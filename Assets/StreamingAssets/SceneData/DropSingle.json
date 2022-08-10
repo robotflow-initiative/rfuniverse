@@ -1,0 +1,461 @@
+{
+  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "ground": false,
+  "cameraPosition": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      1.509,
+      1.806,
+      0.259
+    ]
+  },
+  "cameraRotation": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      44.2080345,
+      291.357819,
+      -1.90571E-05
+    ]
+  },
+  "assetsData": {
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$values": [
+      {
+        "$type": "RFUniverse.Attributes.ControllerData, Assembly-CSharp",
+        "articulationDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, Assembly-CSharp]], mscorlib",
+          "$values": []
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": []
+        },
+        "name": "tobor_robotiq85_robotiq85",
+        "id": 987461,
+        "type": "Controller",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "meshName": "Render",
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "name": "Collider_Box",
+        "id": 584447,
+        "type": "GameObject",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -0.106,
+            0.2070007,
+            1.21
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.3122,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "rigidbodyData": {
+          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "mass": 1.0,
+          "useGravity": true
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "meshName": "default",
+              "type": 5,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "name": "002_master_chef_can",
+        "id": 32659895,
+        "type": "Rigidbody",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.759900033,
+            1.0277
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.78495717,
+            -5.872543E-07,
+            90.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "name": "Hercules_mesh_texture",
+        "id": 984315,
+        "type": "Base",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -0.654,
+            0.0,
+            -2.864
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            270.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "rigidbodyData": {
+          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "mass": 1.0,
+          "useGravity": true
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "meshName": "default",
+              "type": 5,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "name": "004_sugar_box",
+        "id": 32569715,
+        "type": "Rigidbody",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.254,
+            0.770000041,
+            0.933
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            357.849182,
+            90.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "rigidbodyData": {
+          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "mass": 1.0,
+          "useGravity": true
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "meshName": "default",
+              "type": 5,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "name": "005_tomato_soup_can",
+        "id": 21365842,
+        "type": "Rigidbody",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.251,
+            0.7570001,
+            1.272
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            270.0,
+            90.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "name": "wastepaper-basket",
+        "id": 754289,
+        "type": "Base",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            0.0,
+            0.662
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ]
+  }
+}

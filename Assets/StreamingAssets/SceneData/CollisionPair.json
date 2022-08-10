@@ -1,0 +1,111 @@
+{
+  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "ground": true,
+  "cameraPosition": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      0.0,
+      1.0,
+      -3.0
+    ]
+  },
+  "cameraRotation": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      11.71202,
+      350.919952,
+      -1.41688122E-06
+    ]
+  },
+  "assetsData": {
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$values": [
+      {
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "meshName": "GameObject_Box",
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "name": "GameObject_Box",
+        "id": 90668187,
+        "type": "GameObject",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -0.3093291,
+            0.0,
+            0.6320338
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ]
+  }
+}
