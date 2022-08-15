@@ -1,9 +1,4 @@
-using System.IO;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using RootMotion.FinalIK;
 
 public class ToborMove : MonoBehaviour, ICustomMove
 {

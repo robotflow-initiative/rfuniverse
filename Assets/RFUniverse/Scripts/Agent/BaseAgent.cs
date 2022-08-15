@@ -44,7 +44,6 @@ public class BaseAgent : Agent
     }
 
     public AssetManager am;
-
     public InstanceManager im;
     public DebugManager dm;
 
@@ -79,9 +78,9 @@ public class BaseAgent : Agent
         OnStepAction?.Invoke();
     }
 
-    public Action OnEpisodeBeginAction;
-    public override void OnEpisodeBegin()
-    {
-        OnEpisodeBeginAction?.Invoke();
-    }
+    // public Action OnEpisodeBeginAction;
+    // public override void OnEpisodeBegin()
+    // {
+    //     OnEpisodeBeginAction?.Invoke();
+    // }
 }

@@ -21,6 +21,10 @@ namespace RFUniverse.Attributes
     }
     public class GameObjectAttr : ColliderAttr
     {
+        public override string Type
+        {
+            get { return "GameObject"; }
+        }
         public MeshRenderer render = null;
 
         private MeshRenderer Render
@@ -71,24 +75,7 @@ namespace RFUniverse.Attributes
         }
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("GameObject");
-
-            msg.WriteInt32(ID);
-            // Name
-            msg.WriteString(Name);
-            // Position
-            msg.WriteFloat32(transform.position.x);
-            msg.WriteFloat32(transform.position.y);
-            msg.WriteFloat32(transform.position.z);
-            // Rotation
-            msg.WriteFloat32(transform.eulerAngles.x);
-            msg.WriteFloat32(transform.eulerAngles.y);
-            msg.WriteFloat32(transform.eulerAngles.z);
-            // Quaternion
-            msg.WriteFloat32(transform.rotation.x);
-            msg.WriteFloat32(transform.rotation.y);
-            msg.WriteFloat32(transform.rotation.z);
-            msg.WriteFloat32(transform.rotation.w);
+            base.CollectData(msg);
         }
         public override void AnalysisMsg(IncomingMessage msg, string type)
         {

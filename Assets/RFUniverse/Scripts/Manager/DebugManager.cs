@@ -68,12 +68,12 @@ namespace RFUniverse.Manager
         void RefreshGraspPoint()
         {
             if (graspPointSource == null) return;
-            List<int> current = BaseAttr.Attrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).graspPoint != null).Select(s => s.Key).ToList();
+            List<int> current = BaseAttr.Attrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).joints.Count > 0).Select(s => s.Key).ToList();
             foreach (var item in current.Except(graspPoints.Keys))
             {
                 GraspPoint instance = GameObject.Instantiate<GraspPoint>(graspPointSource);
                 graspPoints.Add(item, instance);
-                instance.target = (BaseAttr.Attrs[item] as ControllerAttr).graspPoint.transform;
+                instance.target = (BaseAttr.Attrs[item] as ControllerAttr).joints.Last().transform;
             }
             foreach (var item in graspPoints.Keys.Except(current))
             {

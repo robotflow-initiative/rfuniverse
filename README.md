@@ -6,38 +6,44 @@ RFUniverse是基于Unity开发的用于机器人仿真和强化学习的平台�
 
 Unity端Player：接收python端消息并执行仿真
 
-Unity端Editor：用于搭建或编辑仿真场景
+[Unity端Editor](https://github.com/mvig-robotflow/rfuniverse/blob/main/RFUniverse%20Editor%20User%20Manual.md)：用于搭建或编辑仿真场景
 
 ---
 
 按照以下步骤配置并通过发布版运行示例场景
 
 1. 下载最新的RFUniverse可执行程序并解压：
-
+   
    [RFUniverse](https://github.com/mvig-robotflow/rfuniverse/releases)
+
 2. Clone pyrfuniverse仓库，并正确配置环境：
    
    <https://github.com/mvig-robotflow/pyrfuniverse>
-
+   
    安装时请使用editable模式，以保证后续对源码的修改正确生效
+   
    ```
-   ~$ pip install -e .
+   pip install -e .
    ```
-3. 修改路径参数为第一步中解压后相对应的路径
 
-   pyrfuniverse/envs/tobor_robotiq85_manipulation_env.py 第18行
+3. 在pyrfuniverse/envs/tobor_robotiq85_manipulation_env.py 第18行
+   
+   修改路径参数为第一步中解压后相对应的路径
+   
    ```
    executable_file='*/RFUniverse/Player.x86_64'
    ```
+
 4. 运行`pyrfuniverse/AtomicActions/`下任意python脚本 
 
 ---
 
 ##### 进入Editor模式
 
-启动Player时添加参数<-edit>以进入Editor模式
+启动RFUniverse时添加参数<-edit>以进入Editor模式
+
 ```
-~$ ./Player.x86_64 -edit
+RFUniverse.x86_64 -edit
 ```
 
 ---
@@ -57,19 +63,22 @@ Unity端Editor：用于搭建或编辑仿真场景
   * [Obi](https://assetstore.unity.com/publishers/5170)：Softbody，Cloth，Fluid等物理仿真插件
   * [BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：关节IK解算插件
   * [Demigiant](https://assetstore.unity.com/packages/tools/visual-scripting/dotween-pro-32416)：Dotween，补间动画插件
-  * [RootMotion](https://assetstore.unity.com/packages/tools/animation/final-ik-14290)：FinalIK，人体IK解算插件
 * RFUniverse：核心功能代码
 * StreamingAssets：
   * SceneData：场景Json文件的保存目录
 * TextMesh Pro：UI文字模块资源
+
 ---
+
 ##### Scene场景
 
 * RFUniverse/First.unity：程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景
 * RFUniverse/Empty.unity：Player模式场景
 * EditMode/Edit.unity：Editro模式场景
 * EditMode/Image.unity：将新配置的预制体放入该场景的Camera下，在运行状态下可生成截图
+
 ---
+
 ##### 核心功能
 
 ###### Agent

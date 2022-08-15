@@ -21,6 +21,10 @@ namespace RFUniverse.Attributes
     }
     public class ClothAttr : BaseAttr
     {
+        public override string Type
+        {
+            get { return "Cloth"; }
+        }
         ObiCloth obiCloth = null;
         protected override void Init()
         {
@@ -30,25 +34,7 @@ namespace RFUniverse.Attributes
 
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("Cloth");
-            // ID
-            msg.WriteInt32(ID);
-            // // Name
-            // msg.WriteString(Name);
-            // // NumberOfParticles
-            // int particleCount = obiCloth.particleCount;
-
-            // msg.WriteInt32(particleCount);
-            // // Positions
-            // List<float> positions = new List<float>();
-            // for (int j = 0; j < particleCount; ++j)
-            // {
-            //     Vector4 particlePosition = obiCloth.solver.positions[obiCloth.solverIndices[j]];
-            //     positions.Add(particlePosition.x);
-            //     positions.Add(particlePosition.y);
-            //     positions.Add(particlePosition.z);
-            // }
-            // msg.WriteFloatList(positions);
+            base.CollectData(msg);
         }
 
         public override void AnalysisMsg(IncomingMessage msg, string type)

@@ -6,6 +6,10 @@ namespace RFUniverse.Attributes
 {
     public class HumanDressingAttr : BaseAttr
     {
+        public override string Type
+        {
+            get { return "HumanDressing"; }
+        }
         public GameObject spine;
         public GameObject graspPoint;
         public GameObject target;
@@ -44,11 +48,7 @@ namespace RFUniverse.Attributes
 
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("HumanDressing");
-            // ID
-            msg.WriteInt32(ID);
-            // Name
-            msg.WriteString(Name);
+            base.CollectData(msg);
 
             Rigidbody graspPointRigidbody = graspPoint.GetComponent<Rigidbody>();
             // Grasp point position

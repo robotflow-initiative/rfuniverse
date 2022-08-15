@@ -70,24 +70,6 @@ namespace RFUniverse.Attributes
             attrs.Clear();
             OnAttrChange?.Invoke();
         }
-
-        [HideInInspector]
-        [SerializeField]
-        private string attrName = string.Empty;
-
-        public virtual string Name
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(attrName))
-                    attrName = gameObject.name;
-                return attrName;
-            }
-            set
-            {
-                attrName = value;
-            }
-        }
         [SerializeField]
         private int id = -1;
         public int ID
@@ -102,6 +84,26 @@ namespace RFUniverse.Attributes
             {
                 id = value;
             }
+        }
+        [HideInInspector]
+        [SerializeField]
+        private string attrName = string.Empty;
+        public virtual string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(attrName))
+                    attrName = gameObject.name;
+                return attrName;
+            }
+            set
+            {
+                attrName = value;
+            }
+        }
+        public virtual string Type
+        {
+            get { return "Base"; }
         }
         public List<BaseAttr> childs = new List<BaseAttr>();
 
@@ -189,7 +191,44 @@ namespace RFUniverse.Attributes
 
         }
 
-        public virtual void CollectData(OutgoingMessage msg) { }
+        public virtual void CollectData(OutgoingMessage msg)
+        {
+            // ID
+            msg.WriteInt32(ID);
+            // Name
+            msg.WriteString(Name);
+            // Name
+            msg.WriteString(Type);
+            // Position
+            msg.WriteFloat32(transform.position.x);
+            msg.WriteFloat32(transform.position.y);
+            msg.WriteFloat32(transform.position.z);
+            // Rotation
+            msg.WriteFloat32(transform.eulerAngles.x);
+            msg.WriteFloat32(transform.eulerAngles.y);
+            msg.WriteFloat32(transform.eulerAngles.z);
+            // Quaternion
+            msg.WriteFloat32(transform.rotation.x);
+            msg.WriteFloat32(transform.rotation.y);
+            msg.WriteFloat32(transform.rotation.z);
+            msg.WriteFloat32(transform.rotation.w);
+            if (resultLocalPoint != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteFloatList(resultLocalPoint);
+                resultLocalPoint = null;
+            }
+            else
+                msg.WriteBoolean(false);
+            if (resultWorldPoint != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteFloatList(resultWorldPoint);
+                resultWorldPoint = null;
+            }
+            else
+                msg.WriteBoolean(false);
+        }
 
         public void ReceiveData(IncomingMessage msg)
         {
@@ -222,8 +261,8 @@ namespace RFUniverse.Attributes
                 case "GetLoaclPointFromWorld":
                     GetLoaclPointFromWorld(msg);
                     return;
-                case "GetWorldPointFromLoacl":
-                    GetLoaclPointFromWorld(msg);
+                case "GetWorldPointFromLocal":
+                    GetWorldPointFromLocal(msg);
                     return;
                 default:
                     Debug.Log($"ID:{ID} Dont have mehond:{type}");
@@ -349,6 +388,9 @@ namespace RFUniverse.Attributes
             DestroyImmediate(gameObject);
         }
 
+
+
+        float[] resultLocalPoint = null;
         void GetLoaclPointFromWorld(IncomingMessage msg)
         {
             Debug.Log("GetLoaclPointFromWorld");
@@ -356,27 +398,18 @@ namespace RFUniverse.Attributes
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             Vector3 local = transform.InverseTransformPoint(new Vector3(x, y, z));
-            OutgoingMessage outgoingMessage = new OutgoingMessage();
-            outgoingMessage.WriteString("ResultWorldPoint");
-            outgoingMessage.WriteFloat32(local.x);
-            outgoingMessage.WriteFloat32(local.y);
-            outgoingMessage.WriteFloat32(local.z);
-            InstanceManager.Instance.channel.SendMetaDataToPython(outgoingMessage);
+            resultLocalPoint = new float[] { local.x, local.y, local.z };
         }
 
+        float[] resultWorldPoint = null;
         void GetWorldPointFromLocal(IncomingMessage msg)
         {
             Debug.Log("GetWorldPointFromLocal");
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
-            Vector3 local = transform.TransformPoint(new Vector3(x, y, z));
-            OutgoingMessage outgoingMessage = new OutgoingMessage();
-            outgoingMessage.WriteString("ResultLocalPoint");
-            outgoingMessage.WriteFloat32(local.x);
-            outgoingMessage.WriteFloat32(local.y);
-            outgoingMessage.WriteFloat32(local.z);
-            InstanceManager.Instance.channel.SendMetaDataToPython(outgoingMessage);
+            Vector3 world = transform.TransformPoint(new Vector3(x, y, z));
+            resultWorldPoint = new float[] { world.x, world.y, world.z };
         }
         private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
         public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);

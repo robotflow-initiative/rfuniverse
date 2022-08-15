@@ -100,11 +100,15 @@ namespace RFUniverse.Attributes
     {
         public ArticulationBody body;
         public bool moveable = true;
-        public float initPosition = 0;
+        //public float initPosition = 0;
         //public bool isGraspPoint = false;
     }
     public class ControllerAttr : ColliderAttr
     {
+        public override string Type
+        {
+            get { return "Controller"; }
+        }
         [SerializeField]
         private List<ArticulationData> articulationDatas;
 
@@ -133,11 +137,8 @@ namespace RFUniverse.Attributes
             }
         }
         public List<ArticulationParameter> jointParameters = new List<ArticulationParameter>();
-        protected List<ArticulationBody> joints = new List<ArticulationBody>();
-        protected List<ArticulationBody> moveableJoints = new List<ArticulationBody>();
-        [HideInInspector]
-        public ArticulationBody graspPoint = null;
-        private List<float> initJointPositions = new List<float>();
+        public List<ArticulationBody> joints = new List<ArticulationBody>();
+        public List<ArticulationBody> moveableJoints = new List<ArticulationBody>();
 
         public bool initBioIK = false;
         Transform iKTarget;
@@ -150,11 +151,6 @@ namespace RFUniverse.Attributes
             {
                 if (!item.GetComponent<ArticulationUnit>())
                     item.gameObject.AddComponent<ArticulationUnit>();
-            }
-            initJointPositions = jointParameters.Where(s => s.moveable).Select(s => s.initPosition).ToList();
-            if (jointParameters.Count > 0)
-            {
-                graspPoint = jointParameters.Last()?.body;
             }
             if (initBioIK)
             {
@@ -383,11 +379,9 @@ namespace RFUniverse.Attributes
         }
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("Controller");
-            // ID
-            msg.WriteInt32(ID);
-            // Name
-            msg.WriteString(Name);
+            base.CollectData(msg);
+            // Number of Articulation Joints
+            msg.WriteInt32(GetNumberOfJoints());
             // Position
             msg.WriteFloatList(GetPositions());
             // Rotation
@@ -396,20 +390,33 @@ namespace RFUniverse.Attributes
             msg.WriteFloatList(GetRotationsQuaternion());
             // Velocity
             msg.WriteFloatList(GetVelocities());
-            // GraspPointPosition
-            msg.WriteFloatList(GetGraspPointPosition());
-            // GraspPointRotation
-            msg.WriteFloatList(GetGraspPointRotation());
-            // GraspPointRotationQuaternion
-            msg.WriteFloatList(GetGraspPointRotationQuaternion());
-            // Number of articulation parts
-            msg.WriteInt32(GetNumberOfJoints());
             // Each part's joint position
             msg.WriteFloatList(GetJointPositions());
             // Each part's joint velocity
             msg.WriteFloatList(GetJointVelocities());
             // Whether all parts are stable
             msg.WriteBoolean(AllStable());
+#if  UNITY_2022_1_OR_NEWER
+            if (sendJointInverseDynamicsForce)
+            {
+                msg.WriteBoolean(true);
+                List<float> gravityForces = new List<float>();
+                joints[0].GetJointGravityForces(gravityForces);
+                msg.WriteFloatList(gravityForces);
+                List<float> coriolisCentrifugalForces = new List<float>();
+                joints[0].GetJointCoriolisCentrifugalForces(coriolisCentrifugalForces);
+                msg.WriteFloatList(coriolisCentrifugalForces);
+                List<float> driveForces = new List<float>();
+                joints[0].GetDriveForces(driveForces);
+                msg.WriteFloatList(driveForces);
+            }
+            else
+            {
+                msg.WriteBoolean(false);
+            }
+#else
+            msg.WriteBoolean(false);
+#endif
         }
 
         private List<float> GetPositions()
@@ -460,34 +467,6 @@ namespace RFUniverse.Attributes
                 velocities.Add(velocity.z);
             }
             return velocities;
-        }
-        private List<float> GetGraspPointPosition()
-        {
-            List<float> position = new List<float>();
-            if (graspPoint == null) return position;
-            position.Add(graspPoint.transform.position.x);
-            position.Add(graspPoint.transform.position.y);
-            position.Add(graspPoint.transform.position.z);
-            return position;
-        }
-        private List<float> GetGraspPointRotation()
-        {
-            List<float> rotation = new List<float>();
-            if (graspPoint == null) return rotation;
-            rotation.Add(graspPoint.transform.eulerAngles.x);
-            rotation.Add(graspPoint.transform.eulerAngles.y);
-            rotation.Add(graspPoint.transform.eulerAngles.z);
-            return rotation;
-        }
-        private List<float> GetGraspPointRotationQuaternion()
-        {
-            List<float> quaternion = new List<float>();
-            if (graspPoint == null) return quaternion;
-            quaternion.Add(graspPoint.transform.rotation.x);
-            quaternion.Add(graspPoint.transform.rotation.y);
-            quaternion.Add(graspPoint.transform.rotation.z);
-            quaternion.Add(graspPoint.transform.rotation.w);
-            return quaternion;
         }
         private int GetNumberOfJoints()
         {
@@ -555,7 +534,19 @@ namespace RFUniverse.Attributes
                 case "GetJointInverseDynamicsForce":
                     GetJointInverseDynamicsForce();
                     return;
-                case "EnableNativeIK":
+                case "MoveForward":
+                    MoveForward(msg);
+                    return;
+                case "MoveBack":
+                    MoveBack(msg);
+                    return;
+                case "TurnLeft":
+                    TurnLeft(msg);
+                    return;
+                case "TurnRight":
+                    TurnRight(msg);
+                    return;
+                case "EnabledNativeIK":
                     EnabledNativeIK(msg);
                     return;
                 case "IKTargetDoMove":
@@ -647,7 +638,10 @@ namespace RFUniverse.Attributes
             bool enabled = msg.ReadBoolean();
             BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>();
             if (bioIK == null)
+            {
                 Debug.LogWarning($"Controller ID:{ID},Name:{Name},Dont have IK compenent");
+                return;
+            }
             bioIK.enabled = enabled;
         }
         private void IKTargetDoMove(IncomingMessage msg)
@@ -657,7 +651,6 @@ namespace RFUniverse.Attributes
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            iKTarget.DOComplete();
             iKTarget.DOMove(new Vector3(x, y, z), speed).SetSpeedBased(true).SetEase(Ease.Linear);
         }
         private void IKTargetDoRotateQuaternion(IncomingMessage msg)
@@ -668,32 +661,52 @@ namespace RFUniverse.Attributes
             float z = msg.ReadFloat32();
             float w = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            iKTarget.DOComplete();
             iKTarget.DORotateQuaternion(new Quaternion(), speed).SetSpeedBased(true).SetEase(Ease.Linear);
+        }
+        private void IKDOComplete()
+        {
+            if (iKTarget == null) return;
+            iKTarget.DOComplete();
         }
         private void IKTargetDoKill()
         {
             if (iKTarget == null) return;
             iKTarget.DOKill();
         }
+
+        bool sendJointInverseDynamicsForce = false;
         private void GetJointInverseDynamicsForce()
         {
 #if  UNITY_2022_1_OR_NEWER
-            OutgoingMessage msg = new OutgoingMessage();
-            msg.WriteString("JointInverseDynamicsForce");
-            List<float> gravityForces = new List<float>();
-            joints[0].GetJointGravityForces(gravityForces);
-            msg.WriteFloatList(gravityForces);
-            List<float> coriolisCentrifugalForces = new List<float>();
-            joints[0].GetJointCoriolisCentrifugalForces(coriolisCentrifugalForces);
-            msg.WriteFloatList(coriolisCentrifugalForces);
-            List<float> driveForces = new List<float>();
-            joints[0].GetDriveForces(driveForces);
-            msg.WriteFloatList(driveForces);
-            InstanceManager.Instance.channel.SendMetaDataToPython(msg);
+            sendJointInverseDynamicsForce = true;
 #else
             Debug.LogWarning($"Controller ID:{ID},Name:{Name},Current Unity version dont support GetJointInverseDynamicsForce API");
 #endif
+        }
+
+        private void MoveForward(IncomingMessage msg)
+        {
+            float distance = msg.ReadFloat32();
+            float speed = msg.ReadFloat32();
+            GetComponent<ICustomMove>().Forward(distance, speed);
+        }
+        private void MoveBack(IncomingMessage msg)
+        {
+            float distance = msg.ReadFloat32();
+            float speed = msg.ReadFloat32();
+            GetComponent<ICustomMove>().Back(distance, speed);
+        }
+        private void TurnLeft(IncomingMessage msg)
+        {
+            float angle = msg.ReadFloat32();
+            float speed = msg.ReadFloat32();
+            GetComponent<ICustomMove>().Left(angle, speed);
+        }
+        private void TurnRight(IncomingMessage msg)
+        {
+            float angle = msg.ReadFloat32();
+            float speed = msg.ReadFloat32();
+            GetComponent<ICustomMove>().Right(angle, speed);
         }
         public override void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = false)
         {
@@ -827,15 +840,6 @@ namespace RFUniverse.Attributes
                 moveableJoints[i].GetComponent<ArticulationUnit>().AddJointTorque(jointForces[i]);
             }
         }
-        public void ReSetJointPosition()
-        {
-            List<float> speedScales = new List<float>() { };
-            for (int i = 0; i < joints.Count; ++i)
-            {
-                speedScales.Add(0);
-            }
-            SetJointPosition(initJointPositions, speedScales, ControlMode.Direct);
-        }
     }
 
 #if UNITY_EDITOR
@@ -873,7 +877,7 @@ namespace RFUniverse.Attributes
                     {
                         body = item,
                         moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetComponent<MimicJoint>()?.Parent == null,
-                        initPosition = 0,
+                        //initPosition = 0,
                         //isGraspPoint = false
                     });
                 }

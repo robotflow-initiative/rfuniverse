@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.IO;
+using System;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
-using System.IO;
+using UnityEngine.Experimental.Rendering;
 
 // TODO: Add a target display manager.
 
@@ -15,14 +16,21 @@ namespace RFUniverse.Attributes
         Camera camera = null;
         Texture2D tex = null;
 
+        string rgbBase64String = null;
+        string normalBase64String = null;
+        string depthBase64String = null;
+        string idBase64String = null;
+        string depthEXRBase64String = null;
+
         int width = 512;
         int height = 512;
         public override string Name
         {
-            get
-            {
-                return "Camera";
-            }
+            get { return "Camera"; }
+        }
+        public override string Type
+        {
+            get { return "Camera"; }
         }
         protected override void Init()
         {
@@ -33,9 +41,12 @@ namespace RFUniverse.Attributes
             camera.enabled = false;
 
             camera.nearClipPlane = 0.01f;
-            camera.nearClipPlane = 100f;
+            camera.farClipPlane = 1000f;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(1, 1, 1, 0);
+            camera.depth = -100;
+            camera.allowMSAA = false;
+            camera.allowHDR = false;
 
             if (cameraDepthShader == null)
                 cameraDepthShader = Shader.Find("RFUniverse/CameraDepth");
@@ -48,21 +59,7 @@ namespace RFUniverse.Attributes
 
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("Camera");
-            // id
-            msg.WriteInt32(ID);
-            // position
-            Vector3 position = camera.transform.position;
-            msg.WriteFloat32(position.x);
-            msg.WriteFloat32(position.y);
-            msg.WriteFloat32(position.z);
-            // rotation
-            Vector3 rotation = camera.transform.eulerAngles;
-            msg.WriteFloat32(rotation.x);
-            msg.WriteFloat32(rotation.y);
-            msg.WriteFloat32(rotation.z);
-            // rendering mode
-            //msg.WriteInt32((int)Mode);
+            base.CollectData(msg);
             // near plane
             msg.WriteFloat32(camera.nearClipPlane);
             // far plane
@@ -71,122 +68,212 @@ namespace RFUniverse.Attributes
             msg.WriteFloat32(camera.fieldOfView);
             // target display
             msg.WriteInt32(camera.targetDisplay);
-
+            // target width
             msg.WriteInt32(width);
-
+            // target height
             msg.WriteInt32(height);
 
-            if (isConstant)
+            if (rgbBase64String != null)
             {
                 msg.WriteBoolean(true);
-                msg.WriteString(Convert.ToBase64String(tex.EncodeToPNG()));
-            }
-            else if (tex != null)
-            {
-                msg.WriteBoolean(true);
-                msg.WriteString(Convert.ToBase64String(tex.EncodeToPNG()));
-                tex = null;
+                msg.WriteString(rgbBase64String);
+                rgbBase64String = null;
             }
             else
-            {
                 msg.WriteBoolean(false);
+            if (normalBase64String != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteString(normalBase64String);
+                normalBase64String = null;
             }
+            else
+                msg.WriteBoolean(false);
+            if (idBase64String != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteString(idBase64String);
+                idBase64String = null;
+            }
+            else
+                msg.WriteBoolean(false);
+            if (depthBase64String != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteString(depthBase64String);
+                depthBase64String = null;
+            }
+            else
+                msg.WriteBoolean(false);
+            if (depthEXRBase64String != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteString(depthEXRBase64String);
+                depthEXRBase64String = null;
+            }
+            else
+                msg.WriteBoolean(false);
         }
 
         public override void AnalysisMsg(IncomingMessage msg, string type)
         {
             switch (type)
             {
-                case "GetNormalConstant":
-                    GetNormalConstant(msg);
-                    return;
-                case "GetDepthConstant":
-                    GetDepthConstant(msg);
-                    return;
-                case "StopConstant":
-                    StopConstant();
+                // case "GetRGBConstant":
+                //     GetDepthConstant(msg);
+                //     return;
+                // case "GetNormalConstant":
+                //     GetNormalConstant(msg);
+                //     return;
+                // case "GetDepthConstant":
+                //     GetDepthConstant(msg);
+                //     return;
+                // case "StopConstant":
+                //     StopConstant();
+                //     return;
+                case "GetRGB":
+                    GetRGB(msg);
                     return;
                 case "GetNormal":
                     GetNormal(msg);
                     return;
+                case "GetID":
+                    GetID(msg);
+                    return;
                 case "GetDepth":
                     GetDepth(msg);
+                    return;
+                case "GetDepthEXR":
+                    GetDepthEXR(msg);
                     return;
             }
             base.AnalysisMsg(msg, type);
         }
-        bool isConstant = false;
+        //bool isConstant = false;
 
-        private void OnRenderObject()
+        // private void FixedUpdate()
+        // {
+        //     if (isConstant)
+        //     {
+        //         camera.Render();
+        //         tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        //         tex.Apply();
+        //         texBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+        //     }
+        // // }
+        // void GetNormalConstant(IncomingMessage msg)
+        // {
+        //     if (isConstant) return;
+        //     isConstant = true;
+        //     width = msg.ReadInt32();
+        //     height = msg.ReadInt32();
+        //     camera.targetTexture = new RenderTexture(width, height, 0, GraphicsFormat.R8G8B8A8_UNorm);
+        //     camera.SetReplacementShader(cameraNormalShader, "");
+        //     RenderTexture.active = camera.targetTexture;
+        //     tex = new Texture2D(width, height);
+        // }
+        // void GetDepthConstant(IncomingMessage msg)
+        // {
+        //     if (isConstant) return;
+        //     isConstant = true;
+        //     width = msg.ReadInt32();
+        //     height = msg.ReadInt32();
+        //     float near = msg.ReadFloat32();
+        //     float far = msg.ReadFloat32();
+        //     camera.targetTexture = new RenderTexture(width, height, 0, GraphicsFormat.R8G8B8A8_UNorm);
+        //     Shader.SetGlobalFloat("_CameraZeroDis", near);
+        //     Shader.SetGlobalFloat("_CameraOneDis", far);
+        //     camera.SetReplacementShader(cameraDepthShader, "");
+        //     RenderTexture.active = camera.targetTexture;
+        //     tex = new Texture2D(width, height);
+        // }
+        // void StopConstant()
+        // {
+        //     isConstant = false;
+        // }
+        void GetRGB(IncomingMessage msg)
         {
-            if (isConstant)
-            {
-                camera.Render();
-                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-                tex.Apply();
-            }
-        }
-        void GetNormalConstant(IncomingMessage msg)
-        {
-            if (isConstant) return;
-            isConstant = true;
+            //if (isConstant) return;
             width = msg.ReadInt32();
             height = msg.ReadInt32();
-            camera.targetTexture = new RenderTexture(width, height, 0, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm);
-            camera.SetReplacementShader(cameraNormalShader, "");
+            //string path = msg.ReadString();
+            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.RenderWithShader(null, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height);
-        }
-        void GetDepthConstant(IncomingMessage msg)
-        {
-            if (isConstant) return;
-            isConstant = true;
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
-            float near = msg.ReadFloat32();
-            float far = msg.ReadFloat32();
-            camera.targetTexture = new RenderTexture(width, height, 0, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm);
-            Shader.SetGlobalFloat("_CameraZeroDis", near);
-            Shader.SetGlobalFloat("_CameraOneDis", far);
-            camera.SetReplacementShader(cameraDepthShader, "");
-            RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height);
-        }
-        void StopConstant()
-        {
-            isConstant = false;
+            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            //File.WriteAllBytes(path, tex.EncodeToPNG());
         }
         void GetNormal(IncomingMessage msg)
         {
-            if (isConstant) return;
+            //if (isConstant) return;
             width = msg.ReadInt32();
             height = msg.ReadInt32();
-            string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 0, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm);
+            //string path = msg.ReadString();
+            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
             camera.RenderWithShader(cameraNormalShader, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height);
+            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            //File.WriteAllBytes(path, tex.EncodeToPNG());
+        }
+        void GetID(IncomingMessage msg)
+        {
+            //if (isConstant) return;
+            width = msg.ReadInt32();
+            height = msg.ReadInt32();
+            //string path = msg.ReadString();
+            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.RenderWithShader(cameraIDShader, "");
+            RenderTexture.active = camera.targetTexture;
+            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             //File.WriteAllBytes(path, tex.EncodeToPNG());
         }
         void GetDepth(IncomingMessage msg)
         {
-            if (isConstant) return;
+            //if (isConstant) return;
 
             width = msg.ReadInt32();
             height = msg.ReadInt32();
             float near = msg.ReadFloat32();
             float far = msg.ReadFloat32();
-            string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 0, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm);
+            //string path = msg.ReadString();
+            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
             Shader.SetGlobalFloat("_CameraZeroDis", near);
             Shader.SetGlobalFloat("_CameraOneDis", far);
             camera.RenderWithShader(cameraDepthShader, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height);
+            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            //File.WriteAllBytes(path, tex.EncodeToPNG());
+        }
+        void GetDepthEXR(IncomingMessage msg)
+        {
+            //if (isConstant) return;
+
+            width = msg.ReadInt32();
+            height = msg.ReadInt32();
+            //float near = msg.ReadFloat32();
+            //float far = msg.ReadFloat32();
+            //string path = msg.ReadString();
+            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            Shader.SetGlobalFloat("_CameraZeroDis", 0);
+            Shader.SetGlobalFloat("_CameraOneDis", 1);
+            camera.RenderWithShader(cameraDepthShader, "");
+            RenderTexture.active = camera.targetTexture;
+            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
             //File.WriteAllBytes(path, tex.EncodeToPNG());
         }
     }

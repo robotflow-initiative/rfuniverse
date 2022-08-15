@@ -29,6 +29,10 @@ namespace RFUniverse.Attributes
     //[RequireComponent(typeof(Rigidbody))]
     public class RigidbodyAttr : ColliderAttr
     {
+        public override string Type
+        {
+            get { return "Rigidbody"; }
+        }
         private Rigidbody rigidbody = null;
         public Rigidbody Rigidbody
         {
@@ -90,19 +94,7 @@ namespace RFUniverse.Attributes
 
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("Rigidbody");
-            // ID
-            msg.WriteInt32(ID);
-            // Name
-            msg.WriteString(Name);
-            // Position
-            msg.WriteFloat32(transform.position.x);
-            msg.WriteFloat32(transform.position.y);
-            msg.WriteFloat32(transform.position.z);
-            // Rotation
-            msg.WriteFloat32(transform.eulerAngles.x);
-            msg.WriteFloat32(transform.eulerAngles.y);
-            msg.WriteFloat32(transform.eulerAngles.z);
+            base.CollectData(msg);
             // Velocity
             msg.WriteFloat32(Rigidbody.velocity.x);
             msg.WriteFloat32(Rigidbody.velocity.y);

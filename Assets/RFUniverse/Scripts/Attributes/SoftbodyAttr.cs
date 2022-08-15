@@ -7,6 +7,10 @@ namespace RFUniverse.Attributes
     public class SoftbodyAttr : BaseAttr
     {
 #if OBI_ONI_SUPPORTED
+        public override string Type
+        {
+            get { return "Softbody"; }
+        }
         Obi.ObiSoftbody obiSoftbody;
 
         protected override void Init()
@@ -40,11 +44,7 @@ namespace RFUniverse.Attributes
         }
         public override void CollectData(OutgoingMessage msg)
         {
-            msg.WriteString("Softbody");
-            // ID
-            msg.WriteInt32(ID);
-            // Name
-            msg.WriteString(obiSoftbody.name);
+            base.CollectData(msg);
             // NumberOfParticles
             int particleCount = obiSoftbody.particleCount;
             msg.WriteInt32(particleCount);
