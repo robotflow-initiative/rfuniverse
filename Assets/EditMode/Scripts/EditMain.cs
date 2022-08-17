@@ -90,6 +90,10 @@ namespace RFUniverse.EditMode
 
         public static EditMain Instance = null;
 
+        void OnValidate()
+        {
+            Instance = this;
+        }
         string filePath => Application.streamingAssetsPath + "/SceneData";
         void Awake()
         {
@@ -322,9 +326,9 @@ namespace RFUniverse.EditMode
             SceneData data = new SceneData();
             data.ground = Ground;
             data.cameraPosition = new float[]
-                {Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z};
+                {mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z};
             data.cameraRotation = new float[]
-                {Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, Camera.main.transform.eulerAngles.z};
+                {mainCamera.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z};
             foreach (var item in editableUnits.Values)
             {
                 data.assetsData.Add(item.attr.GetAttrData());

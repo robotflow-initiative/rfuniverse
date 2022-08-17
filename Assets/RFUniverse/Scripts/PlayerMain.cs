@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RFUniverse
@@ -8,6 +6,17 @@ namespace RFUniverse
     {
         public static PlayerMain Instance = null;
         void Awake()
+        {
+            Instance = this;
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetColor("_IDColor", Color.black);
+            foreach (var render in ground.GetComponentsInChildren<Renderer>())
+            {
+                render.SetPropertyBlock(mpb);
+            }
+        }
+
+        void OnValidate()
         {
             Instance = this;
         }

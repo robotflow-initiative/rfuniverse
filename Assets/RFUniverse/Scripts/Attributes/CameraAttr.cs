@@ -45,7 +45,7 @@ namespace RFUniverse.Attributes
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(1, 1, 1, 0);
             camera.depth = -100;
-            camera.allowMSAA = false;
+            camera.allowMSAA = true;
             camera.allowHDR = false;
 
             if (cameraDepthShader == null)
@@ -197,10 +197,10 @@ namespace RFUniverse.Attributes
             width = msg.ReadInt32();
             height = msg.ReadInt32();
             //string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             camera.RenderWithShader(null, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
@@ -212,14 +212,13 @@ namespace RFUniverse.Attributes
             width = msg.ReadInt32();
             height = msg.ReadInt32();
             //string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             camera.RenderWithShader(cameraNormalShader, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-            //File.WriteAllBytes(path, tex.EncodeToPNG());
         }
         void GetID(IncomingMessage msg)
         {
@@ -227,14 +226,14 @@ namespace RFUniverse.Attributes
             width = msg.ReadInt32();
             height = msg.ReadInt32();
             //string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
             camera.RenderWithShader(cameraIDShader, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-            //File.WriteAllBytes(path, tex.EncodeToPNG());
+
         }
         void GetDepth(IncomingMessage msg)
         {
@@ -245,16 +244,15 @@ namespace RFUniverse.Attributes
             float near = msg.ReadFloat32();
             float far = msg.ReadFloat32();
             //string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Linear, 1);
             Shader.SetGlobalFloat("_CameraZeroDis", near);
             Shader.SetGlobalFloat("_CameraOneDis", far);
             camera.RenderWithShader(cameraDepthShader, "");
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGBAFloat, false);
+            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-            //File.WriteAllBytes(path, tex.EncodeToPNG());
         }
         void GetDepthEXR(IncomingMessage msg)
         {
@@ -265,7 +263,7 @@ namespace RFUniverse.Attributes
             //float near = msg.ReadFloat32();
             //float far = msg.ReadFloat32();
             //string path = msg.ReadString();
-            camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGBFloat);
+            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear, 1);
             Shader.SetGlobalFloat("_CameraZeroDis", 0);
             Shader.SetGlobalFloat("_CameraOneDis", 1);
             camera.RenderWithShader(cameraDepthShader, "");

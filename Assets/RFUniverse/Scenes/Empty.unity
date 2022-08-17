@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c276c1208e6b8253bd1099e5e5385f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 2049869952}
   ground: {fileID: 8268642022424909662}
 --- !u!1 &939619230
 GameObject:
@@ -359,6 +360,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &2049869952 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2378326719977876457, guid: 8d18a101adc5f754cbb8eba2851bfd5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2378326720721000770}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2378326720721000770
 PrefabInstance:
   m_ObjectHideFlags: 0

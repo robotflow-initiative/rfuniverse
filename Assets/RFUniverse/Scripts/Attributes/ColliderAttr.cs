@@ -108,8 +108,7 @@ namespace RFUniverse.Attributes
         public List<ColliderData> GetColliderDatas()
         {
             List<ColliderData> datas = new List<ColliderData>();
-            List<MeshRenderer> renderer = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
-            foreach (var item in renderer)
+            foreach (var item in this.GetChildComponentFilter<MeshRenderer>())
             {
                 ColliderData data = new ColliderData();
                 datas.Add(data);
@@ -173,7 +172,7 @@ namespace RFUniverse.Attributes
         {
             foreach (var data in datas)
             {
-                Transform render = FindChlid(transform, data.meshName, false);
+                Transform render = transform.FindChlid(data.meshName, false);
                 if (render == null) continue;
                 Transform collider = render.Find("Collider");
                 if (collider != null && data.type != ColliderType.Original)
@@ -237,8 +236,7 @@ namespace RFUniverse.Attributes
                 if (string.IsNullOrEmpty(text)) return;
                 string path = $"Assets/Model/VHACD_Mesh/{text}_VHACD.asset";
                 AssetDatabase.DeleteAsset(path);
-                List<MeshRenderer> renderer = new List<MeshRenderer>(script.GetComponentsInChildren<MeshRenderer>());
-                foreach (var item in renderer)
+                foreach (var item in script.GetChildComponentFilter<MeshRenderer>())
                 {
                     foreach (var des in item.GetComponents<Collider>())
                     {

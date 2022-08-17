@@ -126,6 +126,12 @@ namespace RFUniverse.Attributes
         }
         protected virtual void Init()
         {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetColor("_IDColor", RFUniverseUtility.EncodeIDAsColor(ID));
+            foreach (var item in this.GetChildComponentFilter<Renderer>())
+            {
+                item.SetPropertyBlock(mpb);
+            }
             for (int i = 0; i < childs.Count; i++)
             {
                 childs[i].ID = ID * 10 + i;
@@ -167,8 +173,8 @@ namespace RFUniverse.Attributes
             Transform parent = transform.parent;
             data.parentName = parent == null ? "" : parent.name;
 
-            data.position = new float[3] { transform.localPosition.x, transform.localPosition.y, transform.localPosition.z };
-            data.rotation = new float[3] { transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z };
+            data.position = new float[3] { transform.position.x, transform.position.y, transform.position.z };
+            data.rotation = new float[3] { transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z };
             data.scale = new float[3] { transform.localScale.x, transform.localScale.y, transform.localScale.z };
 
 
@@ -313,7 +319,7 @@ namespace RFUniverse.Attributes
             Quaternion quaternion = new Quaternion(x, y, z, w);
             SetTransform(false, true, false, Vector3.zero, quaternion.eulerAngles, Vector3.one);
         }
-        public virtual void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = false)
+        public virtual void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {
             if (set_position)
             {
@@ -346,7 +352,7 @@ namespace RFUniverse.Attributes
             Transform parent = null;
             if (attrs.TryGetValue(parentID, out BaseAttr attr))
             {
-                parent = FindChlid(attr.transform, parentName, true);
+                parent = attr.transform.FindChlid(parentName, true);
                 if (parent == null)
                     parent = attr.transform;
             }
@@ -369,20 +375,7 @@ namespace RFUniverse.Attributes
                 item.gameObject.layer = layer;
             }
         }
-        public static Transform FindChlid(Transform parent, string targetName, bool includeSelf = true)
-        {
-            if (includeSelf && parent.name == targetName)
-                return parent;
-            for (int i = 0; i < parent.childCount; i++)
-            {
-                Transform child = FindChlid(parent.GetChild(i), targetName, true);
-                if (child == null)
-                    continue;
-                else
-                    return child;
-            }
-            return null;
-        }
+
         protected void Destroy()
         {
             DestroyImmediate(gameObject);

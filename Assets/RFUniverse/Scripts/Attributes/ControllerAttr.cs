@@ -179,9 +179,9 @@ namespace RFUniverse.Attributes
         public List<ArticulationData> GetArticulationDatas()
         {
             List<ArticulationData> datas = new List<ArticulationData>();
-            List<ArticulationBody> bodys = new List<ArticulationBody>(GetComponentsInChildren<ArticulationBody>());
-            if (bodys.Count == 0) return null;
-            bodys.RemoveAt(0);
+            List<ArticulationBody> bodys = this.GetChildComponentFilter<ArticulationBody>();
+            if (bodys.Count > 0)
+                bodys.RemoveAt(0);
             foreach (var item in bodys)
             {
                 datas.Add(new ArticulationData(item));
@@ -192,8 +192,7 @@ namespace RFUniverse.Attributes
         {
             foreach (var data in datas)
             {
-                ArticulationBody body = FindChlid(transform, data.bodyName, true).GetComponent<ArticulationBody>();
-
+                ArticulationBody body = transform.FindChlid(data.bodyName, true).GetComponent<ArticulationBody>();
                 if (body == null) continue;
 
                 body.anchorPosition = new Vector3(data.anchorPosition[0], data.anchorPosition[1], data.anchorPosition[2]);
@@ -368,14 +367,22 @@ namespace RFUniverse.Attributes
                 segment.Objectives = new BioIK.BioObjective[] { };
                 iKTarget = new GameObject("iKTarget").transform;
                 iKTarget.parent = jointParameters.First().body.transform;
-                iKTarget.position = end.position;
-                iKTarget.rotation = end.rotation;
+                ResetIKTarget();
                 BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
                 ((BioIK.Position)positionObjective).SetTargetTransform(iKTarget);
                 BioIK.BioObjective orientationObjective = segment.AddObjective(BioIK.ObjectiveType.Orientation);
                 ((BioIK.Orientation)orientationObjective).SetTargetTransform(iKTarget);
             }
             bioIK.Refresh();
+        }
+        void ResetIKTarget()
+        {
+            if (jointParameters.Count > 0)
+            {
+                Transform end = jointParameters.Last().body.transform;
+                iKTarget.position = end.position;
+                iKTarget.rotation = end.rotation;
+            }
         }
         public override void CollectData(OutgoingMessage msg)
         {
@@ -396,6 +403,8 @@ namespace RFUniverse.Attributes
             msg.WriteFloatList(GetJointVelocities());
             // Whether all parts are stable
             msg.WriteBoolean(AllStable());
+            msg.WriteBoolean(moveDone);
+            msg.WriteBoolean(rotateDone);
 #if  UNITY_2022_1_OR_NEWER
             if (sendJointInverseDynamicsForce)
             {
@@ -555,6 +564,9 @@ namespace RFUniverse.Attributes
                 case "IKTargetDoRotateQuaternion":
                     IKTargetDoRotateQuaternion(msg);
                     return;
+                case "IKTargetDoComplete":
+                    IKTargetDoComplete();
+                    return;
                 case "IKTargetDoKill":
                     IKTargetDoKill();
                     return;
@@ -642,28 +654,47 @@ namespace RFUniverse.Attributes
                 Debug.LogWarning($"Controller ID:{ID},Name:{Name},Dont have IK compenent");
                 return;
             }
+            if (enabled)
+            {
+                ResetIKTarget();
+            }
             bioIK.enabled = enabled;
+
         }
+        bool moveDone;
         private void IKTargetDoMove(IncomingMessage msg)
         {
+            Debug.Log("IKTargetDoMove");
             if (iKTarget == null) return;
+            moveDone = false;
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            iKTarget.DOMove(new Vector3(x, y, z), speed).SetSpeedBased(true).SetEase(Ease.Linear);
+            bool relative = msg.ReadBoolean();
+            iKTarget.DOMove(new Vector3(x, y, z), speed).SetSpeedBased(true).SetEase(Ease.Linear).SetRelative(relative).onComplete += () =>
+            {
+                moveDone = true;
+            };
         }
+        bool rotateDone;
         private void IKTargetDoRotateQuaternion(IncomingMessage msg)
         {
+            Debug.Log("IKTargetDoRotateQuaternion");
             if (iKTarget == null) return;
+            rotateDone = false;
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             float w = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            iKTarget.DORotateQuaternion(new Quaternion(), speed).SetSpeedBased(true).SetEase(Ease.Linear);
+            bool relative = msg.ReadBoolean();
+            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), speed).SetSpeedBased(true).SetEase(Ease.Linear).SetRelative(relative).onComplete += () =>
+            {
+                rotateDone = true;
+            };
         }
-        private void IKDOComplete()
+        private void IKTargetDoComplete()
         {
             if (iKTarget == null) return;
             iKTarget.DOComplete();
@@ -708,7 +739,7 @@ namespace RFUniverse.Attributes
             float speed = msg.ReadFloat32();
             GetComponent<ICustomMove>().Right(angle, speed);
         }
-        public override void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = false)
+        public override void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {
             Debug.Log("SetTransform");
             if (set_position)
@@ -858,18 +889,7 @@ namespace RFUniverse.Attributes
             if (GUILayout.Button("Get Joint Parameters"))
             {
                 script.jointParameters = new List<ArticulationParameter>();
-                List<ArticulationBody> bodys = script.GetComponentsInChildren<ArticulationBody>().ToList();
-                foreach (var item in script.childs)
-                {
-                    ArticulationBody[] childsBody = item.GetComponentsInChildren<ArticulationBody>();
-                    foreach (var i in childsBody)
-                    {
-                        if (bodys.Contains(i))
-                            bodys.Remove(i);
-                    }
-                }
-
-                foreach (var item in bodys)
+                foreach (var item in script.GetChildComponentFilter<ArticulationBody>())
                 {
                     if (!item.GetComponent<ArticulationUnit>())
                         item.gameObject.AddComponent<ArticulationUnit>();

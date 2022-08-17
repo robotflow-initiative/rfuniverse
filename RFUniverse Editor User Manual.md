@@ -4,7 +4,7 @@ RFUniverse Editor仿真环境的快速搭建工具，使开发者在完全脱离
 
 ##### 进入Edit模式
 
-启动Player时添加参数<-edit>以进入Edit模式
+启动RFUniverse时添加参数<-edit>以进入Edit模式
 
 Windows:
 
@@ -28,7 +28,7 @@ RFUniverse.x86_64 -edit
 * Shift：镜头下降
 * 鼠标右键拖拽：镜头旋转
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ### 主界面
 
@@ -56,7 +56,7 @@ RFUniverse.x86_64 -edit
    
    显示当前场景内的所有物体列表
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体创建
 
@@ -70,7 +70,7 @@ RFUniverse.x86_64 -edit
    
    点击图标选中该物体，随后点击场景地面将创建该物体到点击位置
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体选择
 
@@ -78,7 +78,7 @@ RFUniverse.x86_64 -edit
 
 进入选择模式后所有物体会出现蓝色半透明的包围盒，点击任意物体的包围盒来选中该物体，同时包围盒变为绿色，**选择物体后可进入其他模式对该物体进行编辑**
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体移动
 
@@ -90,7 +90,7 @@ RFUniverse.x86_64 -edit
 
 界面的中上方将会实时的显示物体的局部空间位置值，并支持手动输入修改
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体旋转
 
@@ -102,7 +102,7 @@ RFUniverse.x86_64 -edit
 
 界面的中上方将会实时的显示物体的局部空间旋转值，并支持手动输入修改
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体缩放
 
@@ -114,7 +114,7 @@ RFUniverse.x86_64 -edit
 
 界面的中上方将会实时的显示物体的局部空间缩放值，并支持手动输入修改
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 设置父物体
 
@@ -122,7 +122,7 @@ RFUniverse.x86_64 -edit
 
 选择物体后进入父物体模式，此时所有物体将类似选择模式显示包围盒，点击任意其他物体的包围盒，界面左侧将会刷新点击物体内的子物体列表，点击列表内子物体，即可将当前主选择的物体放置在所点击的子物体下。
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 属性设置
 
@@ -134,7 +134,7 @@ RFUniverse.x86_64 -edit
 
 **只有依照标准所创建的物体才能正确的在Editer中修改属性**
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ###### Collider:
 
@@ -152,7 +152,7 @@ RFUniverse.x86_64 -edit
 
 在属性设置的同时，场景中将实时显示Gizmo以预览修改效果
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ###### GameObject：
 
@@ -160,7 +160,7 @@ RFUniverse.x86_64 -edit
 
 拖动RGBA4个滑动条可修改GameObject物体的颜色
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ###### Rigidbody：
 
@@ -168,7 +168,7 @@ RFUniverse.x86_64 -edit
 
 Rigidbody物体支持修改质量和重力开关
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ###### Articulation：
 
@@ -178,7 +178,7 @@ Rigidbody物体支持修改质量和重力开关
 
 在属性设置的同时，场景中将实时显示Gizmo以预览修改效果
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 物体列表
 
@@ -188,7 +188,7 @@ Rigidbody物体支持修改质量和重力开关
 
 在选择模式下，点击各个选择支持选中该物体，效果与点击物体包围盒等同
 
----
+<div STYLE="page-break-after: always;"></div>
 
 ##### 保存与加载
 

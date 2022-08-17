@@ -2805,6 +2805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -6103,6 +6104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0189c965bb3d422b4a56b5789d742fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 789382334300525544}
   ground: {fileID: 226823316}
   ui: {fileID: 2050357776}
   unit: {fileID: 6242694432786964530, guid: 3014fbf994d45084384b404e460cb3fb, type: 3}
@@ -18897,6 +18899,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d18a101adc5f754cbb8eba2851bfd5a, type: 3}
+--- !u!20 &789382334300525544 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2378326719977876457, guid: 8d18a101adc5f754cbb8eba2851bfd5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 789382334300525543}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &896117323195848046
 GameObject:
   m_ObjectHideFlags: 0

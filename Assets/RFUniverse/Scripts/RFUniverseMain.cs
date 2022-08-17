@@ -6,11 +6,13 @@ namespace RFUniverse
 {
     public class RFUniverseMain : MonoBehaviour
     {
+        public Camera mainCamera;
         public GameObject ground;
         public bool Ground
         {
             get
             {
+                if (ground == null) return false;
                 return ground.activeSelf;
             }
             set

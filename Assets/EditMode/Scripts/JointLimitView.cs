@@ -21,7 +21,7 @@ namespace RFUniverse.EditMode
             }
             gameObject.SetActive(true);
 
-            Transform trans = BaseAttr.FindChlid(EditMain.Instance.CurrentSelectedUnit.attr.transform, articulationData.bodyName, false);
+            Transform trans = EditMain.Instance.CurrentSelectedUnit.attr.transform.FindChlid(articulationData.bodyName, false);
             transform.SetParent(trans);
             transform.localPosition = new Vector3(articulationData.anchorPosition[0], articulationData.anchorPosition[1], articulationData.anchorPosition[2]);
             transform.localRotation = new Quaternion(articulationData.anchorRotation[0], articulationData.anchorRotation[1], articulationData.anchorRotation[2], articulationData.anchorRotation[3]);
