@@ -11,6 +11,7 @@ namespace BioIK
 
         //public bool SolveInEditMode = false;
 
+        public bool isArticulations = false;
         [SerializeField] private bool UseThreading = true;
 
         [SerializeField] private int Generations = 2;
@@ -53,11 +54,9 @@ namespace BioIK
             Utility.Cleanup(transform);
         }
 
-        //bool needDirectly = false;
         void OnEnable()
         {
             Initialise();
-            //needDirectly = true;
         }
 
         void OnDisable()
@@ -114,21 +113,18 @@ namespace BioIK
                     motion.SetTargetValue((float)Solution[i]);
                 }
                 */
-
-                ArticulationBody body = motion.Joint.Segment.transform.GetComponent<ArticulationBody>();
-                if (body != null)
+                if (isArticulations)
                 {
-                    ArticulationDrive drive = body.xDrive;
-                    drive.target = (float)motion.TargetValue;
-                    body.xDrive = drive;
-                    // if (needDirectly)
-                    // {
-                    //     body.jointPosition = new ArticulationReducedSpace((float)motion.TargetValue);
-                    //     body.jointVelocity = new ArticulationReducedSpace(0);
-                    // }
+                    ArticulationBody body = motion.Joint.Segment.transform.GetComponent<ArticulationBody>();
+                    if (body != null)
+                    {
+                        ArticulationDrive drive = body.xDrive;
+                        drive.target = (float)motion.TargetValue;
+                        body.xDrive = drive;
+                    }
                 }
-
-                //ProcessMotion(Root);
+                else
+                    ProcessMotion(Root);
             }
         }
 

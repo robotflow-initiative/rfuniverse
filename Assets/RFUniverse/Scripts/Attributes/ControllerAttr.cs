@@ -137,7 +137,9 @@ namespace RFUniverse.Attributes
             }
         }
         public List<ArticulationParameter> jointParameters = new List<ArticulationParameter>();
+        [HideInInspector]
         public List<ArticulationBody> joints = new List<ArticulationBody>();
+        [HideInInspector]
         public List<ArticulationBody> moveableJoints = new List<ArticulationBody>();
 
         public bool initBioIK = false;
@@ -216,10 +218,11 @@ namespace RFUniverse.Attributes
         public void InitBioIK()
         {
             BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>() ?? gameObject.AddComponent<BioIK.BioIK>();
-            bioIK.SetGenerations(1);
-            bioIK.SetPopulationSize(30);
+            bioIK.isArticulations = true;
+            bioIK.SetGenerations(3);
+            bioIK.SetPopulationSize(50);
             bioIK.SetElites(1);
-            bioIK.Smoothing = 0;
+            bioIK.Smoothing = 1;
             for (int i = 0; i < jointParameters.Count; i++)
             {
                 ArticulationParameter item = jointParameters[i];
@@ -875,7 +878,7 @@ namespace RFUniverse.Attributes
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(ControllerAttr), true)]
-    public class BaseControllerEditor : ColliderAttrEditor
+    public class ControllerAttrEditor : ColliderAttrEditor
     {
         public override void OnInspectorGUI()
         {

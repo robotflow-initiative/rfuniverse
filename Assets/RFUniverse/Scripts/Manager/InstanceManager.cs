@@ -24,20 +24,6 @@ namespace RFUniverse.Manager
             if (BaseAgent.Instance)
                 BaseAgent.Instance.OnStepAction += CollectData;
         }
-        public void RegisterSubordinate(BaseAttr baseAttr)
-        {
-            if (BaseAttr.Attrs.ContainsKey(baseAttr.ID))
-                Debug.LogError($"ID:{baseAttr.ID} Name:{baseAttr.Name} exist");
-            else
-            {
-                Debug.Log($"Rigister ID:{baseAttr.ID} Name:{baseAttr.Name}");
-                BaseAttr.AddAttr(baseAttr);
-            }
-        }
-        public void RemoveSubordinate(BaseAttr gameObjectAttr)
-        {
-            BaseAttr.RemoveAttr(gameObjectAttr);
-        }
         public override void ReceiveData(IncomingMessage msg)
         {
             int id = msg.ReadInt32();

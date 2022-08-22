@@ -472,8 +472,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a4c859e19197a70a0c8ab04ff67a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attrName: ur5
   id: 184297
+  attrName: ur5
   childs: []
   colliderDatas:
   - meshName: 0
@@ -1158,31 +1158,23 @@ MonoBehaviour:
   jointParameters:
   - body: {fileID: 1589272450685119391}
     moveable: 0
-    initPosition: 0
   - body: {fileID: 1589272450371602489}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272450905351577}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272452194652431}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272450229598734}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272451613028606}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272452053321034}
     moveable: 1
-    initPosition: 0
   - body: {fileID: 1589272450826593080}
     moveable: 0
-    initPosition: 0
-  graspPoint: {fileID: 0}
+  joints: []
+  moveableJoints: []
   initBioIK: 1
-  iKTarget: {fileID: 0}
 --- !u!1 &1589272450229598730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1239,7 @@ ArticulationBody:
     stiffness: 10000
     damping: 100
     forceLimit: 3.402823e+38
-    target: 60
+    target: 0
     targetVelocity: 0
   m_YDrive:
     lowerLimit: 0
@@ -1347,7 +1339,7 @@ ArticulationBody:
     stiffness: 10000
     damping: 100
     forceLimit: 3.402823e+38
-    target: 90
+    target: 0
     targetVelocity: 0
   m_YDrive:
     lowerLimit: 0
@@ -1647,7 +1639,7 @@ ArticulationBody:
     stiffness: 10000
     damping: 100
     forceLimit: 3.402823e+38
-    target: -60
+    target: 0
     targetVelocity: 0
   m_YDrive:
     lowerLimit: 0
@@ -1747,7 +1739,7 @@ ArticulationBody:
     stiffness: 10000
     damping: 100
     forceLimit: 3.402823e+38
-    target: 60
+    target: 0
     targetVelocity: 0
   m_YDrive:
     lowerLimit: 0
@@ -1948,7 +1940,7 @@ ArticulationBody:
     stiffness: 10000
     damping: 100
     forceLimit: 3.402823e+38
-    target: 60
+    target: 0
     targetVelocity: 0
   m_YDrive:
     lowerLimit: 0

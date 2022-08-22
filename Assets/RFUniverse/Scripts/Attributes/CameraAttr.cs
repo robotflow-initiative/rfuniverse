@@ -119,18 +119,6 @@ namespace RFUniverse.Attributes
         {
             switch (type)
             {
-                // case "GetRGBConstant":
-                //     GetDepthConstant(msg);
-                //     return;
-                // case "GetNormalConstant":
-                //     GetNormalConstant(msg);
-                //     return;
-                // case "GetDepthConstant":
-                //     GetDepthConstant(msg);
-                //     return;
-                // case "StopConstant":
-                //     StopConstant();
-                //     return;
                 case "GetRGB":
                     GetRGB(msg);
                     return;
@@ -149,48 +137,6 @@ namespace RFUniverse.Attributes
             }
             base.AnalysisMsg(msg, type);
         }
-        //bool isConstant = false;
-
-        // private void FixedUpdate()
-        // {
-        //     if (isConstant)
-        //     {
-        //         camera.Render();
-        //         tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-        //         tex.Apply();
-        //         texBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-        //     }
-        // // }
-        // void GetNormalConstant(IncomingMessage msg)
-        // {
-        //     if (isConstant) return;
-        //     isConstant = true;
-        //     width = msg.ReadInt32();
-        //     height = msg.ReadInt32();
-        //     camera.targetTexture = new RenderTexture(width, height, 0, GraphicsFormat.R8G8B8A8_UNorm);
-        //     camera.SetReplacementShader(cameraNormalShader, "");
-        //     RenderTexture.active = camera.targetTexture;
-        //     tex = new Texture2D(width, height);
-        // }
-        // void GetDepthConstant(IncomingMessage msg)
-        // {
-        //     if (isConstant) return;
-        //     isConstant = true;
-        //     width = msg.ReadInt32();
-        //     height = msg.ReadInt32();
-        //     float near = msg.ReadFloat32();
-        //     float far = msg.ReadFloat32();
-        //     camera.targetTexture = new RenderTexture(width, height, 0, GraphicsFormat.R8G8B8A8_UNorm);
-        //     Shader.SetGlobalFloat("_CameraZeroDis", near);
-        //     Shader.SetGlobalFloat("_CameraOneDis", far);
-        //     camera.SetReplacementShader(cameraDepthShader, "");
-        //     RenderTexture.active = camera.targetTexture;
-        //     tex = new Texture2D(width, height);
-        // }
-        // void StopConstant()
-        // {
-        //     isConstant = false;
-        // }
         void GetRGB(IncomingMessage msg)
         {
             //if (isConstant) return;

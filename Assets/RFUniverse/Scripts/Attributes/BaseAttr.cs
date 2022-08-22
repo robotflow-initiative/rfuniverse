@@ -46,7 +46,7 @@ namespace RFUniverse.Attributes
     [DisallowMultipleComponent]
     public class BaseAttr : MonoBehaviour
     {
-        static Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
+        private static Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
         public static Dictionary<int, BaseAttr> Attrs => new Dictionary<int, BaseAttr>(attrs);
         public static Action OnAttrChange;
         public static void AddAttr(BaseAttr attr)
@@ -59,7 +59,7 @@ namespace RFUniverse.Attributes
         }
         public static void RemoveAttr(BaseAttr attr)
         {
-            if (!attrs.ContainsKey(attr.ID))
+            if (attrs.ContainsKey(attr.ID))
             {
                 attrs.Remove(attr.ID);
                 OnAttrChange?.Invoke();
@@ -70,13 +70,14 @@ namespace RFUniverse.Attributes
             attrs.Clear();
             OnAttrChange?.Invoke();
         }
+
         [SerializeField]
         private int id = -1;
         public int ID
         {
             get
             {
-                if (id <= 0)
+                if (id < 0)
                     id = UnityEngine.Random.Range(100000, 999999);
                 return id;
             }
@@ -105,8 +106,8 @@ namespace RFUniverse.Attributes
         {
             get { return "Base"; }
         }
-        public List<BaseAttr> childs = new List<BaseAttr>();
 
+        public List<BaseAttr> childs = new List<BaseAttr>();
         private bool isRFMoveCollider = true;
         public bool IsRFMoveCollider
         {
@@ -122,7 +123,7 @@ namespace RFUniverse.Attributes
         public void Instance()
         {
             Init();
-            RigisterSelf();
+            Rigister();
         }
         protected virtual void Init()
         {
@@ -139,10 +140,22 @@ namespace RFUniverse.Attributes
             }
         }
 
-        protected void RigisterSelf()
+        protected void Rigister()
         {
-            InstanceManager.Instance.RegisterSubordinate(this);
+            if (Attrs.ContainsKey(ID))
+                Debug.LogError($"ID:{ID} Name:{Name} exist");
+            else
+            {
+                Debug.Log($"Rigister ID:{ID} Name:{Name}");
+                BaseAttr.AddAttr(this);
+            }
         }
+
+        private void OnDestroy()
+        {
+            RemoveAttr(this);
+        }
+
         public virtual BaseAttrData GetAttrData()
         {
             BaseAttrData data = new BaseAttrData();
@@ -203,7 +216,7 @@ namespace RFUniverse.Attributes
             msg.WriteInt32(ID);
             // Name
             msg.WriteString(Name);
-            // Name
+            // Type
             msg.WriteString(Type);
             // Position
             msg.WriteFloat32(transform.position.x);
@@ -350,7 +363,7 @@ namespace RFUniverse.Attributes
         public virtual void SetParent(int parentID, string parentName)
         {
             Transform parent = null;
-            if (attrs.TryGetValue(parentID, out BaseAttr attr))
+            if (Attrs.TryGetValue(parentID, out BaseAttr attr))
             {
                 parent = attr.transform.FindChlid(parentName, true);
                 if (parent == null)
@@ -378,7 +391,8 @@ namespace RFUniverse.Attributes
 
         protected void Destroy()
         {
-            DestroyImmediate(gameObject);
+            RemoveAttr(this);
+            Destroy(gameObject);
         }
 
 
@@ -422,11 +436,6 @@ namespace RFUniverse.Attributes
             Tuple<int, int> pair = collisionPairs.Find(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID));
             collisionPairs.Remove(pair);
             OnCollisionPairsChange?.Invoke();
-        }
-
-        private void OnDestroy()
-        {
-            InstanceManager.Instance.RemoveSubordinate(this);
         }
     }
 

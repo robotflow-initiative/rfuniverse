@@ -244,7 +244,7 @@ namespace RFUniverse.Manager
                         attr.Instance();
                         foreach (var item in waitingMsg[id])
                         {
-                            BaseAttr.Attrs[id].ReceiveData(item);
+                            BaseAttr.Attrs[attr.ID].ReceiveData(item);
                         }
                         waitingMsg.Remove(id);
                     });
