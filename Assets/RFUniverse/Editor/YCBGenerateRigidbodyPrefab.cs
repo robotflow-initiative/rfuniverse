@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using RFUniverse.Attributes;
-
 public class YCBGenerateRigidbodyPrefab : Editor
 {
     [MenuItem("RFUniverse/YCBGenerateRigidbodyPrefab")]

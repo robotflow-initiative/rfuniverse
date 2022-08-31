@@ -1,8 +1,4 @@
 using Robotflow.RFUniverse.SideChannels;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 
 
 namespace RFUniverse.Manager
@@ -11,8 +7,7 @@ namespace RFUniverse.Manager
     {
         public BaseManager(string channel_id)
         {
-            channel = new InfoChannel(channel_id);
-            channel.manager = this;
+            channel = new InfoChannel(this, channel_id);
             SideChannelManager.RegisterSideChannel(channel);
         }
         public InfoChannel channel;

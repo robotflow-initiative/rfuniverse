@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Robotflow.RFUniverse.SideChannels;
 using UnityEditor;
+using DG.Tweening;
 
 namespace RFUniverse.Attributes
 {
@@ -74,26 +75,46 @@ namespace RFUniverse.Attributes
         public SkinnedMeshRenderer skin;
         public Transform root;
         public Bones bones;
-        public BioIK.BioIK bioIK;
+
         public override string Type
         {
             get { return "HumanDressing"; }
         }
+        [HideInInspector]
+        public List<Transform> ikTargets = new List<Transform>();
         protected override void Init()
         {
             base.Init();
         }
 
         static string humanBodyBioIKLimitPath = $"{UnityEngine.Application.streamingAssetsPath}/HumanBodyBioIKLimit.json";
+#if BIOIK
+        public BioIK.BioIK bioIK;
+        public class BioIKMotion
+        {
+            public bool Enabled;
+            public bool Constrained;
+            public double UpperLimit;
+            public double LowerLimit;
+            public BioIKMotion() { }
+            public BioIKMotion(BioIK.BioJoint.Motion motion)
+            {
+                Enabled = motion.Enabled;
+                Constrained = motion.Constrained;
+                UpperLimit = motion.UpperLimit;
+                LowerLimit = motion.LowerLimit;
+            }
+        }
         public void InitBioIK()
         {
-            bioIK = GetComponent<BioIK.BioIK>() ?? gameObject.AddComponent<BioIK.BioIK>();
+            bioIK = root.GetComponent<BioIK.BioIK>() ?? root.gameObject.AddComponent<BioIK.BioIK>();
             bioIK.SetGenerations(3);
             bioIK.SetPopulationSize(50);
             bioIK.SetElites(1);
-            bioIK.Smoothing = 1;
+            bioIK.Smoothing = 0.99f;
+            bioIK.Refresh();
             if (!File.Exists(humanBodyBioIKLimitPath)) return;
-            var boneLimits = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tuple<string, float, float, float, float, float, float>>>(File.ReadAllText(humanBodyBioIKLimitPath));
+            var boneLimits = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>>>(File.ReadAllText(humanBodyBioIKLimitPath));
             foreach (var item in boneLimits)
             {
                 Transform trans = (Transform)bones.GetType().GetField(item.Item1).GetValue(bones);
@@ -102,50 +123,56 @@ namespace RFUniverse.Attributes
                     Debug.Log($" Dont have Bone:{item.Item1}");
                     continue;
                 }
-                BioIK.BioJoint joint = bioIK.FindSegment(trans).AddJoint();
+                BioIK.BioJoint joint = bioIK.FindSegment(trans).Joint;
                 if (joint == null)
-                {
-                    Debug.Log($"Bone:{trans.name} dont have joint");
-                    continue;
-                }
-                joint.X.UpperLimit = item.Item2;
-                joint.X.LowerLimit = item.Item3;
-                joint.Y.UpperLimit = item.Item4;
-                joint.Y.LowerLimit = item.Item5;
-                joint.Z.UpperLimit = item.Item6;
-                joint.Z.LowerLimit = item.Item7;
+                    joint = bioIK.FindSegment(trans).AddJoint();
+                joint.X.Enabled = item.Item2.Enabled;
+                joint.X.Constrained = item.Item2.Constrained;
+                joint.X.UpperLimit = item.Item2.UpperLimit;
+                joint.X.LowerLimit = item.Item2.LowerLimit;
+                joint.Y.Enabled = item.Item3.Enabled;
+                joint.Y.Constrained = item.Item3.Constrained;
+                joint.Y.UpperLimit = item.Item3.UpperLimit;
+                joint.Y.LowerLimit = item.Item3.LowerLimit;
+                joint.Z.Enabled = item.Item4.Enabled;
+                joint.Z.Constrained = item.Item4.Constrained;
+                joint.Z.UpperLimit = item.Item4.UpperLimit;
+                joint.Z.LowerLimit = item.Item4.LowerLimit;
             }
             if (bones.LeftHand != null)
-                InitIKTarget(bones.LeftHand);
+                ikTargets.Add(InitIKTarget(bones.LeftHand));
             if (bones.RightHand != null)
-                InitIKTarget(bones.RightHand);
+                ikTargets.Add(InitIKTarget(bones.RightHand));
             if (bones.LeftFoot != null)
-                InitIKTarget(bones.LeftFoot);
+                ikTargets.Add(InitIKTarget(bones.LeftFoot));
             if (bones.RightFoot != null)
-                InitIKTarget(bones.RightFoot);
-            //if (bones.Pelvis != null)
-            //InitIKTarget(bones.Pelvis);
+                ikTargets.Add(InitIKTarget(bones.RightFoot));
+            if (bones.Head != null)
+                ikTargets.Add(InitIKTarget(bones.Head));
+            // if (bones.Pelvis != null)
+            //     InitIKTarget(bones.Pelvis);
             bioIK.Refresh();
         }
-        void InitIKTarget(Transform end)
+        Transform InitIKTarget(Transform end)
         {
             BioIK.BioSegment segment = bioIK.FindSegment(end);
             segment.Objectives = new BioIK.BioObjective[] { };
             Transform iKTarget = new GameObject("IKTarget").transform;
             iKTarget.parent = transform;
+            iKTarget.parent = root.transform;
             iKTarget.position = end.position;
             iKTarget.rotation = end.rotation;
             BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
             ((BioIK.Position)positionObjective).SetTargetTransform(iKTarget);
             BioIK.BioObjective orientationObjective = segment.AddObjective(BioIK.ObjectiveType.Orientation);
             ((BioIK.Orientation)orientationObjective).SetTargetTransform(iKTarget);
+            return iKTarget;
         }
         public void SaveBioIK()
         {
             BioIK.BioIK bioIK = GetComponentInChildren<BioIK.BioIK>();
-            return;
             if (bioIK == null) return;
-            var boneLimits = new List<Tuple<string, float, float, float, float, float, float>>();
+            var boneLimits = new List<Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>>();
             foreach (FieldInfo fieldInfo in bones.GetType().GetFields())
             {
                 if (fieldInfo.GetValue(bones) is Transform)
@@ -158,15 +185,13 @@ namespace RFUniverse.Attributes
                         Debug.Log($"Bone:{fieldInfo.Name} dont have joint");
                         continue;
                     }
-                    boneLimits.Add(new Tuple<string, float, float, float, float, float, float>(
-                        fieldInfo.Name,
-                        (float)joint.X.UpperLimit, (float)joint.X.LowerLimit,
-                        (float)joint.Y.UpperLimit, (float)joint.Y.LowerLimit,
-                        (float)joint.Z.UpperLimit, (float)joint.Z.LowerLimit));
+                    boneLimits.Add(new Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>(fieldInfo.Name, new BioIKMotion(joint.X), new BioIKMotion(joint.Y), new BioIKMotion(joint.Z)));
                 }
             }
             File.WriteAllText($"{UnityEngine.Application.streamingAssetsPath}/HumanBodyBioIKLimit.json", Newtonsoft.Json.JsonConvert.SerializeObject(boneLimits));
         }
+#endif
+
         public static string GetVarName(System.Linq.Expressions.Expression<Func<string, string>> exp)
         {
             return ((System.Linq.Expressions.MemberExpression)exp.Body).Member.Name;
@@ -182,8 +207,73 @@ namespace RFUniverse.Attributes
                 case "SetTargetX":
                     Destroy();
                     return;
+                case "IKTargetDoMove":
+                    IKTargetDoMove(msg);
+                    return;
+                case "IKTargetDoRotateQuaternion":
+                    IKTargetDoRotateQuaternion(msg);
+                    return;
+                case "IKTargetDoComplete":
+                    IKTargetDoComplete(msg);
+                    return;
+                case "IKTargetDoKill":
+                    IKTargetDoKill(msg);
+                    return;
             }
             base.AnalysisMsg(msg, type);
+        }
+        bool moveDone;
+        private void IKTargetDoMove(IncomingMessage msg)
+        {
+            Debug.Log("IKTargetDoMove");
+            int index = msg.ReadInt32();
+            if (ikTargets.Count <= index) return;
+            Transform iKTarget = ikTargets[index];
+            moveDone = false;
+            float x = msg.ReadFloat32();
+            float y = msg.ReadFloat32();
+            float z = msg.ReadFloat32();
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DOMove(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                moveDone = true;
+            };
+        }
+        bool rotateDone;
+        private void IKTargetDoRotateQuaternion(IncomingMessage msg)
+        {
+            Debug.Log("IKTargetDoRotateQuaternion");
+            int index = msg.ReadInt32();
+            if (ikTargets.Count <= index) return;
+            Transform iKTarget = ikTargets[index];
+            moveDone = false;
+            float x = msg.ReadFloat32();
+            float y = msg.ReadFloat32();
+            float z = msg.ReadFloat32();
+            float w = msg.ReadFloat32();
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                rotateDone = true;
+            };
+        }
+        private void IKTargetDoComplete(IncomingMessage msg)
+        {
+            int index = msg.ReadInt32();
+            if (ikTargets.Count <= index) return;
+            Transform iKTarget = ikTargets[index];
+            iKTarget.DOComplete();
+        }
+        private void IKTargetDoKill(IncomingMessage msg)
+        {
+            int index = msg.ReadInt32();
+            if (ikTargets.Count <= index) return;
+            Transform iKTarget = ikTargets[index];
+            iKTarget.DOKill();
         }
     }
 
@@ -267,6 +357,7 @@ namespace RFUniverse.Attributes
                 script.bones.RightToes = script.bones.RightFoot?.childCount > 0 ? script.bones.RightFoot?.GetChild(0) : null;
                 EditorUtility.SetDirty(script);
             }
+#if BIOIK
             if (GUILayout.Button("Add BioIK"))
             {
                 script.InitBioIK();
@@ -275,8 +366,8 @@ namespace RFUniverse.Attributes
             {
                 script.SaveBioIK();
             }
+#endif
         }
     }
 #endif
 }
-

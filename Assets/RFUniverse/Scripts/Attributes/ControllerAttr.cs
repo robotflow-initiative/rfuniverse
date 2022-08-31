@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
@@ -217,6 +217,7 @@ namespace RFUniverse.Attributes
 
         public void InitBioIK()
         {
+#if BIOIK
             BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>() ?? gameObject.AddComponent<BioIK.BioIK>();
             bioIK.isArticulations = true;
             bioIK.SetGenerations(3);
@@ -377,6 +378,7 @@ namespace RFUniverse.Attributes
                 ((BioIK.Orientation)orientationObjective).SetTargetTransform(iKTarget);
             }
             bioIK.Refresh();
+#endif
         }
         void ResetIKTarget()
         {
@@ -537,7 +539,7 @@ namespace RFUniverse.Attributes
                 case "AddJointForceAtPosition":
                     AddJointForceAtPosition(msg);
                     return;
-                case "AddTorque":
+                case "AddJointTorque":
                     AddJointTorque(msg);
                     return;
                 case "SetImmovable":
@@ -650,6 +652,7 @@ namespace RFUniverse.Attributes
         }
         private void EnabledNativeIK(IncomingMessage msg)
         {
+#if BIOIK
             bool enabled = msg.ReadBoolean();
             BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>();
             if (bioIK == null)
@@ -662,7 +665,7 @@ namespace RFUniverse.Attributes
                 ResetIKTarget();
             }
             bioIK.enabled = enabled;
-
+#endif
         }
         bool moveDone;
         private void IKTargetDoMove(IncomingMessage msg)
@@ -673,9 +676,10 @@ namespace RFUniverse.Attributes
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
-            float speed = msg.ReadFloat32();
-            bool relative = msg.ReadBoolean();
-            iKTarget.DOMove(new Vector3(x, y, z), speed).SetSpeedBased(true).SetEase(Ease.Linear).SetRelative(relative).onComplete += () =>
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DOMove(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 moveDone = true;
             };
@@ -690,9 +694,10 @@ namespace RFUniverse.Attributes
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             float w = msg.ReadFloat32();
-            float speed = msg.ReadFloat32();
-            bool relative = msg.ReadBoolean();
-            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), speed).SetSpeedBased(true).SetEase(Ease.Linear).SetRelative(relative).onComplete += () =>
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 rotateDone = true;
             };

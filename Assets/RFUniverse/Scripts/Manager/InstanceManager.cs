@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using RFUniverse.Attributes;
+﻿using RFUniverse.Attributes;
 using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
 
@@ -40,10 +39,11 @@ namespace RFUniverse.Manager
         public virtual void CollectData()
         {
             OutgoingMessage msg = new OutgoingMessage();
-            msg.WriteString("Instance Info");
             msg.WriteInt32(BaseAttr.Attrs.Count);
             foreach (var attr in BaseAttr.Attrs.Values)
             {
+                msg.WriteInt32(attr.ID);
+                msg.WriteString(attr.Type);
                 attr.CollectData(msg);
             }
             channel.SendMetaDataToPython(msg);

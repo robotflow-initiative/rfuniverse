@@ -287,8 +287,9 @@ namespace RFUniverse.EditMode
                 TypeNameHandling = TypeNameHandling.Auto
             });
             Ground = data.ground;
-            Camera.main.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
-            Camera.main.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+            mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
+            mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+            ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
             AssetManager.Instance.PreLoadAssetsAsync(data.assetsData.Select((a) => a.name).ToList(), () =>
             {
                 List<int> headID = new List<int>();
@@ -325,10 +326,15 @@ namespace RFUniverse.EditMode
         {
             SceneData data = new SceneData();
             data.ground = Ground;
-            data.cameraPosition = new float[]
-                {mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z};
-            data.cameraRotation = new float[]
-                {mainCamera.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z};
+            if (!PlayerMain.Instance.mainCamera)
+            {
+                UnityEngine.Debug.LogError("No Camera");
+                return;
+            }
+            data.cameraPosition = new float[] { mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z };
+            data.cameraRotation = new float[] { mainCamera.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z };
+            if (data.ground)
+                data.groundPosition = new float[] { ground.transform.position.x, ground.transform.position.y, ground.transform.position.z };
             foreach (var item in editableUnits.Values)
             {
                 data.assetsData.Add(item.attr.GetAttrData());

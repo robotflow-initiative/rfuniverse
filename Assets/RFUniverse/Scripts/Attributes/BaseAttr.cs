@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
-using RFUniverse.Manager;
 
 namespace RFUniverse.Attributes
 {
@@ -11,8 +10,9 @@ namespace RFUniverse.Attributes
     public class SceneData
     {
         public bool ground = false;
-        public float[] cameraPosition;
-        public float[] cameraRotation;
+        public float[] cameraPosition = { 0, 0, 0 };
+        public float[] cameraRotation = { 0, 0, 0 };
+        public float[] groundPosition = { 0, 0, 0 };
 
         public List<BaseAttrData> assetsData = new List<BaseAttrData>();
     }
@@ -212,12 +212,8 @@ namespace RFUniverse.Attributes
 
         public virtual void CollectData(OutgoingMessage msg)
         {
-            // ID
-            msg.WriteInt32(ID);
             // Name
             msg.WriteString(Name);
-            // Type
-            msg.WriteString(Type);
             // Position
             msg.WriteFloat32(transform.position.x);
             msg.WriteFloat32(transform.position.y);
@@ -320,7 +316,8 @@ namespace RFUniverse.Attributes
                 float sz = msg.ReadFloat32();
                 scale = new Vector3(sx, sy, sz);
             }
-            SetTransform(set_position, set_rotation, set_scale, position, rotation, scale);
+            bool isWorld = msg.ReadBoolean();
+            SetTransform(set_position, set_rotation, set_scale, position, rotation, scale, isWorld);
         }
         protected virtual void SetRotationQuaternion(IncomingMessage msg)
         {
@@ -329,8 +326,9 @@ namespace RFUniverse.Attributes
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
             float w = msg.ReadFloat32();
+            bool isWorld = msg.ReadBoolean();
             Quaternion quaternion = new Quaternion(x, y, z, w);
-            SetTransform(false, true, false, Vector3.zero, quaternion.eulerAngles, Vector3.one);
+            SetTransform(false, true, false, Vector3.zero, quaternion.eulerAngles, Vector3.one, isWorld);
         }
         public virtual void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {

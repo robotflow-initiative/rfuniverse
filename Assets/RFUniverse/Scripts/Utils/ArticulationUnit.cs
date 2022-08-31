@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-
 public enum MovingDirection
 {
     None = 0,

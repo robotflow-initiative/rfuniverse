@@ -118,7 +118,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2762365296401062048}
+  - {fileID: 1994671268610405198}
   m_Father: {fileID: 1135024978073775737}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -295,12 +295,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804747301978440273}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.000321, z: 0.000129}
-  m_LocalScale: {x: 0.00020806637, y: 0.000443518, z: 0.00025826466}
+  m_LocalRotation: {x: 3.391901e-15, y: -1, z: 3.391901e-15, w: 0.0000000754979}
+  m_LocalPosition: {x: 0, y: 0.00032099994, z: -0.000129}
+  m_LocalScale: {x: 0.00020806637, y: 0.00044351796, z: 0.00025826466}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2175709318342982050}
+  m_Father: {fileID: 6099728963306524755}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8149677741146537411
@@ -447,7 +447,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1994671268610405198}
+  - {fileID: 2762365296401062048}
   m_Father: {fileID: 7937598264036902584}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -623,12 +623,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4163258015260544453}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.000321, z: 0.000129}
-  m_LocalScale: {x: 0.00020806637, y: 0.000443518, z: 0.00025826466}
+  m_LocalRotation: {x: -3.391901e-15, y: 1, z: -3.391901e-15, w: 0.0000000754979}
+  m_LocalPosition: {x: 0, y: 0.00032099994, z: -0.000129}
+  m_LocalScale: {x: 0.00020806637, y: 0.00044351796, z: 0.00025826466}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6099728963306524755}
+  m_Father: {fileID: 2175709318342982050}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6677793333861515096
@@ -747,8 +747,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a4c859e19197a70a0c8ab04ff67a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attrName: gripper
   id: -1
+  attrName: gripper
+  childs: []
   colliderDatas:
   - meshName: body (1)
     type: 1
@@ -777,15 +778,15 @@ MonoBehaviour:
     type: 1
     position:
     - 0
-    - 0.000321
-    - 0.000129
+    - 0.00032099994
+    - -0.000129
     rotation:
-    - -0
-    - 0
-    - 0
+    - 3.8868323e-13
+    - 180
+    - -3.8868325e-13
     scale:
     - 0.00020806637
-    - 0.000443518
+    - 0.00044351796
     - 0.00025826466
     radius: 1
     height: 1
@@ -800,15 +801,15 @@ MonoBehaviour:
     type: 1
     position:
     - 0
-    - 0.000321
-    - 0.000129
+    - 0.00032099994
+    - -0.000129
     rotation:
-    - -0
-    - 0
-    - 0
+    - 3.8868325e-13
+    - 180
+    - -3.8868323e-13
     scale:
     - 0.00020806637
-    - 0.000443518
+    - 0.00044351796
     - 0.00025826466
     radius: 1
     height: 1
@@ -946,22 +947,15 @@ MonoBehaviour:
   jointParameters:
   - body: {fileID: 2255500271420476929}
     moveable: 0
-    initPosition: 0
-    isGraspPoint: 0
   - body: {fileID: 2743493489989477146}
     moveable: 1
-    initPosition: 0
-    isGraspPoint: 0
   - body: {fileID: 7088643521901554480}
     moveable: 1
-    initPosition: 0
-    isGraspPoint: 0
   - body: {fileID: 3741238432616399058}
     moveable: 0
-    initPosition: 0
-    isGraspPoint: 1
-  graspPoint: {fileID: 0}
-  childs: []
+  joints: []
+  moveableJoints: []
+  initBioIK: 0
 --- !u!1 &5636604329104769161
 GameObject:
   m_ObjectHideFlags: 0

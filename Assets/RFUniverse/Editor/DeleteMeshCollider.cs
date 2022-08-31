@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using RFUniverse.Attributes;
 
 public class DeleteMeshCollider : MonoBehaviour
 {

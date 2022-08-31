@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using RFUniverse.Attributes;
+
 namespace RFUniverse.DebugTool
 {
     public class ObjectID : MonoBehaviour

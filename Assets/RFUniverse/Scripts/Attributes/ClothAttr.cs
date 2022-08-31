@@ -1,8 +1,4 @@
-﻿using Obi;
-using RFUniverse.Manager;
-using Robotflow.RFUniverse.SideChannels;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Robotflow.RFUniverse.SideChannels;
 
 namespace RFUniverse.Attributes
 {
@@ -21,15 +17,16 @@ namespace RFUniverse.Attributes
     }
     public class ClothAttr : BaseAttr
     {
+#if OBI_ONI_SUPPORTED
         public override string Type
         {
             get { return "Cloth"; }
         }
-        ObiCloth obiCloth = null;
+        Obi.ObiCloth obiCloth = null;
         protected override void Init()
         {
             base.Init();
-            obiCloth = GetComponentInChildren<ObiCloth>();
+            obiCloth = GetComponentInChildren<Obi.ObiCloth>();
         }
 
         public override void CollectData(OutgoingMessage msg)
@@ -41,5 +38,6 @@ namespace RFUniverse.Attributes
         {
             base.AnalysisMsg(msg, type);
         }
+#endif
     }
 }

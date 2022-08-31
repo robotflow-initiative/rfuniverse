@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,8 +18,15 @@ namespace RFUniverse
             SceneData data = new SceneData();
             List<BaseAttr> attrs = FindObjectsOfType<BaseAttr>().ToList();
             data.ground = PlayerMain.Instance.Ground;
+            if (!PlayerMain.Instance.mainCamera)
+            {
+                UnityEngine.Debug.LogError("No Camera");
+                return;
+            }
             data.cameraPosition = new float[] { PlayerMain.Instance.mainCamera.transform.position.x, PlayerMain.Instance.mainCamera.transform.position.y, PlayerMain.Instance.mainCamera.transform.position.z };
             data.cameraRotation = new float[] { PlayerMain.Instance.mainCamera.transform.eulerAngles.x, PlayerMain.Instance.mainCamera.transform.eulerAngles.y, PlayerMain.Instance.mainCamera.transform.eulerAngles.z };
+            if (data.ground)
+                data.groundPosition = new float[] { PlayerMain.Instance.ground.transform.position.x, PlayerMain.Instance.ground.transform.position.y, PlayerMain.Instance.ground.transform.position.z };
             List<BaseAttr> attrsTmp = new List<BaseAttr>(attrs);
             foreach (var item in attrsTmp)
             {
@@ -31,7 +39,7 @@ namespace RFUniverse
             {
                 data.assetsData.Add(item.GetAttrData());
             }
-            Debug.Log(data.assetsData.Count);
+            UnityEngine.Debug.Log(data.assetsData.Count);
             File.WriteAllText($"{Application.streamingAssetsPath}/SceneData/{UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name}.json", JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.All

@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System;
-using RFUniverse.Manager;
 using Robotflow.RFUniverse.SideChannels;
 
 namespace RFUniverse.Attributes
 {
-
     public class RigidbodyAttrData : ColliderAttrData
     {
         public RigidbodyData rigidbodyData;
@@ -26,7 +24,6 @@ namespace RFUniverse.Attributes
         public float mass = 1;
         public bool useGravity = true;
     }
-    //[RequireComponent(typeof(Rigidbody))]
     public class RigidbodyAttr : ColliderAttr
     {
         public override string Type

@@ -28,53 +28,58 @@ namespace RFUniverse.Manager
         //protected AssetBundle assetBundle;
         private Dictionary<string, GameObject> assets = new Dictionary<string, GameObject>();
 
+        private AssetManagerExt ext = null;
         public AssetManager(string channel_id) : base(channel_id)
         {
+            ext = new AssetManagerExt();
         }
         public override void ReceiveData(IncomingMessage msg)
         {
             string type = msg.ReadString();
+            AnalysisMsg(msg, type);
+        }
+        void AnalysisMsg(IncomingMessage msg, string type)
+        {
             switch (type)
             {
                 case "PreLoadAssetsAsync":
                     PreLoadAssetsAsync(msg);
-                    break;
+                    return;
                 case "LoadSceneAsync":
                     LoadSceneAsync(msg);
-                    break;
+                    return;
                 case "SendMessage":
                     SendMessage(msg);
-                    break;
+                    return;
                 case "InstanceObject":
                     InstanceObject(msg);
-                    break;
+                    return;
                 case "IgnoreLayerCollision":
                     IgnoreLayerCollision(msg);
-                    break;
+                    return;
                 case "GetCurrentCollisionPairs":
                     GetCurrentCollisionPairs();
-                    break;
+                    return;
                 case "GetRFMoveColliders":
                     GetRFMoveColliders();
-                    break;
+                    return;
                 case "SetGravity":
                     SetGravity(msg);
-                    break;
+                    return;
                 case "SetGroundPhysicMaterial":
                     SetGroundPhysicMaterial(msg);
-                    break;
+                    return;
                 case "SetTimeStep":
                     SetTimeStep(msg);
-                    break;
+                    return;
                 case "SetTimeScale":
                     SetTimeScale(msg);
-                    break;
+                    return;
                 default:
-                    Debug.Log("Dont have mehond:" + type);
-                    break;
+                    ext.AnalysisMsg(msg, type);
+                    return;
             }
         }
-
         void PreLoadAssetsAsync(IncomingMessage msg, Action OnCompleted = null, bool sendDoneMsg = true)
         {
             int count = msg.ReadInt32();
@@ -102,9 +107,7 @@ namespace RFUniverse.Manager
                     {
                         if (sendDoneMsg)
                         {
-                            OutgoingMessage metaData = new OutgoingMessage();
-                            metaData.WriteString("PreLoad Done");
-                            channel.SendMetaDataToPython(metaData);
+                            SendLoadDoneMsg();
                         }
                         OnCompleted?.Invoke();
                     }
@@ -125,7 +128,7 @@ namespace RFUniverse.Manager
                 TypeNameHandling = TypeNameHandling.Auto
             });
 
-            PreLoadAssetsAsync(data.assetsData.Select((a) => a.name).ToList(), () =>
+            PreLoadAssetsAsync(data.assetsData.Where((a) => a.name != "Camera").Select((a) => a.name).ToList(), () =>
             {
                 List<int> headID = new List<int>();
                 BaseAttrData temp;
@@ -149,24 +152,27 @@ namespace RFUniverse.Manager
                         }
                     }
                 }
-                GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-                if (ground != null) ground.SetActive(data.ground);
-                Camera.main.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
-                Camera.main.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+                PlayerMain.Instance.Ground = data.ground;
+                PlayerMain.Instance.mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
+                PlayerMain.Instance.mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+                PlayerMain.Instance.ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
                 foreach (var item in data.assetsData)
                 {
                     InstanceObject(item);
                 }
                 if (sendDoneMsg)
                 {
-                    OutgoingMessage metaData = new OutgoingMessage();
-                    metaData.WriteString("PreLoad Done");
-                    channel.SendMetaDataToPython(metaData);
+                    SendLoadDoneMsg();
                 }
                 OnCompleted?.Invoke();
             }, false);
         }
-
+        void SendLoadDoneMsg()
+        {
+            OutgoingMessage metaData = new OutgoingMessage();
+            metaData.WriteString("PreLoadDone");
+            channel.SendMetaDataToPython(metaData);
+        }
         Dictionary<string, List<Action>> Messages = new Dictionary<string, List<Action>>();
         private void SendMessage(IncomingMessage msg)
         {
@@ -207,12 +213,21 @@ namespace RFUniverse.Manager
             else
             {
                 Debug.LogWarning($"GameObject {name} not preload");
-                UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
+                if (name == "Camera")
                 {
-                    if (!assets.ContainsKey(name))
-                        assets.Add(name, handle.Result);
-                    OnCompleted?.Invoke(assets[name]);
-                };
+                    GameObject camera = new GameObject("Camera", typeof(CameraAttr));
+                    OnCompleted?.Invoke(camera);
+                    GameObject.Destroy(camera);
+                }
+                else
+                {
+                    UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
+                    {
+                        if (!assets.ContainsKey(name))
+                            assets.Add(name, handle.Result);
+                        OnCompleted?.Invoke(assets[name]);
+                    };
+                }
             }
         }
 
@@ -221,35 +236,6 @@ namespace RFUniverse.Manager
             string name = msg.ReadString();
             int id = msg.ReadInt32();
             InstanceObject(name, id);
-        }
-        public Dictionary<int, List<IncomingMessage>> waitingMsg = new Dictionary<int, List<IncomingMessage>>();
-        public void InstanceObject(string name, int id)
-        {
-            Debug.Log("InstanceObject:" + name);
-            switch (name)
-            {
-                case "Camera":
-                    CreateCamera(id);
-                    break;
-                default:
-                    waitingMsg.Add(id, new List<IncomingMessage>());
-                    GetGameObject(name, (gameObject) =>
-                    {
-                        gameObject = GameObject.Instantiate(gameObject);
-                        gameObject.name = gameObject.name.Replace("(Clone)", "");
-                        BaseAttr attr = gameObject.GetComponent<BaseAttr>();
-                        attr.ID = id;
-                        attr.Name = name;
-                        Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
-                        attr.Instance();
-                        foreach (var item in waitingMsg[id])
-                        {
-                            BaseAttr.Attrs[attr.ID].ReceiveData(item);
-                        }
-                        waitingMsg.Remove(id);
-                    });
-                    break;
-            }
         }
         public void InstanceObject(BaseAttrData baseAttrData)
         {
@@ -263,6 +249,36 @@ namespace RFUniverse.Manager
                 attr.Instance();
             });
         }
+        public Dictionary<int, List<IncomingMessage>> waitingMsg = new Dictionary<int, List<IncomingMessage>>();
+        public void InstanceObject(string name, int id)
+        {
+            Debug.Log("InstanceObject:" + name);
+            // switch (name)
+            // {
+            //     case "Camera":
+            //         CreateCamera(id);
+            //         break;
+            //     default:
+            waitingMsg.Add(id, new List<IncomingMessage>());
+            GetGameObject(name, (gameObject) =>
+            {
+                gameObject = GameObject.Instantiate(gameObject);
+                gameObject.name = gameObject.name.Replace("(Clone)", "");
+                BaseAttr attr = gameObject.GetComponent<BaseAttr>();
+                attr.ID = id;
+                attr.Name = name;
+                Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
+                attr.Instance();
+                foreach (var item in waitingMsg[id])
+                {
+                    BaseAttr.Attrs[attr.ID].ReceiveData(item);
+                }
+                waitingMsg.Remove(id);
+            });
+            //break;
+            //}
+        }
+
         void IgnoreLayerCollision(IncomingMessage msg)
         {
             int layer1 = msg.ReadInt32();

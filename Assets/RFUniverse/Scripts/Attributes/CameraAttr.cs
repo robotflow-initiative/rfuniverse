@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
-using UnityEngine.Experimental.Rendering;
 
-// TODO: Add a target display manager.
 
 namespace RFUniverse.Attributes
 {

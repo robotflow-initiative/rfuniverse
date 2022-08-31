@@ -1,5 +1,4 @@
-﻿using RFUniverse.Manager;
-using Robotflow.RFUniverse.SideChannels;
+﻿using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
 
 namespace RFUniverse.Attributes
