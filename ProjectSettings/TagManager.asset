@@ -6,6 +6,7 @@ TagManager:
   tags:
   - robot
   - Ground
+  - Gel
   layers:
   - Default
   - TransparentFX
@@ -14,10 +15,6 @@ TagManager:
   - Water
   - UI
   - Axis
-  - Ground
-  - 
-  - 
-  - Mask
   - 
   - 
   - 
@@ -32,6 +29,8 @@ TagManager:
   - 
   - 
   - 
+  - Temp
+  - Digit0
   - 
   - 
   - 
@@ -39,6 +38,8 @@ TagManager:
   - 
   - 
   - 
+  - 
+  - Digit9
   m_SortingLayers:
   - name: Default
     uniqueID: 0

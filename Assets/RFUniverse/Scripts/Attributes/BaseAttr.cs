@@ -124,20 +124,25 @@ namespace RFUniverse.Attributes
         {
             Init();
             Rigister();
+            AfterRigister();
         }
+        MaterialPropertyBlock mpb;
         protected virtual void Init()
         {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb = new MaterialPropertyBlock();
             mpb.SetColor("_IDColor", RFUniverseUtility.EncodeIDAsColor(ID));
             foreach (var item in this.GetChildComponentFilter<Renderer>())
             {
-                item.SetPropertyBlock(mpb);
+                item.SetPropertyBlock(null);
             }
             for (int i = 0; i < childs.Count; i++)
             {
                 childs[i].ID = ID * 10 + i;
                 childs[i].Instance();
             }
+        }
+        protected virtual void AfterRigister()
+        {
         }
 
         protected void Rigister()
@@ -227,6 +232,19 @@ namespace RFUniverse.Attributes
             msg.WriteFloat32(transform.rotation.y);
             msg.WriteFloat32(transform.rotation.z);
             msg.WriteFloat32(transform.rotation.w);
+            // LocalPosition
+            msg.WriteFloat32(transform.localPosition.x);
+            msg.WriteFloat32(transform.localPosition.y);
+            msg.WriteFloat32(transform.localPosition.z);
+            // LocalRotation
+            msg.WriteFloat32(transform.localEulerAngles.x);
+            msg.WriteFloat32(transform.localEulerAngles.y);
+            msg.WriteFloat32(transform.localEulerAngles.z);
+            // LocalQuaternion
+            msg.WriteFloat32(transform.localRotation.x);
+            msg.WriteFloat32(transform.localRotation.y);
+            msg.WriteFloat32(transform.localRotation.z);
+            msg.WriteFloat32(transform.localRotation.w);
             if (resultLocalPoint != null)
             {
                 msg.WriteBoolean(true);

@@ -78,7 +78,7 @@ namespace RFUniverse.Attributes
 
         public override string Type
         {
-            get { return "HumanDressing"; }
+            get { return "HumanBody"; }
         }
         [HideInInspector]
         public List<Transform> ikTargets = new List<Transform>();
@@ -139,6 +139,7 @@ namespace RFUniverse.Attributes
                 joint.Z.UpperLimit = item.Item4.UpperLimit;
                 joint.Z.LowerLimit = item.Item4.LowerLimit;
             }
+            ikTargets.Clear();
             if (bones.LeftHand != null)
                 ikTargets.Add(InitIKTarget(bones.LeftHand));
             if (bones.RightHand != null)
@@ -158,8 +159,7 @@ namespace RFUniverse.Attributes
             BioIK.BioSegment segment = bioIK.FindSegment(end);
             segment.Objectives = new BioIK.BioObjective[] { };
             Transform iKTarget = new GameObject("IKTarget").transform;
-            iKTarget.parent = transform;
-            iKTarget.parent = root.transform;
+            iKTarget.parent = root.parent.transform;
             iKTarget.position = end.position;
             iKTarget.rotation = end.rotation;
             BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
@@ -199,33 +199,32 @@ namespace RFUniverse.Attributes
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
+            msg.WriteBoolean(moveDone);
+            msg.WriteBoolean(rotateDone);
         }
         public override void AnalysisMsg(IncomingMessage msg, string type)
         {
             switch (type)
             {
-                case "SetTargetX":
-                    Destroy();
+                case "HumanIKTargetDoMove":
+                    HumanIKTargetDoMove(msg);
                     return;
-                case "IKTargetDoMove":
-                    IKTargetDoMove(msg);
+                case "HumanIKTargetDoRotateQuaternion":
+                    HumanIKTargetDoRotateQuaternion(msg);
                     return;
-                case "IKTargetDoRotateQuaternion":
-                    IKTargetDoRotateQuaternion(msg);
+                case "HumanIKTargetDoComplete":
+                    HumanIKTargetDoComplete(msg);
                     return;
-                case "IKTargetDoComplete":
-                    IKTargetDoComplete(msg);
-                    return;
-                case "IKTargetDoKill":
-                    IKTargetDoKill(msg);
+                case "HumanIKTargetDoKill":
+                    HumanIKTargetDoKill(msg);
                     return;
             }
             base.AnalysisMsg(msg, type);
         }
         bool moveDone;
-        private void IKTargetDoMove(IncomingMessage msg)
+        private void HumanIKTargetDoMove(IncomingMessage msg)
         {
-            Debug.Log("IKTargetDoMove");
+            Debug.Log("HumanIKTargetDoMove");
             int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
@@ -236,19 +235,20 @@ namespace RFUniverse.Attributes
             float duration = msg.ReadFloat32();
             bool isSpeedBased = msg.ReadBoolean();
             bool isRelative = msg.ReadBoolean();
+            Debug.Log(iKTarget.name);
             iKTarget.DOMove(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 moveDone = true;
             };
         }
         bool rotateDone;
-        private void IKTargetDoRotateQuaternion(IncomingMessage msg)
+        private void HumanIKTargetDoRotateQuaternion(IncomingMessage msg)
         {
-            Debug.Log("IKTargetDoRotateQuaternion");
+            Debug.Log("HumanIKTargetDoRotateQuaternion");
             int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
-            moveDone = false;
+            rotateDone = false;
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
@@ -261,14 +261,14 @@ namespace RFUniverse.Attributes
                 rotateDone = true;
             };
         }
-        private void IKTargetDoComplete(IncomingMessage msg)
+        private void HumanIKTargetDoComplete(IncomingMessage msg)
         {
             int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             iKTarget.DOComplete();
         }
-        private void IKTargetDoKill(IncomingMessage msg)
+        private void HumanIKTargetDoKill(IncomingMessage msg)
         {
             int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;

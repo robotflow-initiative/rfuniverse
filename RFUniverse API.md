@@ -32,10 +32,12 @@ env = RFUniverseBaseEnv
   env.asset_channel.SendMessage
   (
       'msgString'
+      ...
   )
   ```
   
   * (必要) (str)msg:消息标识
+  * *args:任意string,int,float,bool,list<float>类型参数
   
   ---
 

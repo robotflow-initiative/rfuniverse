@@ -22,14 +22,15 @@ public class AssetManagerExt
     {
         //根据pyrfuniverse的asset_channel_ext脚本中CustomMessage函数写入的参数读取
         string str = msg.ReadString();
+        Debug.Log(str);
         //将接收到的参数发送到pyrfuniverse
         OutgoingMessage sendMsg = new OutgoingMessage();
         //第一个参数必须为头字符串
         //此处CustomMessage对应pyrfuniverse的asset_channel_ext脚本中parse_message函数中一个分支
         sendMsg.WriteString("CustomMessage");
         //按顺序写入数据
-        sendMsg.WriteString(str);
-        AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);
+        sendMsg.WriteString("this is a asset channel unity to python custom message");
+        AssetManager.Instance.SendMessage(sendMsg);
     }
 
 }

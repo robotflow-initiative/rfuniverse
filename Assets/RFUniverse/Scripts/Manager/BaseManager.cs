@@ -10,7 +10,7 @@ namespace RFUniverse.Manager
             channel = new InfoChannel(this, channel_id);
             SideChannelManager.RegisterSideChannel(channel);
         }
-        public InfoChannel channel;
+        protected InfoChannel channel;
         public virtual void ReceiveData(IncomingMessage msg) { }
     }
 }

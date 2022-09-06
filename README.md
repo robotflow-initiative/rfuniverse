@@ -187,4 +187,44 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
   
   在pyrfuniverse工程中，修改pyrfuniverse/rfuniverse_channer/asset_channer_ext.py脚本，参照现有代码，添加新增的消息读取代码和新接口，同样传入类型为`dict`，返回类型为`OutgoingMessage`
   
-  在Unity工程中，修改AssetManagerExt.cs脚本，在`AnalysisMsg`方法的`switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置通过`AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`完成
+  在Unity工程中，修改AssetManagerExt.cs脚本，在`AnalysisMsg`方法的`switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置调用`AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`
+
+定制化接口的具体添加示例请看pyrfuniverse/Test/test_custom_message.py
+
+---
+
+##### 动态消息接口
+
+除了固定参数的接口外，AssetManager还支持发送动态消息进行双向数据通信，更加灵活方便
+
+* **Python->Unity**
+  
+  Unity工程
+  
+  `AssetManger.Instance.AddListener(string message, Action<IncomingMessage> action);`
+  
+  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为`IncomingMessage`
+  
+  python端
+  
+  `env.asset_channel.SendMessage(self, message: str, *args)`
+  
+  传入消息名称和任意数量的数据进行发送
+
+* **Unity->Python**
+  
+  python端
+  
+  `env.asset_channel.AddListener(self, message: str, fun)`
+  
+  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为`IncomingMessage`
+  
+  Unity工程
+  
+  `AssetManger.Instance.SendMessage(string message, params object[] objects);`
+  
+  传入消息名称和任意数量的数据进行发送
+
+*请注意，动态消息必须保证接收函数中从`IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
+
+动态消息接口的具体使用示例请看pyrfuniverse/Test/test_custom_message.py

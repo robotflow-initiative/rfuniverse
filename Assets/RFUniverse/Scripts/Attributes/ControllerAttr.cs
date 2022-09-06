@@ -370,7 +370,7 @@ namespace RFUniverse.Attributes
                 BioIK.BioSegment segment = bioIK.FindSegment(end);
                 segment.Objectives = new BioIK.BioObjective[] { };
                 iKTarget = new GameObject("iKTarget").transform;
-                iKTarget.parent = jointParameters.First().body.transform;
+                iKTarget.parent = transform;
                 ResetIKTarget();
                 BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
                 ((BioIK.Position)positionObjective).SetTargetTransform(iKTarget);
@@ -393,15 +393,23 @@ namespace RFUniverse.Attributes
         {
             base.CollectData(msg);
             // Number of Articulation Joints
-            msg.WriteInt32(GetNumberOfJoints());
+            msg.WriteInt32(joints.Count);
             // Position
             msg.WriteFloatList(GetPositions());
             // Rotation
             msg.WriteFloatList(GetRotations());
             // Quaternion
             msg.WriteFloatList(GetRotationsQuaternion());
+            // LocalPosition
+            msg.WriteFloatList(GetLocalPositions());
+            // LocalRotation
+            msg.WriteFloatList(GetLocalRotations());
+            // LocalQuaternion
+            msg.WriteFloatList(GetLocalRotationsQuaternion());
             // Velocity
             msg.WriteFloatList(GetVelocities());
+            // Number of Articulation Moveable Joints
+            msg.WriteInt32(moveableJoints.Count);
             // Each part's joint position
             msg.WriteFloatList(GetJointPositions());
             // Each part's joint velocity
@@ -470,6 +478,43 @@ namespace RFUniverse.Attributes
             }
             return quaternions;
         }
+        private List<float> GetLocalPositions()
+        {
+            List<float> positions = new List<float>();
+            for (int i = 0; i < joints.Count; i++)
+            {
+                Vector3 position = joints[i].transform.localPosition;
+                positions.Add(position.x);
+                positions.Add(position.y);
+                positions.Add(position.z);
+            }
+            return positions;
+        }
+        private List<float> GetLocalRotations()
+        {
+            List<float> rotations = new List<float>();
+            for (int i = 0; i < joints.Count; i++)
+            {
+                Vector3 rotation = joints[i].transform.localEulerAngles;
+                rotations.Add(rotation.x);
+                rotations.Add(rotation.y);
+                rotations.Add(rotation.z);
+            }
+            return rotations;
+        }
+        private List<float> GetLocalRotationsQuaternion()
+        {
+            List<float> quaternions = new List<float>();
+            for (int i = 0; i < joints.Count; i++)
+            {
+                Quaternion quaternion = joints[i].transform.localRotation;
+                quaternions.Add(quaternion.x);
+                quaternions.Add(quaternion.y);
+                quaternions.Add(quaternion.z);
+                quaternions.Add(quaternion.w);
+            }
+            return quaternions;
+        }
         private List<float> GetVelocities()
         {
             List<float> velocities = new List<float>();
@@ -481,10 +526,6 @@ namespace RFUniverse.Attributes
                 velocities.Add(velocity.z);
             }
             return velocities;
-        }
-        private int GetNumberOfJoints()
-        {
-            return joints.Count;
         }
         public List<float> GetJointPositions()
         {

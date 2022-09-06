@@ -20,5 +20,9 @@ namespace RFUniverse
                 ground.SetActive(value);
             }
         }
+
+        public LayerMask simulation = 1 << 0;
+        public LayerMask axis = 1 << 6;
+        public int tempLayer = 21;
     }
 }

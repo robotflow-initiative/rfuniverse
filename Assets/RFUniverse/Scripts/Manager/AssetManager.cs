@@ -49,7 +49,7 @@ namespace RFUniverse.Manager
                     LoadSceneAsync(msg);
                     return;
                 case "SendMessage":
-                    SendMessage(msg);
+                    ReceiveMessage(msg);
                     return;
                 case "InstanceObject":
                     InstanceObject(msg);
@@ -173,37 +173,39 @@ namespace RFUniverse.Manager
             metaData.WriteString("PreLoadDone");
             channel.SendMetaDataToPython(metaData);
         }
-        Dictionary<string, List<Action>> Messages = new Dictionary<string, List<Action>>();
-        private void SendMessage(IncomingMessage msg)
+        Dictionary<string, List<Action<IncomingMessage>>> registeredMessages = new Dictionary<string, List<Action<IncomingMessage>>>();
+        private void ReceiveMessage(IncomingMessage msg)
         {
-            string msgName = msg.ReadString();
-            Debug.Log($"Message : {msgName}");
-            if (Messages.TryGetValue(msgName, out List<Action> actions))
+            string message = msg.ReadString();
+            Debug.Log($"Message : {message}");
+            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
             {
                 foreach (var item in actions)
                 {
-                    item?.Invoke();
+                    item?.Invoke(msg);
                 }
             }
         }
-        public void AddListener(string msgName, Action action)
+        public void AddListener(string message, Action<IncomingMessage> action)
         {
-            if (Messages.TryGetValue(msgName, out List<Action> actions))
+            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
             {
                 if (!actions.Contains(action))
                     actions.Add(action);
             }
             else
             {
-                Messages.Add(msgName, new List<Action>() { action });
+                registeredMessages.Add(message, new List<Action<IncomingMessage>>() { action });
             }
         }
-        public void RemoveListener(string msgName, Action action)
+        public void RemoveListener(string message, Action<IncomingMessage> action)
         {
-            if (Messages.TryGetValue(msgName, out List<Action> actions))
+            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
             {
                 if (actions.Contains(action))
                     actions.Remove(action);
+                if (actions.Count == 0)
+                    registeredMessages.Remove(message);
             }
         }
         public void GetGameObject(string name, Action<GameObject> OnCompleted = null)
@@ -231,6 +233,29 @@ namespace RFUniverse.Manager
             }
         }
 
+        public void SendMessage(string message, params object[] objects)
+        {
+            OutgoingMessage msg = new OutgoingMessage();
+            msg.WriteString(message);
+            foreach (var item in objects)
+            {
+                if (item is int)
+                    msg.WriteInt32((int)item);
+                if (item is float)
+                    msg.WriteFloat32((float)item);
+                if (item is string)
+                    msg.WriteString((string)item);
+                if (item is bool)
+                    msg.WriteBoolean((bool)item);
+                if (item is List<float>)
+                    msg.WriteFloatList((List<float>)item);
+            }
+            channel.SendMetaDataToPython(msg);
+        }
+        public void SendMessage(OutgoingMessage msg)
+        {
+            channel.SendMetaDataToPython(msg);
+        }
         void InstanceObject(IncomingMessage msg)
         {
             string name = msg.ReadString();
@@ -428,12 +453,6 @@ namespace RFUniverse.Manager
         {
             BaseAgent.Instance.TimeScale = msg.ReadFloat32();
         }
-        private void CreateCamera(int id)
-        {
-            GameObject cam = new GameObject("Camera", typeof(CameraAttr));
-            CameraAttr cameraAttr = cam.GetComponent<CameraAttr>();
-            cameraAttr.ID = id;
-            cameraAttr.Instance();
-        }
+
     }
 }
