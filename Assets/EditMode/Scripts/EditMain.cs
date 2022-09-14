@@ -292,29 +292,7 @@ namespace RFUniverse.EditMode
             ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
             AssetManager.Instance.PreLoadAssetsAsync(data.assetsData.Select((a) => a.name).ToList(), () =>
             {
-                List<int> headID = new List<int>();
-                BaseAttrData temp;
-                bool dirty = true;
-                while (dirty)
-                {
-                    dirty = false;
-                    for (int i = 0; i < data.assetsData.Count; i++)
-                    {
-                        if (data.assetsData[i].parentID > 0 && !headID.Contains(data.assetsData[i].parentID))
-                        {
-                            temp = data.assetsData[i];
-                            data.assetsData.Remove(temp);
-                            data.assetsData.Add(temp);
-                            dirty = true;
-                            i--;
-                        }
-                        else
-                        {
-                            headID.Add(data.assetsData[i].id);
-                        }
-                    }
-                }
-
+                data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
                 foreach (var item in data.assetsData)
                 {
                     CreateUnit(item);
@@ -339,6 +317,7 @@ namespace RFUniverse.EditMode
             {
                 data.assetsData.Add(item.attr.GetAttrData());
             }
+            data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
             string dataString = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.All

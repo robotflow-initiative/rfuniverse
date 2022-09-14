@@ -20,9 +20,9 @@ namespace RFUniverse.Attributes
     public class BaseAttrData
     {
         public string name;
-        public int id;
+        public int id = -1;
         public string type;
-        public int parentID;
+        public int parentID = -1;
         public string parentName;
         public float[] position;
         public float[] rotation;
@@ -288,6 +288,9 @@ namespace RFUniverse.Attributes
                 case "SetLayer":
                     SetLayer(msg);
                     return;
+                case "Copy":
+                    Copy(msg);
+                    return;
                 case "Destroy":
                     Destroy();
                     return;
@@ -403,6 +406,16 @@ namespace RFUniverse.Attributes
             {
                 item.gameObject.layer = layer;
             }
+        }
+
+        protected void Copy(IncomingMessage msg)
+        {
+            Debug.Log("Copy");
+            int copyID = msg.ReadInt32();
+            GameObject copy = GameObject.Instantiate(gameObject);
+            BaseAttr attr = copy.GetComponent<BaseAttr>();
+            attr.ID = copyID;
+            attr.Instance();
         }
 
         protected void Destroy()

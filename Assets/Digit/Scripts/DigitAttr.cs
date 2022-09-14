@@ -27,6 +27,8 @@ public class DigitAttr : BaseAttr
     public RawImage lightImage;//灯光UI
     public RawImage depthImage;//深度UI
 
+    Texture2D tex;
+
     private static List<DigitAttr> Digits => BaseAttr.Attrs.Where(s => (s.Value is DigitAttr)).Select(s => (DigitAttr)s.Value).ToList();
     public int index => Digits.IndexOf(this);
 
@@ -36,6 +38,7 @@ public class DigitAttr : BaseAttr
     }
     protected override void Init()
     {
+        tex = new Texture2D(1, 1);
         lightImage.canvas.gameObject.SetActive(showImage);
         //读取config
         ReadConfig();
@@ -256,15 +259,14 @@ public class DigitAttr : BaseAttr
 
     public void GetData(IncomingMessage msg)
     {
-        Texture2D tex;
         RenderTexture.active = lightTex;
-        tex = new Texture2D(lightTex.width, lightTex.height);
+        tex.Reinitialize(lightTex.width, lightTex.height);
         tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
         tex.Apply();
         lightBase64String = Convert.ToBase64String(tex.EncodeToPNG());
 
         RenderTexture.active = depthTex;
-        tex = new Texture2D(depthTex.width, depthTex.height);
+        tex.Reinitialize(depthTex.width, depthTex.height);
         tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
         tex.Apply();
         depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());

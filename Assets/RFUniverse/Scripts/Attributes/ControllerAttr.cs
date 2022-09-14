@@ -178,17 +178,16 @@ namespace RFUniverse.Attributes
                 SetArticulationDatas(articulationDatas);
             }
         }
-        public List<ArticulationData> GetArticulationDatas()
+        public void GetArticulationDatas()
         {
-            List<ArticulationData> datas = new List<ArticulationData>();
+            ArticulationDatas = new List<ArticulationData>();
             List<ArticulationBody> bodys = this.GetChildComponentFilter<ArticulationBody>();
             if (bodys.Count > 0)
                 bodys.RemoveAt(0);
             foreach (var item in bodys)
             {
-                datas.Add(new ArticulationData(item));
+                ArticulationDatas.Add(new ArticulationData(item));
             }
-            return datas;
         }
         private void SetArticulationDatas(List<ArticulationData> datas)
         {
@@ -214,7 +213,22 @@ namespace RFUniverse.Attributes
                 body.zDrive = data.zDrive.ToArticulationDrive();
             }
         }
-
+        public void GetJointParameters()
+        {
+            jointParameters = new List<ArticulationParameter>();
+            foreach (var item in this.GetChildComponentFilter<ArticulationBody>())
+            {
+                if (!item.GetComponent<ArticulationUnit>())
+                    item.gameObject.AddComponent<ArticulationUnit>();
+                jointParameters.Add(new ArticulationParameter
+                {
+                    body = item,
+                    moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetComponent<MimicJoint>()?.Parent == null,
+                    //initPosition = 0,
+                    //isGraspPoint = false
+                });
+            }
+        }
         public void InitBioIK()
         {
 #if BIOIK
@@ -607,6 +621,9 @@ namespace RFUniverse.Attributes
                 case "IKTargetDoMove":
                     IKTargetDoMove(msg);
                     return;
+                case "IKTargetDoRotate":
+                    IKTargetDoRotate(msg);
+                    return;
                 case "IKTargetDoRotateQuaternion":
                     IKTargetDoRotateQuaternion(msg);
                     return;
@@ -726,6 +743,22 @@ namespace RFUniverse.Attributes
             };
         }
         bool rotateDone;
+        private void IKTargetDoRotate(IncomingMessage msg)
+        {
+            Debug.Log("IKTargetDoRotate");
+            if (iKTarget == null) return;
+            rotateDone = false;
+            float x = msg.ReadFloat32();
+            float y = msg.ReadFloat32();
+            float z = msg.ReadFloat32();
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DORotate(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                rotateDone = true;
+            };
+        }
         private void IKTargetDoRotateQuaternion(IncomingMessage msg)
         {
             Debug.Log("IKTargetDoRotateQuaternion");
@@ -790,7 +823,6 @@ namespace RFUniverse.Attributes
         }
         public override void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {
-            Debug.Log("SetTransform");
             if (set_position)
             {
                 if (worldSpace)
@@ -932,24 +964,12 @@ namespace RFUniverse.Attributes
             ControllerAttr script = target as ControllerAttr;
             if (GUILayout.Button("Get Articulation Datas"))
             {
-                script.ArticulationDatas = script.GetArticulationDatas();
+                script.GetArticulationDatas();
                 EditorUtility.SetDirty(script);
             }
             if (GUILayout.Button("Get Joint Parameters"))
             {
-                script.jointParameters = new List<ArticulationParameter>();
-                foreach (var item in script.GetChildComponentFilter<ArticulationBody>())
-                {
-                    if (!item.GetComponent<ArticulationUnit>())
-                        item.gameObject.AddComponent<ArticulationUnit>();
-                    script.jointParameters.Add(new ArticulationParameter
-                    {
-                        body = item,
-                        moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetComponent<MimicJoint>()?.Parent == null,
-                        //initPosition = 0,
-                        //isGraspPoint = false
-                    });
-                }
+                script.GetJointParameters();
                 EditorUtility.SetDirty(script);
             }
             // if (GUILayout.Button("Add BioIK"))

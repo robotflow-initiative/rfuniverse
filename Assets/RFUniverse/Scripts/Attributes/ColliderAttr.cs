@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Robotflow.RFUniverse.SideChannels;
+using System.Linq;
 
 namespace RFUniverse.Attributes
 {
@@ -219,6 +221,48 @@ namespace RFUniverse.Attributes
                 collider.localScale = new Vector3(data.scale[0], data.scale[1], data.scale[2]);
             }
         }
+        public override void AnalysisMsg(IncomingMessage msg, string type)
+        {
+            switch (type)
+            {
+                case "GenerateVHACDColider":
+                    GenerateVHACDCollider();
+                    return;
+            }
+            base.AnalysisMsg(msg, type);
+        }
+
+        public List<Mesh> GenerateVHACDCollider()
+        {
+            List<Mesh> meshAssets = new List<Mesh>();
+            foreach (var item in this.GetChildComponentFilter<MeshRenderer>())
+            {
+                foreach (var des in item.GetComponents<Collider>())
+                {
+                    DestroyImmediate(des, true);
+                }
+                Mesh sourceMesh = item.GetComponent<MeshFilter>().sharedMesh;
+                List<Mesh> meshs = VHACD.GenerateConvexMeshes(sourceMesh);
+                meshAssets = meshAssets.Union(meshs).ToList();
+                Transform child = item.transform.Find("Collider");
+                if (child != null)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+                child = new GameObject("Collider").transform;
+                child.parent = item.transform;
+                child.localPosition = Vector3.zero;
+                child.localEulerAngles = Vector3.zero;
+                child.localScale = Vector3.one;
+                foreach (var i in meshs)
+                {
+                    MeshCollider col = child.gameObject.AddComponent<MeshCollider>();
+                    col.sharedMesh = i;
+                    col.convex = true;
+                }
+            }
+            return meshAssets;
+        }
     }
 #if UNITY_EDITOR
     [CustomEditor(typeof(ColliderAttr), true)]
@@ -233,54 +277,23 @@ namespace RFUniverse.Attributes
             text = GUILayout.TextField(text);
             if (GUILayout.Button("Generate VHACD Collider"))
             {
-                if (string.IsNullOrEmpty(text)) return;
+                if (string.IsNullOrWhiteSpace(text)) return;
                 string path = $"Assets/Model/VHACD_Mesh/{text}_VHACD.asset";
-                AssetDatabase.DeleteAsset(path);
-                foreach (var item in script.GetChildComponentFilter<MeshRenderer>())
+                AssetDatabase.DeleteAsset($"Assets/{path}");
+                List<Mesh> meshs = script.GenerateVHACDCollider();
+                foreach (var i in meshs)
                 {
-                    foreach (var des in item.GetComponents<Collider>())
+                    if (!System.IO.File.Exists($"{Application.dataPath}/{path}"))
                     {
-                        DestroyImmediate(des, true);
-                    }
-                    Mesh sourceMesh = item.GetComponent<MeshFilter>().sharedMesh;
-                    List<Mesh> meshs = VHACD.GenerateConvexMeshes(sourceMesh);
-                    Transform child = item.transform.Find("Collider");
-                    if (child == null)
-                    {
-                        child = new GameObject("Collider").transform;
-                        child.parent = item.transform;
+                        AssetDatabase.CreateAsset(i, $"Assets/{path}");
                     }
                     else
                     {
-                        foreach (var collider in child.GetComponents<Collider>())
-                        {
-                            DestroyImmediate(collider);
-                        }
+                        AssetDatabase.AddObjectToAsset(i, $"Assets/{path}");
                     }
-                    child.localPosition = Vector3.zero;
-                    child.localEulerAngles = Vector3.zero;
-                    child.localScale = Vector3.one;
-                    for (int i = 0; i < child.childCount; i++)
-                    {
-                        Destroy(child.GetChild(i).gameObject);
-                    }
-                    foreach (var i in meshs)
-                    {
-                        if (!System.IO.File.Exists($"{Application.dataPath}/Model/VHACD_Mash/{text}_VHACD.asset"))
-                        {
-                            AssetDatabase.CreateAsset(i, path);
-                        }
-                        else
-                        {
-                            AssetDatabase.AddObjectToAsset(i, path);
-                        }
-                        MeshCollider col = child.gameObject.AddComponent<MeshCollider>();
-                        col.sharedMesh = i;
-                        col.convex = true;
-                    }
-                    AssetDatabase.ImportAsset(path);
-                    EditorUtility.SetDirty(script);
                 }
+                AssetDatabase.Refresh();
+                EditorUtility.SetDirty(script);
             }
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Get Collider Datas"))

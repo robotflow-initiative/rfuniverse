@@ -6,13 +6,13 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
+using Unity.Robotics.UrdfImporter;
 
 namespace RFUniverse.Manager
 {
     public class AssetManager : BaseManager
     {
         const string UUID = "d587efc8-9eb7-11ec-802a-18c04d443e7d";
-
         private static AssetManager instance = null;
         public static AssetManager Instance
         {
@@ -53,6 +53,12 @@ namespace RFUniverse.Manager
                     return;
                 case "InstanceObject":
                     InstanceObject(msg);
+                    return;
+                case "LoadURDF":
+                    LoadURDF(msg);
+                    return;
+                case "LoadMesh":
+                    LoadMesh(msg);
                     return;
                 case "IgnoreLayerCollision":
                     IgnoreLayerCollision(msg);
@@ -130,28 +136,7 @@ namespace RFUniverse.Manager
 
             PreLoadAssetsAsync(data.assetsData.Where((a) => a.name != "Camera").Select((a) => a.name).ToList(), () =>
             {
-                List<int> headID = new List<int>();
-                BaseAttrData temp;
-                bool dirty = true;
-                while (dirty)
-                {
-                    dirty = false;
-                    for (int i = 0; i < data.assetsData.Count; i++)
-                    {
-                        if (data.assetsData[i].parentID > 0 && !headID.Contains(data.assetsData[i].parentID))
-                        {
-                            temp = data.assetsData[i];
-                            data.assetsData.Remove(temp);
-                            data.assetsData.Add(temp);
-                            dirty = true;
-                            i--;
-                        }
-                        else
-                        {
-                            headID.Add(data.assetsData[i].id);
-                        }
-                    }
-                }
+                data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
                 PlayerMain.Instance.Ground = data.ground;
                 PlayerMain.Instance.mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
                 PlayerMain.Instance.mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
@@ -278,12 +263,6 @@ namespace RFUniverse.Manager
         public void InstanceObject(string name, int id)
         {
             Debug.Log("InstanceObject:" + name);
-            // switch (name)
-            // {
-            //     case "Camera":
-            //         CreateCamera(id);
-            //         break;
-            //     default:
             waitingMsg.Add(id, new List<IncomingMessage>());
             GetGameObject(name, (gameObject) =>
             {
@@ -303,7 +282,39 @@ namespace RFUniverse.Manager
             //break;
             //}
         }
-
+        void LoadURDF(IncomingMessage msg)
+        {
+            int id = msg.ReadInt32();
+            string path = msg.ReadString();
+            bool nativeIK = msg.ReadBoolean();
+            Debug.Log("LoadURDF:" + path);
+            ImportSettings setting = new ImportSettings();
+            setting.convexMethod = ImportSettings.convexDecomposer.unity;
+            GameObject robot = UrdfRobotExtensions.CreateRuntime(path, setting);
+            robot.transform.SetParent(null);
+            ControllerAttr attr = RFUniverseUtility.NormalizeRFUniverseArticulation(robot);
+            attr.GetJointParameters();
+            attr.ID = id;
+            attr.Name = Path.GetFileNameWithoutExtension(path);
+            attr.initBioIK = nativeIK;
+            attr.Instance();
+        }
+        void LoadMesh(IncomingMessage msg)
+        {
+            int id = msg.ReadInt32();
+            string path = msg.ReadString();
+            LoadMesh(id, path);
+        }
+        public void LoadMesh(int id, string path)
+        {
+            Debug.Log("LoadMesh:" + path);
+            GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
+            RigidbodyAttr attr = obj.AddComponent<RigidbodyAttr>();
+            attr.ID = id;
+            attr.Name = Path.GetFileNameWithoutExtension(path);
+            attr.GenerateVHACDCollider();
+            attr.Instance();
+        }
         void IgnoreLayerCollision(IncomingMessage msg)
         {
             int layer1 = msg.ReadInt32();

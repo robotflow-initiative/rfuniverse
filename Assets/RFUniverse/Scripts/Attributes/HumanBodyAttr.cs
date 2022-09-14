@@ -209,6 +209,9 @@ namespace RFUniverse.Attributes
                 case "HumanIKTargetDoMove":
                     HumanIKTargetDoMove(msg);
                     return;
+                case "HumanIKTargetDoRotate":
+                    HumanIKTargetDoRotate(msg);
+                    return;
                 case "HumanIKTargetDoRotateQuaternion":
                     HumanIKTargetDoRotateQuaternion(msg);
                     return;
@@ -242,6 +245,24 @@ namespace RFUniverse.Attributes
             };
         }
         bool rotateDone;
+        private void HumanIKTargetDoRotate(IncomingMessage msg)
+        {
+            Debug.Log("HumanIKTargetDoRotate");
+            int index = msg.ReadInt32();
+            if (ikTargets.Count <= index) return;
+            Transform iKTarget = ikTargets[index];
+            rotateDone = false;
+            float x = msg.ReadFloat32();
+            float y = msg.ReadFloat32();
+            float z = msg.ReadFloat32();
+            float duration = msg.ReadFloat32();
+            bool isSpeedBased = msg.ReadBoolean();
+            bool isRelative = msg.ReadBoolean();
+            iKTarget.DORotate(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                rotateDone = true;
+            };
+        }
         private void HumanIKTargetDoRotateQuaternion(IncomingMessage msg)
         {
             Debug.Log("HumanIKTargetDoRotateQuaternion");

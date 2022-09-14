@@ -33,6 +33,7 @@ namespace RFUniverse.Attributes
         protected override void Init()
         {
             base.Init();
+            tex = new Texture2D(1, 1);
             camera = GetComponent<Camera>();
             if (camera == null)
                 camera = gameObject.AddComponent<Camera>();
@@ -45,7 +46,7 @@ namespace RFUniverse.Attributes
             camera.depth = -100;
             camera.allowMSAA = true;
             camera.allowHDR = false;
-            camera.cullingMask = PlayerMain.Instance.simulation;
+            //camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
         public override void CollectData(OutgoingMessage msg)
         {
@@ -117,6 +118,26 @@ namespace RFUniverse.Attributes
                     msg.WriteFloat32(item.height);
                 }
                 ddBBOX = null;
+            }
+            else
+                msg.WriteBoolean(false);
+            if (dddBBOX != null)
+            {
+                msg.WriteBoolean(true);
+                msg.WriteInt32(dddBBOX.Count);
+                foreach (var item in dddBBOX)
+                {
+                    msg.WriteFloat32(item.Item1.x);
+                    msg.WriteFloat32(item.Item1.y);
+                    msg.WriteFloat32(item.Item1.z);
+                    msg.WriteFloat32(item.Item2.x);
+                    msg.WriteFloat32(item.Item2.y);
+                    msg.WriteFloat32(item.Item2.z);
+                    msg.WriteFloat32(item.Item3.x);
+                    msg.WriteFloat32(item.Item3.y);
+                    msg.WriteFloat32(item.Item3.z);
+                }
+                dddBBOX = null;
             }
             else
                 msg.WriteBoolean(false);
@@ -209,7 +230,7 @@ namespace RFUniverse.Attributes
             originLayers = new List<int>();
             foreach (var item in target.GetChildComponentFilter<Renderer>())
             {
-                if ((PlayerMain.Instance.simulation.value & item.gameObject.layer) > 0)
+                if ((PlayerMain.Instance.simulationLayer.value & item.gameObject.layer) > 0)
                     item.gameObject.layer = PlayerMain.Instance.tempLayer;
             }
             camera.cullingMask = 1 << PlayerMain.Instance.tempLayer;
@@ -219,10 +240,10 @@ namespace RFUniverse.Attributes
             List<Renderer> trans = target.GetChildComponentFilter<Renderer>();
             for (int i = 0; i < trans.Count; i++)
             {
-                if ((PlayerMain.Instance.simulation.value & trans[i].gameObject.layer) > 0)
+                if ((PlayerMain.Instance.simulationLayer.value & trans[i].gameObject.layer) > 0)
                     trans[i].gameObject.layer = originLayers[i];
             }
-            camera.cullingMask = PlayerMain.Instance.simulation;
+            camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
 
         List<Rect> ddBBOX = null;
@@ -232,7 +253,7 @@ namespace RFUniverse.Attributes
             foreach (var item in BaseAttr.Attrs.Values)
             {
                 Rect rect = Get2DBBOX(item);
-                if (rect.max.x > 0 || rect.max.y > 0 || rect.min.x < Screen.width || rect.min.y > Screen.height)
+                if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < camera.pixelWidth && rect.min.y < camera.pixelHeight)
                     ddBBOX.Add(rect);
             }
         }
@@ -258,6 +279,48 @@ namespace RFUniverse.Attributes
                 }
             }
             return new Rect((maxX + minX) / 2, (maxY + minY) / 2, maxX - minX, maxY - minY);
+        }
+        List<Tuple<Vector3, Vector3, Vector3>> dddBBOX = null;
+        void Get3DBBOX()
+        {
+            dddBBOX = new List<Tuple<Vector3, Vector3, Vector3>>();
+            foreach (var item in BaseAttr.Attrs.Values)
+            {
+                Tuple<Vector3, Vector3, Vector3> box = Get3DBBOX(item);
+                Vector3 center = camera.WorldToScreenPoint(box.Item1);
+                if (center.x > 0 && center.y > 0 && center.x < camera.pixelWidth && center.y < camera.pixelHeight)
+                    dddBBOX.Add(box);
+            }
+        }
+        Tuple<Vector3, Vector3, Vector3> Get3DBBOX(BaseAttr attr)
+        {
+            float maxX = float.MinValue;
+            float minX = float.MaxValue;
+            float maxY = float.MinValue;
+            float minY = float.MaxValue;
+            float maxZ = float.MinValue;
+            float minZ = float.MaxValue;
+            foreach (var render in attr.GetChildComponentFilter<MeshFilter>())
+            {
+                List<Vector3> vertices = new List<Vector3>();
+                render.mesh.GetVertices(vertices);
+                foreach (var item in vertices)
+                {
+                    Vector3 point = render.transform.TransformPoint(item);
+                    point = attr.transform.InverseTransformPoint(point);
+                    if (point.x > maxX) maxX = point.x;
+                    if (point.x < minX) minX = point.x;
+                    if (point.y > maxY) maxY = point.y;
+                    if (point.y < minY) minY = point.y;
+                    if (point.z > maxZ) maxZ = point.z;
+                    if (point.z < minZ) minZ = point.z;
+                }
+            }
+            Vector3 position = attr.transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
+            Vector3 rotation = attr.transform.eulerAngles;
+            Vector3 size = new Vector3((maxX - minX) * attr.transform.lossyScale.x, (maxY - minY) * attr.transform.lossyScale.y, (maxZ - minZ) * attr.transform.lossyScale.z);
+
+            return new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
         }
     }
 }

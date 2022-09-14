@@ -24,6 +24,7 @@ namespace RFUniverse.Attributes
         public float mass = 1;
         public bool useGravity = true;
     }
+    [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyAttr : ColliderAttr
     {
         public override string Type
@@ -106,6 +107,9 @@ namespace RFUniverse.Attributes
         {
             switch (type)
             {
+                case "SetMass":
+                    SetMass(msg);
+                    return;
                 case "AddForce":
                     AddForce(msg);
                     return;
@@ -116,40 +120,16 @@ namespace RFUniverse.Attributes
             base.AnalysisMsg(msg, type);
         }
 
+        private void SetMass(IncomingMessage msg)
+        {
+            float mass = msg.ReadFloat32();
+            Rigidbody.mass = mass;
+        }
         protected override void SetTransform(IncomingMessage msg)
         {
-            bool set_position = msg.ReadBoolean();
-            bool set_rotation = msg.ReadBoolean();
-            bool set_scale = msg.ReadBoolean();
-
-            if (set_position)
-            {
-                float x = msg.ReadFloat32();
-                float y = msg.ReadFloat32();
-                float z = msg.ReadFloat32();
-                Vector3 position = new Vector3(x, y, z);
-                transform.localPosition = position;
-            }
-
-            if (set_rotation)
-            {
-                float rx = msg.ReadFloat32();
-                float ry = msg.ReadFloat32();
-                float rz = msg.ReadFloat32();
-                Vector3 rotation = new Vector3(rx, ry, rz);
-                transform.localEulerAngles = rotation;
-            }
-
-            if (set_scale)
-            {
-                float sx = msg.ReadFloat32();
-                float sy = msg.ReadFloat32();
-                float sz = msg.ReadFloat32();
-                Vector3 scale = new Vector3(sx, sy, sz);
-                transform.localScale = scale;
-            }
-
+            base.SetTransform(msg);
             Rigidbody.velocity = Vector3.zero;
+            Rigidbody.angularVelocity = Vector3.zero;
         }
         private void AddForce(IncomingMessage msg)
         {

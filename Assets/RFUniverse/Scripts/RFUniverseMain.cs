@@ -21,8 +21,8 @@ namespace RFUniverse
             }
         }
 
-        public LayerMask simulation = 1 << 0;
-        public LayerMask axis = 1 << 6;
+        public LayerMask simulationLayer = 1 << 0;
+        public LayerMask axisLayer = 1 << 6;
         public int tempLayer = 21;
     }
 }

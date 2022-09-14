@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using RFUniverse;
 using RFUniverse.Attributes;
 using Unity.Robotics.UrdfImporter.Control;
 using Unity.Robotics.UrdfImporter;
@@ -18,103 +19,7 @@ public class ArticulationHelper : MonoBehaviour
             return;
         }
         GameObject articulationRoot = Selection.gameObjects[0];
-
-        // Add basic script for root node
-        if (articulationRoot.GetComponent<GameObjectAttr>() == null)
-            articulationRoot.AddComponent<GameObjectAttr>();
-        if (articulationRoot.GetComponent<IgnoreSelfCollision>() == null)
-            articulationRoot.AddComponent<IgnoreSelfCollision>();
-
-        // Remove URDFImporter Scripts
-        Controller controller = articulationRoot.GetComponentInChildren<Controller>();
-        DestroyImmediate(controller);
-        UrdfRobot urdfRobot = articulationRoot.GetComponentInChildren<UrdfRobot>();
-        DestroyImmediate(urdfRobot);
-        UrdfPlugins[] urdfPlugins = articulationRoot.GetComponentsInChildren<UrdfPlugins>();
-        foreach (var urdfPlugin in urdfPlugins)
-        {
-            DestroyImmediate(urdfPlugin);
-        }
-        UrdfLink[] urdfLinks = articulationRoot.GetComponentsInChildren<UrdfLink>();
-        foreach (var urdfLink in urdfLinks)
-        {
-            DestroyImmediate(urdfLink);
-        }
-        UrdfInertial[] urdfInertials = articulationRoot.GetComponentsInChildren<UrdfInertial>();
-        foreach (var urdfInertial in urdfInertials)
-        {
-            DestroyImmediate(urdfInertial);
-        }
-        UrdfJoint[] urdfJoints = articulationRoot.GetComponentsInChildren<UrdfJoint>();
-        foreach (var urdfJoint in urdfJoints)
-        {
-            DestroyImmediate(urdfJoint);
-        }
-        UrdfVisuals[] urdfVisuals = articulationRoot.GetComponentsInChildren<UrdfVisuals>();
-        foreach (var urdfVisual in urdfVisuals)
-        {
-            DestroyImmediate(urdfVisual);
-        }
-        UrdfVisual[] urdfVisuals1 = articulationRoot.GetComponentsInChildren<UrdfVisual>();
-        foreach (var urdfVisual1 in urdfVisuals1)
-        {
-            DestroyImmediate(urdfVisual1);
-        }
-        UrdfCollisions[] urdfCollisions = articulationRoot.GetComponentsInChildren<UrdfCollisions>();
-        foreach (var urdfCollision in urdfCollisions)
-        {
-            DestroyImmediate(urdfCollision);
-        }
-        UrdfCollision[] urdfCollisions1 = articulationRoot.GetComponentsInChildren<UrdfCollision>();
-        foreach (var urdfCollision1 in urdfCollisions1)
-        {
-            DestroyImmediate(urdfCollision1);
-        }
-
-        // Add RFUniverse scripts
-        ArticulationBody[] articulationBodies = articulationRoot.GetComponentsInChildren<ArticulationBody>();
-        for (int i = 0; i < articulationBodies.Length; ++i)
-        {
-            articulationBodies[i].useGravity = false;
-
-            if (articulationBodies[i].gameObject.GetComponent<ArticulationUnit>() == null)
-            {
-                articulationBodies[i].gameObject.AddComponent<ArticulationUnit>();
-            }
-            
-            if (articulationBodies[i].isRoot)
-            {
-                articulationBodies[i].immovable = true;
-            }
-            else if (articulationBodies[i].jointType == ArticulationJointType.RevoluteJoint)
-            {
-                var drive = articulationBodies[i].xDrive;
-                drive.stiffness = 100000;
-                drive.damping = 9000;
-                drive.forceLimit = 10000;
-                articulationBodies[i].xDrive = drive;
-            }
-            else if (articulationBodies[i].jointType == ArticulationJointType.PrismaticJoint)
-            {
-                var xDrive = articulationBodies[i].xDrive;
-                xDrive.stiffness = 100000;
-                xDrive.damping = 9000;
-                xDrive.forceLimit = 10000;
-                articulationBodies[i].xDrive = xDrive;
-
-                var yDrive = articulationBodies[i].yDrive;
-                yDrive.stiffness = 100000;
-                yDrive.damping = 9000;
-                yDrive.forceLimit = 10000;
-                articulationBodies[i].yDrive = yDrive;
-
-                var zDrive = articulationBodies[i].zDrive;
-                zDrive.stiffness = 100000;
-                zDrive.damping = 9000;
-                zDrive.forceLimit = 10000;
-                articulationBodies[i].zDrive = zDrive;
-            }
-        }
+        RFUniverseUtility.NormalizeRFUniverseArticulation(articulationRoot);
     }
 
     [MenuItem("RFUniverse/Articulation Helper/Print all joint and index")]
@@ -129,7 +34,7 @@ public class ArticulationHelper : MonoBehaviour
         ArticulationBody[] articulationBodies = articulationRoot.GetComponentsInChildren<ArticulationBody>();
 
         for (int i = 0; i < articulationBodies.Length; ++i)
-        {            
+        {
             string jointType = "";
             if (articulationBodies[i].isRoot)
             {
@@ -190,9 +95,9 @@ public class ArticulationHelper : MonoBehaviour
         StringBuilder sb = new StringBuilder();
         sb.Append("/**\n");
         sb.AppendLine(" * Links:\n");
-        
+
         for (int i = 0; i < articulationBodies.Length; ++i)
-        {            
+        {
             string jointType = "";
             if (articulationBodies[i].isRoot)
             {

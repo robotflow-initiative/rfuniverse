@@ -71,11 +71,11 @@ namespace RFUniverse.Attributes
             cameraHD.customRenderingSettings = false;
             pass.enabled = false;
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
         public override void GetNormal(int width, int height)
@@ -86,11 +86,12 @@ namespace RFUniverse.Attributes
             pass.overrideMaterial = cameraNormalMaterial;
             //pass.overrideMaterialPassName = "ForwardOnly";
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
 
@@ -102,11 +103,12 @@ namespace RFUniverse.Attributes
             pass.overrideMaterial = cameraIDMaterial;
             //pass.overrideMaterialPassName = "ForwardOnly";
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
 
         }
@@ -120,11 +122,12 @@ namespace RFUniverse.Attributes
             cameraDepthMaterial.SetFloat("_CameraZeroDis", near);
             cameraDepthMaterial.SetFloat("_CameraOneDis", far);
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.R8, false);
+            tex.Reinitialize(width, height, TextureFormat.R8, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
 
@@ -138,11 +141,12 @@ namespace RFUniverse.Attributes
             cameraDepthMaterial.SetFloat("_CameraZeroDis", 0);
             cameraDepthMaterial.SetFloat("_CameraOneDis", 1);
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RFloat, false);
+            tex.Reinitialize(width, height, TextureFormat.RFloat, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
         }
 
@@ -153,12 +157,13 @@ namespace RFUniverse.Attributes
             pass.enabled = true;
             pass.overrideMaterial = cameraIDMaterial;
             camera.Render();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+
             RevertLayer(this);
             RenderTexture.active = camera.targetTexture;
-            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
+            RenderTexture.ReleaseTemporary(camera.targetTexture);
             amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
     }
