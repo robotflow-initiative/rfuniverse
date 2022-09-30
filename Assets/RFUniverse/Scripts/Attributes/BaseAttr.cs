@@ -245,6 +245,14 @@ namespace RFUniverse.Attributes
             msg.WriteFloat32(transform.localRotation.y);
             msg.WriteFloat32(transform.localRotation.z);
             msg.WriteFloat32(transform.localRotation.w);
+
+            List<float> matrix = new List<float>();
+            for (int i = 0; i < 16; i++)
+            {
+                matrix.Add(transform.localToWorldMatrix[i]);
+            }
+            msg.WriteFloatList(matrix);
+
             if (resultLocalPoint != null)
             {
                 msg.WriteBoolean(true);

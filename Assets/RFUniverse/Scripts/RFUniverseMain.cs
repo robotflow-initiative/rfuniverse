@@ -8,6 +8,7 @@ namespace RFUniverse
     {
         public Camera mainCamera;
         public GameObject ground;
+        public Light sun;
         public bool Ground
         {
             get
@@ -20,7 +21,6 @@ namespace RFUniverse
                 ground.SetActive(value);
             }
         }
-
         public LayerMask simulationLayer = 1 << 0;
         public LayerMask axisLayer = 1 << 6;
         public int tempLayer = 21;

@@ -199,7 +199,6 @@ namespace RFUniverse.Manager
                 OnCompleted(gameObject);
             else
             {
-                Debug.LogWarning($"GameObject {name} not preload");
                 if (name == "Camera")
                 {
                     GameObject camera = new GameObject("Camera", typeof(CameraAttr));
@@ -208,6 +207,7 @@ namespace RFUniverse.Manager
                 }
                 else
                 {
+                    Debug.LogWarning($"GameObject {name} not preload");
                     UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
                     {
                         if (!assets.ContainsKey(name))

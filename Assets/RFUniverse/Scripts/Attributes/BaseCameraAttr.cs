@@ -53,11 +53,12 @@ namespace RFUniverse.Attributes
             base.CollectData(msg);
             // FOV (angle in degree)
             msg.WriteFloat32(camera.fieldOfView);
-            // target width
-            msg.WriteInt32(width);
-            // target height
-            msg.WriteInt32(height);
-
+            List<float> matrix = new List<float>();
+            for (int i = 0; i < 16; i++)
+            {
+                matrix.Add(camera.projectionMatrix[i]);
+            }
+            msg.WriteFloatList(matrix);
             if (rgbBase64String != null)
             {
                 msg.WriteBoolean(true);
