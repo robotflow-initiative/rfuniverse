@@ -126,14 +126,13 @@ namespace RFUniverse.Attributes
             Rigister();
             AfterRigister();
         }
-        MaterialPropertyBlock mpb;
         protected virtual void Init()
         {
-            mpb = new MaterialPropertyBlock();
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
             mpb.SetColor("_IDColor", RFUniverseUtility.EncodeIDAsColor(ID));
             foreach (var item in this.GetChildComponentFilter<Renderer>())
             {
-                item.SetPropertyBlock(null);
+                item.SetPropertyBlock(mpb);
             }
             for (int i = 0; i < childs.Count; i++)
             {

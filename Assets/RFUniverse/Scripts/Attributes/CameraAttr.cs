@@ -65,7 +65,6 @@ namespace RFUniverse.Attributes
             tex.Apply();
             RenderTexture.ReleaseTemporary(camera.targetTexture);
             idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-
         }
         public override void GetDepth(int width, int height, float near, float far)
         {

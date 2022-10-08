@@ -10,9 +10,9 @@ namespace RFUniverse
     {
         public static Color EncodeIDAsColor(int instanceId)
         {
-            int r = (instanceId * 16807 + 187) % 256;
-            int g = (instanceId * 48271 + 79) % 256;
-            int b = (instanceId * 95849 + 233) % 256;
+            long r = (instanceId * (long)16807 + 187) % 256;
+            long g = (instanceId * (long)48271 + 79) % 256;
+            long b = (instanceId * (long)95849 + 233) % 256;
             return new Color32((byte)r, (byte)g, (byte)b, 255);
         }
 
