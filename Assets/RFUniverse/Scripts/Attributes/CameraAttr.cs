@@ -35,6 +35,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetRGB(int width, int height)
         {
+            Debug.Log("GetRGB");
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             camera.RenderWithShader(null, "");
             RenderTexture.active = camera.targetTexture;
@@ -46,6 +47,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetNormal(int width, int height)
         {
+            Debug.Log("GetNormal");
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             camera.RenderWithShader(cameraNormalShader, "");
             RenderTexture.active = camera.targetTexture;
@@ -57,6 +59,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetID(int width, int height)
         {
+            Debug.Log("GetID");
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
             camera.RenderWithShader(cameraIDShader, "");
             RenderTexture.active = camera.targetTexture;
@@ -68,6 +71,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetDepth(int width, int height, float near, float far)
         {
+            Debug.Log("GetDepth");
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.R8, RenderTextureReadWrite.Linear, 1);
             Shader.SetGlobalFloat("_CameraZeroDis", near);
             Shader.SetGlobalFloat("_CameraOneDis", far);
@@ -81,6 +85,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetDepthEXR(int width, int height)
         {
+            Debug.Log("GetDepthEXR");
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.RFloat, RenderTextureReadWrite.Linear, 1);
             Shader.SetGlobalFloat("_CameraZeroDis", 0);
             Shader.SetGlobalFloat("_CameraOneDis", 1);
@@ -94,6 +99,7 @@ namespace RFUniverse.Attributes
         }
         public override void GetAmodalMask(int width, int height)
         {
+            Debug.Log("GetAmodalMask");
             SetTempLayer(this);
             camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
             camera.RenderWithShader(cameraIDShader, "");

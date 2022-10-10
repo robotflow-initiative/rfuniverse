@@ -29,6 +29,38 @@
     "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
     "$values": [
       {
+        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "name": "Camera",
+        "id": 698550,
+        "type": "Base",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -2.09,
+            1.52,
+            1.25
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            31.2363262,
+            125.337112,
+            1.09837647E-05
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
         "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
         "color": {
           "$type": "System.Single[], mscorlib",

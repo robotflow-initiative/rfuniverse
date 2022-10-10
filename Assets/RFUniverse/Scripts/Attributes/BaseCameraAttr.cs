@@ -19,9 +19,6 @@ namespace RFUniverse.Attributes
         protected string depthEXRBase64String = null;
         protected string amodalMaskBase64String = null;
 
-        protected int width = 512;
-        protected int height = 512;
-
         public override string Name
         {
             get { return "Camera"; }
@@ -51,14 +48,9 @@ namespace RFUniverse.Attributes
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
-            // FOV (angle in degree)
+            msg.WriteInt32(camera.pixelWidth);
+            msg.WriteInt32(camera.pixelHeight);
             msg.WriteFloat32(camera.fieldOfView);
-            List<float> matrix = new List<float>();
-            for (int i = 0; i < 16; i++)
-            {
-                matrix.Add(camera.projectionMatrix[i]);
-            }
-            msg.WriteFloatList(matrix);
             if (rgbBase64String != null)
             {
                 msg.WriteBoolean(true);
@@ -182,49 +174,154 @@ namespace RFUniverse.Attributes
         }
         void GetRGB(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetRGB(width, height);
         }
         public abstract void GetRGB(int width, int height);
         void GetNormal(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetNormal(width, height);
         }
         public abstract void GetNormal(int width, int height);
         void GetID(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetID(width, height);
         }
         public abstract void GetID(int width, int height);
         void GetDepth(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
             float near = msg.ReadFloat32();
             float far = msg.ReadFloat32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetDepth(width, height, near, far);
         }
         public abstract void GetDepth(int width, int height, float near, float far);
         void GetDepthEXR(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetDepthEXR(width, height);
         }
         public abstract void GetDepthEXR(int width, int height);
         void GetAmodalMask(IncomingMessage msg)
         {
-            width = msg.ReadInt32();
-            height = msg.ReadInt32();
+            int width, height;
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
+                width = size.x;
+                height = size.y;
+            }
+            else
+            {
+                camera.usePhysicalProperties = false;
+                width = msg.ReadInt32();
+                height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                camera.fieldOfView = fov;
+            }
             GetAmodalMask(width, height);
         }
         public abstract void GetAmodalMask(int width, int height);
 
+        public Vector2Int SetCameraIntrinsicMatrix(Camera set_camera, List<float> intrinsicMatrix)
+        {
+            camera.usePhysicalProperties = true;
+            float focal = 35;
+            float ax, ay, sizeX, sizeY;
+            float x0, y0, shiftX, shiftY;
+            ax = intrinsicMatrix[0];
+            ay = intrinsicMatrix[4];
+            x0 = intrinsicMatrix[6];
+            y0 = intrinsicMatrix[7];
+            int width = (int)x0 * 2;
+            int height = (int)y0 * 2;
+            sizeX = focal * width / ax;
+            sizeY = focal * height / ay;
+            shiftX = -(x0 - width / 2.0f) / width;
+            shiftY = (y0 - height / 2.0f) / height;
+            set_camera.sensorSize = new Vector2(sizeX, sizeY);
+            set_camera.focalLength = focal;
+            set_camera.lensShift = new Vector2(shiftX, shiftY);
+            return new Vector2Int(width, height);
+        }
         List<int> originLayers = new List<int>();
         protected void SetTempLayer(BaseAttr target)
         {
