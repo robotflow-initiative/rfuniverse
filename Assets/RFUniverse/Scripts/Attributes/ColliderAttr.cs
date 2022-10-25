@@ -263,7 +263,21 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
+#if UNITY_EDITOR
+        public static void SaveMeshs(string path, List<UnityEngine.Mesh> meshs)
+        {
+            if (!path.EndsWith(".asset"))
+                path += ".asset";
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.CreateAsset(new Mesh(), path);
+            foreach (var i in meshs)
+            {
+                AssetDatabase.AddObjectToAsset(i, path);
+            }
+        }
+#endif
     }
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(ColliderAttr), true)]
     public class ColliderAttrEditor : Editor

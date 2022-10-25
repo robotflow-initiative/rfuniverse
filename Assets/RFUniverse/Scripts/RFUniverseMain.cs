@@ -6,10 +6,27 @@ namespace RFUniverse
 {
     public class RFUniverseMain : MonoBehaviour
     {
+
+        [SerializeField]
         public Camera mainCamera;
-        public GameObject ground;
-        public Light sun;
-        public bool Ground
+        public Camera MainCamera
+        {
+            get
+            {
+                return mainCamera;
+            }
+        }
+
+        [SerializeField]
+        private GameObject ground;
+        public GameObject Ground
+        {
+            get
+            {
+                return ground;
+            }
+        }
+        public bool GroundActive
         {
             get
             {
@@ -21,8 +38,17 @@ namespace RFUniverse
                 ground.SetActive(value);
             }
         }
-        public LayerMask simulationLayer = 1 << 0;
-        public LayerMask axisLayer = 1 << 6;
-        public int tempLayer = 21;
+        [SerializeField]
+        private Light sun;
+        public Light Sun
+        {
+            get
+            {
+                return sun;
+            }
+        }
+        public LayerMask simulationLayer = 1 << 0;//常规显示层
+        public int axisLayer = 6;//debug显示层
+        public int tempLayer = 21;//相机渲染临时层
     }
 }

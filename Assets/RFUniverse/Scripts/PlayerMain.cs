@@ -10,7 +10,7 @@ namespace RFUniverse
             Instance = this;
             MaterialPropertyBlock mpb = new MaterialPropertyBlock();
             mpb.SetColor("_IDColor", Color.black);
-            foreach (var render in ground.GetComponentsInChildren<Renderer>())
+            foreach (var render in Ground.GetComponentsInChildren<Renderer>())
             {
                 render.SetPropertyBlock(mpb);
             }

@@ -8,18 +8,14 @@ namespace RFUniverse
 {
     public class SDKExporter : Editor
     {
-        string[] sdkFiles;
-        [MenuItem("RFUniverse/ExportRFUniverseSDK")]
+        [MenuItem("RFUniverse/Export SDK Package")]
         public static void Export()
         {
             Object[] files = Selection.GetFiltered<Object>(SelectionMode.Assets);
             List<string> filePaths = new List<string>();
-            foreach (var item in files)
-            {
-                Debug.Log(1);
-                filePaths.Add(AssetDatabase.GetAssetPath(item));
-            }
-            AssetDatabase.ExportPackage(filePaths.ToArray(), System.Environment.CurrentDirectory + "/SDK.unitypackage");
+            filePaths.Add("Assets/RFUniverse");
+            filePaths.Add("Assets/Plugins/Editor");
+            AssetDatabase.ExportPackage(filePaths.ToArray(), System.Environment.CurrentDirectory + "/RFUniverse_Core_SDK.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse | ExportPackageOptions.IncludeLibraryAssets);
         }
     }
 }

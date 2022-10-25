@@ -147,10 +147,8 @@ MonoBehaviour:
   sun: {fileID: 1891555477}
   simulationLayer:
     serializedVersion: 2
-    m_Bits: 1
-  axisLayer:
-    serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 137
+  axisLayer: 6
   tempLayer: 21
 --- !u!1 &8403022067523355461
 GameObject:
@@ -218,7 +216,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 191
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -436,9 +434,9 @@ GameObject:
   - component: {fileID: 8403022068214923497}
   - component: {fileID: 8403022068214923502}
   - component: {fileID: 7851003010961975716}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

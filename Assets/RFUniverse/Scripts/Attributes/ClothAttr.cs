@@ -23,7 +23,7 @@ namespace RFUniverse.Attributes
             get { return "Cloth"; }
         }
         Obi.ObiCloth obiCloth = null;
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             obiCloth = GetComponentInChildren<Obi.ObiCloth>();

@@ -126,7 +126,7 @@ namespace RFUniverse.Attributes
             Rigister();
             AfterRigister();
         }
-        protected virtual void Init()
+        public virtual void Init()
         {
             MaterialPropertyBlock mpb = new MaterialPropertyBlock();
             mpb.SetColor("_IDColor", RFUniverseUtility.EncodeIDAsColor(ID));
@@ -140,9 +140,6 @@ namespace RFUniverse.Attributes
                 childs[i].Instance();
             }
         }
-        protected virtual void AfterRigister()
-        {
-        }
 
         protected void Rigister()
         {
@@ -153,6 +150,10 @@ namespace RFUniverse.Attributes
                 Debug.Log($"Rigister ID:{ID} Name:{Name}");
                 BaseAttr.AddAttr(this);
             }
+        }
+
+        protected virtual void AfterRigister()
+        {
         }
 
         private void OnDestroy()
@@ -409,12 +410,15 @@ namespace RFUniverse.Attributes
         {
             Debug.Log("SetLayer");
             int layer = msg.ReadInt32();
-            foreach (var item in GetComponentsInChildren<Transform>())
+            SetLayer(layer);
+        }
+        public void SetLayer(int layer)
+        {
+            foreach (var item in this.GetChildComponentFilter<Transform>())
             {
                 item.gameObject.layer = layer;
             }
         }
-
         protected void Copy(IncomingMessage msg)
         {
             Debug.Log("Copy");

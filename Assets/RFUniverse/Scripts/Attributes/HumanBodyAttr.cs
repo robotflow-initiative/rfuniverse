@@ -82,7 +82,7 @@ namespace RFUniverse.Attributes
         }
         [HideInInspector]
         public List<Transform> ikTargets = new List<Transform>();
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
         }

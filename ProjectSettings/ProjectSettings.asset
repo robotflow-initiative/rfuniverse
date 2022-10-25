@@ -134,7 +134,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.5.5
+  bundleVersion: 0.5.8
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
@@ -625,7 +625,7 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     Android: OBI_ONI_SUPPORTED
-    Standalone: OBI_ONI_SUPPORTED;AMPLIFY_SHADER_EDITOR;BIOIK
+    Standalone: AMPLIFY_SHADER_EDITOR;OBI_ONI_SUPPORTED;BIOIK;OBI
     iPhone: OBI_ONI_SUPPORTED
   additionalCompilerArguments: {}
   platformArchitecture: {}

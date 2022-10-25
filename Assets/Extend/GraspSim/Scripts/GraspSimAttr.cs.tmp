@@ -1,0 +1,259 @@
+using System.Collections.Generic;
+using System.Collections;
+using UnityEngine;
+using Robotflow.RFUniverse.SideChannels;
+using System.Linq;
+using RFUniverse;
+using RFUniverse.Manager;
+using RFUniverse.Attributes;
+using System.IO;
+
+public class GraspSimAttr : BaseAttr
+{
+    public int objectLayer = 19;
+    public int gripperLayer = 20;
+    public GameObject platform;
+
+    public override string Type
+    {
+        get { return "GraspSim"; }
+    }
+
+    public override void AnalysisMsg(IncomingMessage msg, string type)
+    {
+        switch (type)
+        {
+            case "StartGraspSim":
+                StartGraspSim(msg);
+                return;
+        }
+        base.AnalysisMsg(msg, type);
+    }
+    public override void CollectData(OutgoingMessage msg)
+    {
+        base.CollectData(msg);
+        msg.WriteBoolean(isDone);
+        if (isDone)
+        {
+            List<Vector3> successPoints = allPoints.Where((s, i) => success[i]).ToList();
+            List<Quaternion> successQuaternions = allQuaternions.Where((s, i) => success[i]).ToList();
+            List<float> successGripperWidth = gripperWidth.Where((s, i) => success[i]).ToList();
+            msg.WriteFloatList(RFUniverseUtility.ListVector3ToListFloat(successPoints));
+            msg.WriteFloatList(RFUniverseUtility.ListQuaternionToListFloat(successQuaternions));
+            msg.WriteFloatList(successGripperWidth);
+            isDone = false;
+        }
+    }
+    bool isDone = false;
+    List<Vector3> allPoints = new List<Vector3>();
+    List<Quaternion> allQuaternions = new List<Quaternion>();
+    List<bool> success = new List<bool>();
+    List<float> gripperWidth = new List<float>();
+    string meshPath;
+    float depthRangeMin;
+    float depthRangeMax;
+    int depthLerpCount;
+    int angleLerpCount;
+    int parallelCount;
+    List<Transform> envs = new List<Transform>();
+    List<GameObject> platforms = new List<GameObject>();
+    List<ControllerAttr> grippers = new List<ControllerAttr>();
+    List<RigidbodyAttr> targets = new List<RigidbodyAttr>();
+
+    void StartGraspSim(IncomingMessage msg)
+    {
+        Debug.Log("StartGraspSim");
+        meshPath = msg.ReadString();
+        string gripperName = msg.ReadString();
+        List<float> points = msg.ReadFloatList().ToList();
+        List<float> normals = msg.ReadFloatList().ToList();
+        depthRangeMin = msg.ReadFloat32();
+        depthRangeMax = msg.ReadFloat32();
+        depthLerpCount = msg.ReadInt32();
+        angleLerpCount = msg.ReadInt32();
+        parallelCount = msg.ReadInt32();
+        Debug.Log(parallelCount);
+        List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
+        List<Vector3> normalsV3 = RFUniverseUtility.ListFloatToListVector3(normals);
+        if (pointsV3.Count != normalsV3.Count) return;
+        allPoints.Clear();
+        allQuaternions.Clear();
+        success.Clear();
+        gripperWidth.Clear();
+        envs.Clear();
+        platforms.Clear();
+        grippers.Clear();
+        targets.Clear();
+
+        //生成抓取点
+        for (int i = 0; i < pointsV3.Count; i++)
+        {
+            Vector3 point = pointsV3[i];
+            Vector3 normal = normalsV3[i];
+            Quaternion qua = Quaternion.LookRotation(normal);
+            qua *= Quaternion.AngleAxis(90, Vector3.left);
+            for (int j = 0; j < depthLerpCount; j++)
+            {
+                Vector3 depthPoint = point + normal * Mathf.Lerp(depthRangeMin, depthRangeMax, j / (float)depthLerpCount);
+                for (int k = 0; k < angleLerpCount; k++)
+                {
+                    Quaternion angle = Quaternion.AngleAxis(k * 360 / angleLerpCount, Vector3.up);
+                    allPoints.Add(depthPoint);
+                    allQuaternions.Add(qua * angle);
+                }
+            }
+        }
+        Transform env = new GameObject($"Env0").transform;
+        env.SetParent(transform);
+        envs.Add(env);
+        platform.SetActive(false);
+        GameObject newPlatform = GameObject.Instantiate(platform);
+        newPlatform.transform.SetParent(env);
+        platforms.Add(newPlatform);
+        newPlatform.SetActive(true);
+
+
+        RigidbodyAttr target = AssetManager.Instance.LoadMesh(ID * 10 + 0, meshPath, false);
+        targets.Add(target);
+        target.transform.SetParent(env);
+        target.SetLayer(objectLayer);
+        AssetManager.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
+        {
+            ControllerAttr gripper = attr as ControllerAttr;
+            gripper.Init();
+            grippers.Add(gripper);
+            gripper.transform.SetParent(env);
+            gripper.SetLayer(gripperLayer);
+            StartCoroutine(GraspSim());
+        }, false);
+    }
+
+    IEnumerator GraspSim()
+    {
+        //测试静止位置
+        PlayerMain.Instance.GroundActive = false;
+        targets[0].transform.localPosition = Vector3.up * 1.25f;
+        yield return new WaitForFixedUpdate();
+        int waitFrame = 0;
+        while (targets[0].Rigidbody.velocity.sqrMagnitude > 0)
+        {
+            if (waitFrame > 1000)
+            {
+                Debug.LogWarning($"{meshPath} waited 1000 frame");
+                break;
+            }
+            yield return new WaitForFixedUpdate();
+            waitFrame++;
+        }
+        Vector3 setPosition = targets[0].transform.localPosition;
+        Quaternion setRotation = targets[0].transform.localRotation;
+
+        //计算抓点与Root间旋转
+        Transform graspPoint = grippers[0].jointParameters.LastOrDefault().body.transform;
+        Quaternion graspPointToGripperQuaternion = Quaternion.FromToRotation(graspPoint.transform.eulerAngles, grippers[0].transform.eulerAngles);
+
+        //复制并行环境
+        for (int i = 1; i < parallelCount; i++)
+        {
+            Transform newEnv = new GameObject($"Env{i}").transform;
+            newEnv.SetParent(transform);
+            envs.Add(newEnv);
+
+            GameObject newPlatform = GameObject.Instantiate(platforms[0]);
+            newPlatform.transform.SetParent(newEnv);
+            newPlatform.transform.localPosition = platforms[0].transform.localPosition;
+            newPlatform.SetActive(true);
+            platforms.Add(newPlatform);
+
+            RigidbodyAttr newTarget = GameObject.Instantiate(targets[0]);
+            newTarget.transform.SetParent(newEnv);
+            targets.Add(newTarget);
+
+            ControllerAttr newGripper = GameObject.Instantiate(grippers[0]);
+            newGripper.Init();
+            newGripper.transform.SetParent(newEnv);
+            grippers.Add(newGripper);
+        }
+
+        //设置环境位置
+        int wCount = Mathf.FloorToInt(Mathf.Sqrt(parallelCount));
+        for (int i = 0; i < parallelCount; i++)
+        {
+            int w = i % wCount;
+            int h = i / wCount;
+            envs[i].transform.position = new Vector3(w * 2, 0, h * 2);
+        }
+        //开始循环
+        for (int i = 0; i < allPoints.Count; i += parallelCount)
+        {
+            foreach (var item in platforms)
+            {
+                item.SetActive(true);
+            }
+            for (int j = 0; j < parallelCount; j++)
+            {
+                if (i + j >= allPoints.Count) break;
+                Vector3 point = allPoints[i + j];
+                Quaternion quaternion = allQuaternions[i + j];
+                Transform localEnv = envs[j];
+                GameObject localPlatform = platforms[j];
+                RigidbodyAttr localTarget = targets[j];
+                ControllerAttr localGripper = grippers[j];
+                localTarget.transform.localPosition = setPosition;
+                localTarget.transform.localRotation = setRotation;
+                localTarget.Rigidbody.velocity = Vector3.zero;
+
+                quaternion = (localTarget.transform.rotation * quaternion) * localEnv.transform.rotation;
+                localGripper.transform.localRotation = graspPointToGripperQuaternion * quaternion;
+                point = localEnv.InverseTransformPoint(localTarget.transform.TransformPoint(point));
+                graspPoint = localGripper.jointParameters.LastOrDefault().body.transform;
+                Vector3 graspPointToGripperVector3 = localGripper.transform.position - graspPoint.transform.position;
+                localGripper.SetTransform(true, false, false, point + graspPointToGripperVector3, Vector3.zero, Vector3.zero, false);
+                localGripper.SetJointPositionDirectly(new List<float>(new float[] { 0.04f, 0.04f }));
+                localGripper.SetJointPosition(new List<float>(new float[] { 0, 0 }));
+            }
+            for (int j = 0; j < 100; j++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            foreach (var item in platforms)
+            {
+                item.SetActive(false);
+            }
+            for (int j = 0; j < 200; j++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            //写入数据
+            for (int j = 0; j < parallelCount; j++)
+            {
+                if (success.Count < allPoints.Count)
+                {
+                    success.Add(targets[j].Rigidbody.velocity.sqrMagnitude < 0.1f);
+                    Debug.Log(targets[j].Rigidbody.velocity.sqrMagnitude < 0.1f);
+                    List<float> width = grippers[j].GetJointPositions();
+                    gripperWidth.Add(width[0] + width[1]);
+                }
+            }
+        }
+        //清理
+        for (int i = 0; i < parallelCount; i++)
+        {
+            GameObject.Destroy(envs[i].gameObject);
+        }
+        isDone = true;
+    }
+
+    // void OnDrawGizmos()
+    // {
+    //     for (int i = 0; i < allPoints.Count; i++)
+    //     {
+    //         Gizmos.color = Color.white;
+    //         Gizmos.DrawSphere(allPoints[i], 0.005f);
+    //         Gizmos.color = Color.green;
+    //         Gizmos.DrawLine(allPoints[i], allPoints[i] + allQuaternions[i] * Vector3.up * 0.01f);
+    //         Gizmos.color = Color.red;
+    //         Gizmos.DrawLine(allPoints[i], allPoints[i] + allQuaternions[i] * Vector3.left * 0.01f);
+    //     }
+    // }
+}

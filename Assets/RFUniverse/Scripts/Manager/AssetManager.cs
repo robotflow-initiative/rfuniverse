@@ -72,6 +72,9 @@ namespace RFUniverse.Manager
                 case "SetGravity":
                     SetGravity(msg);
                     return;
+                case "SetGroundActive":
+                    SetGroundActive(msg);
+                    return;
                 case "SetGroundPhysicMaterial":
                     SetGroundPhysicMaterial(msg);
                     return;
@@ -86,7 +89,7 @@ namespace RFUniverse.Manager
                     return;
             }
         }
-        void PreLoadAssetsAsync(IncomingMessage msg, Action OnCompleted = null, bool sendDoneMsg = true)
+        void PreLoadAssetsAsync(IncomingMessage msg, Action onCompleted = null, bool sendDoneMsg = true)
         {
             int count = msg.ReadInt32();
             List<string> names = new List<string>();
@@ -96,18 +99,15 @@ namespace RFUniverse.Manager
                 if (!names.Contains(n))
                     names.Add(n);
             }
-            PreLoadAssetsAsync(names, OnCompleted, sendDoneMsg);
+            PreLoadAssetsAsync(names, onCompleted, sendDoneMsg);
         }
-        public void PreLoadAssetsAsync(List<string> names, Action OnCompleted = null, bool sendDoneMsg = true)
+        public void PreLoadAssetsAsync(List<string> names, Action onCompleted = null, bool sendDoneMsg = true)
         {
             int loadedCount = 0;
             foreach (string name in names)
             {
-                Debug.Log("PreLoadAssets:" + name);
-                UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
+                PreLoadAssetAsync(name, () =>
                 {
-                    if (!assets.ContainsKey(name))
-                        assets.Add(name, handle.Result);
                     loadedCount++;
                     if (loadedCount == names.Count)
                     {
@@ -115,17 +115,58 @@ namespace RFUniverse.Manager
                         {
                             SendLoadDoneMsg();
                         }
-                        OnCompleted?.Invoke();
+                        onCompleted?.Invoke();
                     }
+                });
+            }
+        }
+        public void PreLoadAssetAsync(string name, Action onCompleted = null)
+        {
+            if (assets.ContainsKey(name))
+            {
+                Debug.Log("LoadedAsset:" + name);
+                onCompleted?.Invoke();
+            }
+            else if (name == "Camera")
+            {
+                Debug.Log("LoadAsset:" + name);
+                GameObject camera = new GameObject("Camera", typeof(CameraAttr));
+                //camera.SetActive(false);
+                assets.Add(name, camera);
+                onCompleted?.Invoke();
+            }
+            else
+            {
+                Debug.Log("LoadAsset:" + name);
+                UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
+                {
+                    if (!assets.ContainsKey(name))
+                        assets.Add(name, handle.Result);
+                    onCompleted?.Invoke();
                 };
             }
         }
-        public void LoadSceneAsync(IncomingMessage msg, Action OnCompleted = null, bool sendDoneMsg = true)
+        public void GetGameObject(string name, Action<GameObject> onCompleted = null)
+        {
+            if (assets.TryGetValue(name, out GameObject gameObject))
+            {
+                onCompleted?.Invoke(assets[name]);
+            }
+            else
+            {
+                Debug.LogWarning($"GameObject {name} not preload");
+                PreLoadAssetAsync(name, () =>
+                {
+                    onCompleted?.Invoke(assets[name]);
+                });
+            }
+        }
+        public void LoadSceneAsync(IncomingMessage msg, Action onCompleted = null, bool sendDoneMsg = true)
         {
             string fileName = msg.ReadString();
-            LoadSceneAsync(fileName, OnCompleted, sendDoneMsg);
+            LoadSceneAsync(fileName, onCompleted, sendDoneMsg);
         }
-        void LoadSceneAsync(string fileName, Action OnCompleted = null, bool sendDoneMsg = true)
+        void LoadSceneAsync(string fileName, Action onCompleted = null, bool sendDoneMsg = true)
         {
             string filePath = $"{Application.streamingAssetsPath}/SceneData/{fileName}";
             string dataString = File.ReadAllText(filePath);
@@ -133,14 +174,14 @@ namespace RFUniverse.Manager
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });
-
-            PreLoadAssetsAsync(data.assetsData.Where((a) => a.name != "Camera").Select((a) => a.name).ToList(), () =>
+            List<string> names = data.assetsData.Select((a) => a.name).ToList();
+            PreLoadAssetsAsync(names, () =>
             {
                 data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
-                PlayerMain.Instance.Ground = data.ground;
+                PlayerMain.Instance.GroundActive = data.ground;
                 PlayerMain.Instance.mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
                 PlayerMain.Instance.mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
-                PlayerMain.Instance.ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
+                PlayerMain.Instance.Ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
                 foreach (var item in data.assetsData)
                 {
                     InstanceObject(item);
@@ -149,7 +190,7 @@ namespace RFUniverse.Manager
                 {
                     SendLoadDoneMsg();
                 }
-                OnCompleted?.Invoke();
+                onCompleted?.Invoke();
             }, false);
         }
         void SendLoadDoneMsg()
@@ -162,7 +203,7 @@ namespace RFUniverse.Manager
         private void ReceiveMessage(IncomingMessage msg)
         {
             string message = msg.ReadString();
-            Debug.Log($"Message : {message}");
+            //Debug.Log($"Message : {message}");
             if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
             {
                 foreach (var item in actions)
@@ -193,30 +234,7 @@ namespace RFUniverse.Manager
                     registeredMessages.Remove(message);
             }
         }
-        public void GetGameObject(string name, Action<GameObject> OnCompleted = null)
-        {
-            if (assets.TryGetValue(name, out GameObject gameObject))
-                OnCompleted(gameObject);
-            else
-            {
-                if (name == "Camera")
-                {
-                    GameObject camera = new GameObject("Camera", typeof(CameraAttr));
-                    OnCompleted?.Invoke(camera);
-                    GameObject.Destroy(camera);
-                }
-                else
-                {
-                    Debug.LogWarning($"GameObject {name} not preload");
-                    UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
-                    {
-                        if (!assets.ContainsKey(name))
-                            assets.Add(name, handle.Result);
-                        OnCompleted?.Invoke(assets[name]);
-                    };
-                }
-            }
-        }
+
 
         public void SendMessage(string message, params object[] objects)
         {
@@ -247,7 +265,7 @@ namespace RFUniverse.Manager
             int id = msg.ReadInt32();
             InstanceObject(name, id);
         }
-        public void InstanceObject(BaseAttrData baseAttrData)
+        public void InstanceObject(BaseAttrData baseAttrData, Action<BaseAttr> onCompleted = null)
         {
             GetGameObject(baseAttrData.name, gameObject =>
             {
@@ -257,10 +275,11 @@ namespace RFUniverse.Manager
                 attr.SetAttrData(baseAttrData);
                 Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
                 attr.Instance();
+                onCompleted?.Invoke(attr);
             });
         }
         public Dictionary<int, List<IncomingMessage>> waitingMsg = new Dictionary<int, List<IncomingMessage>>();
-        public void InstanceObject(string name, int id)
+        public void InstanceObject(string name, int id, Action<BaseAttr> onCompleted = null, bool callInstance = true)
         {
             Debug.Log("InstanceObject:" + name);
             waitingMsg.Add(id, new List<IncomingMessage>());
@@ -272,15 +291,19 @@ namespace RFUniverse.Manager
                 attr.ID = id;
                 attr.Name = name;
                 Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
-                attr.Instance();
-                foreach (var item in waitingMsg[id])
+                if (callInstance)
                 {
-                    BaseAttr.Attrs[attr.ID].ReceiveData(item);
+                    attr.Instance();
+                    foreach (var item in waitingMsg[id])
+                    {
+                        Debug.Log("run a waiting msg");
+                        InstanceManager.Instance.ReceiveData(item);
+                        item.Dispose();
+                    }
                 }
                 waitingMsg.Remove(id);
+                onCompleted?.Invoke(attr);
             });
-            //break;
-            //}
         }
         void LoadURDF(IncomingMessage msg)
         {
@@ -305,7 +328,7 @@ namespace RFUniverse.Manager
             string path = msg.ReadString();
             LoadMesh(id, path);
         }
-        public void LoadMesh(int id, string path)
+        public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true)
         {
             Debug.Log("LoadMesh:" + path);
             GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
@@ -313,7 +336,9 @@ namespace RFUniverse.Manager
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
             attr.GenerateVHACDCollider();
-            attr.Instance();
+            if (autoInstance)
+                attr.Instance();
+            return attr;
         }
         void IgnoreLayerCollision(IncomingMessage msg)
         {
@@ -445,9 +470,13 @@ namespace RFUniverse.Manager
             float z = msg.ReadFloat32();
             Physics.gravity = new Vector3(x, y, z);
         }
+        void SetGroundActive(IncomingMessage msg)
+        {
+            PlayerMain.Instance.GroundActive = msg.ReadBoolean();
+        }
         void SetGroundPhysicMaterial(IncomingMessage msg)
         {
-            PlayerMain.Instance.ground.GetComponent<Collider>().material = new PhysicMaterial
+            PlayerMain.Instance.Ground.GetComponent<Collider>().material = new PhysicMaterial
             {
                 bounciness = msg.ReadFloat32(),
                 dynamicFriction = msg.ReadFloat32(),

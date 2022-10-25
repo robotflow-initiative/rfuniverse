@@ -144,7 +144,7 @@ namespace RFUniverse.Attributes
 
         public bool initBioIK = false;
         Transform iKTarget;
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             joints = jointParameters.Select(s => s.body).ToList();
@@ -193,7 +193,9 @@ namespace RFUniverse.Attributes
         {
             foreach (var data in datas)
             {
-                ArticulationBody body = transform.FindChlid(data.bodyName, true).GetComponent<ArticulationBody>();
+                Transform trans = transform.FindChlid(data.bodyName, true);
+                if (trans == null) continue;
+                ArticulationBody body = trans.GetComponent<ArticulationBody>();
                 if (body == null) continue;
 
                 body.anchorPosition = new Vector3(data.anchorPosition[0], data.anchorPosition[1], data.anchorPosition[2]);
@@ -583,7 +585,7 @@ namespace RFUniverse.Attributes
                     SetJointPositionDirectly(msg);
                     return;
                 case "SetJointPositionContinue":
-                    StartCoroutine(SetJointPositionContinue(msg));
+                    SetJointPositionContinue(msg);
                     return;
                 case "SetJointVelocity":
                     SetJointVelocity(msg);
@@ -787,7 +789,7 @@ namespace RFUniverse.Attributes
             iKTarget.DOKill();
         }
 
-        bool sendJointInverseDynamicsForce = false;
+        //bool sendJointInverseDynamicsForce = false;
         private void GetJointInverseDynamicsForce()
         {
 #if  UNITY_2022_1_OR_NEWER
@@ -851,21 +853,35 @@ namespace RFUniverse.Attributes
 
             List<float> jointPositions = msg.ReadFloatList().ToList();
             List<float> speedScales = msg.ReadFloatList().ToList();
-
+            SetJointPosition(jointPositions, speedScales);
+        }
+        private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
+        {
             SetJointPosition(jointPositions, speedScales, ControlMode.Target);
         }
-
+        public void SetJointPosition(List<float> jointPositions)
+        {
+            List<float> speedScales = new List<float>();
+            for (int i = 0; i < moveableJoints.Count; ++i)
+            {
+                speedScales.Add(1.0f);
+            }
+            SetJointPosition(jointPositions, speedScales, ControlMode.Target);
+        }
         private void SetJointPositionDirectly(IncomingMessage msg)
         {
             //Debug.Log("SetJointPositionDirectly");
             int jointCount = msg.ReadInt32();
             if (moveableJoints.Count != jointCount)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointCount, moveableJoints.Count));
+                Debug.LogError($"The number of target joint positions is {jointCount}, but the valid number of joints in robot arm is {moveableJoints.Count}");
                 return;
             }
-
             List<float> jointPositions = msg.ReadFloatList().ToList();
+            SetJointPositionDirectly(jointPositions);
+        }
+        public void SetJointPositionDirectly(List<float> jointPositions)
+        {
             List<float> speedScales = new List<float>();
             for (int i = 0; i < moveableJoints.Count; ++i)
             {
@@ -873,19 +889,23 @@ namespace RFUniverse.Attributes
             }
             SetJointPosition(jointPositions, speedScales, ControlMode.Direct);
         }
-
-        private IEnumerator SetJointPositionContinue(IncomingMessage msg)
+        private void SetJointPositionContinue(IncomingMessage msg)
         {
-            Debug.Log("SetJointPositionContinue");
             float startTime = Time.time * 1000;
             int timeCount = msg.ReadInt32();
-            int jointCount = msg.ReadInt32();
             int interval = msg.ReadInt32();
             List<List<float>> jointPositions = new List<List<float>>();
             for (int i = 0; i < timeCount; i++)
             {
                 jointPositions.Add(msg.ReadFloatList().ToList());
             }
+            SetJointPositionContinue(interval, jointPositions);
+        }
+        public IEnumerator SetJointPositionContinue(int interval, List<List<float>> jointPositions)
+        {
+            Debug.Log("SetJointPositionContinue");
+            int timeCount = jointPositions.Count;
+            int jointCount = jointPositions[0].Count;
             if (moveableJoints.Count != jointCount)
             {
                 Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointCount, moveableJoints.Count));
@@ -896,11 +916,16 @@ namespace RFUniverse.Attributes
             {
                 speedScales.Add(1.0f);
             }
+            float startTime = Time.time * 1000;
             for (int i = 0; i < timeCount; i++)
             {
                 while ((Time.time * 1000 - startTime) < interval * i)
                 {
                     yield return 0;
+                }
+                while ((Time.time * 1000 - startTime) > interval * i + 1)
+                {
+                    i++;
                 }
                 SetJointPosition(jointPositions[i], speedScales, ControlMode.Target);
             }

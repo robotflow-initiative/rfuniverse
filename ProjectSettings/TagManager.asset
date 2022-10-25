@@ -3,15 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - robot
-  - Ground
-  - Gel
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Light
+  - Ground
   - Water
   - UI
   - Axis
@@ -31,14 +28,14 @@ TagManager:
   - 
   - Temp
   - Digit0
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Digit1
+  - Digit2
+  - Digit3
+  - Digit4
+  - Digit5
+  - Digit6
+  - Digit7
+  - Digit8
   - Digit9
   m_SortingLayers:
   - name: Default

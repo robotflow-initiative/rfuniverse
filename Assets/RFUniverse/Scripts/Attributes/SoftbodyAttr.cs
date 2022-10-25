@@ -12,7 +12,7 @@ namespace RFUniverse.Attributes
         }
         Obi.ObiSoftbody obiSoftbody;
 
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             obiSoftbody = GetComponent<Obi.ObiSoftbody>();

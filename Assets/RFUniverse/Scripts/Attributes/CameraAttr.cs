@@ -12,7 +12,7 @@ namespace RFUniverse.Attributes
         public static Shader cameraDepthShader = null;
         public static Shader cameraNormalShader = null;
         public static Shader cameraIDShader = null;
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
 
@@ -33,83 +33,137 @@ namespace RFUniverse.Attributes
         {
             base.AnalysisMsg(msg, type);
         }
-        public override void GetRGB(int width, int height)
+        public override Texture2D GetRGB(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetRGB");
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
-            camera.RenderWithShader(null, "");
-            RenderTexture.active = camera.targetTexture;
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
+            Camera.RenderWithShader(null, "");
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
             rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
         }
-        public override void GetNormal(int width, int height)
+        public override Texture2D GetNormal(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetNormal");
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
-            camera.RenderWithShader(cameraNormalShader, "");
-            RenderTexture.active = camera.targetTexture;
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
+            Camera.RenderWithShader(cameraNormalShader, "");
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
             normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
         }
-        public override void GetID(int width, int height)
+        public override Texture2D GetID(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetID");
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
-            camera.RenderWithShader(cameraIDShader, "");
-            RenderTexture.active = camera.targetTexture;
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
+            Camera.RenderWithShader(cameraIDShader, "");
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
             idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
         }
-        public override void GetDepth(int width, int height, float near, float far)
+        public override Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetDepth");
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.R8, RenderTextureReadWrite.Linear, 1);
-            Shader.SetGlobalFloat("_CameraZeroDis", near);
-            Shader.SetGlobalFloat("_CameraOneDis", far);
-            camera.RenderWithShader(cameraDepthShader, "");
-            RenderTexture.active = camera.targetTexture;
+            Debug.Log("GetID");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
+            Camera.RenderWithShader(cameraIDShader, "");
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.R8, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
-            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
+            idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
         }
-        public override void GetDepthEXR(int width, int height)
+        public override Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null)
+        {
+            Debug.Log("GetDepth");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.R8, RenderTextureReadWrite.Linear, 1);
+            Shader.SetGlobalFloat("_CameraZeroDis", near);
+            Shader.SetGlobalFloat("_CameraOneDis", far);
+            Camera.RenderWithShader(cameraDepthShader, "");
+            RenderTexture.active = Camera.targetTexture;
+            tex.Reinitialize(width, height, TextureFormat.R8, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
+            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
+        }
+        public override Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetDepthEXR");
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.RFloat, RenderTextureReadWrite.Linear, 1);
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.RFloat, RenderTextureReadWrite.Linear, 1);
             Shader.SetGlobalFloat("_CameraZeroDis", 0);
             Shader.SetGlobalFloat("_CameraOneDis", 1);
-            camera.RenderWithShader(cameraDepthShader, "");
-            RenderTexture.active = camera.targetTexture;
+            Camera.RenderWithShader(cameraDepthShader, "");
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RFloat, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
             depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
+            return tex;
         }
-        public override void GetAmodalMask(int width, int height)
+        public override Texture2D GetAmodalMask(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetAmodalMask");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
             SetTempLayer(this);
-            camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
-            camera.RenderWithShader(cameraIDShader, "");
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
+            Camera.RenderWithShader(cameraIDShader, "");
             RevertLayer(this);
-            RenderTexture.active = camera.targetTexture;
+            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
-            RenderTexture.ReleaseTemporary(camera.targetTexture);
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
             amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
         }
     }
 }

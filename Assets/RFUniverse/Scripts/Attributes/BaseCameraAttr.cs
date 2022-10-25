@@ -9,7 +9,18 @@ namespace RFUniverse.Attributes
 {
     public abstract class BaseCameraAttr : BaseAttr
     {
-        protected Camera camera = null;
+        new protected Camera camera = null;
+        public Camera Camera
+        {
+            get
+            {
+                if (camera == null)
+                    camera = GetComponent<Camera>();
+                if (camera == null)
+                    camera = gameObject.AddComponent<Camera>();
+                return camera;
+            }
+        }
         protected Texture2D tex = null;
 
         protected string rgbBase64String = null;
@@ -27,30 +38,28 @@ namespace RFUniverse.Attributes
         {
             get { return "Camera"; }
         }
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             tex = new Texture2D(1, 1);
-            camera = GetComponent<Camera>();
-            if (camera == null)
-                camera = gameObject.AddComponent<Camera>();
 
-            camera.enabled = false;
-            camera.nearClipPlane = 0.01f;
-            camera.farClipPlane = 1000f;
-            camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color(1, 1, 1, 0);
-            camera.depth = -100;
-            camera.allowMSAA = true;
-            camera.allowHDR = false;
-            //camera.cullingMask = PlayerMain.Instance.simulationLayer;
+
+            Camera.enabled = false;
+            Camera.nearClipPlane = 0.01f;
+            Camera.farClipPlane = 1000f;
+            Camera.clearFlags = CameraClearFlags.SolidColor;
+            Camera.backgroundColor = new Color(1, 1, 1, 0);
+            Camera.depth = -100;
+            Camera.allowMSAA = true;
+            Camera.allowHDR = false;
+            //Camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
-            msg.WriteInt32(camera.pixelWidth);
-            msg.WriteInt32(camera.pixelHeight);
-            msg.WriteFloat32(camera.fieldOfView);
+            msg.WriteInt32(Camera.pixelWidth);
+            msg.WriteInt32(Camera.pixelHeight);
+            msg.WriteFloat32(Camera.fieldOfView);
             if (rgbBase64String != null)
             {
                 msg.WriteBoolean(true);
@@ -172,138 +181,147 @@ namespace RFUniverse.Attributes
             transform.position = PlayerMain.Instance.mainCamera.transform.position;
             transform.rotation = PlayerMain.Instance.mainCamera.transform.rotation;
         }
-        void GetRGB(IncomingMessage msg)
+        Texture2D GetRGB(IncomingMessage msg)
         {
-            int width, height;
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
+                return GetRGB(intrinsicMatrix);
             }
             else
             {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
+                return GetRGB(width, height, fov);
             }
-            GetRGB(width, height);
+
         }
-        public abstract void GetRGB(int width, int height);
-        void GetNormal(IncomingMessage msg)
+        public Texture2D GetRGB(List<float> intrinsicMatrix)
         {
-            int width, height;
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetRGB(size.x, size.y);
+        }
+        public abstract Texture2D GetRGB(int width, int height, float? fov = null);
+        Texture2D GetNormal(IncomingMessage msg)
+        {
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
+                return GetNormal(intrinsicMatrix);
             }
             else
             {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
+                return GetNormal(width, height, fov);
             }
-            GetNormal(width, height);
+
         }
-        public abstract void GetNormal(int width, int height);
-        void GetID(IncomingMessage msg)
+        public Texture2D GetNormal(List<float> intrinsicMatrix)
         {
-            int width, height;
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetNormal(size.x, size.y);
+        }
+        public abstract Texture2D GetNormal(int width, int height, float? unPhysicalFov = null);
+        Texture2D GetID(IncomingMessage msg)
+        {
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
+                return GetID(intrinsicMatrix);
             }
             else
             {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
+                return GetID(width, height, fov);
             }
-            GetID(width, height);
         }
-        public abstract void GetID(int width, int height);
-        void GetDepth(IncomingMessage msg)
+        public Texture2D GetID(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetID(size.x, size.y);
+        }
+
+        public abstract Texture2D GetID(int width, int height, float? unPhysicalFov = null);
+        public Texture2D GetIDSingleChannel(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetIDSingleChannel(size.x, size.y);
+        }
+        public abstract Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null);
+        Texture2D GetDepth(IncomingMessage msg)
         {
             float near = msg.ReadFloat32();
             float far = msg.ReadFloat32();
-            int width, height;
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
+                return GetDepth(intrinsicMatrix, near, far);
             }
             else
             {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
+                return GetDepth(width, height, near, far, fov);
             }
-            GetDepth(width, height, near, far);
         }
-        public abstract void GetDepth(int width, int height, float near, float far);
-        void GetDepthEXR(IncomingMessage msg)
+        public Texture2D GetDepth(List<float> intrinsicMatrix, float near, float far)
         {
-            int width, height;
-            if (msg.ReadBoolean())
-            {
-                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
-            }
-            else
-            {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
-                float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
-            }
-            GetDepthEXR(width, height);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetDepth(size.x, size.y, near, far);
         }
-        public abstract void GetDepthEXR(int width, int height);
-        void GetAmodalMask(IncomingMessage msg)
+        public abstract Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null);
+        Texture2D GetDepthEXR(IncomingMessage msg)
         {
-            int width, height;
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                Vector2Int size = SetCameraIntrinsicMatrix(camera, intrinsicMatrix);
-                width = size.x;
-                height = size.y;
+                return GetDepthEXR(intrinsicMatrix);
             }
             else
             {
-                camera.usePhysicalProperties = false;
-                width = msg.ReadInt32();
-                height = msg.ReadInt32();
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                camera.fieldOfView = fov;
+                return GetDepthEXR(width, height, fov);
             }
-            GetAmodalMask(width, height);
         }
-        public abstract void GetAmodalMask(int width, int height);
+        public Texture2D GetDepthEXR(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetDepthEXR(size.x, size.y);
+        }
+        public abstract Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null);
+        Texture2D GetAmodalMask(IncomingMessage msg)
+        {
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                return GetAmodalMask(intrinsicMatrix);
+            }
+            else
+            {
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                return GetAmodalMask(width, height, fov);
+            }
+        }
+        public Texture2D GetAmodalMask(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetAmodalMask(size.x, size.y);
+        }
+        public abstract Texture2D GetAmodalMask(int width, int height, float? unPhysicalFov = null);
 
         public Vector2Int SetCameraIntrinsicMatrix(Camera set_camera, List<float> intrinsicMatrix)
         {
-            camera.usePhysicalProperties = true;
+            set_camera.usePhysicalProperties = true;
             float focal = 35;
             float ax, ay, sizeX, sizeY;
             float x0, y0, shiftX, shiftY;
@@ -331,7 +349,7 @@ namespace RFUniverse.Attributes
                 if ((PlayerMain.Instance.simulationLayer.value & item.gameObject.layer) > 0)
                     item.gameObject.layer = PlayerMain.Instance.tempLayer;
             }
-            camera.cullingMask = 1 << PlayerMain.Instance.tempLayer;
+            Camera.cullingMask = 1 << PlayerMain.Instance.tempLayer;
         }
         protected void RevertLayer(BaseAttr target)
         {
@@ -341,7 +359,7 @@ namespace RFUniverse.Attributes
                 if ((PlayerMain.Instance.simulationLayer.value & trans[i].gameObject.layer) > 0)
                     trans[i].gameObject.layer = originLayers[i];
             }
-            camera.cullingMask = PlayerMain.Instance.simulationLayer;
+            Camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
 
         List<Rect> ddBBOX = null;
@@ -351,7 +369,7 @@ namespace RFUniverse.Attributes
             foreach (var item in BaseAttr.Attrs.Values)
             {
                 Rect rect = Get2DBBOX(item);
-                if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < camera.pixelWidth && rect.min.y < camera.pixelHeight)
+                if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
                     ddBBOX.Add(rect);
             }
         }
@@ -369,7 +387,7 @@ namespace RFUniverse.Attributes
                 foreach (var item in vertices)
                 {
                     Vector3 point = render.transform.TransformPoint(item);
-                    point = camera.WorldToScreenPoint(point);
+                    point = Camera.WorldToScreenPoint(point);
                     if (point.x > maxX) maxX = point.x;
                     if (point.x < minX) minX = point.x;
                     if (point.y > maxY) maxY = point.y;
@@ -385,8 +403,8 @@ namespace RFUniverse.Attributes
             foreach (var item in BaseAttr.Attrs.Values)
             {
                 Tuple<Vector3, Vector3, Vector3> box = Get3DBBOX(item);
-                Vector3 center = camera.WorldToScreenPoint(box.Item1);
-                if (center.x > 0 && center.y > 0 && center.x < camera.pixelWidth && center.y < camera.pixelHeight)
+                Vector3 center = Camera.WorldToScreenPoint(box.Item1);
+                if (center.x > 0 && center.y > 0 && center.x < Camera.pixelWidth && center.y < Camera.pixelHeight)
                     dddBBOX.Add(box);
             }
         }

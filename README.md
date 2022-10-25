@@ -16,7 +16,7 @@ Unity端Player：接收python端消息并执行仿真
    
    [RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-2. Clone pyrfuniverse仓库，并正确配置环境：
+2. Clone pyrfuniverse仓库，切换到与Release相同的Tag，正确配置环境：
    
    <https://github.com/mvig-robotflow/pyrfuniverse>
    
@@ -92,7 +92,7 @@ package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: UR
 
 打开RFUniverse工程或导入RFUniverse Core SDK后需要自行补充第三方插件和资源
 
-**请将插件放入Plugins目录下**
+**请将插件放入Plugins目录**
 
 免费：
 
@@ -102,7 +102,7 @@ package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: UR
 
 - (可选：删除EditMode目录以消除报错)[Modern UI Pack](https://assetstore.unity.com/packages/tools/gui/modern-ui-pack-201717)：Edit模式的UI插件，提供了便捷美观的UI控件
 - (可选)[Obi](https://assetstore.unity.com/publishers/5170)：Softbody，Cloth，Fluid等物理仿真插件
-- (可选)[BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：IK解算插件，**请注意导入该插件时不要覆盖工程中现有的文件BioIK.cs脚本**
+- (可选：删除Plugins/BioIK目录以消除报错)[BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：IK解算插件，**请注意导入该插件时不要覆盖工程中现有的文件BioIK.cs脚本**
 
 按需自行下载的模型资源文件
 

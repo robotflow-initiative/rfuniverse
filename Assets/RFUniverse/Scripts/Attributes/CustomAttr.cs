@@ -14,7 +14,7 @@ namespace RFUniverse.Attributes
             get { return "Custom"; }
         }
 
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             AssetManager.Instance.AddListener("ListenerMessage", ListenerMessage);

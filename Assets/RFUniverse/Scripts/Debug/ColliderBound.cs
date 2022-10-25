@@ -8,7 +8,7 @@ namespace RFUniverse.DebugTool
         public GameObject sphere;
         public MeshRenderer capsule;
         public MeshFilter mesh;
-        private Collider collider;
+        private new Collider collider;
         public Collider Collider
         {
             get

@@ -17,6 +17,14 @@
       0.0
     ]
   },
+  "groundPosition": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
   "assetsData": {
     "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
     "$values": [
@@ -2298,238 +2306,6 @@
                 "target": 0.0,
                 "targetVelocity": 0.0
               }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ArticulationData, Assembly-CSharp",
-              "bodyName": "panda_hand",
-              "anchorPosition": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "anchorRotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.7071068,
-                  0.7071068
-                ]
-              },
-              "JointType": 0,
-              "linearLockX": 2,
-              "linearLockY": 2,
-              "linearLockZ": 2,
-              "swingYLock": 2,
-              "swingZLock": 2,
-              "twistLock": 2,
-              "xDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "yDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "zDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ArticulationData, Assembly-CSharp",
-              "bodyName": "panda_rightfinger",
-              "anchorPosition": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "anchorRotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0,
-                  1.0
-                ]
-              },
-              "JointType": 1,
-              "linearLockX": 1,
-              "linearLockY": 0,
-              "linearLockZ": 0,
-              "swingYLock": 2,
-              "swingZLock": 2,
-              "twistLock": 2,
-              "xDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.04,
-                "stiffness": 100000.0,
-                "damping": 9000.0,
-                "forceLimit": 3.402823E+38,
-                "target": 0.04,
-                "targetVelocity": 0.0
-              },
-              "yDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "zDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ArticulationData, Assembly-CSharp",
-              "bodyName": "panda_leftfinger",
-              "anchorPosition": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "anchorRotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  1.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "JointType": 1,
-              "linearLockX": 1,
-              "linearLockY": 0,
-              "linearLockZ": 0,
-              "swingYLock": 2,
-              "swingZLock": 2,
-              "twistLock": 2,
-              "xDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.04,
-                "stiffness": 100000.0,
-                "damping": 9000.0,
-                "forceLimit": 3.402823E+38,
-                "target": 0.04,
-                "targetVelocity": 0.0
-              },
-              "yDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "zDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ArticulationData, Assembly-CSharp",
-              "bodyName": "panda_grasptarget",
-              "anchorPosition": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "anchorRotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.7071068,
-                  0.7071068
-                ]
-              },
-              "JointType": 0,
-              "linearLockX": 2,
-              "linearLockY": 2,
-              "linearLockZ": 2,
-              "swingYLock": 2,
-              "swingZLock": 2,
-              "twistLock": 2,
-              "xDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "yDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              },
-              "zDrive": {
-                "$type": "RFUniverse.Attributes.MyArticulationDrive, Assembly-CSharp",
-                "lowerLimit": 0.0,
-                "upperLimit": 0.0,
-                "stiffness": 0.0,
-                "damping": 0.0,
-                "forceLimit": 3.40282347E+38,
-                "target": 0.0,
-                "targetVelocity": 0.0
-              }
             }
           ]
         },
@@ -2570,8 +2346,8 @@
               "physicMateria": {
                 "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
                 "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
                 "frictionCombine": 0,
                 "bounceCombine": 0
               }
@@ -2810,8 +2586,8 @@
               "physicMateria": {
                 "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
                 "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
                 "frictionCombine": 0,
                 "bounceCombine": 0
               }
@@ -2850,128 +2626,8 @@
               "physicMateria": {
                 "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
                 "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
-                "frictionCombine": 0,
-                "bounceCombine": 0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
-              "meshName": "hand",
-              "type": 5,
-              "position": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "rotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "scale": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  1.0,
-                  1.0,
-                  1.0
-                ]
-              },
-              "radius": 1.0,
-              "height": 1.0,
-              "direction": 0,
-              "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
-                "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
-                "frictionCombine": 0,
-                "bounceCombine": 0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
-              "meshName": "rightfinger",
-              "type": 5,
-              "position": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "rotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "scale": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  1.0,
-                  1.0,
-                  1.0
-                ]
-              },
-              "radius": 1.0,
-              "height": 1.0,
-              "direction": 0,
-              "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
-                "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
-                "frictionCombine": 0,
-                "bounceCombine": 0
-              }
-            },
-            {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
-              "meshName": "leftfinger",
-              "type": 5,
-              "position": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "rotation": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  0.0,
-                  0.0,
-                  0.0
-                ]
-              },
-              "scale": {
-                "$type": "System.Single[], mscorlib",
-                "$values": [
-                  1.0,
-                  1.0,
-                  1.0
-                ]
-              },
-              "radius": 1.0,
-              "height": 1.0,
-              "direction": 0,
-              "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
-                "bounciness": 0.0,
-                "dynamicFriction": 0.0,
-                "staticFriction": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
                 "frictionCombine": 0,
                 "bounceCombine": 0
               }

@@ -53,7 +53,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
         }

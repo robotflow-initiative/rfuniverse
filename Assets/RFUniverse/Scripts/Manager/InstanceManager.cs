@@ -1,6 +1,8 @@
 ﻿using RFUniverse.Attributes;
 using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RFUniverse.Manager
 {
@@ -30,8 +32,8 @@ namespace RFUniverse.Manager
                 BaseAttr.Attrs[id].ReceiveData(msg);
             else if (AssetManager.Instance.waitingMsg.ContainsKey(id))
             {
-                Debug.LogWarning($"ID:{id} is loading");
-                AssetManager.Instance.waitingMsg[id].Add(msg);
+                Debug.LogWarning($"ID:{id} is loading, add in waiting msg");
+                AssetManager.Instance.waitingMsg[id].Add(new IncomingMessage(msg.GetRawBytes()));
             }
             else
                 Debug.LogError($"ID:{id} not exist");
@@ -39,8 +41,9 @@ namespace RFUniverse.Manager
         public virtual void CollectData()
         {
             OutgoingMessage msg = new OutgoingMessage();
-            msg.WriteInt32(BaseAttr.Attrs.Count);
-            foreach (var attr in BaseAttr.Attrs.Values)
+            List<BaseAttr> activeAttr = BaseAttr.Attrs.Where((s) => s.Value.gameObject.activeInHierarchy).Select((s) => s.Value).ToList();
+            msg.WriteInt32(activeAttr.Count);
+            foreach (var attr in activeAttr)
             {
                 msg.WriteInt32(attr.ID);
                 msg.WriteString(attr.Type);

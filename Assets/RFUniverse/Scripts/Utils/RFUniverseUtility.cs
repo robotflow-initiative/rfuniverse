@@ -156,5 +156,45 @@ namespace RFUniverse
             }
             return datas;
         }
+
+        public static List<Vector3> ListFloatToListVector3(List<float> floats)
+        {
+            List<Vector3> v3s = new List<Vector3>();
+            int i = 0;
+            while (i + 2 < floats.Count)
+                v3s.Add(new Vector3(floats[i++], floats[i++], floats[i++]));
+            return v3s;
+        }
+        public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
+        {
+            List<float> fs = new List<float>();
+            foreach (var item in v3s)
+            {
+                fs.Add(item.x);
+                fs.Add(item.y);
+                fs.Add(item.z);
+            }
+            return fs;
+        }
+        public static List<Quaternion> ListFloatToListQuaternion(List<float> floats)
+        {
+            List<Quaternion> qs = new List<Quaternion>();
+            int i = 0;
+            while (i + 3 < floats.Count)
+                qs.Add(new Quaternion(floats[i++], floats[i++], floats[i++], floats[i++]));
+            return qs;
+        }
+        public static List<float> ListQuaternionToListFloat(List<Quaternion> qs)
+        {
+            List<float> fs = new List<float>();
+            foreach (var item in qs)
+            {
+                fs.Add(item.x);
+                fs.Add(item.y);
+                fs.Add(item.z);
+                fs.Add(item.w);
+            }
+            return fs;
+        }
     }
 }

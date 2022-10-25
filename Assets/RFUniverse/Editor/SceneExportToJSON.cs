@@ -17,7 +17,7 @@ namespace RFUniverse
         {
             SceneData data = new SceneData();
             List<BaseAttr> attrs = FindObjectsOfType<BaseAttr>().ToList();
-            data.ground = PlayerMain.Instance.Ground;
+            data.ground = PlayerMain.Instance.GroundActive;
             if (!PlayerMain.Instance.mainCamera)
             {
                 UnityEngine.Debug.LogError("No Camera");
@@ -26,7 +26,7 @@ namespace RFUniverse
             data.cameraPosition = new float[] { PlayerMain.Instance.mainCamera.transform.position.x, PlayerMain.Instance.mainCamera.transform.position.y, PlayerMain.Instance.mainCamera.transform.position.z };
             data.cameraRotation = new float[] { PlayerMain.Instance.mainCamera.transform.eulerAngles.x, PlayerMain.Instance.mainCamera.transform.eulerAngles.y, PlayerMain.Instance.mainCamera.transform.eulerAngles.z };
             if (data.ground)
-                data.groundPosition = new float[] { PlayerMain.Instance.ground.transform.position.x, PlayerMain.Instance.ground.transform.position.y, PlayerMain.Instance.ground.transform.position.z };
+                data.groundPosition = new float[] { PlayerMain.Instance.Ground.transform.position.x, PlayerMain.Instance.Ground.transform.position.y, PlayerMain.Instance.Ground.transform.position.z };
             List<BaseAttr> attrsTmp = new List<BaseAttr>(attrs);
             foreach (var item in attrsTmp)
             {

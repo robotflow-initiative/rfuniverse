@@ -31,13 +31,15 @@ namespace RFUniverse.Attributes
         {
             get { return "Rigidbody"; }
         }
-        private Rigidbody rigidbody = null;
+        new private Rigidbody rigidbody = null;
         public Rigidbody Rigidbody
         {
             get
             {
                 if (rigidbody == null)
                     rigidbody = GetComponent<Rigidbody>();
+                if (rigidbody == null)
+                    rigidbody = gameObject.AddComponent<Rigidbody>();
                 return rigidbody;
             }
         }
@@ -56,7 +58,7 @@ namespace RFUniverse.Attributes
                 rigidbodyData = value;
             }
         }
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
         }
