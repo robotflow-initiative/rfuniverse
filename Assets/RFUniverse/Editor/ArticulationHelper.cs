@@ -13,13 +13,12 @@ public class ArticulationHelper : MonoBehaviour
     [MenuItem("RFUniverse/Articulation Helper/Normalize RFUniverse Articulation")]
     static void NormalizeRFUniverseArticulation()
     {
-        if (Selection.gameObjects.Length == 0)
+        if (Selection.activeGameObject == null)
         {
             Debug.LogError("No gameobject selected");
             return;
         }
-        GameObject articulationRoot = Selection.gameObjects[0];
-        RFUniverseUtility.NormalizeRFUniverseArticulation(articulationRoot);
+        RFUniverseUtility.NormalizeRFUniverseArticulation(Selection.activeGameObject);
     }
 
     [MenuItem("RFUniverse/Articulation Helper/Print all joint and index")]

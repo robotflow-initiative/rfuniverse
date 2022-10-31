@@ -112,7 +112,7 @@ namespace RFUniverse.Attributes
         [SerializeField]
         private List<ArticulationData> articulationDatas;
 
-        [Attr("Articulations")]
+        [EditableAttr("Articulations")]
         public List<ArticulationData> ArticulationDatas
         {
             get
@@ -617,6 +617,12 @@ namespace RFUniverse.Attributes
                 case "TurnRight":
                     TurnRight(msg);
                     return;
+                case "GripperOpen":
+                    GripperOpen();
+                    return;
+                case "GripperClose":
+                    GripperClose();
+                    return;
                 case "EnabledNativeIK":
                     EnabledNativeIK(msg);
                     return;
@@ -712,8 +718,12 @@ namespace RFUniverse.Attributes
         }
         private void EnabledNativeIK(IncomingMessage msg)
         {
-#if BIOIK
             bool enabled = msg.ReadBoolean();
+            EnabledNativeIK(enabled);
+        }
+        private void EnabledNativeIK(bool enabled)
+        {
+#if BIOIK
             BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>();
             if (bioIK == null)
             {
@@ -803,36 +813,44 @@ namespace RFUniverse.Attributes
         {
             float distance = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            GetComponent<ICustomMove>().Forward(distance, speed);
+            GetComponent<ICustomMove>()?.Forward(distance, speed);
         }
         private void MoveBack(IncomingMessage msg)
         {
             float distance = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            GetComponent<ICustomMove>().Back(distance, speed);
+            GetComponent<ICustomMove>()?.Back(distance, speed);
         }
         private void TurnLeft(IncomingMessage msg)
         {
             float angle = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            GetComponent<ICustomMove>().Left(angle, speed);
+            GetComponent<ICustomMove>()?.Left(angle, speed);
         }
         private void TurnRight(IncomingMessage msg)
         {
             float angle = msg.ReadFloat32();
             float speed = msg.ReadFloat32();
-            GetComponent<ICustomMove>().Right(angle, speed);
+            GetComponent<ICustomMove>()?.Right(angle, speed);
         }
-        public override void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
+        private void GripperOpen()
         {
-            if (set_position)
+            GetComponent<ICustomGripper>()?.Open();
+        }
+        private void GripperClose()
+        {
+            GetComponent<ICustomGripper>()?.Close();
+        }
+        public override void SetTransform(bool setPosition, bool setRotation, bool setScale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
+        {
+            if (setPosition)
             {
                 if (worldSpace)
                     transform.position = position;
                 else
                     transform.localPosition = position;
             }
-            if (set_rotation)
+            if (setRotation)
             {
                 if (worldSpace)
                     transform.eulerAngles = rotation;
@@ -853,10 +871,6 @@ namespace RFUniverse.Attributes
 
             List<float> jointPositions = msg.ReadFloatList().ToList();
             List<float> speedScales = msg.ReadFloatList().ToList();
-            SetJointPosition(jointPositions, speedScales);
-        }
-        private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
-        {
             SetJointPosition(jointPositions, speedScales, ControlMode.Target);
         }
         public void SetJointPosition(List<float> jointPositions)

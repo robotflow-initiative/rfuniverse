@@ -1,20 +1,22 @@
 ﻿using Robotflow.RFUniverse.SideChannels;
 using RFUniverse.Manager;
-
-public class InfoChannel : SideChannel
+namespace RFUniverse
 {
-    BaseManager Manager = null;
-    public InfoChannel(BaseManager manager, string uuid)
+    public class InfoChannel : SideChannel
     {
-        ChannelId = new System.Guid(uuid);
-        Manager = manager;
-    }
-    protected override void OnMessageReceived(IncomingMessage msg)
-    {
-        Manager?.ReceiveData(msg);
-    }
-    public void SendMetaDataToPython(OutgoingMessage msg)
-    {
-        QueueMessageToSend(msg);
+        BaseManager Manager = null;
+        public InfoChannel(BaseManager manager, string uuid)
+        {
+            ChannelId = new System.Guid(uuid);
+            Manager = manager;
+        }
+        protected override void OnMessageReceived(IncomingMessage msg)
+        {
+            Manager?.ReceiveData(msg);
+        }
+        public void SendMetaDataToPython(OutgoingMessage msg)
+        {
+            QueueMessageToSend(msg);
+        }
     }
 }

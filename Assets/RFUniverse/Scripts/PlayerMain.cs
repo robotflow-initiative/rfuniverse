@@ -5,8 +5,9 @@ namespace RFUniverse
     public class PlayerMain : RFUniverseMain
     {
         public static PlayerMain Instance = null;
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Instance = this;
             MaterialPropertyBlock mpb = new MaterialPropertyBlock();
             mpb.SetColor("_IDColor", Color.black);

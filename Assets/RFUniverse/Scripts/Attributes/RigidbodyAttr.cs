@@ -46,7 +46,7 @@ namespace RFUniverse.Attributes
 
         [SerializeField]
         private RigidbodyData rigidbodyData = new RigidbodyData();
-        [Attr("Rigidbody")]
+        [EditableAttr("Rigidbody")]
         public RigidbodyData RigidbodyData
         {
             get

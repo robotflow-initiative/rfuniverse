@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 8403022067523355462}
+  axisCamera: {fileID: 8403022067630339421}
   ground: {fileID: 8403022068214923500}
   sun: {fileID: 1891555477}
   simulationLayer:
@@ -216,7 +217,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 191
+    m_Bits: 159
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

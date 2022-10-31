@@ -18,13 +18,13 @@ namespace RFUniverse
             SceneData data = new SceneData();
             List<BaseAttr> attrs = FindObjectsOfType<BaseAttr>().ToList();
             data.ground = PlayerMain.Instance.GroundActive;
-            if (!PlayerMain.Instance.mainCamera)
+            if (!PlayerMain.Instance.MainCamera)
             {
                 UnityEngine.Debug.LogError("No Camera");
                 return;
             }
-            data.cameraPosition = new float[] { PlayerMain.Instance.mainCamera.transform.position.x, PlayerMain.Instance.mainCamera.transform.position.y, PlayerMain.Instance.mainCamera.transform.position.z };
-            data.cameraRotation = new float[] { PlayerMain.Instance.mainCamera.transform.eulerAngles.x, PlayerMain.Instance.mainCamera.transform.eulerAngles.y, PlayerMain.Instance.mainCamera.transform.eulerAngles.z };
+            data.cameraPosition = new float[] { PlayerMain.Instance.MainCamera.transform.position.x, PlayerMain.Instance.MainCamera.transform.position.y, PlayerMain.Instance.MainCamera.transform.position.z };
+            data.cameraRotation = new float[] { PlayerMain.Instance.MainCamera.transform.eulerAngles.x, PlayerMain.Instance.MainCamera.transform.eulerAngles.y, PlayerMain.Instance.MainCamera.transform.eulerAngles.z };
             if (data.ground)
                 data.groundPosition = new float[] { PlayerMain.Instance.Ground.transform.position.x, PlayerMain.Instance.Ground.transform.position.y, PlayerMain.Instance.Ground.transform.position.z };
             List<BaseAttr> attrsTmp = new List<BaseAttr>(attrs);

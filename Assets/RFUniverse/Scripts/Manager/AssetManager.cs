@@ -175,12 +175,12 @@ namespace RFUniverse.Manager
                 TypeNameHandling = TypeNameHandling.Auto
             });
             List<string> names = data.assetsData.Select((a) => a.name).ToList();
-            PreLoadAssetsAsync(names, () =>
+            PreLoadAssetsAsync(names, (Action)(() =>
             {
                 data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
                 PlayerMain.Instance.GroundActive = data.ground;
-                PlayerMain.Instance.mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
-                PlayerMain.Instance.mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+                PlayerMain.Instance.MainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
+                PlayerMain.Instance.MainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
                 PlayerMain.Instance.Ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
                 foreach (var item in data.assetsData)
                 {
@@ -191,7 +191,7 @@ namespace RFUniverse.Manager
                     SendLoadDoneMsg();
                 }
                 onCompleted?.Invoke();
-            }, false);
+            }), false);
         }
         void SendLoadDoneMsg()
         {
@@ -296,7 +296,7 @@ namespace RFUniverse.Manager
                     attr.Instance();
                     foreach (var item in waitingMsg[id])
                     {
-                        Debug.Log("run a waiting msg");
+                        Debug.Log("run waiting msg");
                         InstanceManager.Instance.ReceiveData(item);
                         item.Dispose();
                     }
@@ -333,6 +333,14 @@ namespace RFUniverse.Manager
             Debug.Log("LoadMesh:" + path);
             GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
             RigidbodyAttr attr = obj.AddComponent<RigidbodyAttr>();
+            foreach (var item in obj.GetComponentsInChildren<Renderer>())
+            {
+                foreach (var mat in item.materials)
+                {
+                    mat.SetFloat("_Metallic", 0);
+                    mat.SetFloat("_Glossiness", 0);
+                }
+            }
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
             attr.GenerateVHACDCollider();

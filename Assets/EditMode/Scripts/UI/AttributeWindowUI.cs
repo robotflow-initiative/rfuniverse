@@ -44,12 +44,12 @@ namespace RFUniverse.EditMode
                 item.gameObject.SetActive(false);
             }
             attributesToggle[0].isOn = false;
-            
+
             Type type = baseAttr.GetType();
             PropertyInfo[] ps = type.GetProperties();
             foreach (var item in ps)
             {
-                AttrAttribute a = item.GetCustomAttribute<AttrAttribute>(false);
+                EditableAttrAttribute a = item.GetCustomAttribute<EditableAttrAttribute>(false);
                 if (a == null) continue;
                 AssetManager.Instance.GetGameObject(a.Name, (gameObject) =>
                  {

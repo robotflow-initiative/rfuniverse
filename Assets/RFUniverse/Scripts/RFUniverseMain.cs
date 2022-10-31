@@ -8,12 +8,22 @@ namespace RFUniverse
     {
 
         [SerializeField]
-        public Camera mainCamera;
+        private Camera mainCamera;
         public Camera MainCamera
         {
             get
             {
                 return mainCamera;
+            }
+        }
+
+        [SerializeField]
+        private Camera axisCamera;
+        public Camera AxisCamera
+        {
+            get
+            {
+                return axisCamera;
             }
         }
 
@@ -26,6 +36,7 @@ namespace RFUniverse
                 return ground;
             }
         }
+
         public bool GroundActive
         {
             get
@@ -38,6 +49,7 @@ namespace RFUniverse
                 ground.SetActive(value);
             }
         }
+
         [SerializeField]
         private Light sun;
         public Light Sun
@@ -50,5 +62,10 @@ namespace RFUniverse
         public LayerMask simulationLayer = 1 << 0;//常规显示层
         public int axisLayer = 6;//debug显示层
         public int tempLayer = 21;//相机渲染临时层
+
+        protected virtual void Awake()
+        {
+            AxisCamera.cullingMask = 1 << axisLayer;
+        }
     }
 }

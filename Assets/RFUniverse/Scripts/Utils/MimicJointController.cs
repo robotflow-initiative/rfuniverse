@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MimicJointController : MonoBehaviour
 {
-    
+
     private ArticulationBody[] articulationChain;
     private MimicJoint[] mimicJoints;
     private List<MimicJoint> mimicRootJoints;
@@ -22,13 +22,14 @@ public class MimicJointController : MonoBehaviour
         {
             mimicToNode.Add(mimic, new TreeNode<MimicJoint>(mimic));
         }
-        
+
         foreach (var mimic in mimicJoints)
         {
             if (mimic.Parent == null)
             {
                 mimicRootJoints.Add(mimic);
-            } else
+            }
+            else
             {
                 var parentNode = mimicToNode[mimic.Parent];
                 var currentNode = mimicToNode[mimic];
@@ -48,9 +49,9 @@ public class MimicJointController : MonoBehaviour
         }
         else if (parentJoint.jointType != ArticulationJointType.FixedJoint)
         {
-            currentDrive.target = parentJoint.jointPosition[0]*Mathf.Rad2Deg * child.multiplier + child.offset;
+            currentDrive.target = parentJoint.jointPosition[0] * Mathf.Rad2Deg * child.multiplier + child.offset;
         }
-        
+
         childJoint.xDrive = currentDrive;
     }
 

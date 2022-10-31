@@ -178,8 +178,8 @@ namespace RFUniverse.Attributes
         }
         void AlignView()
         {
-            transform.position = PlayerMain.Instance.mainCamera.transform.position;
-            transform.rotation = PlayerMain.Instance.mainCamera.transform.rotation;
+            transform.position = PlayerMain.Instance.MainCamera.transform.position;
+            transform.rotation = PlayerMain.Instance.MainCamera.transform.rotation;
         }
         Texture2D GetRGB(IncomingMessage msg)
         {

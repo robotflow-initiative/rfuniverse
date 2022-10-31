@@ -36,7 +36,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        [Attr("Color")]
+        [EditableAttr("Color")]
         public Color Color
         {
             get

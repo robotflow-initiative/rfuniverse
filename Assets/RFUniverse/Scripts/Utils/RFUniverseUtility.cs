@@ -16,12 +16,17 @@ namespace RFUniverse
             return new Color32((byte)r, (byte)g, (byte)b, 255);
         }
 
-        public static List<T> GetChildComponentFilter<T>(this BaseAttr attr) where T : Component
+        public static List<TResult> GetChildComponentFilter<TResult>(this BaseAttr parent) where TResult : Component
         {
-            List<T> components = new List<T>();
-            foreach (var item in attr.GetComponentsInChildren<T>())
+            return GetChildComponentFilter<BaseAttr, TResult>(parent);
+        }
+
+        public static List<TResult> GetChildComponentFilter<TParent, TResult>(TParent parent) where TParent : Component where TResult : Component
+        {
+            List<TResult> components = new List<TResult>();
+            foreach (var item in parent.GetComponentsInChildren<TResult>())
             {
-                if (item.GetComponentInParent<BaseAttr>() == attr)
+                if (item.GetComponentInParent<TParent>() == parent)
                     components.Add(item);
             }
             return components;
@@ -45,87 +50,118 @@ namespace RFUniverse
         public static ControllerAttr NormalizeRFUniverseArticulation(GameObject root)
         {
             ControllerAttr attr = root.GetComponent<ControllerAttr>() ?? root.AddComponent<ControllerAttr>();
-            // Add basic script for root node
-            IgnoreSelfCollision ign = root.GetComponent<IgnoreSelfCollision>() ?? root.AddComponent<IgnoreSelfCollision>();
-            if (root.transform.GetChild(1).GetComponent<ArticulationBody>() == null)
-                root.transform.GetChild(1).gameObject.AddComponent<ArticulationBody>();
+
             // Remove URDFImporter Scripts
-            Controller controller = root.GetComponentInChildren<Controller>();
-            Destroy(controller);
-            UrdfRobot urdfRobot = root.GetComponentInChildren<UrdfRobot>();
-            Destroy(urdfRobot);
             UrdfPlugins urdfPlugins = root.GetComponentInChildren<UrdfPlugins>();
-            Destroy(urdfPlugins.gameObject);
+            if (urdfPlugins != null)
+                Destroy(urdfPlugins.gameObject);
+            Controller controller = root.GetComponentInChildren<Controller>();
+            if (controller != null)
+                Destroy(controller);
+            UrdfRobot urdfRobot = root.GetComponentInChildren<UrdfRobot>();
+            if (urdfRobot != null)
+                Destroy(urdfRobot);
             UrdfLink[] urdfLinks = root.GetComponentsInChildren<UrdfLink>();
             foreach (var urdfLink in urdfLinks)
             {
                 Destroy(urdfLink);
             }
-            UrdfInertial[] urdfInertials = root.GetComponentsInChildren<UrdfInertial>();
-            foreach (var urdfInertial in urdfInertials)
+            UrdfInertial[] urdfInertial = root.GetComponentsInChildren<UrdfInertial>();
+            foreach (var item in urdfInertial)
             {
-                Destroy(urdfInertial);
+                Destroy(item);
             }
-            UrdfJoint[] urdfJoints = root.GetComponentsInChildren<UrdfJoint>();
-            foreach (var urdfJoint in urdfJoints)
+            UrdfJoint[] urdfJoint = root.GetComponentsInChildren<UrdfJoint>();
+            foreach (var item in urdfJoint)
             {
-                Destroy(urdfJoint);
+                Destroy(item);
             }
-            UrdfVisuals[] urdfVisuals = root.GetComponentsInChildren<UrdfVisuals>();
-            foreach (var urdfVisual in urdfVisuals)
+
+            UrdfVisual[] urdfVisual = root.GetComponentsInChildren<UrdfVisual>();
+            foreach (var item in urdfVisual)
             {
-                Destroy(urdfVisual);
+                Destroy(item);
             }
-            UrdfVisual[] urdfVisuals1 = root.GetComponentsInChildren<UrdfVisual>();
-            foreach (var urdfVisual1 in urdfVisuals1)
+
+            UrdfCollision[] urdfCollision = root.GetComponentsInChildren<UrdfCollision>();
+            foreach (var item in urdfCollision)
             {
-                Destroy(urdfVisual1);
+                Destroy(item);
             }
-            UrdfCollisions[] urdfCollisions = root.GetComponentsInChildren<UrdfCollisions>();
-            foreach (var urdfCollision in urdfCollisions)
-            {
-                Destroy(urdfCollision);
-            }
-            UrdfCollision[] urdfCollisions1 = root.GetComponentsInChildren<UrdfCollision>();
-            foreach (var urdfCollision1 in urdfCollisions1)
-            {
-                Destroy(urdfCollision1);
-            }
+
+            // Add basic script for root node
+            IgnoreSelfCollision ign = root.GetComponent<IgnoreSelfCollision>() ?? root.AddComponent<IgnoreSelfCollision>();
+            if (root.transform.GetChild(0).GetComponent<ArticulationBody>() == null)
+                root.transform.GetChild(0).gameObject.AddComponent<ArticulationBody>();
 
             // Add RFUniverse scripts
             ArticulationBody[] articulationBodies = root.GetComponentsInChildren<ArticulationBody>();
-            for (int i = 0; i < articulationBodies.Length; ++i)
+            foreach (var body in articulationBodies)
             {
-                //articulationBodies[i].useGravity = false;
-
-                if (articulationBodies[i].gameObject.GetComponent<ArticulationUnit>() == null)
+                if (body.gameObject.GetComponent<ArticulationUnit>() == null)
                 {
-                    articulationBodies[i].gameObject.AddComponent<ArticulationUnit>();
+                    body.gameObject.AddComponent<ArticulationUnit>();
+                }
+                if (body.isRoot)
+                {
+                    body.immovable = true;
                 }
 
-                if (articulationBodies[i].isRoot)
-                {
-                    articulationBodies[i].immovable = true;
-                }
-
-                var xDrive = articulationBodies[i].xDrive;
+                var xDrive = body.xDrive;
                 xDrive.stiffness = 100000;
                 xDrive.damping = 9000;
                 xDrive.forceLimit = float.MaxValue;
-                articulationBodies[i].xDrive = xDrive;
+                body.xDrive = xDrive;
 
-                var yDrive = articulationBodies[i].yDrive;
+                var yDrive = body.yDrive;
                 yDrive.stiffness = 100000;
                 yDrive.damping = 9000;
                 yDrive.forceLimit = float.MaxValue;
-                articulationBodies[i].yDrive = yDrive;
+                body.yDrive = yDrive;
 
-                var zDrive = articulationBodies[i].zDrive;
+                var zDrive = body.zDrive;
                 zDrive.stiffness = 100000;
                 zDrive.damping = 9000;
                 zDrive.forceLimit = float.MaxValue;
-                articulationBodies[i].zDrive = zDrive;
+                body.zDrive = zDrive;
+
+                List<Renderer> renders = GetChildComponentFilter<ArticulationBody, Renderer>(body);
+                foreach (var item in renders)
+                {
+#if UNITY_EDITOR
+                    GameObject prefab = UnityEditor.PrefabUtility.GetNearestPrefabInstanceRoot(item.gameObject);
+                    if (prefab != null)
+                        UnityEditor.PrefabUtility.UnpackPrefabInstance(prefab, UnityEditor.PrefabUnpackMode.OutermostRoot, UnityEditor.InteractionMode.AutomatedAction);
+#endif
+                    item.transform.SetParent(body.transform);
+                    item.transform.SetSiblingIndex(0);
+                }
+                List<Collider> colliders = GetChildComponentFilter<ArticulationBody, Collider>(body);
+                for (int i = 0; i < colliders.Count; i++)
+                {
+                    Collider collider = colliders[i];
+#if UNITY_EDITOR
+                    GameObject prefab = UnityEditor.PrefabUtility.GetNearestPrefabInstanceRoot(collider.gameObject);
+                    if (prefab != null)
+                        UnityEditor.PrefabUtility.UnpackPrefabInstance(prefab, UnityEditor.PrefabUnpackMode.OutermostRoot, UnityEditor.InteractionMode.AutomatedAction);
+#endif
+                    int index = Mathf.Min(renders.Count - 1, i);
+                    collider.transform.parent = renders[index].transform;
+                }
             }
+
+            UrdfVisuals[] urdfVisuals = root.GetComponentsInChildren<UrdfVisuals>();
+            foreach (var item in urdfVisuals)
+            {
+                Destroy(item.gameObject);
+            }
+            UrdfCollisions[] urdfCollisions = root.GetComponentsInChildren<UrdfCollisions>();
+            foreach (var item in urdfCollisions)
+            {
+                Destroy(item.gameObject);
+            }
+
+            attr.GetJointParameters();
             return attr;
         }
 

@@ -95,8 +95,9 @@ namespace RFUniverse.EditMode
             Instance = this;
         }
         string filePath => Application.streamingAssetsPath + "/SceneData";
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Instance = this;
             Physics.autoSimulation = false;
             Physics.gravity = Vector3.zero;
@@ -287,8 +288,8 @@ namespace RFUniverse.EditMode
                 TypeNameHandling = TypeNameHandling.Auto
             });
             GroundActive = data.ground;
-            mainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
-            mainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+            MainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
+            MainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
             Ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
             AssetManager.Instance.PreLoadAssetsAsync(data.assetsData.Select((a) => a.name).ToList(), () =>
             {
@@ -304,13 +305,13 @@ namespace RFUniverse.EditMode
         {
             SceneData data = new SceneData();
             data.ground = GroundActive;
-            if (!PlayerMain.Instance.mainCamera)
+            if (!PlayerMain.Instance.MainCamera)
             {
                 UnityEngine.Debug.LogError("No Camera");
                 return;
             }
-            data.cameraPosition = new float[] { mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z };
-            data.cameraRotation = new float[] { mainCamera.transform.eulerAngles.x, mainCamera.transform.eulerAngles.y, mainCamera.transform.eulerAngles.z };
+            data.cameraPosition = new float[] { MainCamera.transform.position.x, MainCamera.transform.position.y, MainCamera.transform.position.z };
+            data.cameraRotation = new float[] { MainCamera.transform.eulerAngles.x, MainCamera.transform.eulerAngles.y, MainCamera.transform.eulerAngles.z };
             if (data.ground)
                 data.groundPosition = new float[] { Ground.transform.position.x, Ground.transform.position.y, Ground.transform.position.z };
             foreach (var item in editableUnits.Values)

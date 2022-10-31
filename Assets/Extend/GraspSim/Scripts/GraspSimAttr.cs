@@ -80,7 +80,7 @@ public class GraspSimAttr : BaseAttr
         envs.Clear();
         grippers.Clear();
         targets.Clear();
-        PlayerMain.Instance.GroundActive = false;
+
 
         //创建初始环境
         Transform env = new GameObject($"Env0").transform;
@@ -115,6 +115,8 @@ public class GraspSimAttr : BaseAttr
     Quaternion graspPointRotaion;
     IEnumerator GraspSim()
     {
+        bool sourceGround = PlayerMain.Instance.GroundActive;
+        PlayerMain.Instance.GroundActive = false;
         //复制并行环境
         int wCount = Mathf.FloorToInt(Mathf.Sqrt(parallelCount));
         for (int i = 1; i < parallelCount; i++)
@@ -126,19 +128,28 @@ public class GraspSimAttr : BaseAttr
             newEnv.localPosition = new Vector3(w * 2, 0, h * 2);
             envs.Add(newEnv);
 
-            RigidbodyAttr newTarget = GameObject.Instantiate(targets[0]);
-            newTarget.transform.SetParent(newEnv);
+            RigidbodyAttr newTarget = GameObject.Instantiate(targets[0], newEnv);
             targets.Add(newTarget);
 
-            ControllerAttr newGripper = GameObject.Instantiate(grippers[0]);
+            ControllerAttr newGripper = GameObject.Instantiate(grippers[0], newEnv);
             newGripper.Init();
-            newGripper.transform.SetParent(newEnv);
             newGripper.SetTransform(true, true, false, grippers[0].transform.localPosition, grippers[0].transform.localRotation.eulerAngles, Vector3.zero, false);
             grippers.Add(newGripper);
         }
         //开始循环
         for (int i = 0; i < allPoints.Count; i += parallelCount)
         {
+            Vector3 tempGravity = Physics.gravity;
+            Physics.gravity = Vector3.zero;
+            //打开gripper
+            for (int j = 0; j < parallelCount; j++)
+            {
+                grippers[j].SetJointPositionDirectly(new List<float>(new float[] { 0.04f, 0.04f }));
+            }
+            yield return new WaitForFixedUpdate();
+            //设置物体位置
+            List<Vector3> startPositions = new List<Vector3>();
+            List<Vector3> startRotations = new List<Vector3>();
             for (int j = 0; j < parallelCount; j++)
             {
                 if (i + j >= allPoints.Count) break;
@@ -146,7 +157,6 @@ public class GraspSimAttr : BaseAttr
                 Quaternion quaternion = allQuaternions[i + j];
                 Transform localEnv = envs[j];
                 RigidbodyAttr localTarget = targets[j];
-                ControllerAttr localGripper = grippers[j];
 
                 Transform graspPoint = new GameObject("GraspPoint").transform;
                 graspPoint.SetParent(localTarget.transform);
@@ -159,40 +169,67 @@ public class GraspSimAttr : BaseAttr
                 graspPoint.localRotation = graspPointRotaion;
                 localTarget.transform.SetParent(localEnv);
                 GameObject.Destroy(graspPoint.gameObject);
-                //local to world(env)
-                // localTarget.transform.localRotation = graspPointRotaion * Quaternion.Inverse(quaternion);
-                // localTarget.transform.localPosition = Vector3.up + (-localTarget.transform.position);
-                // quaternion = (localTarget.transform.rotation * quaternion) * localEnv.transform.rotation;
-                // localGripper.transform.localRotation = graspPointToGripperQuaternion * quaternion;
-                // point = localEnv.InverseTransformPoint(localTarget.transform.TransformPoint(point));
-                // graspPoint = localGripper.jointParameters.LastOrDefault().body.transform;
-                // Vector3 graspPointToGripperVector3 = localGripper.transform.position - graspPoint.transform.position;
-                // localGripper.SetTransform(true, false, false, point + graspPointToGripperVector3, Vector3.zero, Vector3.zero, false);
                 localTarget.Rigidbody.velocity = Vector3.zero;
-                localGripper.SetJointPositionDirectly(new List<float>(new float[] { 0.04f, 0.04f }));
-                localGripper.SetJointPosition(new List<float>(new float[] { 0, 0 }));
+                startPositions.Add(localTarget.transform.position);
+                startRotations.Add(localTarget.transform.eulerAngles);
             }
-            Vector3 gravity = Physics.gravity;
-            Physics.gravity = Vector3.zero;
+            for (int j = 0; j < 5; j++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            bool[] envSuccess = new bool[parallelCount];
+            //初始状态检查
+            for (int j = 0; j < parallelCount; j++)
+            {
+
+                //检测第一帧后碰撞状态
+                //envSuccess[j] = !targets[j].GetComponent<CollisionState>().collision;
+
+                //检测第一帧后速度
+                //envSuccess[j] = (targets[j].Rigidbody.velocity.sqrMagnitude < 0.0001f);
+
+                //检测第5帧后pose
+                if (i + j >= allPoints.Count) break;
+                envSuccess[j] = Vector3.Distance(targets[j].transform.position, startPositions[j]) < 0.001f;
+                envSuccess[j] &= Vector3.Angle(targets[j].transform.eulerAngles, startRotations[j]) < 0.1;
+            }
+            //闭合gripper开始抓取
+            for (int j = 0; j < parallelCount; j++)
+            {
+                if (!envSuccess[j]) continue;
+                grippers[j].SetJointPosition(new List<float>(new float[] { 0, 0 }));
+            }
+            //等待抓取
             for (int j = 0; j < 100; j++)
             {
                 yield return new WaitForFixedUpdate();
             }
-            Physics.gravity = gravity;
-            for (int j = 0; j < 200; j++)
+            //启用重力 等待掉落
+            Physics.gravity = tempGravity;
+            for (int j = 0; j < 100; j++)
             {
                 yield return new WaitForFixedUpdate();
             }
-            //判断并写入数据
+            //判断结束状态物体速度
             for (int j = 0; j < parallelCount; j++)
             {
-                if (success.Count < allPoints.Count)
+                if (!envSuccess[j]) continue;
+                envSuccess[j] &= (targets[j].Rigidbody.velocity.sqrMagnitude < 0.01f);
+            }
+            //写入结果
+            for (int j = 0; j < parallelCount; j++)
+            {
+                if (success.Count >= allPoints.Count) break;
+                success.Add(envSuccess[j]);
+                Debug.Log(envSuccess[j]);
+                if (envSuccess[j])
                 {
-                    success.Add(targets[j].Rigidbody.velocity.sqrMagnitude < 0.1f);
-                    Debug.Log(targets[j].Rigidbody.velocity.sqrMagnitude < 0.1f);
                     List<float> width = grippers[j].GetJointPositions();
                     gripperWidth.Add(width[0] + width[1]);
                 }
+                else
+                    gripperWidth.Add(0);
+
             }
         }
         //清理
@@ -201,7 +238,8 @@ public class GraspSimAttr : BaseAttr
             GameObject.Destroy(envs[i].gameObject);
         }
         isDone = true;
-        PlayerMain.Instance.GroundActive = true;
+        PlayerMain.Instance.GroundActive = sourceGround;
+        System.GC.Collect();
     }
     void ShowGraspPose(IncomingMessage msg)
     {
@@ -277,12 +315,13 @@ public class GraspSimAttr : BaseAttr
             }
         }
     }
+
     // void OnDrawGizmos()
     // {
     //     for (int i = 0; i < allPoints.Count; i++)
     //     {
     //         Gizmos.color = Color.white;
-    //         Gizmos.DrawSphere(allPoints[i], 0.005f);
+    //         Gizmos.DrawSphere(allPoints[i], 0.001f);
     //         Gizmos.color = Color.green;
     //         Gizmos.DrawLine(allPoints[i], allPoints[i] + allQuaternions[i] * Vector3.up * 0.01f);
     //         Gizmos.color = Color.red;

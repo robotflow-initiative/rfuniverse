@@ -78,7 +78,7 @@ namespace RFUniverse.Attributes
         [SerializeField]
         private List<ColliderData> colliderDatas;
 
-        [Attr("Colliders")]
+        [EditableAttr("Colliders")]
         public List<ColliderData> ColliderDatas
         {
             get
