@@ -63,8 +63,28 @@ namespace RFUniverse
         public int axisLayer = 6;//debug显示层
         public int tempLayer = 21;//相机渲染临时层
 
+        class ConfigData
+        {
+            public string assets_path = "";
+            public string executable_file = "";
+        }
         protected virtual void Awake()
         {
+            string userPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+            string configPath = $"{userPath}/.rfuniverse/config.json";
+            print(configPath);
+            if (System.IO.File.Exists(configPath))
+            {
+                string configString = System.IO.File.ReadAllText(configPath);
+                ConfigData config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigData>(configString);
+                if (UnityEngine.Application.isEditor)
+                    config.executable_file = "";
+                else
+                    config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                configString = Newtonsoft.Json.JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented);
+                System.IO.File.WriteAllText(configPath, configString);
+            }
+
             AxisCamera.cullingMask = 1 << axisLayer;
         }
     }

@@ -3,6 +3,7 @@ using RFUniverse.Attributes;
 using System.Collections.Generic;
 using Unity.Robotics.UrdfImporter.Control;
 using Unity.Robotics.UrdfImporter;
+using System.Linq;
 
 namespace RFUniverse
 {
@@ -54,7 +55,7 @@ namespace RFUniverse
             // Remove URDFImporter Scripts
             UrdfPlugins urdfPlugins = root.GetComponentInChildren<UrdfPlugins>();
             if (urdfPlugins != null)
-                Destroy(urdfPlugins.gameObject);
+                GameObject.DestroyImmediate(urdfPlugins.gameObject);
             Controller controller = root.GetComponentInChildren<Controller>();
             if (controller != null)
                 Destroy(controller);
@@ -125,7 +126,9 @@ namespace RFUniverse
                 zDrive.forceLimit = float.MaxValue;
                 body.zDrive = zDrive;
 
-                List<Renderer> renders = GetChildComponentFilter<ArticulationBody, Renderer>(body);
+                List<Transform> renders = GetChildComponentFilter<ArticulationBody, Renderer>(body).Select((s) => s.transform).ToList();
+                if (renders.Count == 0)
+                    renders.Add(new GameObject("None").transform);
                 foreach (var item in renders)
                 {
 #if UNITY_EDITOR
@@ -133,8 +136,8 @@ namespace RFUniverse
                     if (prefab != null)
                         UnityEditor.PrefabUtility.UnpackPrefabInstance(prefab, UnityEditor.PrefabUnpackMode.OutermostRoot, UnityEditor.InteractionMode.AutomatedAction);
 #endif
-                    item.transform.SetParent(body.transform);
-                    item.transform.SetSiblingIndex(0);
+                    item.SetParent(body.transform);
+                    item.SetSiblingIndex(0);
                 }
                 List<Collider> colliders = GetChildComponentFilter<ArticulationBody, Collider>(body);
                 for (int i = 0; i < colliders.Count; i++)
@@ -145,8 +148,12 @@ namespace RFUniverse
                     if (prefab != null)
                         UnityEditor.PrefabUtility.UnpackPrefabInstance(prefab, UnityEditor.PrefabUnpackMode.OutermostRoot, UnityEditor.InteractionMode.AutomatedAction);
 #endif
+                    collider.name = "Collider";
                     int index = Mathf.Min(renders.Count - 1, i);
-                    collider.transform.parent = renders[index].transform;
+                    if (index >= 0 && index < renders.Count)
+                        collider.transform.parent = renders[index];
+                    else
+                        collider.transform.parent = body.transform;
                 }
             }
 
@@ -162,6 +169,9 @@ namespace RFUniverse
             }
 
             attr.GetJointParameters();
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(root);
+#endif
             return attr;
         }
 
@@ -231,6 +241,30 @@ namespace RFUniverse
                 fs.Add(item.w);
             }
             return fs;
+        }
+        public static List<int> GetChildIndexQueue(this Transform transform, Transform child)
+        {
+            if (!child.GetComponentsInParent<Transform>().Contains(transform)) return null;
+            List<int> indexQueue = new List<int>();
+            Transform current = child;
+            do
+            {
+                indexQueue.Add(current.GetSiblingIndex());
+                current = current.parent;
+            }
+            while (current != transform);
+            indexQueue.Reverse();
+            return indexQueue;
+        }
+        public static Transform FindChildIndexQueue(this Transform transform, List<int> indexQueue)
+        {
+            if (indexQueue.Count == 0) return null;
+            foreach (var item in indexQueue)
+            {
+                transform = transform.GetChild(item);
+                if (transform == null) return null;
+            }
+            return transform;
         }
     }
 }

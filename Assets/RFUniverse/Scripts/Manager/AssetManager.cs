@@ -316,7 +316,6 @@ namespace RFUniverse.Manager
             GameObject robot = UrdfRobotExtensions.CreateRuntime(path, setting);
             robot.transform.SetParent(null);
             ControllerAttr attr = RFUniverseUtility.NormalizeRFUniverseArticulation(robot);
-            attr.GetJointParameters();
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
             attr.initBioIK = nativeIK;

@@ -144,7 +144,7 @@ public class GraspSimAttr : BaseAttr
             //打开gripper
             for (int j = 0; j < parallelCount; j++)
             {
-                grippers[j].SetJointPositionDirectly(new List<float>(new float[] { 0.04f, 0.04f }));
+                grippers[j].SetJointPosition(new List<float>(new float[] { 0.04f, 0.04f }), ControlMode.Direct);
             }
             yield return new WaitForFixedUpdate();
             //设置物体位置

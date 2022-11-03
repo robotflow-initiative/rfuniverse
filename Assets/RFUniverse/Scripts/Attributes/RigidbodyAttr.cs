@@ -44,20 +44,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        [SerializeField]
-        private RigidbodyData rigidbodyData = new RigidbodyData();
-        [EditableAttr("Rigidbody")]
-        public RigidbodyData RigidbodyData
-        {
-            get
-            {
-                return rigidbodyData;
-            }
-            set
-            {
-                rigidbodyData = value;
-            }
-        }
+
         public override void Init()
         {
             base.Init();
@@ -66,7 +53,7 @@ namespace RFUniverse.Attributes
         public override BaseAttrData GetAttrData()
         {
             RigidbodyAttrData data = new RigidbodyAttrData(base.GetAttrData());
-            data.rigidbodyData = RigidbodyData;
+            data.rigidbodyData = GetRigidbodyData();
             return data;
         }
         public override void SetAttrData(BaseAttrData setData)
@@ -75,12 +62,36 @@ namespace RFUniverse.Attributes
             if (setData is RigidbodyAttrData)
             {
                 RigidbodyAttrData data = setData as RigidbodyAttrData;
-
-                RigidbodyData = data.rigidbodyData;
-
-                Rigidbody.mass = RigidbodyData.mass;
-                Rigidbody.useGravity = RigidbodyData.useGravity;
+                SetRigidbodyData(data.rigidbodyData);
             }
+        }
+        private RigidbodyData rigidbodyData = new RigidbodyData();
+
+        [EditableAttr("Rigidbody")]
+        public RigidbodyData RigidbodyData
+        {
+            get
+            {
+                if (rigidbodyData == null)
+                    rigidbodyData = GetRigidbodyData();
+                return rigidbodyData;
+            }
+            set
+            {
+                rigidbodyData = value;
+            }
+        }
+        public RigidbodyData GetRigidbodyData()
+        {
+            RigidbodyData data = new RigidbodyData();
+            data.mass = Rigidbody.mass;
+            data.useGravity = Rigidbody.useGravity;
+            return data;
+        }
+        private void SetRigidbodyData(RigidbodyData data)
+        {
+            Rigidbody.mass = data.mass;
+            Rigidbody.useGravity = data.useGravity;
         }
         private Vector3 force = Vector3.zero;
         void FixedUpdate()

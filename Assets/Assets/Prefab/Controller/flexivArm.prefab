@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 7790070504592174624}
   - component: {fileID: 7421548756667457770}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 6832971406714721797}
   - component: {fileID: 5451779744412573325}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -614,7 +614,7 @@ GameObject:
   - component: {fileID: 5842058484772470901}
   - component: {fileID: 7305001942276399573}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 3079440669415124210}
   - component: {fileID: 1315563061817461204}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1157,7 +1157,7 @@ GameObject:
   - component: {fileID: 2910780124603461947}
   - component: {fileID: 723519357341450271}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1326,520 +1326,6 @@ MonoBehaviour:
   id: 621325
   attrName: flexivArm
   childs: []
-  colliderDatas:
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: default
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  articulationDatas:
-  - bodyName: base
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0.7071068
-    - 0.7071068
-    JointType: 0
-    linearLockX: 2
-    linearLockY: 2
-    linearLockZ: 2
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link1
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -164.99982
-      upperLimit: 164.99982
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link2
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -124.0001
-      upperLimit: 124.0001
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link3
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -175.00021
-      upperLimit: 175.00021
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link4
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -160.00018
-      upperLimit: 112.00007
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link5
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -175.00021
-      upperLimit: 175.00021
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link6
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -85.00001
-      upperLimit: 264.99985
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: link7
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -175.00021
-      upperLimit: 175.00021
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
   jointParameters:
   - body: {fileID: 732860744649856328}
     moveable: 0
@@ -1861,7 +1347,7 @@ MonoBehaviour:
     moveable: 1
   joints: []
   moveableJoints: []
-  initBioIK: 0
+  initBioIK: 1
 --- !u!114 &7588859497064683029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1970,7 +1456,7 @@ GameObject:
   - component: {fileID: 1379460035896194752}
   - component: {fileID: 7601694643866653437}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2115,7 +1601,7 @@ GameObject:
   - component: {fileID: 1236507017059579198}
   - component: {fileID: 6914394212637070549}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2331,7 +1817,7 @@ GameObject:
   - component: {fileID: 983347743974388127}
   - component: {fileID: 2818546714688927825}
   m_Layer: 0
-  m_Name: default
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -106,18 +106,18 @@ namespace RFUniverse.EditMode
 
             UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<EditAssetsData>("AssetsData").Completed += (handle) =>
             {
-                assetsData = handle.Result;
+                assetsData = handle.Result;//物体列表
                 ui.Init(assetsData.typeData,
-                (mode) => CurrentEditMode = mode,
-                (s) => currentSelectedCreate = s,
-                (index) => SelectUnitIndex(index),
-                () => DeleteCurrentUnit(),
-                (sa, sp, o, i) => ChangeValue(sa, sp, o, i),
-                (v3) => ChangeTransform(v3),
-                (s, i) => ChangeAttribute(s, i),
-                filePath,
-                (s, b) => SelectFile(s, b),
-                (b) => ChangeGround(b)
+                (mode) => CurrentEditMode = mode,//模式切换回调
+                (s) => currentSelectedCreate = s,//选择创建物体回调
+                (index) => SelectUnitIndex(index),//选择物体index回调
+                () => DeleteCurrentUnit(),//删除当前物体回调
+                (sa, sp, o, i) => ChangeValue(sa, sp, o, i),//改变物体属性回调
+                (v3) => ChangeTransform(v3),//修改位置回调
+                (s, i) => ChangeAttribute(s, i),//切换属性回调
+                filePath,//场景文件路径
+                (s, b) => SelectFile(s, b),//选择文件回调
+                (b) => ChangeGround(b)//开关地面回调
                 );
                 OnModeChange += ui.ModeChange;
                 OnModeChange += axis.ModeChange;
@@ -134,13 +134,15 @@ namespace RFUniverse.EditMode
         void ChangeAttribute(string attr, int index)
         {
             if (attr == "Articulations")
-                jointLimitView.SetArticulationData((CurrentSelectedUnit.attr as ControllerAttr).ArticulationDatas[index]);
+            {
+                jointLimitView.SetArticulationData((CurrentSelectedUnit.attr as ControllerAttr), (CurrentSelectedUnit.attr as ControllerAttr).ArticulationDatas[index]);
+            }
             else
-                jointLimitView.SetArticulationData(null);
+                jointLimitView.SetArticulationData(null, null);
             if (attr == "Colliders")
-                colldierView.SetColliderData((CurrentSelectedUnit.attr as ColliderAttr).ColliderDatas[index]);
+                colldierView.SetColliderData((CurrentSelectedUnit.attr as ColliderAttr), (CurrentSelectedUnit.attr as ColliderAttr).ColliderDatas[index]);
             else
-                colldierView.SetColliderData(null);
+                colldierView.SetColliderData(null, null);
         }
         void ChangeTransform(Vector3 vector3)
         {

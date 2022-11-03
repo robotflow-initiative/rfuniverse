@@ -12,7 +12,7 @@ namespace RFUniverse
 {
     public class SceneExportToJSON : Editor
     {
-        [MenuItem("RFUniverse/SceneExportToJSON")]
+        [MenuItem("RFUniverse/Scene Export To JSON")]
         public static void Export()
         {
             SceneData data = new SceneData();

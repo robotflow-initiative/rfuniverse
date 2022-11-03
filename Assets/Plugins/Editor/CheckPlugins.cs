@@ -6,12 +6,6 @@ using UnityEditor;
 
 public class CheckPlugins
 {
-    [MenuItem("RFUniverse/FixPlugins")]
-    private static void FixPlugins()
-    {
-        UnityEditor.PackageManager.Client.Add("com.unity.addressables");
-        UnityEditor.PackageManager.Client.Add("com.unity.textmeshpro");
-    }
     [InitializeOnLoadMethod]
     //[DidReloadScripts]
     private static void OnScriptsReloaded()

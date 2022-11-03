@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.48235294, g: 0.48235294, b: 0.48235294, a: 1}
+  m_SubtractiveShadowColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 2073347913}
   m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -3698,7 +3698,7 @@ PrefabInstance:
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
@@ -3708,7 +3708,7 @@ PrefabInstance:
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
@@ -3758,12 +3758,12 @@ PrefabInstance:
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224267535101231384, guid: f63e7af37cc635a48a0de550afaf79c5,
         type: 3}
@@ -6830,6 +6830,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594459882}
   m_CullTransparentMesh: 0
+--- !u!20 &1631582032 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8403022067630339421, guid: 484696e9928c00105b994a533d08f7b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2073347911}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1632742063
 GameObject:
   m_ObjectHideFlags: 0
@@ -10042,14 +10048,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 2073347915}
+  axisCamera: {fileID: 1631582032}
   ground: {fileID: 2073347914}
   sun: {fileID: 2073347913}
   simulationLayer:
     serializedVersion: 2
     m_Bits: 1
-  axisLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  axisLayer: 6
   tempLayer: 21
   ui: {fileID: 2050357776}
   unit: {fileID: 6242694432786964530, guid: 3014fbf994d45084384b404e460cb3fb, type: 3}

@@ -62,11 +62,11 @@ namespace RFUniverse.EditMode
                 // {
                 //     item.enabled = false;
                 // }
-                Rigidbody[] rigidbody = attrObject.GetComponentsInChildren<Rigidbody>();
-                foreach (var item in rigidbody)
-                {
-                    Destroy(item);
-                }
+                // Rigidbody[] rigidbody = attrObject.GetComponentsInChildren<Rigidbody>();
+                // foreach (var item in rigidbody)
+                // {
+                //     Destroy(item);
+                // }
                 ObiFixedUpdater[] obiUpdater = attrObject.GetComponentsInChildren<ObiFixedUpdater>();
                 foreach (var item in obiUpdater)
                 {

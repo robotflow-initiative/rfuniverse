@@ -25,7 +25,7 @@ namespace RFUniverse.Attributes
     [Serializable]
     public class ColliderData
     {
-        public string meshName = "";
+        public List<int> renderIndexQueue = new List<int>();
         public ColliderType type = ColliderType.Original;
         public float[] position = { 0, 0, 0 };
         public float[] rotation = { 0, 0, 0 };
@@ -33,16 +33,16 @@ namespace RFUniverse.Attributes
         public float radius = 1;
         public float height = 1;
         public int direction = 0;
-        public PhysicMaterialData physicMateria;
+        public PhysicMaterialData physicMateria = new PhysicMaterialData(null);
     }
     [Serializable]
     public class PhysicMaterialData
     {
-        public float bounciness;
-        public float dynamicFriction;
-        public float staticFriction;
-        public PhysicMaterialCombine frictionCombine;
-        public PhysicMaterialCombine bounceCombine;
+        public float bounciness = 0;
+        public float dynamicFriction = 0.6f;
+        public float staticFriction = 0.6f;
+        public PhysicMaterialCombine frictionCombine = PhysicMaterialCombine.Average;
+        public PhysicMaterialCombine bounceCombine = PhysicMaterialCombine.Average;
         public PhysicMaterialData(PhysicMaterial physicMaterial)
         {
             if (physicMaterial == null) return;
@@ -75,26 +75,10 @@ namespace RFUniverse.Attributes
     }
     public abstract class ColliderAttr : BaseAttr
     {
-        [SerializeField]
-        private List<ColliderData> colliderDatas;
-
-        [EditableAttr("Colliders")]
-        public List<ColliderData> ColliderDatas
-        {
-            get
-            {
-                return colliderDatas;
-            }
-            set
-            {
-                colliderDatas = value;
-            }
-        }
-
         public override BaseAttrData GetAttrData()
         {
             ColliderAttrData data = new ColliderAttrData(base.GetAttrData());
-            data.colliderDatas = ColliderDatas;
+            data.colliderDatas = GetColliderDatas();
             return data;
         }
         public override void SetAttrData(BaseAttrData setData)
@@ -103,8 +87,23 @@ namespace RFUniverse.Attributes
             if (setData is ColliderAttrData)
             {
                 ColliderAttrData data = setData as ColliderAttrData;
-                ColliderDatas = data.colliderDatas;
                 SetColliderDatas(data.colliderDatas);
+            }
+        }
+
+        private List<ColliderData> colliderDatas;
+        [EditableAttr("Colliders")]
+        public List<ColliderData> ColliderDatas
+        {
+            get
+            {
+                if (colliderDatas == null)
+                    colliderDatas = GetColliderDatas();
+                return colliderDatas;
+            }
+            set
+            {
+                colliderDatas = value;
             }
         }
         public List<ColliderData> GetColliderDatas()
@@ -114,24 +113,24 @@ namespace RFUniverse.Attributes
             {
                 ColliderData data = new ColliderData();
                 datas.Add(data);
-                data.meshName = item.gameObject.name;
+                data.renderIndexQueue = transform.GetChildIndexQueue(item.transform);
                 Transform child = item.transform.Find("Collider");
                 if (child == null)
                     data.type = ColliderType.None;
                 else
                 {
-                    Component[] com = child.GetComponents<Component>();
-                    if (com.Length == 1)
+                    Collider[] colliders = child.GetComponents<Collider>();
+                    if (colliders.Length == 0)
                     {
                         data.type = ColliderType.None;
                     }
-                    else if (com.Length > 2 || !(com[1] is Collider))
+                    else if (colliders.Length > 1)
                     {
                         data.type = ColliderType.Original;
                     }
                     else
                     {
-                        Collider collider = com[1] as Collider;
+                        Collider collider = colliders[0];
 
                         data.position = new float[3] { collider.transform.localPosition.x, collider.transform.localPosition.y, collider.transform.localPosition.z };
                         data.rotation = new float[3] { collider.transform.localEulerAngles.x, collider.transform.localEulerAngles.y, collider.transform.localEulerAngles.z };
@@ -174,7 +173,7 @@ namespace RFUniverse.Attributes
         {
             foreach (var data in datas)
             {
-                Transform render = transform.FindChlid(data.meshName, false);
+                Transform render = transform.FindChildIndexQueue(data.renderIndexQueue);
                 if (render == null) continue;
                 Transform collider = render.Find("Collider");
                 if (collider != null && data.type != ColliderType.Original)
@@ -310,11 +309,6 @@ namespace RFUniverse.Attributes
                 EditorUtility.SetDirty(script);
             }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Get Collider Datas"))
-            {
-                script.ColliderDatas = script.GetColliderDatas();
-                EditorUtility.SetDirty(script);
-            }
         }
     }
 #endif

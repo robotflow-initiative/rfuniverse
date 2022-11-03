@@ -11,9 +11,9 @@ namespace RFUniverse.EditMode
         public GameObject sphere;
         public MeshRenderer capsule;
         public MeshFilter mesh;
-        public void SetColliderData(ColliderData colliderData)
+        public void SetColliderData(ColliderAttr attr, ColliderData colliderData)
         {
-            if (colliderData == null)
+            if (attr == null || colliderData == null)
             {
                 transform.parent = null;
                 gameObject.SetActive(false);
@@ -21,7 +21,7 @@ namespace RFUniverse.EditMode
             }
             gameObject.SetActive(true);
 
-            Transform trans = EditMain.Instance.CurrentSelectedUnit.attr.transform.FindChlid(colliderData.meshName, false);
+            Transform trans = attr.transform.FindChildIndexQueue(colliderData.renderIndexQueue);
             transform.SetParent(trans);
             transform.localPosition = new Vector3(colliderData.position[0], colliderData.position[1], colliderData.position[2]);
             transform.localEulerAngles = new Vector3(colliderData.rotation[0], colliderData.rotation[1], colliderData.rotation[2]);

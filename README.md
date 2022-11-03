@@ -12,43 +12,36 @@ Unity端Player：接收python端消息并执行仿真
 
 按照以下步骤配置并通过发布版运行示例场景
 
-1. 下载最新的RFUniverse可执行程序并解压：
+1. 创建conda环境，激活并安装pyrfuniverse包：
+   ```
+   conda create -n rfuniverse python=3.9 -y
+   conda activate rfuniverse
+   pip install pyrfuniverse
+   ```
+2. 下载RFUniverse可执行程序并解压：
    
    [RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
+   
+   解压完成后运行一次程序，进入场景后即可关闭：
 
-2. Clone pyrfuniverse仓库，切换到与Release相同的Tag，正确配置环境：
+   Linux：RFUniverse.x86_64
+   
+   Windows：RFUniverse.exe
+3. Clone pyrfuniverse仓库，切换到与RFUniverse Release相同的Tag：
    
    <https://github.com/mvig-robotflow/pyrfuniverse>
-   
-   安装时请使用editable模式，以保证后续对源码的修改正确生效
-   
-   ```
-   pip install -e .
-   ```
 
-3. 在pyrfuniverse/envs/tobor_robotiq85_manipulation_env.py 第18行
-   
-   修改路径参数为第一步中解压后相对应的路径
-   
-   Linux:
-   
+4. 运行`pyrfuniverse/AtomicActions`，`pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
    ```
-   executable_file='~/RFUniverse/RFUniverse.x86_64'
+   cd pyrfuniverse/Test
+   python test_articulation_ik.py
    ```
-   
-   Windows:
-   
-   ```
-   executable_file='~/RFUniverse/RFUniverse.exe'
-   ```
-
-4. 运行`pyrfuniverse/AtomicActions/`下任意python脚本 
 
 ---
 
 ##### 进入Edit模式
 
-启动RFUniverse时添加参数<-edit>以进入Edit模式
+启动RFUniverse时添加参数<-edit>可进入Edit模式
 
 Linux:
 
@@ -151,7 +144,33 @@ pyrfuniverse/Test目录下有更多单项功能的示例
 
 ###### Attributes
 
-Attr是RFUniverse中物体的基本单元，所有的物体都是基于BaseAttr派生而来，如GameObjectAttr，RigidbodyAttr，ControllerAttr等
+Attr是RFUniverse中物体的基本单元，所有的物体都是基于BaseAttr派生而来，如GameObjectAttr，RigidbodyAttr，ControllerAttr， CmaeraAttr等
+
+```mermaid
+graph TD
+ Base-->BaseCamera
+Base-->...
+Base-->Collider
+BaseCamera-->Camera
+BaseCamera-->HDRPCamera
+Collider-->GameObject
+Collider-->Rigidbody
+Collider-->Controller
+```
+
+其中：
+
+BaseAttr提供了基础的物体加载创建删除移动等属性
+
+ColldierAttr扩展物体碰撞体的修改功能
+
+GameObject扩展物体视觉效果修改功能
+
+Rigidbody扩展物体的刚体属性
+
+Controller扩展机械臂关节体的操作功能
+
+CameraAttr
 
 ###### Manager
 

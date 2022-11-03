@@ -4,7 +4,7 @@ using UnityEditor;
 using RFUniverse.Attributes;
 public class ModelToRigidbodyPrefab : Editor
 {
-    [MenuItem("RFUniverse/ModelToRigidbodyPrefab")]
+    [MenuItem("RFUniverse/Model To Rigidbody Prefab")]
     public static void Generate()
     {
         GameObject[] objs = Selection.GetFiltered<GameObject>(SelectionMode.Assets);

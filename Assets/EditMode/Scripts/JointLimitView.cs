@@ -12,16 +12,16 @@ namespace RFUniverse.EditMode
         public GameObject prismaticX;
         public GameObject prismaticZ;
 
-        public void SetArticulationData(ArticulationData articulationData)
+        public void SetArticulationData(ControllerAttr attr, ArticulationData articulationData)
         {
-            if (articulationData == null)
+            if (attr == null || articulationData == null)
             {
                 gameObject.SetActive(false);
                 return;
             }
             gameObject.SetActive(true);
 
-            Transform trans = EditMain.Instance.CurrentSelectedUnit.attr.transform.FindChlid(articulationData.bodyName, false);
+            Transform trans = attr.transform.FindChildIndexQueue(articulationData.artIndexQueue);
             transform.SetParent(trans);
             transform.localPosition = new Vector3(articulationData.anchorPosition[0], articulationData.anchorPosition[1], articulationData.anchorPosition[2]);
             transform.localRotation = new Quaternion(articulationData.anchorRotation[0], articulationData.anchorRotation[1], articulationData.anchorRotation[2], articulationData.anchorRotation[3]);

@@ -13,9 +13,9 @@ namespace RFUniverse.Attributes
         }
         public GameObjectAttrData(BaseAttrData b) : base(b)
         {
+            type = "GameObject";
             if (b is GameObjectAttrData)
                 color = (b as GameObjectAttrData).color;
-            type = "GameObject";
         }
     }
     public class GameObjectAttr : ColliderAttr
@@ -24,15 +24,15 @@ namespace RFUniverse.Attributes
         {
             get { return "GameObject"; }
         }
-        public MeshRenderer render = null;
 
-        private MeshRenderer Render
+        private Material mat = null;
+        private Material Material
         {
             get
             {
-                if (render == null)
-                    render = GetComponentInChildren<MeshRenderer>();
-                return render;
+                if (mat == null)
+                    mat = GetComponentInChildren<Renderer>()?.material;
+                return mat;
             }
         }
 
@@ -41,15 +41,24 @@ namespace RFUniverse.Attributes
         {
             get
             {
-                if (Render != null && Render.sharedMaterial != null)
-                    return Render.sharedMaterial.GetColor("_Color");
+                if (Material != null)
+                    return Material.GetColor("_Color");
                 else
                     return Color.white;
             }
             set
             {
-                if (Render != null && Render.sharedMaterial != null)
-                    Render.material.SetColor("_Color", value);
+                if (Material != null)
+                    Material.SetColor("_Color", value);
+            }
+        }
+
+        public Texture2D Texture
+        {
+            set
+            {
+                if (Material != null)
+                    Material.SetTexture("_MainTex", value);
             }
         }
 
@@ -89,6 +98,9 @@ namespace RFUniverse.Attributes
                 case "SetColor":
                     SetColor(msg);
                     return;
+                case "SetTexture":
+                    SetTexture(msg);
+                    return;
             }
             base.AnalysisMsg(msg, type);
         }
@@ -119,6 +131,20 @@ namespace RFUniverse.Attributes
             float cb = msg.ReadFloat32();
             float ca = msg.ReadFloat32();
             Color = new Color(cr, cg, cb, ca);
+        }
+
+        private void SetTexture(IncomingMessage msg)
+        {
+            string path = msg.ReadString();
+            SetTexture(path);
+        }
+        private void SetTexture(string path)
+        {
+            if (!System.IO.File.Exists(path)) return;
+            byte[] data = System.IO.File.ReadAllBytes(path);
+            Texture2D tex = new Texture2D(1, 1);
+            tex.LoadImage(data);
+            Texture = tex;
         }
     }
 }

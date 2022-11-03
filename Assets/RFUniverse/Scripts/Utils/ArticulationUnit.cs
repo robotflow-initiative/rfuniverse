@@ -184,7 +184,7 @@ public class ArticulationUnit : MonoBehaviour
         articulationBody.zDrive = drive;
         articulationBody.jointVelocity = new ArticulationReducedSpace(jointTargetVelocity);
     }
-    public void SetJointTargetPosition(float jointPosition, ControlMode controlMode, float speedScale = 1.0f)
+    public void SetJointTargetPosition(float jointPosition, ControlMode controlMode, float speedScale = 1f)
     {
         this.controlMode = controlMode;
         this.speedScale = speedScale;
@@ -224,7 +224,6 @@ public class ArticulationUnit : MonoBehaviour
     private float CalculateCurrentTargetJointPosition()
     {
         float currentJointPosition = CalculateCurrentJointPosition();
-        float currentTargetJointPosition = 0.0f;
 
         // Check whether the joint has reached the target
         if (Mathf.Abs(currentJointPosition - targetJointPosition) < jointArrivingTolerance)
@@ -233,7 +232,7 @@ public class ArticulationUnit : MonoBehaviour
             direction = MovingDirection.None;
         }
 
-        currentTargetJointPosition = currentJointPosition + (float)direction * speedScale * speed * Time.fixedDeltaTime;
+        float currentTargetJointPosition = currentJointPosition + (float)direction * speedScale * speed * Time.fixedDeltaTime;
 
         return currentTargetJointPosition;
     }

@@ -58,7 +58,7 @@ namespace RFUniverse.Attributes
     [Serializable]
     public class ArticulationData
     {
-        public string bodyName;
+        public List<int> artIndexQueue = new List<int>();
         public float[] anchorPosition;
         public float[] anchorRotation;
 
@@ -76,24 +76,6 @@ namespace RFUniverse.Attributes
         public ArticulationData()
         {
         }
-        public ArticulationData(ArticulationBody body)
-        {
-            bodyName = body.name;
-            anchorPosition = new float[] { body.anchorPosition.x, body.anchorPosition.y, body.anchorPosition.z };
-            anchorRotation = new float[] { body.anchorRotation.x, body.anchorRotation.y, body.anchorRotation.z, body.anchorRotation.w };
-            JointType = body.jointType;
-
-            linearLockX = body.linearLockX;
-            linearLockY = body.linearLockY;
-            linearLockZ = body.linearLockZ;
-            swingYLock = body.swingYLock;
-            swingZLock = body.swingZLock;
-            twistLock = body.twistLock;
-
-            xDrive = new MyArticulationDrive(body.xDrive);
-            yDrive = new MyArticulationDrive(body.yDrive);
-            zDrive = new MyArticulationDrive(body.zDrive);
-        }
     }
     [Serializable]
     public class ArticulationParameter
@@ -109,21 +91,7 @@ namespace RFUniverse.Attributes
         {
             get { return "Controller"; }
         }
-        [SerializeField]
-        private List<ArticulationData> articulationDatas;
 
-        [EditableAttr("Articulations")]
-        public List<ArticulationData> ArticulationDatas
-        {
-            get
-            {
-                return articulationDatas;
-            }
-            set
-            {
-                articulationDatas = value;
-            }
-        }
         private ArticulationBody root;
         public ArticulationBody Root
         {
@@ -159,11 +127,12 @@ namespace RFUniverse.Attributes
                 InitBioIK();
             }
         }
+
         public override BaseAttrData GetAttrData()
         {
             ControllerData data = new ControllerData(base.GetAttrData());
 
-            data.articulationDatas = ArticulationDatas;
+            data.articulationDatas = GetArticulationDatas();
 
             return data;
         }
@@ -174,26 +143,57 @@ namespace RFUniverse.Attributes
             {
                 ControllerData data = setData as ControllerData;
 
-                ArticulationDatas = data.articulationDatas;
-                SetArticulationDatas(articulationDatas);
+                SetArticulationDatas(data.articulationDatas);
             }
         }
-        public void GetArticulationDatas()
+        private List<ArticulationData> articulationDatas;
+        [EditableAttr("Articulations")]
+        public List<ArticulationData> ArticulationDatas
         {
-            ArticulationDatas = new List<ArticulationData>();
+            get
+            {
+                if (articulationDatas == null)
+                    articulationDatas = GetArticulationDatas();
+                return articulationDatas;
+            }
+            set
+            {
+                articulationDatas = value;
+            }
+        }
+        public List<ArticulationData> GetArticulationDatas()
+        {
+            List<ArticulationData> datas = new List<ArticulationData>();
             List<ArticulationBody> bodys = this.GetChildComponentFilter<ArticulationBody>();
             if (bodys.Count > 0)
                 bodys.RemoveAt(0);
-            foreach (var item in bodys)
+            foreach (var body in bodys)
             {
-                ArticulationDatas.Add(new ArticulationData(item));
+                ArticulationData data = new ArticulationData();
+                datas.Add(data);
+                data.artIndexQueue = transform.GetChildIndexQueue(body.transform);
+                data.anchorPosition = new float[] { body.anchorPosition.x, body.anchorPosition.y, body.anchorPosition.z };
+                data.anchorRotation = new float[] { body.anchorRotation.x, body.anchorRotation.y, body.anchorRotation.z, body.anchorRotation.w };
+                data.JointType = body.jointType;
+
+                data.linearLockX = body.linearLockX;
+                data.linearLockY = body.linearLockY;
+                data.linearLockZ = body.linearLockZ;
+                data.swingYLock = body.swingYLock;
+                data.swingZLock = body.swingZLock;
+                data.twistLock = body.twistLock;
+
+                data.xDrive = new MyArticulationDrive(body.xDrive);
+                data.yDrive = new MyArticulationDrive(body.yDrive);
+                data.zDrive = new MyArticulationDrive(body.zDrive);
             }
+            return datas;
         }
         private void SetArticulationDatas(List<ArticulationData> datas)
         {
             foreach (var data in datas)
             {
-                Transform trans = transform.FindChlid(data.bodyName, true);
+                Transform trans = transform.FindChildIndexQueue(data.artIndexQueue);
                 if (trans == null) continue;
                 ArticulationBody body = trans.GetComponent<ArticulationBody>();
                 if (body == null) continue;
@@ -220,7 +220,7 @@ namespace RFUniverse.Attributes
             jointParameters = new List<ArticulationParameter>();
             foreach (var item in this.GetChildComponentFilter<ArticulationBody>())
             {
-                if (!item.GetComponent<ArticulationUnit>())
+                if (item.GetComponent<ArticulationUnit>() == null)
                     item.gameObject.AddComponent<ArticulationUnit>();
                 jointParameters.Add(new ArticulationParameter
                 {
@@ -584,6 +584,12 @@ namespace RFUniverse.Attributes
                 case "SetJointPositionDirectly":
                     SetJointPositionDirectly(msg);
                     return;
+                case "SetIndexJointPosition":
+                    SetIndexJointPosition(msg);
+                    return;
+                case "SetIndexJointPositionDirectly":
+                    SetIndexJointPositionDirectly(msg);
+                    return;
                 case "SetJointPositionContinue":
                     SetJointPositionContinue(msg);
                     return;
@@ -871,16 +877,7 @@ namespace RFUniverse.Attributes
 
             List<float> jointPositions = msg.ReadFloatList().ToList();
             List<float> speedScales = msg.ReadFloatList().ToList();
-            SetJointPosition(jointPositions, speedScales, ControlMode.Target);
-        }
-        public void SetJointPosition(List<float> jointPositions)
-        {
-            List<float> speedScales = new List<float>();
-            for (int i = 0; i < moveableJoints.Count; ++i)
-            {
-                speedScales.Add(1.0f);
-            }
-            SetJointPosition(jointPositions, speedScales, ControlMode.Target);
+            SetJointPosition(jointPositions, ControlMode.Target, speedScales);
         }
         private void SetJointPositionDirectly(IncomingMessage msg)
         {
@@ -892,17 +889,31 @@ namespace RFUniverse.Attributes
                 return;
             }
             List<float> jointPositions = msg.ReadFloatList().ToList();
-            SetJointPositionDirectly(jointPositions);
+            SetJointPosition(jointPositions, ControlMode.Direct);
         }
-        public void SetJointPositionDirectly(List<float> jointPositions)
+        private void SetIndexJointPosition(IncomingMessage msg)
         {
-            List<float> speedScales = new List<float>();
-            for (int i = 0; i < moveableJoints.Count; ++i)
+            int inedx = msg.ReadInt32();
+            if (moveableJoints.Count! > inedx)
             {
-                speedScales.Add(1.0f);
+                Debug.LogError($"The index of target joint positions is {inedx}, but the valid number of joints in robot arm is {moveableJoints.Count}");
+                return;
             }
-            SetJointPosition(jointPositions, speedScales, ControlMode.Direct);
+            float jointPosition = msg.ReadFloat32();
+            SetIndexJointPosition(inedx, jointPosition, ControlMode.Target);
         }
+        private void SetIndexJointPositionDirectly(IncomingMessage msg)
+        {
+            int inedx = msg.ReadInt32();
+            if (moveableJoints.Count! > inedx)
+            {
+                Debug.LogError($"The index of target joint positions is {inedx}, but the valid number of joints in robot arm is {moveableJoints.Count}");
+                return;
+            }
+            float jointPosition = msg.ReadFloat32();
+            SetIndexJointPosition(inedx, jointPosition, ControlMode.Direct);
+        }
+
         private void SetJointPositionContinue(IncomingMessage msg)
         {
             float startTime = Time.time * 1000;
@@ -941,7 +952,7 @@ namespace RFUniverse.Attributes
                 {
                     i++;
                 }
-                SetJointPosition(jointPositions[i], speedScales, ControlMode.Target);
+                SetJointPosition(jointPositions[i], ControlMode.Target);
             }
         }
         private void SetJointVelocity(IncomingMessage msg)
@@ -963,12 +974,21 @@ namespace RFUniverse.Attributes
                 moveableJoints[i].GetComponent<ArticulationUnit>().SetJointTargetVelocity(jointTargetVelocitys[i]);
             }
         }
-        private void SetJointPosition(List<float> jointTargetPositions, List<float> speedScales, ControlMode mode)
+        public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target, List<float> speedScales = null)
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                moveableJoints[i].GetComponent<ArticulationUnit>().SetJointTargetPosition(jointTargetPositions[i], mode, speedScales[i]);
+                float speedScale;
+                if (speedScales != null && speedScales.Count > i)
+                    speedScale = speedScales[i];
+                else
+                    speedScale = 1;
+                moveableJoints[i].GetComponent<ArticulationUnit>().SetJointTargetPosition(jointTargetPositions[i], mode, speedScale);
             }
+        }
+        private void SetIndexJointPosition(int index, float jointPosition, ControlMode mode = ControlMode.Target)
+        {
+            moveableJoints[index].GetComponent<ArticulationUnit>().SetJointTargetPosition(jointPosition, mode);
         }
         private void AddJointForce(List<Vector3> jointForces)
         {
@@ -1001,11 +1021,11 @@ namespace RFUniverse.Attributes
         {
             base.OnInspectorGUI();
             ControllerAttr script = target as ControllerAttr;
-            if (GUILayout.Button("Get Articulation Datas"))
-            {
-                script.GetArticulationDatas();
-                EditorUtility.SetDirty(script);
-            }
+            // if (GUILayout.Button("Get Articulation Datas"))
+            // {
+            //     script.GetArticulationDatas();
+            //     EditorUtility.SetDirty(script);
+            // }
             if (GUILayout.Button("Get Joint Parameters"))
             {
                 script.GetJointParameters();

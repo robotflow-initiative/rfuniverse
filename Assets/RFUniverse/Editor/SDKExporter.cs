@@ -15,7 +15,7 @@ namespace RFUniverse
             List<string> filePaths = new List<string>();
             filePaths.Add("Assets/RFUniverse");
             filePaths.Add("Assets/Plugins/Editor");
-            AssetDatabase.ExportPackage(filePaths.ToArray(), System.Environment.CurrentDirectory + "/RFUniverse_Core_SDK.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse | ExportPackageOptions.IncludeLibraryAssets);
+            AssetDatabase.ExportPackage(filePaths.ToArray(), $"{System.Environment.CurrentDirectory}/Build/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse | ExportPackageOptions.IncludeLibraryAssets);
         }
     }
 }
