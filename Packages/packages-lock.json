@@ -70,7 +70,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.15",
+      "version": "3.0.16",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -96,7 +96,7 @@
     },
     "com.unity.mathematics": {
       "version": "1.2.6",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -108,40 +108,14 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.render-pipelines.core": {
-      "version": "12.1.7",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.physics": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      }
-    },
-    "com.unity.render-pipelines.high-definition": {
-      "version": "12.1.7",
+    "com.unity.postprocessing": {
+      "version": "3.2.2",
       "depth": 0,
-      "source": "builtin",
+      "source": "registry",
       "dependencies": {
-        "com.unity.mathematics": "1.2.4",
-        "com.unity.burst": "1.6.0",
-        "com.unity.modules.video": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.imageconversion": "1.0.0",
-        "com.unity.modules.terrain": "1.0.0",
-        "com.unity.render-pipelines.core": "12.1.7",
-        "com.unity.shadergraph": "12.1.7",
-        "com.unity.visualeffectgraph": "12.1.7",
-        "com.unity.render-pipelines.high-definition-config": "12.1.7"
-      }
-    },
-    "com.unity.render-pipelines.high-definition-config": {
-      "version": "12.1.7",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.7"
-      }
+        "com.unity.modules.physics": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.robotics.urdf-importer": {
       "version": "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.5.2",
@@ -159,35 +133,19 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.searcher": {
-      "version": "4.9.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.shadergraph": {
-      "version": "12.1.7",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.7",
-        "com.unity.searcher": "4.9.1"
-      }
-    },
     "com.unity.sysroot": {
-      "version": "2.0.3",
+      "version": "2.0.4",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.3"
+        "com.unity.sysroot": "2.0.4"
       },
       "url": "https://packages.unity.com"
     },
@@ -212,12 +170,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.linux-x86_64": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.3",
-        "com.unity.sysroot.linux-x86_64": "2.0.2"
+        "com.unity.sysroot": "2.0.4",
+        "com.unity.sysroot.linux-x86_64": "2.0.3"
       },
       "url": "https://packages.unity.com"
     },
@@ -228,15 +186,6 @@
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
-      }
-    },
-    "com.unity.visualeffectgraph": {
-      "version": "12.1.7",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.shadergraph": "12.1.7",
-        "com.unity.render-pipelines.core": "12.1.7"
       }
     },
     "com.unity.modules.ai": {

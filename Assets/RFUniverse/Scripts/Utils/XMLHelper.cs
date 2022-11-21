@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
 /// <summary>
@@ -75,13 +76,15 @@ public static class XMLHelper
     {
         if (data == null) return null;
         XmlSerializer serializer = new XmlSerializer(typeof(T));
-        StringBuilder sb = new StringBuilder();
-        using (StringWriter stream = new StringWriter(sb))
+        MemoryStream stream = new MemoryStream();
+        XmlWriterSettings settings = new XmlWriterSettings();
+        settings.Encoding = Encoding.UTF8;
+        settings.Indent = true;
+        using (XmlWriter writer = XmlWriter.Create(stream, settings))
         {
-            serializer.Serialize(stream, data);
+            serializer.Serialize(writer, data);
         }
-
-        string s = sb.ToString();
+        string s = Encoding.UTF8.GetString(stream.ToArray());
         if (compress)
             s = Compress(s);
         if (encrypt)

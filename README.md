@@ -2,7 +2,7 @@
 
 RFUniverse是基于Unity开发的用于机器人仿真和强化学习的平台，主要有三个功能模块：
 
-[Python接口](https://github.com/mvig-robotflow/rfuniverse/blob/main/RFUniverse%20API.md)：Python封装的通信接口
+[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)Python接口：Python封装的通信接口
 
 Unity端Player：接收python端消息并执行仿真
 
@@ -13,28 +13,29 @@ Unity端Player：接收python端消息并执行仿真
 按照以下步骤配置并通过发布版运行示例场景
 
 1. 创建conda环境，激活并安装pyrfuniverse包：
+
    ```
    conda create -n rfuniverse python=3.9 -y
    conda activate rfuniverse
    pip install pyrfuniverse
    ```
 2. 下载RFUniverse可执行程序并解压：
-   
+
    [RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
-   
+
    解压完成后运行一次程序，进入场景后即可关闭：
 
    Linux：RFUniverse.x86_64
-   
+
    Windows：RFUniverse.exe
 3. Clone pyrfuniverse仓库，切换到与RFUniverse Release相同的Tag：
-   
-   <https://github.com/mvig-robotflow/pyrfuniverse>
 
-4. 运行`pyrfuniverse/AtomicActions`，`pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
+   [https://github.com/mvig-robotflow/pyrfuniverse](https://github.com/mvig-robotflow/pyrfuniverse)
+4. 运行 `pyrfuniverse/AtomicActions`，`pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
+
    ```
    cd pyrfuniverse/Test
-   python test_articulation_ik.py
+   python test_pick_and_place.py
    ```
 
 ---
@@ -67,7 +68,7 @@ RFUniverse.exe -edit
 
 如果你选择向自己的工程中导入RFUniverse Core SDK，还需要添加一些额外操作
 
-在ProjectSettings-Player-OtherSettings中勾选`Allow ‘unsafe’ Code`
+在ProjectSettings-Player-OtherSettings中勾选 `Allow ‘unsafe’ Code`
 
 在PackageManager中导入
 
@@ -100,7 +101,6 @@ package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: UR
 按需自行下载的模型资源文件
 
 - (可选)[iGibson扫描场景](https://svl.stanford.edu/igibson/)
-
 - (可选)[YCB数据集](http://ycb-benchmarks.s3-website-us-east-1.amazonaws.com/)
 
 ---
@@ -170,14 +170,13 @@ Rigidbody扩展物体的刚体属性
 
 Controller扩展机械臂关节体的操作功能
 
-CameraAttr
+CameraAttr扩展相机图像抓取功能
 
 ###### Manager
 
 Manager负责接受和发送不同类型的数据，每一个Manager有独立的channel与python保持通信，在运行过程中通过channel接受或发送数据。RFUniverser中有两个重要的Manager：
 
 - AssetManager：负责环境中通用的接口和数据的发送
-
 - InstanceManager：负责分发和收集面向不同Attr的接口和数据
 
 ---
@@ -189,11 +188,8 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
 ###### 搭建场景的基本流程：
 
 1. 复制一份Empty场景，在此基础上添加自己的物体或者将RFUniverse/Assets/Prefab/RFUniverse导入现有场景，同时移除场景中原本的MainCamera
-
 2. 为需要通信的物体添加BaseAttr脚本，手动设置不同的ID
-
 3. 将BaseAttr脚本添加到RFUniverse/Agent的BaseAgent脚本SceneAttr列表中
-
 4. 参照example编写python脚本，通过ID来读取物体上的信息并调用物体上的接口
 
 ---
@@ -205,16 +201,15 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
 接口分为全局接口(AssetManager)和面向对象接口(InstanceManager)
 
 * ###### 扩展Attr面向对象接口/属性
-  
-  在pyrfuniverse工程中，参照pyrfuniverse/attributes/custom_attr.py，在同目录下新建脚本，添加新增的消息读取代码和新接口，传入参数类型为`dict`，返回值类型为`OutgoingMessage`。并在pyrfuniverse/attributes/\_\_init\_\_.py中添加`import`，并加入`__all__`
-  
-  在Unity工程中，参照RFUniverse/Scripts/Attributes/CustomAttr.py脚本，新建脚本，继承`BaseAttr`或其他派生类，重写Type属性值与python脚本_attr前半段命名相同，重写`CollectData`在其中写入新增的数据，重写`AnalysisMsg`添加接口实现函数。
 
+  在pyrfuniverse工程中，参照pyrfuniverse/attributes/custom_attr.py，在同目录下新建脚本，添加新增的消息读取代码和新接口，传入参数类型为 `dict`，返回值类型为 `OutgoingMessage`。并在pyrfuniverse/attributes/\_\_init\_\_.py中添加 `import`，并加入 `__all__`
+
+  在Unity工程中，参照RFUniverse/Scripts/Attributes/CustomAttr.py脚本，新建脚本，继承 `BaseAttr`或其他派生类，重写Type属性值与python脚本_attr前半段命名相同，重写 `CollectData`在其中写入新增的数据，重写 `AnalysisMsg`添加接口实现函数。
 * ###### 扩展全局接口/属性
-  
-  在pyrfuniverse工程中，修改pyrfuniverse/rfuniverse_channer/asset_channer_ext.py脚本，参照现有代码，添加新增的消息读取代码和新接口，同样传入类型为`dict`，返回类型为`OutgoingMessage`
-  
-  在Unity工程中，修改AssetManagerExt.cs脚本，在`AnalysisMsg`方法的`switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置调用`AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`
+
+  在pyrfuniverse工程中，修改pyrfuniverse/rfuniverse_channer/asset_channer_ext.py脚本，参照现有代码，添加新增的消息读取代码和新接口，同样传入类型为 `dict`，返回类型为 `OutgoingMessage`
+
+  在Unity工程中，修改AssetManagerExt.cs脚本，在 `AnalysisMsg`方法的 `switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置调用 `AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`
 
 定制化接口的具体添加示例请看pyrfuniverse/Test/test_custom_message.py
 
@@ -225,33 +220,32 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
 除了固定参数的接口外，AssetManager还支持发送动态消息进行双向数据通信，更加灵活方便
 
 * **Python->Unity**
-  
+
   Unity工程
-  
+
   `AssetManger.Instance.AddListener(string message, Action<IncomingMessage> action);`
-  
-  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为`IncomingMessage`
-  
+
+  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
+
   python端
-  
+
   `env.asset_channel.SendMessage(self, message: str, *args)`
-  
-  传入消息名称和任意数量的数据进行发送
 
+  传入消息名称和任意数量的数据进行发送
 * **Unity->Python**
-  
+
   python端
-  
+
   `env.asset_channel.AddListener(self, message: str, fun)`
-  
-  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为`IncomingMessage`
-  
+
+  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
+
   Unity工程
-  
+
   `AssetManger.Instance.SendMessage(string message, params object[] objects);`
-  
+
   传入消息名称和任意数量的数据进行发送
 
-*请注意，动态消息必须保证接收函数中从`IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
+*请注意，动态消息必须保证接收函数中从 `IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
 
 动态消息接口的具体使用示例请看pyrfuniverse/Test/test_custom_message.py

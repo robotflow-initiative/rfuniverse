@@ -52,6 +52,7 @@ namespace RFUniverse.Attributes
             Camera.depth = -100;
             Camera.allowMSAA = true;
             Camera.allowHDR = false;
+            Camera.depthTextureMode |= DepthTextureMode.MotionVectors | DepthTextureMode.Depth;
             //Camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
         public override void CollectData(OutgoingMessage msg)

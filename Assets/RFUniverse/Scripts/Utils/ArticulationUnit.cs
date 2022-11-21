@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public enum MovingDirection
 {
     None = 0,
@@ -132,7 +131,7 @@ public class ArticulationUnit : MonoBehaviour
 
         if (controlMode == ControlMode.Direct)
         {
-            SetJointPositionDirectly();
+            SetJointPositionDirectly(targetJointPosition);
         }
         else if (controlMode == ControlMode.Target || controlMode == ControlMode.Speed)
         {
@@ -145,7 +144,7 @@ public class ArticulationUnit : MonoBehaviour
         {
             if (IsStable())
             {
-                SetJointPositionDirectly();
+                SetJointPositionDirectly(targetJointPosition);
             }
         }
     }
@@ -237,15 +236,19 @@ public class ArticulationUnit : MonoBehaviour
         return currentTargetJointPosition;
     }
 
-    private void SetJointPositionDirectly()
+    public void SetJointPositionDirectly(float target)
     {
+        ArticulationDrive drive = articulationBody.xDrive;
+        drive.target = target;
+        articulationBody.xDrive = drive;
+        
         if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
         {
-            articulationBody.jointPosition = new ArticulationReducedSpace(targetJointPosition * Mathf.Deg2Rad);
+            articulationBody.jointPosition = new ArticulationReducedSpace(target * Mathf.Deg2Rad);
         }
         else if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
         {
-            articulationBody.jointPosition = new ArticulationReducedSpace(targetJointPosition);
+            articulationBody.jointPosition = new ArticulationReducedSpace(target);
         }
         articulationBody.jointVelocity = new ArticulationReducedSpace(0);
         direction = MovingDirection.None;

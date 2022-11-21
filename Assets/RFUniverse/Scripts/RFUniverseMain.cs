@@ -72,7 +72,6 @@ namespace RFUniverse
         {
             string userPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
             string configPath = $"{userPath}/.rfuniverse/config.json";
-            print(configPath);
             if (System.IO.File.Exists(configPath))
             {
                 string configString = System.IO.File.ReadAllText(configPath);

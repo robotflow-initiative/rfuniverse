@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace BioIK
@@ -12,6 +13,8 @@ namespace BioIK
         //public bool SolveInEditMode = false;
 
         public bool isArticulations = false;
+        public Dictionary<Transform, float> targets = new Dictionary<Transform, float>();
+
         [SerializeField] private bool UseThreading = true;
 
         [SerializeField] private int Generations = 2;
@@ -81,12 +84,18 @@ namespace BioIK
             }
         }
 
-        void Update()
+        public void FixedUpdate1()
+        {
+            Update1();
+            LateUpdate1();
+        }
+
+        void Update1()
         {
             PrecaptureAnimation(Root);
         }
 
-        void LateUpdate()
+        void LateUpdate1()
         {
             PostcaptureAnimation(Root);
 
@@ -113,17 +122,21 @@ namespace BioIK
                     motion.SetTargetValue((float)Solution[i]);
                 }
                 */
-                if (isArticulations)
-                {
-                    ArticulationBody body = motion.Joint.Segment.transform.GetComponent<ArticulationBody>();
-                    if (body != null)
-                    {
-                        ArticulationDrive drive = body.xDrive;
-                        drive.target = (float)motion.TargetValue;
-                        body.xDrive = drive;
-                    }
-                }
-                else
+                //if (isArticulations)
+                //{
+                    //ArticulationBody body = motion.Joint.Segment.transform.GetComponent<ArticulationBody>();
+                    //if (body != null)
+                    //{
+                    Transform trans = motion.Joint.Segment.transform;
+                    if (targets.ContainsKey(trans))
+                        targets.Remove(trans);
+                    targets.Add(trans,(float)motion.TargetValue);
+                        //ArticulationDrive drive = body.xDrive;
+                        //drive.target = (float)motion.TargetValue;
+                        //body.xDrive = drive;
+                    //}
+                //}
+                //else
                     ProcessMotion(Root);
             }
         }

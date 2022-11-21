@@ -57,6 +57,15 @@ public class BaseAgent : Agent
     private void Start()
     {
         environmentParameters = Academy.Instance.EnvironmentParameters;
+        BaseAttr[] attrs = FindObjectsOfType<BaseAttr>();
+        List<BaseAttr> sceneAttr = new List<BaseAttr>(attrs);
+        foreach (var item in attrs)
+        {
+            foreach (var child in item.childs)
+            {
+                sceneAttr.Remove(child);
+            }
+        }
         foreach (var item in sceneAttr)
         {
             if (item != null)

@@ -190,8 +190,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -5.0019217
     upperLimit: 219.00166
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -289,8 +289,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -170.0023
     upperLimit: 170.0023
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -1014,8 +1014,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -170.0023
     upperLimit: 170.0023
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -1273,8 +1273,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -170.0023
     upperLimit: 170.0023
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -1596,8 +1596,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -180.00043
     upperLimit: 0
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -1781,8 +1781,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -105.000244
     upperLimit: 105.000244
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -1882,520 +1882,6 @@ MonoBehaviour:
   attrName: franka_panda
   childs:
   - {fileID: 2827087362304951104}
-  colliderDatas:
-  - meshName: link0
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - -0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0.6
-      staticFriction: 0.6
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link1
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link2
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link3
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link4
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link5
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link6
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - -0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0.6
-      staticFriction: 0.6
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: link7
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - -0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0.6
-      staticFriction: 0.6
-      frictionCombine: 0
-      bounceCombine: 0
-  articulationDatas:
-  - bodyName: panda_link1
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -170.0023
-      upperLimit: 170.0023
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link2
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -105.000244
-      upperLimit: 105.000244
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link3
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -170.0023
-      upperLimit: 170.0023
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link4
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -180.00043
-      upperLimit: 0
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link5
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -170.0023
-      upperLimit: 170.0023
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link6
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -5.0019217
-      upperLimit: 219.00166
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link7
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - -0.7071068
-    - 0.7071068
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -170.0023
-      upperLimit: 170.0023
-      stiffness: 10000
-      damping: 100
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_link8
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0.7071068
-    - 0.7071068
-    JointType: 0
-    linearLockX: 2
-    linearLockY: 2
-    linearLockZ: 2
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
   jointParameters:
   - body: {fileID: 8638672172247422982}
     moveable: 0
@@ -2665,8 +2151,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -170.0023
     upperLimit: 170.0023
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0

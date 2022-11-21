@@ -401,11 +401,13 @@ namespace RFUniverse.Attributes
 
         protected void SetActive(IncomingMessage msg)
         {
-            Debug.Log("SetActive");
             bool active = msg.ReadBoolean();
+            SetActive(active);
+        }
+        protected virtual void SetActive(bool active)
+        {
             gameObject.SetActive(active);
         }
-
         protected void SetLayer(IncomingMessage msg)
         {
             Debug.Log("SetLayer");
@@ -434,8 +436,6 @@ namespace RFUniverse.Attributes
             RemoveAttr(this);
             Destroy(gameObject);
         }
-
-
 
         float[] resultLocalPoint = null;
         void GetLoaclPointFromWorld(IncomingMessage msg)

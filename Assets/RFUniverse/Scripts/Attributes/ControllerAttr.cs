@@ -11,7 +11,7 @@ namespace RFUniverse.Attributes
 {
     public class ControllerData : ColliderAttrData
     {
-        public List<ArticulationData> articulationDatas;
+        public List<ArticulationData> articulationDatas= new List<ArticulationData>();
         public ControllerData() : base()
         {
             type = "Controller";
@@ -111,6 +111,7 @@ namespace RFUniverse.Attributes
         public List<ArticulationBody> moveableJoints = new List<ArticulationBody>();
 
         public bool initBioIK = false;
+        Transform iKFollow;
         Transform iKTarget;
         public override void Init()
         {
@@ -231,163 +232,341 @@ namespace RFUniverse.Attributes
                 });
             }
         }
+#if BIOIK
+        private BioIK.BioIK bioIK = null;
+#endif
+
+        private Dictionary<Transform, ArticulationBody> iKCopy = new ();
         public void InitBioIK()
         {
 #if BIOIK
-            BioIK.BioIK bioIK = GetComponent<BioIK.BioIK>() ?? gameObject.AddComponent<BioIK.BioIK>();
-            bioIK.isArticulations = true;
+            if (jointParameters.Count == 0) return;
+            Transform last = transform;
+            foreach (var item in jointParameters)
+            {
+                Transform current = new GameObject(item.body.transform.name).transform;
+                current.transform.SetParent(last);
+                iKCopy.Add(current.transform, item.body);
+                current.transform.localPosition = item.body.transform.localPosition;
+                current.transform.localRotation = item.body.transform.localRotation;
+                current.transform.localScale = item.body.transform.localScale;
+                last = current;
+            }
+            
+            Transform end = iKCopy.Last().Key;
+            iKFollow = new GameObject("iKFollowPoint").transform;
+            iKFollow.SetParent(end);
+            iKFollow.localPosition = Vector3.zero;
+            iKFollow.localRotation = Quaternion.identity;
+                
+            iKTarget = new GameObject("iKTargetPoint").transform;
+            iKTarget.SetParent(transform);
+            ResetIKTarget();
+            
+            bioIK = iKCopy.First().Key.gameObject.AddComponent<BioIK.BioIK>();
+            //bioIK.isArticulations = true;
             bioIK.SetGenerations(3);
             bioIK.SetPopulationSize(50);
             bioIK.SetElites(1);
-            bioIK.Smoothing = 1;
-            for (int i = 0; i < jointParameters.Count; i++)
+            bioIK.Smoothing = 0f;
+            foreach (var item in iKCopy)
             {
-                ArticulationParameter item = jointParameters[i];
-                if (item.moveable)
+                BioIK.BioJoint joint = bioIK.FindSegment(item.Key).AddJoint();
+                joint.SetAnchor(item.Value.anchorPosition);
+                joint.SetOrientation(item.Value.anchorRotation.eulerAngles);
+                joint.SetDefaultFrame(item.Value.transform.localPosition, item.Value.transform.localRotation);
+                switch (item.Value.jointType)
                 {
-                    BioIK.BioJoint joint = bioIK.FindSegment(item.body.transform).AddJoint();
-                    joint.SetAnchor(item.body.anchorPosition);
-                    joint.SetOrientation(item.body.anchorRotation.eulerAngles);
-                    joint.SetDefaultFrame(item.body.transform.localPosition, item.body.transform.localRotation);
-                    switch (item.body.jointType)
-                    {
-                        case ArticulationJointType.RevoluteJoint:
-                            joint.JointType = BioIK.JointType.Rotational;
-                            joint.X.Enabled = true;
-                            switch (item.body.twistLock)
-                            {
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            joint.Y.Enabled = false;
-                            joint.Z.Enabled = false;
-                            break;
-                        case ArticulationJointType.PrismaticJoint:
-                            joint.JointType = BioIK.JointType.Translational;
-                            switch (item.body.linearLockX)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.X.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            switch (item.body.linearLockY)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Y.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = true;
-                                    joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
-                                    joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
-                                    joint.Y.SetTargetValue(item.body.yDrive.target);
-                                    break;
-                            }
-                            switch (item.body.linearLockZ)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Z.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = true;
-                                    joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
-                                    joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
-                                    joint.Z.SetTargetValue(item.body.zDrive.target);
-                                    break;
-                            }
-                            break;
-                        case ArticulationJointType.SphericalJoint:
-                            joint.JointType = BioIK.JointType.Rotational;
-                            switch (item.body.twistLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.X.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            switch (item.body.swingYLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Y.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = true;
-                                    joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
-                                    joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
-                                    joint.Y.SetTargetValue(item.body.yDrive.target);
-                                    break;
-                            }
-                            switch (item.body.swingZLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Z.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = true;
-                                    joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
-                                    joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
-                                    joint.Z.SetTargetValue(item.body.zDrive.target);
-                                    break;
-                            }
-                            break;
+                    case ArticulationJointType.RevoluteJoint:
+                        joint.JointType = BioIK.JointType.Rotational;
+                        joint.X.Enabled = true;
+                        switch (item.Value.twistLock)
+                        {
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.Value.xDrive.target);
+                                break;
+                        }
+                        joint.Y.Enabled = false;
+                        joint.Z.Enabled = false;
+                        break;
+                    case ArticulationJointType.PrismaticJoint:
+                        joint.JointType = BioIK.JointType.Translational;
+                        switch (item.Value.linearLockX)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.X.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.Value.xDrive.target);
+                                break;
+                        }
+                        switch (item.Value.linearLockY)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Y.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = true;
+                                joint.Y.SetUpperLimit(item.Value.yDrive.upperLimit);
+                                joint.Y.SetLowerLimit(item.Value.yDrive.lowerLimit);
+                                joint.Y.SetTargetValue(item.Value.yDrive.target);
+                                break;
+                        }
+                        switch (item.Value.linearLockZ)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Z.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = true;
+                                joint.Z.SetUpperLimit(item.Value.zDrive.upperLimit);
+                                joint.Z.SetLowerLimit(item.Value.zDrive.lowerLimit);
+                                joint.Z.SetTargetValue(item.Value.zDrive.target);
+                                break;
+                        }
+                        break;
+                    case ArticulationJointType.SphericalJoint:
+                        joint.JointType = BioIK.JointType.Rotational;
+                        switch (item.Value.twistLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.X.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.Value.xDrive.target);
+                                break;
+                        }
+                        switch (item.Value.swingYLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Y.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = true;
+                                joint.Y.SetUpperLimit(item.Value.yDrive.upperLimit);
+                                joint.Y.SetLowerLimit(item.Value.yDrive.lowerLimit);
+                                joint.Y.SetTargetValue(item.Value.yDrive.target);
+                                break;
+                        }
+                        switch (item.Value.swingZLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Z.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = true;
+                                joint.Z.SetUpperLimit(item.Value.zDrive.upperLimit);
+                                joint.Z.SetLowerLimit(item.Value.zDrive.lowerLimit);
+                                joint.Z.SetTargetValue(item.Value.zDrive.target);
+                                break;
+                        }
+                        break;
                     }
-                }
+                
             }
-            if (jointParameters.Count > 0)
+
+            // Transform end = jointParameters.Last().body.transform;
+            // iKFollow = new GameObject("iKFollowPoint").transform;
+            // iKFollow.SetParent(end);
+            // iKFollow.localPosition = Vector3.zero;
+            // iKFollow.localRotation = Quaternion.identity;
+            //     
+            // iKTarget = new GameObject("iKTargetPoint").transform;
+            // iKTarget.parent = transform;
+            // ResetIKTarget();
+            //
+            // bioIK = GetComponent<BioIK.BioIK>() ?? gameObject.AddComponent<BioIK.BioIK>();
+            // bioIK.isArticulations = true;
+            // bioIK.SetGenerations(3);
+            // bioIK.SetPopulationSize(50);
+            // bioIK.SetElites(1);
+            // bioIK.Smoothing = 1;
+            // for (int i = 0; i < jointParameters.Count; i++)
+            // {
+            //     ArticulationParameter item = jointParameters[i];
+            //     if (item.moveable)
+            //     {
+            //         BioIK.BioJoint joint = bioIK.FindSegment(item.body.transform).AddJoint();
+            //         joint.SetAnchor(item.body.anchorPosition);
+            //         joint.SetOrientation(item.body.anchorRotation.eulerAngles);
+            //         joint.SetDefaultFrame(item.body.transform.localPosition, item.body.transform.localRotation);
+            //         switch (item.body.jointType)
+            //         {
+            //             case ArticulationJointType.RevoluteJoint:
+            //                 joint.JointType = BioIK.JointType.Rotational;
+            //                 joint.X.Enabled = true;
+            //                 switch (item.body.twistLock)
+            //                 {
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.X.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.X.Constrained = true;
+            //                         joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
+            //                         joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
+            //                         joint.X.SetTargetValue(item.body.xDrive.target);
+            //                         break;
+            //                 }
+            //                 joint.Y.Enabled = false;
+            //                 joint.Z.Enabled = false;
+            //                 break;
+            //             case ArticulationJointType.PrismaticJoint:
+            //                 joint.JointType = BioIK.JointType.Translational;
+            //                 switch (item.body.linearLockX)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.X.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.X.Enabled = true;
+            //                         joint.X.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.X.Enabled = true;
+            //                         joint.X.Constrained = true;
+            //                         joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
+            //                         joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
+            //                         joint.X.SetTargetValue(item.body.xDrive.target);
+            //                         break;
+            //                 }
+            //                 switch (item.body.linearLockY)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.Y.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.Y.Enabled = true;
+            //                         joint.Y.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.Y.Enabled = true;
+            //                         joint.Y.Constrained = true;
+            //                         joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
+            //                         joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
+            //                         joint.Y.SetTargetValue(item.body.yDrive.target);
+            //                         break;
+            //                 }
+            //                 switch (item.body.linearLockZ)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.Z.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.Z.Enabled = true;
+            //                         joint.Z.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.Z.Enabled = true;
+            //                         joint.Z.Constrained = true;
+            //                         joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
+            //                         joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
+            //                         joint.Z.SetTargetValue(item.body.zDrive.target);
+            //                         break;
+            //                 }
+            //                 break;
+            //             case ArticulationJointType.SphericalJoint:
+            //                 joint.JointType = BioIK.JointType.Rotational;
+            //                 switch (item.body.twistLock)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.X.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.X.Enabled = true;
+            //                         joint.X.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.X.Enabled = true;
+            //                         joint.X.Constrained = true;
+            //                         joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
+            //                         joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
+            //                         joint.X.SetTargetValue(item.body.xDrive.target);
+            //                         break;
+            //                 }
+            //                 switch (item.body.swingYLock)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.Y.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.Y.Enabled = true;
+            //                         joint.Y.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.Y.Enabled = true;
+            //                         joint.Y.Constrained = true;
+            //                         joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
+            //                         joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
+            //                         joint.Y.SetTargetValue(item.body.yDrive.target);
+            //                         break;
+            //                 }
+            //                 switch (item.body.swingZLock)
+            //                 {
+            //                     case ArticulationDofLock.LockedMotion:
+            //                         joint.Z.Enabled = false;
+            //                         break;
+            //                     case ArticulationDofLock.FreeMotion:
+            //                         joint.Z.Enabled = true;
+            //                         joint.Z.Constrained = false;
+            //                         break;
+            //                     case ArticulationDofLock.LimitedMotion:
+            //                         joint.Z.Enabled = true;
+            //                         joint.Z.Constrained = true;
+            //                         joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
+            //                         joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
+            //                         joint.Z.SetTargetValue(item.body.zDrive.target);
+            //                         break;
+            //                 }
+            //                 break;
+            //         }
+            //     }
+            // }
+            if (iKFollow != null)
             {
-                Transform end = jointParameters.Last().body.transform;
-                BioIK.BioSegment segment = bioIK.FindSegment(end);
+                BioIK.BioSegment segment = bioIK.FindSegment(iKFollow);
                 segment.Objectives = new BioIK.BioObjective[] { };
-                iKTarget = new GameObject("iKTarget").transform;
-                iKTarget.parent = transform;
-                ResetIKTarget();
                 BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
                 ((BioIK.Position)positionObjective).SetTargetTransform(iKTarget);
                 BioIK.BioObjective orientationObjective = segment.AddObjective(BioIK.ObjectiveType.Orientation);
@@ -398,13 +577,42 @@ namespace RFUniverse.Attributes
         }
         void ResetIKTarget()
         {
-            if (jointParameters.Count > 0)
+            if (iKFollow != null)
             {
-                Transform end = jointParameters.Last().body.transform;
-                iKTarget.position = end.position;
-                iKTarget.rotation = end.rotation;
+                iKTarget.position = iKFollow.position;
+                iKTarget.rotation = iKFollow.rotation;
             }
         }
+
+        private void FixedUpdate()
+        {
+            if (bioIK != null)
+            {
+                //bioIK.FixedUpdate1();
+                if (directly)
+                {
+                    bioIK.FixedUpdate1();
+                    bioIK.FixedUpdate1();
+                    bioIK.FixedUpdate1();
+                    foreach (var item in bioIK.targets)
+                    {
+                        iKCopy[item.Key].GetUnit().SetJointPositionDirectly(item.Value);
+                    }
+                    directly = false;
+                }
+                else
+                {
+                    bioIK.FixedUpdate1();
+                    foreach (var item in bioIK.targets)
+                    {
+                        ArticulationDrive drive = iKCopy[item.Key].xDrive;
+                        drive.target = item.Value;
+                        iKCopy[item.Key].xDrive = drive;
+                    } 
+                }
+            }
+        }
+
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
@@ -647,6 +855,9 @@ namespace RFUniverse.Attributes
                 case "IKTargetDoKill":
                     IKTargetDoKill();
                     return;
+                case "SetIKTargetOffset":
+                    SetIKTargetOffset(msg);
+                    return;
             }
             base.AnalysisMsg(msg, type);
         }
@@ -743,6 +954,8 @@ namespace RFUniverse.Attributes
             bioIK.enabled = enabled;
 #endif
         }
+
+        bool directly;
         bool moveDone;
         private void IKTargetDoMove(IncomingMessage msg)
         {
@@ -755,10 +968,21 @@ namespace RFUniverse.Attributes
             float duration = msg.ReadFloat32();
             bool isSpeedBased = msg.ReadBoolean();
             bool isRelative = msg.ReadBoolean();
-            iKTarget.DOMove(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            Vector3 pos = new Vector3(x, y, z);
+            if (duration == 0)
             {
+                directly = true;
+                if (isRelative)
+                    iKTarget.transform.position += pos;
+                else
+                    iKTarget.transform.position = pos;
                 moveDone = true;
-            };
+            }
+            else
+                iKTarget.DOMove(pos, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+                {
+                    moveDone = true;
+                };
         }
         bool rotateDone;
         private void IKTargetDoRotate(IncomingMessage msg)
@@ -772,10 +996,21 @@ namespace RFUniverse.Attributes
             float duration = msg.ReadFloat32();
             bool isSpeedBased = msg.ReadBoolean();
             bool isRelative = msg.ReadBoolean();
-            iKTarget.DORotate(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            Vector3 pos = new Vector3(x, y, z);
+            if (duration == 0)
             {
+                directly = true;
+                if (isRelative)
+                    iKTarget.transform.eulerAngles += pos;
+                else
+                    iKTarget.transform.eulerAngles = pos;
                 rotateDone = true;
-            };
+            }
+            else
+                iKTarget.DORotate(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+                {
+                    rotateDone = true;
+                };
         }
         private void IKTargetDoRotateQuaternion(IncomingMessage msg)
         {
@@ -789,10 +1024,21 @@ namespace RFUniverse.Attributes
             float duration = msg.ReadFloat32();
             bool isSpeedBased = msg.ReadBoolean();
             bool isRelative = msg.ReadBoolean();
-            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            Quaternion rot = new Quaternion(x, y, z, w);
+            if (duration == 0)
             {
+                directly = true;
+                if (isRelative)
+                    iKTarget.transform.rotation *= rot;
+                else
+                    iKTarget.transform.rotation = rot;
                 rotateDone = true;
-            };
+            }
+            else
+                iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+                {
+                    rotateDone = true;
+                };
         }
         private void IKTargetDoComplete()
         {
@@ -804,7 +1050,15 @@ namespace RFUniverse.Attributes
             if (iKTarget == null) return;
             iKTarget.DOKill();
         }
-
+        private void SetIKTargetOffset(IncomingMessage msg)
+        {
+            iKFollow.localPosition = new Vector3(msg.ReadFloat32(),msg.ReadFloat32(),msg.ReadFloat32());
+            if(msg.ReadBoolean())
+                iKFollow.localRotation = new Quaternion(msg.ReadFloat32(),msg.ReadFloat32(),msg.ReadFloat32(),msg.ReadFloat32());
+            else
+                iKFollow.localEulerAngles = new Vector3(msg.ReadFloat32(),msg.ReadFloat32(),msg.ReadFloat32());
+            ResetIKTarget();
+        }
         //bool sendJointInverseDynamicsForce = false;
         private void GetJointInverseDynamicsForce()
         {
@@ -841,10 +1095,12 @@ namespace RFUniverse.Attributes
         }
         private void GripperOpen()
         {
+            Debug.Log("GripperOpen");
             GetComponent<ICustomGripper>()?.Open();
         }
         private void GripperClose()
         {
+            Debug.Log("GripperClose");
             GetComponent<ICustomGripper>()?.Close();
         }
         public override void SetTransform(bool setPosition, bool setRotation, bool setScale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
@@ -864,6 +1120,21 @@ namespace RFUniverse.Attributes
                     transform.localEulerAngles = rotation;
             }
             Root.TeleportRoot(transform.position, Quaternion.Euler(transform.eulerAngles));
+        }
+        protected override void SetActive(bool active)
+        {
+            //gameObject.SetActive(active);
+        }
+        public override void SetParent(int parentID, string parentName)
+        {
+            if (Attrs.TryGetValue(parentID, out BaseAttr attr))
+            {
+                Transform parent = attr.transform.FindChlid("ChildPoint", true);
+                if (parent == null) return;
+                transform.SetParent(parent);
+                SetTransform(true,true,false,Vector3.zero, Vector3.zero, Vector3.one, false);
+            }
+            
         }
         private void SetJointPosition(IncomingMessage msg)
         {
@@ -971,7 +1242,7 @@ namespace RFUniverse.Attributes
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                moveableJoints[i].GetComponent<ArticulationUnit>().SetJointTargetVelocity(jointTargetVelocitys[i]);
+                moveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
             }
         }
         public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target, List<float> speedScales = null)
@@ -983,32 +1254,32 @@ namespace RFUniverse.Attributes
                     speedScale = speedScales[i];
                 else
                     speedScale = 1;
-                moveableJoints[i].GetComponent<ArticulationUnit>().SetJointTargetPosition(jointTargetPositions[i], mode, speedScale);
+                moveableJoints[i].GetUnit().SetJointTargetPosition(jointTargetPositions[i], mode, speedScale);
             }
         }
         private void SetIndexJointPosition(int index, float jointPosition, ControlMode mode = ControlMode.Target)
         {
-            moveableJoints[index].GetComponent<ArticulationUnit>().SetJointTargetPosition(jointPosition, mode);
+            moveableJoints[index].GetUnit().SetJointTargetPosition(jointPosition, mode);
         }
         private void AddJointForce(List<Vector3> jointForces)
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                moveableJoints[i].GetComponent<ArticulationUnit>().AddJointForce(jointForces[i]);
+                moveableJoints[i].GetUnit().AddJointForce(jointForces[i]);
             }
         }
         private void AddJointForceAtPosition(List<Vector3> jointForces, List<Vector3> forcesPosition)
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                moveableJoints[i].GetComponent<ArticulationUnit>().AddJointForceAtPosition(jointForces[i], forcesPosition[i]);
+                moveableJoints[i].GetUnit().AddJointForceAtPosition(jointForces[i], forcesPosition[i]);
             }
         }
         private void AddJointTorque(List<Vector3> jointForces)
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                moveableJoints[i].GetComponent<ArticulationUnit>().AddJointTorque(jointForces[i]);
+                moveableJoints[i].GetUnit().AddJointTorque(jointForces[i]);
             }
         }
     }

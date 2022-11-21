@@ -23,22 +23,17 @@ public class FreeCamera : MonoBehaviour
     {
         if (m_Camera == null) return;
         if (Input.GetKey(KeyCode.W))
-            m_Camera.transform.position += m_Camera.transform.forward * moveSpeed * Time.deltaTime;
+            m_Camera.transform.position += m_Camera.transform.forward * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
         if (Input.GetKey(KeyCode.S))
-            m_Camera.transform.position += m_Camera.transform.forward * -1 * moveSpeed * Time.deltaTime;
+            m_Camera.transform.position += m_Camera.transform.forward * -1 * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
         if (Input.GetKey(KeyCode.A))
-            m_Camera.transform.position += m_Camera.transform.right * -1 * moveSpeed * Time.deltaTime;
+            m_Camera.transform.position += m_Camera.transform.right * -1 * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
         if (Input.GetKey(KeyCode.D))
-            m_Camera.transform.position += m_Camera.transform.right * moveSpeed * Time.deltaTime;
+            m_Camera.transform.position += m_Camera.transform.right * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
         if (Input.GetKey(KeyCode.Space))
-            m_Camera.transform.position += m_Camera.transform.up * moveSpeed * Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftShift))
-            m_Camera.transform.position += m_Camera.transform.up * -1 * moveSpeed * Time.deltaTime;
-        if (Input.GetMouseButton(1))
-        {
-            m_Camera.transform.localEulerAngles += Vector3.up * rotateSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
-            m_Camera.transform.localEulerAngles += -Vector3.right * rotateSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime;
-        }
+            m_Camera.transform.position += m_Camera.transform.up * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
+        if (Input.GetKey(KeyCode.LeftControl))
+            m_Camera.transform.position += m_Camera.transform.up * -1 * moveSpeed * Time.deltaTime * (Input.GetKey(KeyCode.LeftShift)?5f:1f) * (Input.GetKey(KeyCode.LeftAlt)?0.2f:1f);
         if (Input.GetMouseButton(1))
         {
             m_Camera.transform.localEulerAngles += Vector3.up * rotateSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;

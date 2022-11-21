@@ -47,7 +47,14 @@ namespace RFUniverse
             }
             return null;
         }
-
+        
+        public static ArticulationUnit GetUnit(this ArticulationBody body)
+        {
+            if(body.TryGetComponent(out ArticulationUnit unit))
+                return unit;
+            else
+                return body.gameObject.AddComponent<ArticulationUnit>();
+        }
         public static ControllerAttr NormalizeRFUniverseArticulation(GameObject root)
         {
             ControllerAttr attr = root.GetComponent<ControllerAttr>() ?? root.AddComponent<ControllerAttr>();

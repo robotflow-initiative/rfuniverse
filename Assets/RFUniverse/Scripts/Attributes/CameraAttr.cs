@@ -12,16 +12,19 @@ namespace RFUniverse.Attributes
         public static Shader cameraDepthShader = null;
         public static Shader cameraNormalShader = null;
         public static Shader cameraIDShader = null;
+        public static Shader cameraMotionVectorShader = null;
         public override void Init()
         {
             base.Init();
-
+            
             if (cameraDepthShader == null)
                 cameraDepthShader = Shader.Find("RFUniverse/CameraDepth");
             if (cameraNormalShader == null)
                 cameraNormalShader = Shader.Find("RFUniverse/CameraNormal");
             if (cameraIDShader == null)
                 cameraIDShader = Shader.Find("RFUniverse/CameraID");
+            if (cameraMotionVectorShader == null)
+                cameraMotionVectorShader = Shader.Find("RFUniverse/CameraMotionVector");
         }
 
         public override void CollectData(OutgoingMessage msg)
@@ -165,5 +168,23 @@ namespace RFUniverse.Attributes
             amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
+        // public override Texture2D MotionVector(int width, int height, float? unPhysicalFov = null)
+        // {
+        //     Debug.Log("GetID");
+        //     if (unPhysicalFov != null)
+        //     {
+        //         Camera.usePhysicalProperties = false;
+        //         Camera.fieldOfView = unPhysicalFov.Value;
+        //     }
+        //     Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
+        //     Camera.RenderWithShader(cameraMotionVectorShader, "");
+        //     RenderTexture.active = Camera.targetTexture;
+        //     tex.Reinitialize(width, height, TextureFormat.RGB24, false);
+        //     tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        //     tex.Apply();
+        //     RenderTexture.ReleaseTemporary(Camera.targetTexture);
+        //     idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+        //     return tex;
+        // }
     }
 }

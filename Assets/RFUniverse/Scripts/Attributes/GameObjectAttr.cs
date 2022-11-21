@@ -3,9 +3,9 @@ using Robotflow.RFUniverse.SideChannels;
 
 namespace RFUniverse.Attributes
 {
-    public class GameObjectAttrData : ColliderAttrData
+    public class GameObjectAttrData : BaseAttrData
     {
-        public float[] color;
+        public float[] color = new float[]{1,1,1,1};
 
         public GameObjectAttrData() : base()
         {
@@ -18,7 +18,7 @@ namespace RFUniverse.Attributes
                 color = (b as GameObjectAttrData).color;
         }
     }
-    public class GameObjectAttr : ColliderAttr
+    public class GameObjectAttr : BaseAttr
     {
         public override string Type
         {

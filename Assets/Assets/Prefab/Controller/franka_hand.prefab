@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 744383735425102560}
   - component: {fileID: 3920975087127906762}
   - component: {fileID: 2030607991124203615}
+  - component: {fileID: 3071661113305182447}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -44,7 +45,7 @@ MeshCollider:
   m_GameObject: {fileID: 260492784459197361}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -86,11 +87,24 @@ MeshCollider:
   m_GameObject: {fileID: 260492784459197361}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4506650552607989865, guid: bc77a40f3edd7fffa833053ec5db5809, type: 2}
+--- !u!65 &3071661113305182447
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260492784459197361}
+  m_Material: {fileID: 13400000, guid: bc6af56e33c915c4eb8af24ba5195e6c, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.018, y: 0.014, z: 0.0175}
+  m_Center: {x: 0, y: 0.007, z: 0.045}
 --- !u!1 &1559536515309921723
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +118,7 @@ GameObject:
   - component: {fileID: 6998153291974751134}
   - component: {fileID: 3134956693623190604}
   - component: {fileID: 2649414757951006615}
+  - component: {fileID: 2072714871641667951}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -135,7 +150,7 @@ MeshCollider:
   m_GameObject: {fileID: 1559536515309921723}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -177,11 +192,24 @@ MeshCollider:
   m_GameObject: {fileID: 1559536515309921723}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2246880355558808414, guid: bc77a40f3edd7fffa833053ec5db5809, type: 2}
+--- !u!65 &2072714871641667951
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559536515309921723}
+  m_Material: {fileID: 13400000, guid: bc6af56e33c915c4eb8af24ba5195e6c, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.018, y: 0.014, z: 0.0175}
+  m_Center: {x: 0, y: 0.007, z: 0.045}
 --- !u!1 &2749948562339029906
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,6 +407,7 @@ GameObject:
   - component: {fileID: 7740947590172232440}
   - component: {fileID: 6319369237483828960}
   - component: {fileID: 3033355711590582485}
+  - component: {fileID: 3169237759859886738}
   m_Layer: 0
   m_Name: franka_hand
   m_TagString: Untagged
@@ -429,200 +458,6 @@ MonoBehaviour:
   id: -1
   attrName: franka_hand
   childs: []
-  colliderDatas:
-  - meshName: hand
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: rightfinger
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: leftfinger
-    type: 5
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  articulationDatas:
-  - bodyName: panda_rightfinger
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 1
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0.04
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: panda_leftfinger
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - -0
-    - 0
-    JointType: 1
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0.04
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 3.402823e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: grasp_point
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0.7071068
-    - 0.7071068
-    JointType: 0
-    linearLockX: 2
-    linearLockY: 2
-    linearLockZ: 2
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
   jointParameters:
   - body: {fileID: 8499826124220862488}
     moveable: 0
@@ -635,6 +470,23 @@ MonoBehaviour:
   joints: []
   moveableJoints: []
   initBioIK: 0
+--- !u!114 &3169237759859886738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966352728398106116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4d2caf4d0084551967ee6885c04a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fingers:
+  - body: {fileID: 1530785033803740329}
+    position: {x: 0.04, y: 0}
+  - body: {fileID: 5536954253185484387}
+    position: {x: 0.04, y: 0}
 --- !u!1 &5293218921426395841
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +500,7 @@ GameObject:
   - component: {fileID: 6406180168775184565}
   - component: {fileID: 8532694109360230064}
   - component: {fileID: 934738911737507289}
+  - component: {fileID: 5305759268649448016}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
@@ -679,7 +532,7 @@ MeshCollider:
   m_GameObject: {fileID: 5293218921426395841}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -693,7 +546,7 @@ MeshCollider:
   m_GameObject: {fileID: 5293218921426395841}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -707,7 +560,7 @@ MeshCollider:
   m_GameObject: {fileID: 5293218921426395841}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -721,11 +574,24 @@ MeshCollider:
   m_GameObject: {fileID: 5293218921426395841}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -4836895312996448681, guid: bc77a40f3edd7fffa833053ec5db5809, type: 2}
+--- !u!65 &5305759268649448016
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293218921426395841}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.032, y: 0.2, z: 0.075}
+  m_Center: {x: 0, y: 0, z: 0.028}
 --- !u!1 &5473220373765075411
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,7 +638,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5473220373765075411}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.81
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0.0000000447035, y: -0.00000011920929, z: 0}
   m_ParentAnchorRotation: {x: 0.27059817, y: 0.27059817, z: 0.6532821, w: 0.6532821}
   m_AnchorPosition: {x: 0, y: 0, z: 0}

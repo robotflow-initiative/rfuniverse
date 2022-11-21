@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using RFUniverse;
 using Robotflow.RFUniverse.SideChannels;
 using System.Linq;
 
 namespace RFUniverse.Attributes
 {
     [Serializable]
-    public class ColliderAttrData : BaseAttrData
+    public class ColliderAttrData : GameObjectAttrData
     {
         public List<ColliderData> colliderDatas = new List<ColliderData>();
         public ColliderAttrData()
@@ -73,7 +74,7 @@ namespace RFUniverse.Attributes
         Mesh,
         Original
     }
-    public abstract class ColliderAttr : BaseAttr
+    public class ColliderAttr : GameObjectAttr
     {
         public override BaseAttrData GetAttrData()
         {
@@ -224,6 +225,12 @@ namespace RFUniverse.Attributes
         {
             switch (type)
             {
+                case "EnabledAllCollider":
+                    EnabledAllCollider(msg);
+                    return;
+                case "SetPhysicMaterial":
+                    SetPhysicMaterial(msg);
+                    return;
                 case "GenerateVHACDColider":
                     GenerateVHACDCollider();
                     return;
@@ -262,8 +269,35 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
+        
+        public void EnabledAllCollider(IncomingMessage msg)
+        {
+            bool enabled = msg.ReadBoolean();
+            foreach (var item in this.GetChildComponentFilter<Collider>())
+            {
+                if (!item.isTrigger)
+                    item.enabled = enabled;
+            }
+        }
+        public void SetPhysicMaterial(IncomingMessage msg)
+        {
+            PhysicMaterial material = new PhysicMaterial
+            {
+                bounciness = msg.ReadFloat32(),
+                dynamicFriction = msg.ReadFloat32(),
+                staticFriction = msg.ReadFloat32(),
+                frictionCombine = (PhysicMaterialCombine)msg.ReadInt32(),
+                bounceCombine = (PhysicMaterialCombine)msg.ReadInt32()
+            };
+            foreach (var item in this.GetChildComponentFilter<Collider>())
+            {
+                if (!item.isTrigger)
+                    item.material = material;
+            }
+        }
+        
 #if UNITY_EDITOR
-        public static void SaveMeshs(string path, List<UnityEngine.Mesh> meshs)
+        public static void SaveMeshs(string path, List<Mesh> meshs)
         {
             if (!path.EndsWith(".asset"))
                 path += ".asset";
