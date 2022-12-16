@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DigitConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <cameraConfig>
     <position>
@@ -8,7 +8,7 @@
     </position>
     <rotation>
       <x>-90</x>
-      <y>0</y>
+      <y>180</y>
       <z>0</z>
     </rotation>
     <fov>60</fov>
@@ -20,38 +20,61 @@
       <y>0.022</y>
       <z>0.015</z>
     </position>
-    <width>0.02</width>
-    <height>0.03</height>
+    <width>0.024</width>
+    <height>0.032</height>
     <curvature>true</curvature>
-    <curvatureMax>0.005</curvatureMax>
+    <curvatureMax>0.003</curvatureMax>
     <r>0.1</r>
-    <meshVerticesCountW>10</meshVerticesCountW>
-    <resolutionW>200</resolutionW>
+    <meshVerticesCountW>100</meshVerticesCountW>
+    <resolutionW>240</resolutionW>
   </gelConfig>
   <lightConfig>
     <centerPosition>
       <x>0</x>
-      <y>0.005</y>
-      <z>0.015</z>
+      <y>0.01</y>
+      <z>0.016</z>
     </centerPosition>
-    <polar>true</polar>
+    <spot>true</spot>
+    <spotAngle>
+      <float>60</float>
+      <float>60</float>
+      <float>80</float>
+    </spotAngle>
+    <polar>false</polar>
     <cartesianPosition>
       <Vector3>
-        <x>-0.01732</x>
+        <x>-0.01</x>
         <y>0</y>
-        <z>-0.01</z>
+        <z>0.01</z>
       </Vector3>
       <Vector3>
-        <x>0.01732</x>
+        <x>0.01</x>
         <y>0</y>
-        <z>-0.01</z>
+        <z>0.01</z>
       </Vector3>
       <Vector3>
         <x>0</x>
         <y>0</y>
-        <z>0.02</z>
+        <z>-0.015</z>
       </Vector3>
     </cartesianPosition>
+    <cartesianRotaiton>
+      <Vector3>
+        <x>-19.5</x>
+        <y>120</y>
+        <z>0</z>
+      </Vector3>
+      <Vector3>
+        <x>-19.5</x>
+        <y>-120</y>
+        <z>0</z>
+      </Vector3>
+      <Vector3>
+        <x>-5</x>
+        <y>0</y>
+        <z>0</z>
+      </Vector3>
+    </cartesianRotaiton>
     <polarDistance>
       <float>0.02</float>
       <float>0.02</float>
@@ -77,15 +100,15 @@
       </Color>
       <Color>
         <r>0</r>
-        <g>0</g>
+        <g>0.5</g>
         <b>1</b>
         <a>1</a>
       </Color>
     </color>
     <intensity>
-      <int>1</int>
-      <int>1</int>
-      <int>1</int>
+      <float>1.8</float>
+      <float>1.8</float>
+      <float>1.5</float>
     </intensity>
   </lightConfig>
   <forceConfig>

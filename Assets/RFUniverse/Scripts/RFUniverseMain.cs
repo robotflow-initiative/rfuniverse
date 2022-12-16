@@ -76,7 +76,7 @@ namespace RFUniverse
             {
                 string configString = System.IO.File.ReadAllText(configPath);
                 ConfigData config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigData>(configString);
-                if (UnityEngine.Application.isEditor)
+                if (Application.isEditor)
                     config.executable_file = "";
                 else
                     config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;

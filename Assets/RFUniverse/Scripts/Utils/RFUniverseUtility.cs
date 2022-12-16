@@ -47,10 +47,10 @@ namespace RFUniverse
             }
             return null;
         }
-        
+
         public static ArticulationUnit GetUnit(this ArticulationBody body)
         {
-            if(body.TryGetComponent(out ArticulationUnit unit))
+            if (body.TryGetComponent(out ArticulationUnit unit))
                 return unit;
             else
                 return body.gameObject.AddComponent<ArticulationUnit>();
@@ -218,6 +218,71 @@ namespace RFUniverse
                 v3s.Add(new Vector3(floats[i++], floats[i++], floats[i++]));
             return v3s;
         }
+        public static List<Color> ListFloatToListColor(List<float> floats)
+        {
+            List<Color> v3s = new List<Color>();
+            int i = 0;
+            while (i + 2 < floats.Count)
+                v3s.Add(new Color(floats[i++], floats[i++], floats[i++]));
+            return v3s;
+        }
+        public static List<List<float>> ListFloatSlicer(List<float> floats, int count)
+        {
+            Queue<float> que = new Queue<float>(floats);
+            List<List<float>> back = new();
+            while (que.Count >= count)
+            {
+                List<float> one = new();
+                for (int i = 0; i < count; i++)
+                {
+                    one.Add(que.Dequeue());
+                }
+                back.Add(one);
+            }
+            return back;
+        }
+        public static Matrix4x4 ListFloatToMatrix(List<float> floats)
+        {
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 16; i++)
+            {
+                matrix[i] = floats[i];
+            }
+            return matrix;
+        }
+        public static List<float> MatrixToListFloat(Matrix4x4 matrix)
+        {
+            List<float> floats = new();
+            for (int i = 0; i < 16; i++)
+            {
+                floats.Add(matrix[i]);
+            }
+            return floats;
+        }
+        public static float[,] MatrixToFloatArray(Matrix4x4 matrix)
+        {
+            float[,] floats = new float[4, 4];
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    floats[i, j] = matrix[i, j];
+                }
+            }
+            return floats;
+        }
+        public static Matrix4x4 FloatArrayToMatrix(float[,] floats)
+        {
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = floats[i, j];
+                }
+            }
+            return matrix;
+        }
         public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
         {
             List<float> fs = new List<float>();
@@ -228,6 +293,54 @@ namespace RFUniverse
                 fs.Add(item.z);
             }
             return fs;
+        }
+        public static List<List<float>> ListVector3ToListFloat3(List<Vector3> v3s)
+        {
+            List<List<float>> f = new List<List<float>>();
+            foreach (var item in v3s)
+            {
+                List<float> fs = new List<float>();
+                fs.Add(item.x);
+                fs.Add(item.y);
+                fs.Add(item.z);
+                f.Add(fs);
+            }
+            return f;
+        }
+        public static List<float[,]> ListMatrixToListFloatArray(List<Matrix4x4> ms)
+        {
+            List<float[,]> f = new List<float[,]>();
+            foreach (var item in ms)
+            {
+                f.Add(MatrixToFloatArray(item));
+            }
+            return f;
+        }
+        public static List<Matrix4x4> ListMatrixTRS(List<Vector3> positioins, List<Quaternion> rotatiobs, List<Vector3> scales = null)
+        {
+            if (scales == null)
+            {
+                scales = new();
+                for (int i = 0; i < positioins.Count; i++)
+                {
+                    scales.Add(Vector3.one);
+                }
+            }
+            List<Matrix4x4> ms = new();
+            for (int i = 0; i < positioins.Count; i++)
+            {
+                ms.Add(Matrix4x4.TRS(positioins[i], rotatiobs[i], scales[i]));
+            }
+            return ms;
+        }
+        public static List<Vector3> ListVector3LocalToWorld(List<Vector3> v3s, Transform trans)
+        {
+            List<Vector3> world = new List<Vector3>();
+            foreach (var item in v3s)
+            {
+                world.Add(trans.TransformPoint(item));
+            }
+            return world;
         }
         public static List<Quaternion> ListFloatToListQuaternion(List<float> floats)
         {

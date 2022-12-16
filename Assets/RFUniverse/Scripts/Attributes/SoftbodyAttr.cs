@@ -5,7 +5,7 @@ namespace RFUniverse.Attributes
 {
     public class SoftbodyAttr : BaseAttr
     {
-#if OBI_ONI_SUPPORTED
+#if OBI
         public override string Type
         {
             get { return "Softbody"; }

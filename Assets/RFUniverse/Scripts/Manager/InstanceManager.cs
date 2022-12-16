@@ -22,8 +22,7 @@ namespace RFUniverse.Manager
         }
         public InstanceManager(string channel_id) : base(channel_id)
         {
-            if (BaseAgent.Instance)
-                BaseAgent.Instance.OnStepAction += CollectData;
+            BaseAgent.Instance.OnStepAction += CollectData;
         }
         public override void ReceiveData(IncomingMessage msg)
         {

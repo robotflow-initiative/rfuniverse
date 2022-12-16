@@ -1499,7 +1499,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5004602738330410926}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bc6af56e33c915c4eb8af24ba5195e6c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1877,7 +1877,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336949980816176}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0, y: 0.10586, z: -0.01600001}
   m_ParentAnchorRotation: {x: 1.1866061e-11, y: 0.000796318, z: -0.000000014901155,
     w: 0.9999997}
@@ -1894,8 +1894,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 55
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -2296,7 +2296,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336950250329024}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: -0.0000000120926416, y: 0.038275205, z: 0.03949701}
   m_ParentAnchorRotation: {x: 2.373102e-11, y: 0.000000013853423, z: -0.000000014901142,
     w: 1}
@@ -2313,8 +2313,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 55
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -2413,7 +2413,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336950770690024}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: -0.000000011470547, y: -0.022713266, z: 0.029208053}
   m_ParentAnchorRotation: {x: 0.000000014901142, y: 1, z: 2.3731671e-11, w: -0.00000005756481}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -2429,8 +2429,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -50
     upperLimit: 15
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -2571,7 +2571,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5689336950877723475}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bc6af56e33c915c4eb8af24ba5195e6c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -2665,7 +2665,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336951339122892}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0.000000009690666, y: 0.10586, z: 0.015999995}
   m_ParentAnchorRotation: {x: 0.000000014901159, y: 1, z: 6.513504e-16, w: -0.00000004371139}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -2681,8 +2681,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 50
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -2781,7 +2781,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336951366188014}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0, y: 0.10586, z: -0.01600001}
   m_ParentAnchorRotation: {x: 1.1866061e-11, y: 0.000796318, z: -0.000000014901155,
     w: 0.9999997}
@@ -2798,8 +2798,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 50
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -2928,584 +2928,6 @@ MonoBehaviour:
   id: -1
   attrName: dh_robotics_ag95_gripper
   childs: []
-  colliderDatas:
-  - meshName: base_link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: proximal_phalanx_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: distal_phalanx_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: crank_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: rod_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: proximal_phalanx_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: distal_phalanx_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: crank_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  - meshName: rod_Link_0
-    type: 0
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - 0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 1
-    height: 1
-    direction: 0
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0
-      staticFriction: 0
-      frictionCombine: 0
-      bounceCombine: 0
-  articulationDatas:
-  - bodyName: gripper_finger1_inner_knuckle_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 55
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger1_finger_tip_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 55
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger1_knuckle_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 50
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger1_finger_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -50
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 100000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger2_inner_knuckle_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 55
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger2_finger_tip_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0
-    - 1
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 55
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger2_knuckle_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 1
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 50
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: gripper_finger2_finger_link
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 1
-    - 0
-    - -0.00000004371139
-    JointType: 2
-    linearLockX: 0
-    linearLockY: 0
-    linearLockZ: 0
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 1
-    xDrive:
-      lowerLimit: -50
-      upperLimit: 0
-      stiffness: 100000
-      damping: 9000
-      forceLimit: 10000
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-  - bodyName: grasp_point
-    anchorPosition:
-    - 0
-    - 0
-    - 0
-    anchorRotation:
-    - 0
-    - 0
-    - 0.70710677
-    - 0.70710677
-    JointType: 0
-    linearLockX: 2
-    linearLockY: 2
-    linearLockZ: 2
-    swingYLock: 2
-    swingZLock: 2
-    twistLock: 2
-    xDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    yDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
-    zDrive:
-      lowerLimit: 0
-      upperLimit: 0
-      stiffness: 0
-      damping: 0
-      forceLimit: 3.4028235e+38
-      target: 0
-      targetVelocity: 0
   jointParameters:
   - body: {fileID: 5689336949956079667}
     moveable: 0
@@ -3591,7 +3013,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336951906926531}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0.000000020385691, y: 0.038275197, z: 0.039496936}
   m_ParentAnchorRotation: {x: 0, y: 0, z: 0, w: 1}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -3607,8 +3029,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 55
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -3707,7 +3129,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336951940422045}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0.000000009690666, y: 0.10586, z: 0.015999995}
   m_ParentAnchorRotation: {x: 0.000000014901159, y: 1, z: 6.513504e-16, w: -0.00000004371139}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -3723,8 +3145,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: 0
     upperLimit: 55
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0
@@ -3822,7 +3244,7 @@ ArticulationBody:
   m_GameObject: {fileID: 5689336951979135643}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 0.1
+  m_Mass: 1
   m_ParentAnchorPosition: {x: 0.000000015951874, y: -0.022713272, z: 0.029207997}
   m_ParentAnchorRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -3838,8 +3260,8 @@ ArticulationBody:
   m_XDrive:
     lowerLimit: -50
     upperLimit: 15
-    stiffness: 10000
-    damping: 100
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.402823e+38
     target: 0
     targetVelocity: 0

@@ -2,22 +2,9 @@
 
 namespace RFUniverse.Attributes
 {
-    public class ClothAttrData : BaseAttrData
-    {
-        public float[] color;
-
-        public ClothAttrData() : base()
-        {
-            type = "Cloth";
-        }
-        public ClothAttrData(BaseAttrData b) : base(b)
-        {
-            type = "Cloth";
-        }
-    }
     public class ClothAttr : BaseAttr
     {
-#if OBI_ONI_SUPPORTED
+#if OBI
         public override string Type
         {
             get { return "Cloth"; }

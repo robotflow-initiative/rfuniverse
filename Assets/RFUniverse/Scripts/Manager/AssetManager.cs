@@ -84,6 +84,9 @@ namespace RFUniverse.Manager
                 case "SetTimeScale":
                     SetTimeScale(msg);
                     return;
+                case "SetResolution":
+                    SetResolution(msg);
+                    return;
                 default:
                     ext.AnalysisMsg(msg, type);
                     return;
@@ -124,15 +127,20 @@ namespace RFUniverse.Manager
         {
             if (assets.ContainsKey(name))
             {
-                Debug.Log("LoadedAsset:" + name);
                 onCompleted?.Invoke();
             }
             else if (name == "Camera")
             {
-                Debug.Log("LoadAsset:" + name);
-                GameObject camera = new GameObject("Camera", typeof(CameraAttr));
-                //camera.SetActive(false);
-                assets.Add(name, camera);
+                GameObject attr = new GameObject(name, typeof(CameraAttr));
+                attr.hideFlags = HideFlags.HideInHierarchy;
+                assets.Add(name, attr);
+                onCompleted?.Invoke();
+            }
+            else if (name == "PointCloud")
+            {
+                GameObject attr = new GameObject(name, typeof(PointCloudAttr));
+                attr.hideFlags = HideFlags.HideInHierarchy;
+                assets.Add(name, attr);
                 onCompleted?.Invoke();
             }
             else
@@ -252,6 +260,15 @@ namespace RFUniverse.Manager
                     msg.WriteBoolean((bool)item);
                 if (item is List<float>)
                     msg.WriteFloatList((List<float>)item);
+                if (item is List<bool>)
+                {
+                    List<bool> data = (List<bool>)item;
+                    msg.WriteInt32(data.Count);
+                    foreach (var i in data)
+                    {
+                        msg.WriteBoolean(i);
+                    }
+                }
             }
             channel.SendMetaDataToPython(msg);
         }
@@ -494,12 +511,15 @@ namespace RFUniverse.Manager
         }
         void SetTimeStep(IncomingMessage msg)
         {
-            BaseAgent.Instance.FixedDeltaTime = msg.ReadFloat32();
+            PlayerMain.Instance.FixedDeltaTime = msg.ReadFloat32();
         }
         void SetTimeScale(IncomingMessage msg)
         {
-            BaseAgent.Instance.TimeScale = msg.ReadFloat32();
+            PlayerMain.Instance.TimeScale = msg.ReadFloat32();
         }
-
+        void SetResolution(IncomingMessage msg)
+        {
+            Screen.SetResolution(msg.ReadInt32(), msg.ReadInt32(), FullScreenMode.Windowed);
+        }
     }
 }
