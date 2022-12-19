@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
-using RFUniverse;
 using System.Linq;
 using System.Collections.Generic;
-using Obi;
 
 namespace RFUniverse.Attributes
 {

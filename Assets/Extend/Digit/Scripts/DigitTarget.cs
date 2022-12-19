@@ -22,7 +22,6 @@ public class DigitTarget : MonoBehaviour
 
     //Render列表，key：Digit，value：复制出的渲染物体
     private Dictionary<DigitAttr, GameObject> targets = new Dictionary<DigitAttr, GameObject>();
-
     //获取或者生成渲染物体
     GameObject GetOrCreateRender(DigitAttr target)
     {
@@ -33,6 +32,7 @@ public class DigitTarget : MonoBehaviour
         }
         //复制一份Render
         copyRender = Instantiate(render);
+        copyRender.transform.localScale = render.transform.lossyScale;
         //改变渲染层
         copyRender.layer = target.index + DigitAttr.startLayer;
         //替换材质

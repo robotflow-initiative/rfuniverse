@@ -43,6 +43,26 @@ Unity端Player：接收python端消息并执行仿真
 
 ---
 
+##### Test目录
+
+| name                                   | feature                 |
+| -------------------------------------- | ----------------------- |
+| test_active_depth                      | 红外深度                    |
+| test_articulation_ik                   | 原生IK                    |
+| test_camera_image                      | 相机截图示例                  |
+| test_custom_message                    | 自定义消息和动态消息              |
+| test_grasp_pose                        | Franka抓点预览              |
+| test_grasp_sim                         | Franka抓取测试              |
+| test_humanbody_ik                      | 人体IK接口示例                |
+| test_load_mesh                         | obj模型文件导入为刚体            |
+| test_load_urdf                         | urdf文件导入                |
+| test_pick_and_place                    | 基础接口和原生IK驱动的抓取示例        |
+| test_pick_and_place_gym                | 基础接口和原生IK驱动的抓取训练任务示例    |
+| test_point_cloud                       | 使用图像宽高和fov获取深度图并转换点云的示例 |
+| test_point_cloud_with_intrinsic_matrix | 使用相机内参获取深度图并转换点云的示例     |
+
+---
+
 ##### 进入Edit模式
 
 启动RFUniverse时添加参数<-edit>可进入Edit模式
@@ -83,11 +103,9 @@ RFUniverse.exe -edit
 
 `com.unity.nuget.newtonsoft-json`
 
-**add package by name**
+`com.unity.addressables`
 
-`Addressables`
-
-`TextMeshPro`
+`com.unity.textmeshpro`
 
 package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: URDF importer](https://github.com/Unity-Technologies/URDF-Importer)
 

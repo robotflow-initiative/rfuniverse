@@ -70,6 +70,7 @@ namespace RFUniverse
         }
         protected virtual void Awake()
         {
+            Application.targetFrameRate = 60;
             string userPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
             string configPath = $"{userPath}/.rfuniverse/config.json";
             if (System.IO.File.Exists(configPath))
