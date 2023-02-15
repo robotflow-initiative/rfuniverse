@@ -1,3 +1,4 @@
+#if OBI
 using UnityEngine;
 using Obi;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace RFUniverse.Attributes.Digit
     //这么做可以保证多个Digit同时成像，相互之间不产生影响
     public class DigitTargetObiRope : MonoBehaviour
     {
+
         public Material[] lightMaterial;
         ObiRod rod;//Obi实例
         void Start()
@@ -91,3 +93,4 @@ namespace RFUniverse.Attributes.Digit
         }
     }
 }
+#endif

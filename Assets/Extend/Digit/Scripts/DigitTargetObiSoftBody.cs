@@ -1,3 +1,4 @@
+#if OBI
 using UnityEngine;
 using Obi;
 using System.Collections.Generic;
@@ -86,3 +87,4 @@ namespace RFUniverse.Attributes.Digit
         }
     }
 }
+#endif

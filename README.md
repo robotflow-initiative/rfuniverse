@@ -85,52 +85,22 @@ RFUniverse.exe -edit
 
 *以下步骤说明将默认你对UnityEditor有一定了解*
 
-如果你想要在RFUniverse中加入自己的定制资源或功能，你可以在RFUniverse原工程的基础上添加
+如果你想要在RFUniverse中加入自己的定制资源或功能，可以在RFUniverse开源工程基础上添加
 
-或者你想要为自己的项目添加RFUniverse功能，可以导入[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
+如果你想要为自己的项目添加RFUniverse功能，可以导入[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-如果你选择向自己的工程中导入RFUniverse Core SDK，还需要添加一些额外操作
-
-~~在ProjectSettings-Player-OtherSettings中勾选 `Allow ‘unsafe’ Code`~~
-
-在PackageManager中导入依赖包
-
-**add package from git URL**
-
-`https://github.com/mvig-robotflow/rfuniverse_base.git?path=/com.robotflow.rfuniverse`
-
-`https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.5.2`
-
-`com.unity.nuget.newtonsoft-json`
-
-`com.unity.addressables`
-
-`com.unity.textmeshpro`
-
-package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: URDF importer](https://github.com/Unity-Technologies/URDF-Importer)
+**工程中若出现缺失插件的报错，可重启工程后使用菜单RFUniverse/CheckPlugins修复**
 
 ---
 
 ##### 插件与资源补足
 
-打开RFUniverse工程或导入RFUniverse Core SDK后需要自行补充第三方插件和资源
+打开RFUniverse工程或导入RFUniverse Core SDK后需要自行补充第三方插件和资源，以开启其中的功能
 
-**请将插件放入Plugins目录**
-
-免费：
-
-(必须)[DoTween](https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676)：DoTween，补间动画插件
-
-付费：
-
-- (可选：删除EditMode目录以消除报错)[Modern UI Pack](https://assetstore.unity.com/packages/tools/gui/modern-ui-pack-201717)：Edit模式的UI插件，提供了便捷美观的UI控件
 - (可选)[Obi](https://assetstore.unity.com/publishers/5170)：Softbody，Cloth，Fluid等物理仿真插件
-- (可选：删除Plugins/BioIK目录以消除报错)[BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：IK解算插件，**请注意导入该插件时不要覆盖工程中现有的文件BioIK.cs脚本**
+- (可选)[BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：关节IK解算插件
 
-按需自行下载的模型资源文件
-
-- (可选)[iGibson扫描场景](https://svl.stanford.edu/igibson/)
-- (可选)[YCB数据集](http://ycb-benchmarks.s3-website-us-east-1.amazonaws.com/)
+**请将插件放入Plugins目录，导入插件后使用菜单RFUniverse/CheckPlugins修复依赖**
 
 ---
 
@@ -141,10 +111,11 @@ package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: UR
   * Model：模型/贴图/材质等资源
   * PhysicalMaterials：物理材质
   * Prefab：预制体，分配Addressable地址用于资源加载
-* EditMode： Editor相关场景/资源/脚本，独立于核心模块，**如果不使用EditMode，可以将其删除以消除报错**
+* Extend： 各种扩展Attr模块
+* Plugins：扩展插件目录，请将OBI，BioIK等插件放置在此目录下
 * RFUniverse：RFUniverse Core 核心功能资源及脚本
 * StreamingAssets：配置文件保存目录
-  * SceneData：场景Json文件的保存目录
+  * SceneData：场景JSON文件的保存目录
 * TextMesh Pro：TMP UI 资源
 
 ---
@@ -157,11 +128,11 @@ package的导入方法可以参照[GitHub - Unity-Technologies/URDF-Importer: UR
 
 ---
 
-##### 工程下的更多示例场景
+##### 工程下运行示例场景
 
-pyrfuniverse/Test目录下有更多单项功能的示例
+pyrfuniverse/Test目录的功能示例即可以再Release下运行，也可以在UnityEditor中运行
 
-运行其中的某个python脚本后，在UnityEditor中运行Empty场景即可
+先运行一次Empty场景后退出，随后运行某个python脚本，再在UnityEditor中运行Empty场景即可
 
 ---
 
@@ -169,7 +140,7 @@ pyrfuniverse/Test目录下有更多单项功能的示例
 
 ###### Agent
 
-是Python与Unity进行通信的基础，场景中必须有一个Agent才能与python建立通信
+是Python与Unity进行通信的基础
 
 ###### Attributes
 
@@ -216,10 +187,11 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
 
 ###### 搭建场景的基本流程：
 
-1. 复制一份Empty场景，在此基础上添加自己的物体。或者将RFUniverse/Assets/Prefab/RFUniverse导入现有场景，同时移除场景中原本的MainCamera和Directional Light
+1. 复制一份Empty场景，在此基础上添加自己的物体。
+   
+   或者将RFUniverse/Assets/Prefab/RFUniverse导入现有场景，同时移除场景中原本的MainCamera和Directional Light
 2. 为需要通信的物体添加BaseAttr脚本，手动设置不同的ID，保证ID没有重复
-3. ~~将BaseAttr脚本添加到RFUniverse/Agent的BaseAgent脚本SceneAttr列表中~~
-4. 参照example编写python脚本，通过ID来读取物体上的信息并调用物体上的接口
+3. 参照pyrfuniverse/Test编写python脚本，通过ID读取物体上的信息并调用物体上的接口
 
 ---
 
@@ -240,6 +212,8 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
   在pyrfuniverse工程中，修改pyrfuniverse/rfuniverse_channer/asset_channer_ext.py脚本，参照现有代码，添加新增的消息读取代码和新接口，同样传入类型为 `dict`，返回类型为 `OutgoingMessage`
   
   在Unity工程中，修改AssetManagerExt.cs脚本，在 `AnalysisMsg`方法的 `switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置调用 `AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`
+  
+  
 
 定制化接口的具体添加示例请看pyrfuniverse/Test/test_custom_message.py
 
@@ -251,13 +225,13 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
 
 * **Python->Unity**
   
-  Unity工程
+  C#:
   
   `AssetManger.Instance.AddListener(string message, Action<IncomingMessage> action);`
   
   传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
   
-  python端
+  Python:
   
   `env.asset_channel.SendMessage(self, message: str, *args)`
   
@@ -265,17 +239,19 @@ RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证�
 
 * **Unity->Python**
   
-  python端
+  Python:
   
   `env.asset_channel.AddListener(self, message: str, fun)`
   
   传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
   
-  Unity工程
+  C#:
   
   `AssetManger.Instance.SendMessage(string message, params object[] objects);`
   
   传入消息名称和任意数量的数据进行发送
+  
+  
 
 *请注意，动态消息必须保证接收函数中从 `IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
 
