@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DigitCollider : MonoBehaviour
+namespace RFUniverse.Attributes.Digit
 {
-    public DigitAttr digit;
+    public class DigitCollider : MonoBehaviour
+    {
+        public DigitAttr digit;
+    }
 }

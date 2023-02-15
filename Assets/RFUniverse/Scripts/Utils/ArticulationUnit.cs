@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 public enum MovingDirection
 {
     None = 0,
@@ -28,6 +29,11 @@ public enum ControlMode
 [DisallowMultipleComponent]
 public class ArticulationUnit : MonoBehaviour
 {
+    public ArticulationBody mimicParent = null;
+    public float mimicMultiplier = 1.0f;
+    public float mimicOffset = 0.0f;
+    public bool mimicSync = false;
+    public event Action OnSetJointPositionDirectly = null;
     private ControlMode controlMode;
     private ArticulationBody articulationBody;
     private int dofCount;
@@ -61,6 +67,8 @@ public class ArticulationUnit : MonoBehaviour
             jointArrivingTolerance = 0.001f;
             jointVelocityThres = 0.3f;
         }
+        if (mimicParent)
+            mimicParent.GetComponent<ArticulationUnit>().OnSetJointPositionDirectly += MimicDirectly;
     }
 
     enum ForceMode
@@ -88,6 +96,25 @@ public class ArticulationUnit : MonoBehaviour
                 break;
         }
         forceMode = ForceMode.None;
+        Mimic();
+    }
+    private void Mimic()
+    {
+        if (mimicParent == null) return;
+        var currentDrive = articulationBody.xDrive;
+        if (mimicSync)
+        {
+            currentDrive.target = mimicParent.xDrive.target * mimicMultiplier + mimicOffset;
+        }
+        else if (mimicParent.jointType != ArticulationJointType.FixedJoint)
+        {
+            currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+        }
+        articulationBody.xDrive = currentDrive;
+    }
+    private void MimicDirectly()
+    {
+        SetJointPositionDirectly(mimicParent.xDrive.target * mimicMultiplier + mimicOffset);
     }
     void AttrUpdate()
     {
@@ -241,7 +268,7 @@ public class ArticulationUnit : MonoBehaviour
         ArticulationDrive drive = articulationBody.xDrive;
         drive.target = target;
         articulationBody.xDrive = drive;
-        
+
         if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
         {
             articulationBody.jointPosition = new ArticulationReducedSpace(target * Mathf.Deg2Rad);
@@ -252,6 +279,7 @@ public class ArticulationUnit : MonoBehaviour
         }
         articulationBody.jointVelocity = new ArticulationReducedSpace(0);
         direction = MovingDirection.None;
+        OnSetJointPositionDirectly?.Invoke();
     }
 
     private bool IsStable()

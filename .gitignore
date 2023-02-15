@@ -4,6 +4,7 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Uu]serSettings/
+/[Rr]ecordings/
 *.unitypackage
 
 /.vs/
@@ -28,8 +29,11 @@ Assets/Assets/Model/YCB.meta
 Assets/ML-Agents/
 Assets/ML-Agents.meta
 
-Assets/Plugins/
-Assets/Plugins.meta
+Assets/Plugins/*
+!Assets/Plugins/Demigiant/
+!Assets/Plugins/Demigiant.meta
+!Assets/Plugins/Editor/
+!Assets/Plugins/Editor.meta
 
 ObiEditorSettings.asset
 ObiEditorSettings.asset.meta
@@ -48,17 +52,12 @@ Assets/History.meta
 
 *.zip
 *.zip.meta
+
 Assets/Assets/Model/AKB48
-
 Assets/Assets/Model/AKB48.meta
-
-Assets/Resources
-Assets/Resources.meta
 
 Assets/AddressableAssetsData/link.xml
 
 Assets/AddressableAssetsData/link.xml.meta
 
 ProjectSettings/ProjectVersion.txt
-
-Recordings/

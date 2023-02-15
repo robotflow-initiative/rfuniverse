@@ -105,15 +105,19 @@ namespace RFUniverse.Attributes
             }
         }
         public List<ArticulationParameter> jointParameters = new List<ArticulationParameter>();
-        [HideInInspector]
+        [NonSerialized]
         public List<ArticulationBody> joints = new List<ArticulationBody>();
-        [HideInInspector]
+        [NonSerialized]
         public List<ArticulationBody> moveableJoints = new List<ArticulationBody>();
 
         public bool initBioIK = false;
         public bool iKTargetOrientation = true;
-        Transform iKFollow;
-        Transform iKTarget;
+        //[HideInInspector]
+        [NonSerialized]
+        public Transform iKFollow;
+        //[HideInInspector]
+        [NonSerialized]
+        public Transform iKTarget;
         public override void Init()
         {
             base.Init();
@@ -150,6 +154,7 @@ namespace RFUniverse.Attributes
         }
         private List<ArticulationData> articulationDatas;
         [EditableAttr("Articulations")]
+        [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationsAttrUI")]
         public List<ArticulationData> ArticulationDatas
         {
             get
@@ -598,6 +603,7 @@ namespace RFUniverse.Attributes
 
         private void FixedUpdate()
         {
+#if BIOIK
             if (bioIK != null && bioIK.enabled)
             {
                 if (tempIKTargetPosition != null || tempIKTargetRotation != null)
@@ -619,6 +625,7 @@ namespace RFUniverse.Attributes
                     }
                 }
             }
+#endif
         }
 
         public override void CollectData(OutgoingMessage msg)
@@ -650,7 +657,7 @@ namespace RFUniverse.Attributes
             msg.WriteBoolean(AllStable());
             msg.WriteBoolean(moveDone);
             msg.WriteBoolean(rotateDone);
-#if  UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
             if (sendJointInverseDynamicsForce)
             {
                 msg.WriteBoolean(true);
@@ -1055,6 +1062,7 @@ namespace RFUniverse.Attributes
         }
         void DirectlyIK(Vector3 targetPos, Quaternion targetRot)
         {
+#if BIOIK
             Debug.Log("DirectlyIK");
             iKTarget.DOKill();
             float disPos = Vector3.Distance(iKTarget.position, targetPos);
@@ -1076,6 +1084,7 @@ namespace RFUniverse.Attributes
             }
             moveDone = true;
             rotateDone = true;
+#endif
         }
 
         private void IKTargetDoComplete()
@@ -1101,7 +1110,7 @@ namespace RFUniverse.Attributes
         bool sendJointInverseDynamicsForce = false;
         private void GetJointInverseDynamicsForce()
         {
-#if  UNITY_2022_1_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
             sendJointInverseDynamicsForce = true;
 #else
             Debug.LogWarning($"Controller ID:{ID},Name:{Name},Current Unity version dont support GetJointInverseDynamicsForce API");
@@ -1134,12 +1143,12 @@ namespace RFUniverse.Attributes
         }
         public void GripperOpen()
         {
-            Debug.Log("GripperOpen");
+            //Debug.Log("GripperOpen");
             GetComponent<ICustomGripper>()?.Open();
         }
         public void GripperClose()
         {
-            Debug.Log("GripperClose");
+            //Debug.Log("GripperClose");
             GetComponent<ICustomGripper>()?.Close();
         }
         public override void SetTransform(bool setPosition, bool setRotation, bool setScale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
@@ -1234,7 +1243,7 @@ namespace RFUniverse.Attributes
             {
                 jointPositions.Add(msg.ReadFloatList().ToList());
             }
-            SetJointPositionContinue(interval, jointPositions);
+            StartCoroutine(SetJointPositionContinue(interval, jointPositions));
         }
         public IEnumerator SetJointPositionContinue(int interval, List<List<float>> jointPositions)
         {
@@ -1262,6 +1271,8 @@ namespace RFUniverse.Attributes
                 {
                     i++;
                 }
+                if (i >= jointPositions.Count)
+                    i = jointPositions.Count - 1;
                 SetJointPosition(jointPositions[i], ControlMode.Target);
             }
         }

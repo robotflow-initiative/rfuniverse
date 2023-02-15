@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace RFUniverse
@@ -32,4 +33,32 @@ namespace RFUniverse
             }
         }
     }
+
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(GeneralGripper))]
+    public class GeneralGripperEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            GeneralGripper script = target as GeneralGripper;
+
+            if (EditorApplication.isPlaying)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Open"))
+                {
+
+                    script.Open();
+                }
+                if (GUILayout.Button("Close"))
+                {
+                    script.Close();
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
+    }
+#endif
 }

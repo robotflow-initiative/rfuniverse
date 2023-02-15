@@ -108,6 +108,7 @@ namespace RFUniverse.Attributes
         }
 
         public List<BaseAttr> childs = new List<BaseAttr>();
+
         private bool isRFMoveCollider = true;
         public bool IsRFMoveCollider
         {
@@ -141,7 +142,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        protected void Rigister()
+        protected virtual void Rigister()
         {
             if (Attrs.ContainsKey(ID))
                 Debug.LogError($"ID:{ID} Name:{Name} exist");
@@ -302,6 +303,9 @@ namespace RFUniverse.Attributes
                 case "Destroy":
                     Destroy();
                     return;
+                case "SetRFMoveColliderActive":
+                    SetRFMoveColliderActive(msg);
+                    return;
                 case "GetLoaclPointFromWorld":
                     GetLoaclPointFromWorld(msg);
                     return;
@@ -431,10 +435,15 @@ namespace RFUniverse.Attributes
             attr.Instance();
         }
 
-        protected void Destroy()
+        protected virtual void Destroy()
         {
             RemoveAttr(this);
             Destroy(gameObject);
+        }
+
+        protected void SetRFMoveColliderActive(IncomingMessage msg)
+        {
+            IsRFMoveCollider = msg.ReadBoolean();
         }
 
         float[] resultLocalPoint = null;

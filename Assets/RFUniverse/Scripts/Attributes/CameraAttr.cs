@@ -16,7 +16,7 @@ namespace RFUniverse.Attributes
         public override void Init()
         {
             base.Init();
-            
+
             if (cameraDepthShader == null)
                 cameraDepthShader = Shader.Find("RFUniverse/CameraDepth");
             if (cameraNormalShader == null)
@@ -48,6 +48,24 @@ namespace RFUniverse.Attributes
             Camera.RenderWithShader(null, "");
             RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
+            rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            return tex;
+        }
+        public Texture2D GetRGBWithAlpha(int width, int height, float? unPhysicalFov = null)
+        {
+            Debug.Log("GetRGB");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
+            Camera.RenderWithShader(null, "");
+            RenderTexture.active = Camera.targetTexture;
+            tex.Reinitialize(width, height, TextureFormat.RGBA32, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);

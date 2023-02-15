@@ -12,11 +12,11 @@
       "hash": "5ae70d85c18162550bb2691200dff20b1dfe7c2e"
     },
     "com.unity.addressables": {
-      "version": "1.19.19",
+      "version": "1.21.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.19.6",
+        "com.unity.scriptablebuildpipeline": "1.21.1",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -108,15 +108,6 @@
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
-    "com.unity.postprocessing": {
-      "version": "3.2.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.physics": "1.0.0"
-      },
-      "url": "https://packages.unity.cn"
-    },
     "com.unity.recorder": {
       "version": "3.0.3",
       "depth": 0,
@@ -136,25 +127,25 @@
       "hash": "90f353e4352aae4df52fa2c05e49b804631d2a63"
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.20.2",
-      "depth": 0,
+      "version": "1.21.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
     "com.unity.sysroot": {
-      "version": "2.0.4",
+      "version": "2.0.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
     "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.3",
+      "version": "2.0.4",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.4"
+        "com.unity.sysroot": "2.0.5"
       },
       "url": "https://packages.unity.cn"
     },
@@ -197,6 +188,16 @@
       "dependencies": {
         "com.unity.sysroot": "2.0.4",
         "com.unity.sysroot.linux-x86_64": "2.0.3"
+      },
+      "url": "https://packages.unity.cn"
+    },
+    "com.unity.toolchain.win-x86_64-linux-x86_64": {
+      "version": "2.0.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot": "2.0.5",
+        "com.unity.sysroot.linux-x86_64": "2.0.4"
       },
       "url": "https://packages.unity.cn"
     },

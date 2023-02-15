@@ -283,9 +283,21 @@ namespace RFUniverse
             }
             return matrix;
         }
+        public static Matrix4x4 DoubleArrayToMatrix(double[,] floats)
+        {
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = (float)floats[i, j];
+                }
+            }
+            return matrix;
+        }
         public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
         {
-            List<float> fs = new List<float>();
+            List<float> fs = new();
             foreach (var item in v3s)
             {
                 fs.Add(item.x);
@@ -296,7 +308,7 @@ namespace RFUniverse
         }
         public static List<List<float>> ListVector3ToListFloat3(List<Vector3> v3s)
         {
-            List<List<float>> f = new List<List<float>>();
+            List<List<float>> f = new();
             foreach (var item in v3s)
             {
                 List<float> fs = new List<float>();
@@ -309,7 +321,7 @@ namespace RFUniverse
         }
         public static List<float[,]> ListMatrixToListFloatArray(List<Matrix4x4> ms)
         {
-            List<float[,]> f = new List<float[,]>();
+            List<float[,]> f = new();
             foreach (var item in ms)
             {
                 f.Add(MatrixToFloatArray(item));
@@ -335,16 +347,25 @@ namespace RFUniverse
         }
         public static List<Vector3> ListVector3LocalToWorld(List<Vector3> v3s, Transform trans)
         {
-            List<Vector3> world = new List<Vector3>();
+            List<Vector3> world = new();
             foreach (var item in v3s)
             {
                 world.Add(trans.TransformPoint(item));
             }
             return world;
         }
+        public static List<Quaternion> ListQuaternionLocalToWorld(List<Quaternion> qs, Transform trans)
+        {
+            List<Quaternion> world = new();
+            foreach (var item in qs)
+            {
+                world.Add(trans.rotation * item);
+            }
+            return world;
+        }
         public static List<Quaternion> ListFloatToListQuaternion(List<float> floats)
         {
-            List<Quaternion> qs = new List<Quaternion>();
+            List<Quaternion> qs = new();
             int i = 0;
             while (i + 3 < floats.Count)
                 qs.Add(new Quaternion(floats[i++], floats[i++], floats[i++], floats[i++]));

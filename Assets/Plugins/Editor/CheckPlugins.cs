@@ -1,22 +1,72 @@
-using System.Reflection;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
+using System.IO;
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
+using Unity.EditorCoroutines.Editor;
+using System.Collections;
 
-public class CheckPlugins
+public class CheckPlugins : Editor
 {
-    [InitializeOnLoadMethod]
-    //[DidReloadScripts]
-    private static void OnScriptsReloaded()
+    [MenuItem("RFUniverse/Check Plugins")]
+    private static void Check()
     {
-        List<string> defines = new List<string>(PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';'));
+        EditorCoroutineUtility.StartCoroutineOwnerless(Main());
+    }
+    private static IEnumerator Main()
+    {
+        string[] packageNames =
+{
+            "com.unity.textmeshpro",
+            "com.unity.addressables",
+            "com.unity.nuget.newtonsoft-json",
+            "com.robotflow.rfuniverse",
+            "com.unity.robotics.urdf-importer"
+            };
+        string[] packageAddNames =
+        {
+            "com.unity.textmeshpro",
+            "com.unity.addressables",
+            "com.unity.nuget.newtonsoft-json",
+            "https://github.com/mvig-robotflow/rfuniverse_base.git?path=/com.robotflow.rfuniverse",
+            "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.5.2"
+            };
 
-        bool exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup");
+        ListRequest listRequest = Client.List();
+        yield return new WaitUntil(() => listRequest.IsCompleted);
+        string[] packageList = listRequest.Result.Select((s) => s.name).ToArray();
+        for (int i = 0; i < packageNames.Length; i++)
+        {
+            if (!packageList.Contains(packageNames[i]))
+            {
+                Debug.Log(packageNames[i]);
+                AddRequest addRequest = Client.Add(packageAddNames[i]);
+                yield return new WaitUntil(() =>
+                {
+                    bool userCancel = EditorUtility.DisplayCancelableProgressBar("CheckPlugins", $"Getting Plugin: {packageNames[i]}", 0);
+                    return userCancel || addRequest.IsCompleted;
+                });
+                EditorUtility.ClearProgressBar();
+                yield return null;
+            }
+        }
+
+        List<string> defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';').ToList();
+
+        bool exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/BioIK");
         if (exist && !defines.Contains("BIOIK"))
         {
-            UnityEngine.Debug.Log("BIOIK plugin detected,Add BIOIK DefineSymbols");
+            Debug.Log("BIOIK plugin detected,Add BIOIK DefineSymbols");
             defines.Add("BIOIK");
+            string tmpPath = $"{Application.dataPath}/Plugins/Editor/BioIK.cs.backup";
+            string bioikPath = $"{Application.dataPath}/Plugins/BioIK/BioIK.cs";
+            if (File.Exists(tmpPath))
+            {
+                File.Copy(tmpPath, bioikPath, true);
+            }
         }
         else if (!exist && defines.Contains("BIOIK"))
         {
@@ -24,18 +74,19 @@ public class CheckPlugins
             defines.Remove("BIOIK");
         }
 
-        //exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/Obi");
-        //if (exist && !defines.Contains("OBI"))
-        //{
-        //    UnityEngine.Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
-        //    defines.Add("OBI");
-        //}
-        //else if (!exist && defines.Contains("OBI"))
-        //{
-        //    UnityEngine.Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
-        //    defines.Remove("OBI");
-        //}
+        exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/Obi");
+        if (exist && !defines.Contains("OBI"))
+        {
+            UnityEngine.Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
+            defines.Add("OBI");
+        }
+        else if (!exist && defines.Contains("OBI"))
+        {
+            UnityEngine.Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
+            defines.Remove("OBI");
+        }
 
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
+        yield break;
     }
 }
