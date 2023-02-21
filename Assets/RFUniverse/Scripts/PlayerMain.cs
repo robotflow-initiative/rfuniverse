@@ -73,7 +73,6 @@ namespace RFUniverse
         void OnValidate()
         {
             Instance = this;
-            transform.position = Vector3.zero;
         }
     }
 }
