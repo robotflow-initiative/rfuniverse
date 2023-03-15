@@ -23,14 +23,11 @@ namespace RFUniverse.Attributes
     {
         public float mass = 1;
         public bool useGravity = true;
+        public bool isKinematic = false;
     }
     [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyAttr : ColliderAttr
     {
-        public override string Type
-        {
-            get { return "Rigidbody"; }
-        }
         new private Rigidbody rigidbody = null;
         public Rigidbody Rigidbody
         {
@@ -68,6 +65,7 @@ namespace RFUniverse.Attributes
         private RigidbodyData rigidbodyData = new RigidbodyData();
 
         [EditableAttr("Rigidbody")]
+        [EditAttr("Rigidbody", "RFUniverse.EditMode.RigidbodyAttrUI")]
         public RigidbodyData RigidbodyData
         {
             get
@@ -86,12 +84,14 @@ namespace RFUniverse.Attributes
             RigidbodyData data = new RigidbodyData();
             data.mass = Rigidbody.mass;
             data.useGravity = Rigidbody.useGravity;
+            data.isKinematic = Rigidbody.isKinematic;
             return data;
         }
         private void SetRigidbodyData(RigidbodyData data)
         {
             Rigidbody.mass = data.mass;
             Rigidbody.useGravity = data.useGravity;
+            Rigidbody.isKinematic = data.isKinematic;
         }
         private Vector3 force = Vector3.zero;
         void FixedUpdate()

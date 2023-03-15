@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
+锘縰sing Newtonsoft.Json;
 using System;
 using UnityEngine;
 /// <summary>
-/// 使Json.Net可以正确序列化或反序列化Unity中的Vector数据
+/// 浣縅son.Net鍙互姝ｇ‘搴忓垪鍖栨垨鍙嶅簭鍒楀寲Unity涓殑Vector鏁版嵁
 /// </summary>
 public class VectorConverter : JsonConverter
 {

@@ -6,10 +6,6 @@ namespace RFUniverse.Attributes
     public class SoftbodyAttr : BaseAttr
     {
 #if OBI
-        public override string Type
-        {
-            get { return "Softbody"; }
-        }
         Obi.ObiSoftbody obiSoftbody;
 
         public override void Init()

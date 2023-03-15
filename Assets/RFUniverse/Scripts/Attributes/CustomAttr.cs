@@ -7,17 +7,10 @@ namespace RFUniverse.Attributes
 {
     public class CustomAttr : BaseAttr
     {
-        //重写Type值
-        //该值需要和pyrfuniverse中custom_attr下划线前半段相同 不区分大小写
-        public override string Type
-        {
-            get { return "Custom"; }
-        }
-
         public override void Init()
         {
             base.Init();
-            AssetManager.Instance.AddListener("ListenerMessage", ListenerMessage);
+            AssetManager.Instance.AddListener("DynamicMessage", ListenerMessage);
         }
         //数据发送示例
         public override void CollectData(OutgoingMessage msg)
@@ -59,8 +52,8 @@ namespace RFUniverse.Attributes
             Debug.Log(msg.ReadFloatList());
 
             AssetManager.Instance.SendMessage(
-                "ListenerMessage",
-                "this is a unity to python listener message",
+                "DynamicMessage",
+                "this is a unity to python dynamic message",
                 987654,
                 649849f,
                 false,

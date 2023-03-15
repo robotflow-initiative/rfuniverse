@@ -69,8 +69,7 @@ namespace RFUniverse.Attributes.Digit
         public const int startLayer = 22;//22层开始都是digit预留层
         public Camera cameraLight;//光照相机
         public Camera cameraDepth;//深度相机
-                                  //private RenderTexture lightTex;//光照RT
-                                  //private RenderTexture depthTex;//深度RT
+
         public Shader depthShader;//深度Shdaer
         public MeshRenderer gel;//Gel
         public Transform lightCenter;//灯光中心
@@ -95,11 +94,6 @@ namespace RFUniverse.Attributes.Digit
 
         private static List<DigitAttr> Digits = new List<DigitAttr>();
         public int index => Digits.IndexOf(this);
-
-        public override string Type
-        {
-            get { return "Digit"; }
-        }
         public override void Init()
         {
             tex = new Texture2D(1, 1);
@@ -113,19 +107,9 @@ namespace RFUniverse.Attributes.Digit
             lightImage.texture = cameraLight.targetTexture;
             depthImage.texture = cameraDepth.targetTexture;
 
-            tex = GetDepth();
-            foreach (var item in tex.GetPixels())
-            {
-                defultDepth.Add(item);
-            }
-        }
-        protected override void Rigister()
-        {
-            base.Rigister();
+
             Digits.Add(this);
-        }
-        protected override void AfterRigister()
-        {
+
             //根据index改变UI位置
             //lightImage.rectTransform.sizeDelta = new Vector2(Digits[0].lightImage.rectTransform.sizeDelta.x, Digits[0].lightImage.rectTransform.sizeDelta.y);
             //depthImage.rectTransform.sizeDelta = lightImage.rectTransform.sizeDelta;
@@ -133,18 +117,23 @@ namespace RFUniverse.Attributes.Digit
             //depthImage.rectTransform.anchoredPosition = new Vector2(depthImage.rectTransform.sizeDelta.x * index, depthImage.rectTransform.sizeDelta.y);
 
             //根据index设置gel的层，灯光照射等层，相机渲染的层
+            tex = GetDepth();
+            foreach (var item in tex.GetPixels())
+            {
+                defultDepth.Add(item);
+            }
             gel.gameObject.layer = index + startLayer;
             light0.cullingMask = 1 << (index + startLayer);
             light1.cullingMask = 1 << (index + startLayer);
             light2.cullingMask = 1 << (index + startLayer);
             cameraLight.cullingMask = 1 << (index + startLayer);
             cameraDepth.cullingMask = 1 << (index + startLayer);
-
             SetProxy();
         }
 
         static DigitConfig config = null;//全局config实例
-                                         //读取Config
+
+        //读取Config
         void ReadConfig()
         {
             //已读取后不再读取

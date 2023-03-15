@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -11,6 +11,7 @@ namespace RFUniverse.DebugTool
         public Transform axis;
         public Canvas canvas;
         public TextMeshProUGUI text;
+
         void Update()
         {
             if (target)

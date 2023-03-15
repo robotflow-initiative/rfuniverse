@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
@@ -87,11 +87,6 @@ namespace RFUniverse.Attributes
     }
     public class ControllerAttr : ColliderAttr
     {
-        public override string Type
-        {
-            get { return "Controller"; }
-        }
-
         private ArticulationBody root;
         public ArticulationBody Root
         {
@@ -154,7 +149,7 @@ namespace RFUniverse.Attributes
         }
         private List<ArticulationData> articulationDatas;
         [EditableAttr("Articulations")]
-        [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationsAttrUI")]
+        [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
         public List<ArticulationData> ArticulationDatas
         {
             get
@@ -978,7 +973,9 @@ namespace RFUniverse.Attributes
 
         Vector3? tempIKTargetPosition;
         Quaternion? tempIKTargetRotation;
-        bool moveDone;
+
+        bool moveDone = true;
+        bool rotateDone = true;
         private void IKTargetDoMove(IncomingMessage msg)
         {
             Debug.Log("IKTargetDoMove");
@@ -1009,11 +1006,10 @@ namespace RFUniverse.Attributes
                     moveDone = true;
                 };
         }
-        bool rotateDone;
+
         private void IKTargetDoRotate(IncomingMessage msg)
         {
             if (iKTarget == null) return;
-            rotateDone = false;
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
@@ -1026,7 +1022,6 @@ namespace RFUniverse.Attributes
         private void IKTargetDoRotateQuaternion(IncomingMessage msg)
         {
             if (iKTarget == null) return;
-            rotateDone = false;
             float x = msg.ReadFloat32();
             float y = msg.ReadFloat32();
             float z = msg.ReadFloat32();
@@ -1091,11 +1086,15 @@ namespace RFUniverse.Attributes
         {
             if (iKTarget == null) return;
             iKTarget.DOComplete();
+            moveDone = true;
+            rotateDone = true;
         }
         private void IKTargetDoKill()
         {
             if (iKTarget == null) return;
             iKTarget.DOKill();
+            moveDone = true;
+            rotateDone = true;
         }
         private void SetIKTargetOffset(IncomingMessage msg)
         {
@@ -1187,27 +1186,24 @@ namespace RFUniverse.Attributes
         private void SetJointPosition(IncomingMessage msg)
         {
             //Debug.Log("SetJointPosition");
-            int jointCount = msg.ReadInt32();
-            if (moveableJoints.Count != jointCount)
-            {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointCount, moveableJoints.Count));
-                return;
-            }
-
             List<float> jointPositions = msg.ReadFloatList().ToList();
             List<float> speedScales = msg.ReadFloatList().ToList();
+            if (moveableJoints.Count != jointPositions.Count)
+            {
+                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
+                return;
+            }
             SetJointPosition(jointPositions, ControlMode.Target, speedScales);
         }
         private void SetJointPositionDirectly(IncomingMessage msg)
         {
             //Debug.Log("SetJointPositionDirectly");
-            int jointCount = msg.ReadInt32();
-            if (moveableJoints.Count != jointCount)
+            List<float> jointPositions = msg.ReadFloatList().ToList();
+            if (moveableJoints.Count != jointPositions.Count)
             {
-                Debug.LogError($"The number of target joint positions is {jointCount}, but the valid number of joints in robot arm is {moveableJoints.Count}");
+                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
                 return;
             }
-            List<float> jointPositions = msg.ReadFloatList().ToList();
             SetJointPosition(jointPositions, ControlMode.Direct);
         }
         private void SetIndexJointPosition(IncomingMessage msg)
@@ -1279,13 +1275,13 @@ namespace RFUniverse.Attributes
         private void SetJointVelocity(IncomingMessage msg)
         {
             Debug.Log("SetJointVelocity");
-            int jointCount = msg.ReadInt32();
-            if (moveableJoints.Count != jointCount)
+
+            List<float> jointTargetVelocitys = msg.ReadFloatList().ToList();
+            if (moveableJoints.Count != jointTargetVelocitys.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointCount, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointTargetVelocitys.Count, moveableJoints.Count));
                 return;
             }
-            List<float> jointTargetVelocitys = msg.ReadFloatList().ToList();
             SetJointVelocity(jointTargetVelocitys);
         }
         private void SetJointVelocity(List<float> jointTargetVelocitys)

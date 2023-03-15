@@ -5,6 +5,7 @@ using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
 using System;
 using System.Linq;
+using Google.Protobuf.WellKnownTypes;
 
 namespace RFUniverse.Manager
 {
@@ -34,19 +35,22 @@ namespace RFUniverse.Manager
             switch (type)
             {
                 case "DebugGraspPoint":
-                    DebugGraspPoint();
+                    DebugGraspPoint(msg);
                     break;
                 case "DebugObjectPose":
-                    DebugObjectPose();
+                    DebugObjectPose(msg);
                     break;
                 case "DebugCollisionPair":
-                    DebugCollisionPair();
+                    DebugCollisionPair(msg);
                     break;
                 case "DebugColliderBound":
-                    DebugColliderBound();
+                    DebugColliderBound(msg);
+                    break;
+                case "Debug3DBBox":
+                    Debug3DBBox(msg);
                     break;
                 case "DebugObjectID":
-                    DebugObjectID();
+                    DebugObjectID(msg);
                     break;
                 default:
                     Debug.Log("Dont have mehond:" + type);
@@ -54,15 +58,43 @@ namespace RFUniverse.Manager
             }
         }
 
-        GraspPoint graspPointSource = null;
-        public void DebugGraspPoint()
+
+
+        bool isDebugGraspPoint = false;
+        public bool IsDebugGraspPoint
         {
-            UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>("GraspPoint").Completed += (handle) =>
+            get
             {
-                graspPointSource = handle.Result.GetComponent<GraspPoint>();
-                BaseAttr.OnAttrChange += RefreshGraspPoint;
-                RefreshGraspPoint();
-            };
+                return isDebugGraspPoint;
+            }
+            set
+            {
+                if (value == isDebugGraspPoint) return;
+                if (value)
+                {
+                    if (graspPointSource == null)
+                    {
+                        graspPointSource = Resources.Load<GraspPoint>("GraspPoint");
+                    }
+                    BaseAttr.OnAttrChange += RefreshGraspPoint;
+                    RefreshGraspPoint();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshGraspPoint;
+                }
+                foreach (var item in graspPoints)
+                {
+                    item.Value.gameObject.SetActive(false);
+                }
+                isDebugGraspPoint = value;
+            }
+        }
+
+        GraspPoint graspPointSource = null;
+        public void DebugGraspPoint(IncomingMessage msg)
+        {
+            IsDebugGraspPoint = msg.ReadBoolean();
         }
         Dictionary<int, GraspPoint> graspPoints = new Dictionary<int, GraspPoint>();
         void RefreshGraspPoint()
@@ -82,15 +114,43 @@ namespace RFUniverse.Manager
             }
         }
 
-        PoseGizmo poseGizmoSource = null;
-        public void DebugObjectPose()
+
+
+
+        bool isDebugObjectPose = false;
+        public bool IsDebugObjectPose
         {
-            UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>("PoseGizmo").Completed += (handle) =>
+            get
             {
-                poseGizmoSource = handle.Result.GetComponent<PoseGizmo>();
-                BaseAttr.OnAttrChange += RefreshObjectPose;
-                RefreshObjectPose();
-            };
+                return isDebugObjectPose;
+            }
+            set
+            {
+                if (value == isDebugObjectPose) return;
+                if (value)
+                {
+                    if (poseGizmoSource == null)
+                    {
+                        poseGizmoSource = Resources.Load<PoseGizmo>("PoseGizmo");
+                    }
+                    BaseAttr.OnAttrChange += RefreshObjectPose;
+                    RefreshObjectPose();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshObjectPose;
+                }
+                foreach (var item in poseGizmos)
+                {
+                    item.Value.gameObject.SetActive(false);
+                }
+                isDebugObjectPose = value;
+            }
+        }
+        PoseGizmo poseGizmoSource = null;
+        public void DebugObjectPose(IncomingMessage msg)
+        {
+            IsDebugObjectPose = msg.ReadBoolean();
         }
         Dictionary<int, PoseGizmo> poseGizmos = new Dictionary<int, PoseGizmo>();
         void RefreshObjectPose()
@@ -109,15 +169,45 @@ namespace RFUniverse.Manager
                 poseGizmos.Remove(item);
             }
         }
-        CollisionLine collisionLineSource = null;
-        public void DebugCollisionPair()
+
+
+
+
+
+        bool isDebugCollisionPair = false;
+        public bool IsDebugCollisionPair
         {
-            UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>("CollisionLine").Completed += (handle) =>
+            get
             {
-                collisionLineSource = handle.Result.GetComponent<CollisionLine>();
-                BaseAttr.OnCollisionPairsChange += RefreshCollisionPair;
-                RefreshCollisionPair();
-            };
+                return isDebugCollisionPair;
+            }
+            set
+            {
+                if (value == isDebugCollisionPair) return;
+                if (value)
+                {
+                    if (collisionLineSource == null)
+                    {
+                        collisionLineSource = Resources.Load<CollisionLine>("CollisionLine");
+                    }
+                    BaseAttr.OnAttrChange += RefreshCollisionPair;
+                    RefreshCollisionPair();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshCollisionPair;
+                }
+                foreach (var item in collisionLines)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                isDebugCollisionPair = value;
+            }
+        }
+        CollisionLine collisionLineSource = null;
+        public void DebugCollisionPair(IncomingMessage msg)
+        {
+            IsDebugCollisionPair = msg.ReadBoolean();
         }
         List<CollisionLine> collisionLines = new List<CollisionLine>();
         void RefreshCollisionPair()
@@ -137,15 +227,44 @@ namespace RFUniverse.Manager
                 collisionLines[i].gameObject.SetActive(true);
             }
         }
-        ColliderBound colliderBoundSource = null;
-        public void DebugColliderBound()
+
+
+
+        bool isDebugColliderBound = false;
+        public bool IsDebugColliderBound
         {
-            UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>("ColliderBound").Completed += (handle) =>
+            get
             {
-                colliderBoundSource = handle.Result.GetComponent<ColliderBound>();
-                BaseAttr.OnAttrChange += RefreshColliderBound;
-                RefreshColliderBound();
-            };
+                return isDebugColliderBound;
+            }
+            set
+            {
+                if (value == isDebugColliderBound) return;
+                if (value)
+                {
+                    if (colliderBoundSource == null)
+                    {
+                        colliderBoundSource = Resources.Load<ColliderBound>("ColliderBound");
+                    }
+                    BaseAttr.OnAttrChange += RefreshColliderBound;
+                    RefreshColliderBound();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshColliderBound;
+                }
+                foreach (var item in collisionLines)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                isDebugColliderBound = value;
+            }
+        }
+
+        ColliderBound colliderBoundSource = null;
+        public void DebugColliderBound(IncomingMessage msg)
+        {
+            IsDebugColliderBound = msg.ReadBoolean();
         }
         Dictionary<int, List<ColliderBound>> colliderBounds = new Dictionary<int, List<ColliderBound>>();
         void RefreshColliderBound()
@@ -154,9 +273,8 @@ namespace RFUniverse.Manager
             List<int> current = BaseAttr.Attrs.Keys.ToList();
             foreach (var item in current.Except(colliderBounds.Keys))
             {
-                if (!BaseAttr.Attrs[item].IsRFMoveCollider) continue;
                 List<ColliderBound> colliders = new List<ColliderBound>();
-                foreach (Collider col in BaseAttr.Attrs[item].GetComponentsInChildren<Collider>())
+                foreach (Collider col in BaseAttr.Attrs[item].GetChildComponentFilter<Collider>())
                 {
                     ColliderBound instance = GameObject.Instantiate<ColliderBound>(colliderBoundSource);
                     colliders.Add(instance);
@@ -173,15 +291,46 @@ namespace RFUniverse.Manager
                 colliderBounds.Remove(item);
             }
         }
-        ObjectID objectIDSource = null;
-        public void DebugObjectID()
+
+
+
+
+
+        bool isDebugObjectID = false;
+        public bool IsDebugObjectID
         {
-            UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>("ObjectID").Completed += (handle) =>
+            get
             {
-                objectIDSource = handle.Result.GetComponent<ObjectID>();
-                BaseAttr.OnAttrChange += RefreshObjectID;
-                RefreshObjectID();
-            };
+                return isDebugObjectID;
+            }
+            set
+            {
+                if (value == isDebugObjectID) return;
+                if (value)
+                {
+                    if (objectIDSource == null)
+                    {
+                        objectIDSource = Resources.Load<ObjectID>("ObjectID");
+                    }
+                    BaseAttr.OnAttrChange += RefreshObjectID;
+                    RefreshObjectID();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshObjectID;
+                }
+                foreach (var item in collisionLines)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                isDebugColliderBound = value;
+            }
+        }
+
+        ObjectID objectIDSource = null;
+        public void DebugObjectID(IncomingMessage msg)
+        {
+            IsDebugObjectID = msg.ReadBoolean();
         }
         Dictionary<int, ObjectID> objectIDs = new Dictionary<int, ObjectID>();
         void RefreshObjectID()
@@ -198,6 +347,64 @@ namespace RFUniverse.Manager
             {
                 GameObject.Destroy(objectIDs[item].gameObject);
                 objectIDs.Remove(item);
+            }
+        }
+
+
+
+
+
+        bool isDebug3DBBox = false;
+        public bool IsDebug3DBBox
+        {
+            get
+            {
+                return isDebug3DBBox;
+            }
+            set
+            {
+                if (value == isDebug3DBBox) return;
+                if (value)
+                {
+                    if (dddBBoxSource == null)
+                    {
+                        dddBBoxSource = Resources.Load<DDDBBox>("3DBBox");
+                    }
+                    BaseAttr.OnAttrChange += Refresh3DBBox;
+                    Refresh3DBBox();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= Refresh3DBBox;
+                }
+                foreach (var item in collisionLines)
+                {
+                    item.gameObject.SetActive(false);
+                }
+                isDebugColliderBound = value;
+            }
+        }
+
+        DDDBBox dddBBoxSource = null;
+        public void Debug3DBBox(IncomingMessage msg)
+        {
+            IsDebug3DBBox = msg.ReadBoolean();
+        }
+        Dictionary<int, DDDBBox> dddBBoxs = new Dictionary<int, DDDBBox>();
+        void Refresh3DBBox()
+        {
+            if (dddBBoxSource == null) return;
+            List<int> current = BaseAttr.Attrs.Keys.ToList();
+            foreach (var item in current.Except(dddBBoxs.Keys))
+            {
+                DDDBBox instance = GameObject.Instantiate<DDDBBox>(dddBBoxSource);
+                dddBBoxs.Add(item, instance);
+                instance.target = BaseAttr.Attrs[item];
+            }
+            foreach (var item in dddBBoxs.Keys.Except(current))
+            {
+                GameObject.Destroy(dddBBoxs[item].gameObject);
+                dddBBoxs.Remove(item);
             }
         }
     }

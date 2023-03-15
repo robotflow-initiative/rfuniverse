@@ -9,11 +9,6 @@ namespace RFUniverse.Attributes
 {
     public class GraspSimAttr : BaseAttr
     {
-        public override string Type
-        {
-            get { return "GraspSim"; }
-        }
-
         public override void AnalysisMsg(IncomingMessage msg, string type)
         {
             switch (type)

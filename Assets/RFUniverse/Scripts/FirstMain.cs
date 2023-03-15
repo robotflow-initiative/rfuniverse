@@ -10,8 +10,6 @@ namespace RFUniverse
             string[] CommandLineArgs = System.Environment.GetCommandLineArgs();
             for (int i = 0; i < CommandLineArgs.Length; i++)
             {
-
-
                 if (CommandLineArgs[i].ToLower() == "-edit")
                 {
                     SceneManager.LoadScene("Edit");

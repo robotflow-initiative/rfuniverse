@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace RFUniverse.Attributes
 {
+    [RequireComponent(typeof(Camera))]
     public abstract class BaseCameraAttr : BaseAttr
     {
         new protected Camera camera = null;
@@ -34,15 +35,10 @@ namespace RFUniverse.Attributes
         {
             get { return "Camera"; }
         }
-        public override string Type
-        {
-            get { return "Camera"; }
-        }
         public override void Init()
         {
             base.Init();
             tex = new Texture2D(1, 1);
-
 
             Camera.enabled = false;
             Camera.nearClipPlane = 0.01f;
@@ -53,7 +49,15 @@ namespace RFUniverse.Attributes
             Camera.allowMSAA = true;
             Camera.allowHDR = false;
             Camera.depthTextureMode |= DepthTextureMode.MotionVectors | DepthTextureMode.Depth;
-            //Camera.cullingMask = PlayerMain.Instance.simulationLayer;
+            Camera.cullingMask &= ~(1 << PlayerMain.Instance.axisLayer);
+            Camera.cullingMask &= ~(1 << PlayerMain.Instance.tempLayer);
+        }
+        private void Awake()
+        {
+            GameObject cameraView = GameObject.Instantiate(Resources.Load<GameObject>("CameraView"));
+            cameraView.transform.parent = transform;
+            cameraView.transform.localPosition = Vector3.zero;
+            cameraView.transform.rotation = Quaternion.identity;
         }
         public override void CollectData(OutgoingMessage msg)
         {
@@ -367,7 +371,7 @@ namespace RFUniverse.Attributes
         void Get2DBBOX()
         {
             ddBBOX = new List<Rect>();
-            foreach (var item in BaseAttr.Attrs.Values)
+            foreach (var item in ActiveAttrs.Values)
             {
                 Rect rect = Get2DBBOX(item);
                 if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
@@ -401,7 +405,7 @@ namespace RFUniverse.Attributes
         void Get3DBBOX()
         {
             dddBBOX = new List<Tuple<Vector3, Vector3, Vector3>>();
-            foreach (var item in BaseAttr.Attrs.Values)
+            foreach (var item in ActiveAttrs.Values)
             {
                 Tuple<Vector3, Vector3, Vector3> box = Get3DBBOX(item);
                 Vector3 center = Camera.WorldToScreenPoint(box.Item1);

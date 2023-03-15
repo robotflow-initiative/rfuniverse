@@ -517,16 +517,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ba588c959d09a614cb54af32bed06d3b
-    m_Address: Color
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ab907941ea661414d91b816f63868a91
-    m_Address: Articulations
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 64dc30530f4be93408bbae7775e6bb1c
     m_Address: Halfway_mesh_texture
     m_ReadOnly: 0
@@ -544,16 +534,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5519b7266c9090b44bfa879210036ad1
     m_Address: Highspire_mesh_texture
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c0a67bfe958eead4da0515e5ed20305b
-    m_Address: Colliders
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ad2cf5cd48b755c4487cc6519a632786
-    m_Address: Rigidbody
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -697,11 +677,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c8945d616eea9db428dcf52ce9560ad1
-    m_Address: AssetsData
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f710f985daef002db8593d8859c0f89
     m_Address: 003_cracker_box_obi
     m_ReadOnly: 0
@@ -717,21 +692,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c92e3693f4817639883d7856b08108f7
-    m_Address: GraspPoint
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e0d9f959c9a37a429b1740e64059df00
-    m_Address: PoseGizmo
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2cf4b953525a80b0aa68c77ecc33c223
-    m_Address: CollisionLine
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0aa668691811ef36094554d9e49fa875
     m_Address: GameObject_Capsule
     m_ReadOnly: 0
@@ -744,16 +704,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1fe50ab63a256103285a682a99b3c8f5
     m_Address: tobor_r300
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b056e81f97971351187d17c1c2b1e61b
-    m_Address: ObjectID
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1d675634340bba4fc96cd93faf69b50a
-    m_Address: ColliderBound
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -834,6 +784,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2de4f78579b1e6b4b99d27c6d9d69e9f
     m_Address: svh
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8945d616eea9db428dcf52ce9560ad1
+    m_Address: AssetsData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54aff78258db93142837fa64c288062e
+    m_Address: HumanArticulation
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

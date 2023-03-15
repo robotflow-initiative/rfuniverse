@@ -1,4 +1,4 @@
-using Robotflow.RFUniverse.SideChannels;
+﻿using Robotflow.RFUniverse.SideChannels;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -48,6 +48,8 @@ namespace RFUniverse.Attributes
     {
         private static Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
         public static Dictionary<int, BaseAttr> Attrs => new Dictionary<int, BaseAttr>(attrs);
+        public static Dictionary<int, BaseAttr> ActiveAttrs => attrs.Where((s) => s.Value.gameObject.activeInHierarchy).ToDictionary((s) => s.Key, (s) => s.Value);
+
         public static Action OnAttrChange;
         public static void AddAttr(BaseAttr attr)
         {
@@ -101,10 +103,6 @@ namespace RFUniverse.Attributes
             {
                 attrName = value;
             }
-        }
-        public virtual string Type
-        {
-            get { return "Base"; }
         }
 
         public List<BaseAttr> childs = new List<BaseAttr>();

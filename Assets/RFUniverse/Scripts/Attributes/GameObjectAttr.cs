@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
 using RFUniverse;
+using System.Collections.Generic;
 
 namespace RFUniverse.Attributes
 {
     public class GameObjectAttrData : BaseAttrData
     {
-        public float[] color = new float[]{1,1,1,1};
+        public float[] color = new float[] { 1, 1, 1, 1 };
         public bool render = true;
         public GameObjectAttrData() : base()
         {
@@ -24,42 +25,61 @@ namespace RFUniverse.Attributes
     }
     public class GameObjectAttr : BaseAttr
     {
-        public override string Type
-        {
-            get { return "GameObject"; }
-        }
-
-        private Material mat = null;
-        private Material Material
+        private List<Renderer> renderers = null;
+        private List<Renderer> Renderers
         {
             get
             {
-                if (mat == null)
-                    mat = GetComponentInChildren<Renderer>()?.material;
-                return mat;
+                if (renderers == null)
+                {
+                    renderers = this.GetChildComponentFilter<Renderer>();
+                }
+                return renderers;
+            }
+        }
+
+        private List<Material> materials = null;
+        private List<Material> Materials
+        {
+            get
+            {
+                if (materials == null)
+                {
+                    materials = new List<Material>();
+                    foreach (var item in Renderers)
+                    {
+                        materials.AddRange(item.materials);
+                    }
+                }
+                return materials;
             }
         }
 
         //public Color color;
         [EditableAttr("Color")]
+        [EditAttr("Color", "RFUniverse.EditMode.ColorAttrUI")]
         public Color Color
         {
             get
             {
-                if (Material != null)
-                    return Material.GetColor("_Color");
+                if (Materials.Count > 0l)
+                    return Materials[0].GetColor("_Color");
                 else
                     return Color.white;
             }
             set
             {
-                if (Material != null)
-                    Material.SetColor("_Color", value);
+                foreach (var item in Materials)
+                {
+                    item.SetColor("_Color", value);
+                }
+
             }
         }
 
         bool render = true;
         //[EditableAttr("Render")]
+        [EditAttr("Render", "RFUniverse.EditMode.RenderAttrUI")]
         public bool Render
         {
             get
@@ -68,16 +88,21 @@ namespace RFUniverse.Attributes
             }
             set
             {
-                EnabledRender(value);
                 render = value;
+                foreach (var item in Renderers)
+                {
+                    item.enabled = render;
+                }
             }
         }
         public Texture2D Texture
         {
             set
             {
-                if (Material != null)
-                    Material.SetTexture("_MainTex", value);
+                foreach (var item in Materials)
+                {
+                    item.SetTexture("_MainTex", value);
+                }
             }
         }
 
@@ -156,21 +181,13 @@ namespace RFUniverse.Attributes
             float ca = msg.ReadFloat32();
             Color = new Color(cr, cg, cb, ca);
         }
-        
+
         private void EnabledRender(IncomingMessage msg)
         {
             bool enabled = msg.ReadBoolean();
-            EnabledRender(enabled);
-            
+            Render = enabled;
         }
-        private void EnabledRender(bool enabled)
-        {
-            foreach (var item in this.GetChildComponentFilter<Renderer>())
-            {
-                item.enabled = enabled;
-            }
-        }
-        
+
         private void SetTexture(IncomingMessage msg)
         {
             string path = msg.ReadString();

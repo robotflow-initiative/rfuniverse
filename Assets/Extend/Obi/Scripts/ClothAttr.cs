@@ -5,10 +5,6 @@ namespace RFUniverse.Attributes
     public class ClothAttr : BaseAttr
     {
 #if OBI
-        public override string Type
-        {
-            get { return "Cloth"; }
-        }
         Obi.ObiCloth obiCloth = null;
         public override void Init()
         {

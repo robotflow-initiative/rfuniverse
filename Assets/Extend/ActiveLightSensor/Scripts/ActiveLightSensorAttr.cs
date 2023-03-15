@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
@@ -15,10 +15,6 @@ namespace RFUniverse.Attributes
         protected string leftLRBase64String = null;
         protected string rightLRBase64String = null;
         public override string Name
-        {
-            get { return "ActiveLightSensor"; }
-        }
-        public override string Type
         {
             get { return "ActiveLightSensor"; }
         }

@@ -387,7 +387,7 @@ namespace RFUniverse.Manager
         {
             OutgoingMessage msg = new OutgoingMessage();
             msg.WriteString("RFMoveColliders");
-            List<BaseAttr> colliderAttrs = BaseAttr.Attrs.Values.Where(s => s.IsRFMoveCollider).ToList();
+            List<BaseAttr> colliderAttrs = BaseAttr.ActiveAttrs.Values.Where(s => s.IsRFMoveCollider).ToList();
             msg.WriteInt32(colliderAttrs.Count);
             foreach (var attr in colliderAttrs)
             {

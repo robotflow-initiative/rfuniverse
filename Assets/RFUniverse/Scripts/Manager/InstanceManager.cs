@@ -3,6 +3,7 @@ using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 
 namespace RFUniverse.Manager
 {
@@ -40,12 +41,11 @@ namespace RFUniverse.Manager
         public virtual void CollectData()
         {
             OutgoingMessage msg = new OutgoingMessage();
-            List<BaseAttr> activeAttr = BaseAttr.Attrs.Where((s) => s.Value.gameObject.activeInHierarchy).Select((s) => s.Value).ToList();
-            msg.WriteInt32(activeAttr.Count);
-            foreach (var attr in activeAttr)
+            msg.WriteInt32(BaseAttr.ActiveAttrs.Count);
+            foreach (var attr in BaseAttr.ActiveAttrs.Values)
             {
                 msg.WriteInt32(attr.ID);
-                msg.WriteString(attr.Type);
+                msg.WriteString(attr.GetType().Name);
                 attr.CollectData(msg);
             }
             channel.SendMetaDataToPython(msg);
