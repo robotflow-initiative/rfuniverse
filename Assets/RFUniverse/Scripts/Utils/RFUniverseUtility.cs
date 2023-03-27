@@ -4,11 +4,37 @@ using System.Collections.Generic;
 using Unity.Robotics.UrdfImporter.Control;
 using Unity.Robotics.UrdfImporter;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace RFUniverse
 {
     public static class RFUniverseUtility
     {
+        static JsonSerializerSettings jsonSerializerSettings = null;
+        public static JsonSerializerSettings JsonSerializerSettings
+        {
+            get
+            {
+                if (jsonSerializerSettings == null)
+                {
+                    jsonSerializerSettings = new JsonSerializerSettings();
+                    jsonSerializerSettings.Converters = new[] { new UnityJsonConverter() };
+                    jsonSerializerSettings.TypeNameHandling = TypeNameHandling.All;
+                }
+                return jsonSerializerSettings;
+            }
+        }
+        static WaitForFixedUpdate waitForFixedUpdate = new();
+
+        public static IEnumerator WaitFixedUpdateFrame(int count)
+        {
+
+            for (int i = 0; i < count; i++)
+            {
+                yield return waitForFixedUpdate;
+            }
+        }
         public static Color EncodeIDAsColor(int instanceId)
         {
             long r = (instanceId * (long)16807 + 187) % 256;
@@ -16,7 +42,6 @@ namespace RFUniverse
             long b = (instanceId * (long)95849 + 233) % 256;
             return new Color32((byte)r, (byte)g, (byte)b, 255);
         }
-
         public static List<TResult> GetChildComponentFilter<TResult>(this BaseAttr parent) where TResult : Component
         {
             return GetChildComponentFilter<BaseAttr, TResult>(parent);

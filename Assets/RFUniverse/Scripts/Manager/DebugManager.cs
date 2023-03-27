@@ -52,6 +52,9 @@ namespace RFUniverse.Manager
                 case "DebugObjectID":
                     DebugObjectID(msg);
                     break;
+                case "SendVersion":
+                    SendVersion(msg);
+                    break;
                 default:
                     Debug.Log("Dont have mehond:" + type);
                     break;
@@ -350,10 +353,6 @@ namespace RFUniverse.Manager
             }
         }
 
-
-
-
-
         bool isDebug3DBBox = false;
         public bool IsDebug3DBBox
         {
@@ -406,6 +405,12 @@ namespace RFUniverse.Manager
                 GameObject.Destroy(dddBBoxs[item].gameObject);
                 dddBBoxs.Remove(item);
             }
+        }
+
+
+        public void SendVersion(IncomingMessage msg)
+        {
+            PlayerMain.Instance.pythonVersion = new Version(msg.ReadString());
         }
     }
 }

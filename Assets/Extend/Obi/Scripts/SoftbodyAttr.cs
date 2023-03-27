@@ -13,30 +13,7 @@ namespace RFUniverse.Attributes
             base.Init();
             obiSoftbody = GetComponent<Obi.ObiSoftbody>();
         }
-        public override BaseAttrData GetAttrData()
-        {
-            BaseAttrData data = new BaseAttrData();
 
-            data.name = Name;
-
-            data.id = ID;
-
-            data.type = "Softbody";
-
-            BaseAttr parentAttr = null;
-            if (GetComponentsInParent<BaseAttr>().Length > 1)
-                parentAttr = GetComponentsInParent<BaseAttr>()[1];
-            data.parentID = parentAttr == null ? -1 : parentAttr.ID;
-
-            Transform parent = transform.parent;
-            data.parentName = parent == null ? "" : parent.name;
-
-            data.position = new float[3] { transform.localPosition.x, transform.localPosition.y, transform.localPosition.z };
-            data.rotation = new float[3] { transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z };
-            data.scale = new float[3] { transform.localScale.x, transform.localScale.y, transform.localScale.z };
-
-            return data;
-        }
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);

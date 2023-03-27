@@ -27,11 +27,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 56b81b7e4ff6e791194511476014ff01
-    m_Address: Jaco
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e9ee17e5814e7c10c81ad6223343be9b
     m_Address: kinova_gen3
     m_ReadOnly: 0
@@ -42,38 +37,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7c9401649aba91d4aa7b368dc0f923ba
-    m_Address: iiwa
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3f73aee831412f610a2fff7435b28c6d
-    m_Address: pr21
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 035c17fcd642a09f08f5ba36643c22b8
     m_Address: robotiq_arg2f_85_model
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 39b3221a1349738a0b40b22c17255290
-    m_Address: stretch
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0bf6279c9e9c96c69861e1b0b1ae5736
-    m_Address: tobor
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 96ace51e68c0b1ee09823f80b468f28e
-    m_Address: tobor_for_show
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7bc8a334a55a9c429b2c834131fd2d02
-    m_Address: tobor_full
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -612,7 +577,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2c8e244c59ac78c3fb5900d6cb995e95
+  - m_GUID: 47953456a20cc364fb936d24932fc2fa
     m_Address: Collider_Box
     m_ReadOnly: 0
     m_SerializedLabels: []
@@ -762,11 +727,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c15990b1b8d6970a59425d4c21d30f3d
-    m_Address: Visual_Box
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 54bddc7546d48b47b9e20f5f51c87472
     m_Address: flexivArm_ag95
     m_ReadOnly: 0
@@ -792,8 +752,38 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 54aff78258db93142837fa64c288062e
-    m_Address: HumanArticulation
+  - m_GUID: 55bcbf4a0679d4849bcdba0982d2c1a5
+    m_Address: Camera
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 744422607e6f01742bed371dbf6e5e3b
+    m_Address: PointCloud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13c1824c2d2d46743bfb976c42f19af6
+    m_Address: Light
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5918dc62ac47b21438ce6bacde4099ea
+    m_Address: Collider_Quad
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a5f31aaa738ed144bf5992892850dee
+    m_Address: Collider_Sphere
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 930c40967697b434f913411bd2778cdc
+    m_Address: Collider_Capsule
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a401368091afa24a8f47c4c793989ab
+    m_Address: Collider_Cylinder
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -130,35 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47b7e39ac5db5a51fb268a3ea9867a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: -1
   attrName: Rigidbody_Cylinder
-  id: 125554
-  colliderDatas:
-  - meshName: Rigidbody_Cylinder
-    type: 3
-    position:
-    - 0
-    - 0
-    - 0
-    rotation:
-    - -0
-    - 0
-    - 0
-    scale:
-    - 1
-    - 1
-    - 1
-    radius: 0.5000001
-    height: 2
-    direction: 1
-    physicMateria:
-      bounciness: 0
-      dynamicFriction: 0.6
-      staticFriction: 0.6
-      frictionCombine: 0
-      bounceCombine: 0
-  rigidbodyData:
-    mass: 1
-    useGravity: 1
+  childs: []
 --- !u!54 &-4902291103825405525
 Rigidbody:
   m_ObjectHideFlags: 0

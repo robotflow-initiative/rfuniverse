@@ -1,13 +1,24 @@
-using RFUniverse.Attributes;
+﻿using RFUniverse.Attributes;
+using RFUniverse.EditMode;
+using RFUniverse.Manager;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace RFUniverse
 {
     public class PlayerMain : RFUniverseMain
     {
         public static PlayerMain Instance = null;
+        [SerializeField]
+        private PlayerMainUI playerMainUI;
 
+
+        public Version pythonVersion = new Version();
+        Queue<string> logList = new Queue<string>();
         [SerializeField]
         float fixedDeltaTime = 0.02f;
 
@@ -38,23 +49,18 @@ namespace RFUniverse
             }
         }
 
+        public void Pend()
+        {
+            playerMainUI.ShowPend();
+        }
         protected override void Awake()
         {
             base.Awake();
             Instance = this;
             FixedDeltaTime = fixedDeltaTime;
-            TimeScale = timeScale; ;
-            BaseAgent agent = BaseAgent.Instance;
-        }
-        private void Start()
-        {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-            mpb.SetColor("_IDColor", Color.black);
-            foreach (var render in Ground.GetComponentsInChildren<Renderer>())
-            {
-                render.SetPropertyBlock(mpb);
-            }
-            BaseAttr[] sceneAttrs = FindObjectsOfType<BaseAttr>();
+            TimeScale = timeScale;
+
+            BaseAttr[] sceneAttrs = FindObjectsOfType<BaseAttr>(true);
             List<BaseAttr> noParentAttr = new List<BaseAttr>(sceneAttrs);
             foreach (var item in sceneAttrs)
             {
@@ -68,8 +74,28 @@ namespace RFUniverse
                 if (item != null)
                     item.Instance();
             }
+
+            BaseAgent agent = BaseAgent.Instance;
+
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetColor("_IDColor", Color.black);
+            foreach (var render in Ground.GetComponentsInChildren<Renderer>())
+            {
+                render.SetPropertyBlock(mpb);
+            }
+
+            playerMainUI.Init(pythonVersion,
+                () => AssetManager.Instance.SendPendDoneMsg()
+                ); ;
         }
 
+        public void AddLog<T>(T log)
+        {
+            logList.Enqueue(log.ToString());
+            if (logList.Count > 50)
+                logList.Dequeue();
+            playerMainUI.RefreshLogList(logList.ToArray());
+        }
         void OnValidate()
         {
             Instance = this;

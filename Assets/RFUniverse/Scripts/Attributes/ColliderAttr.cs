@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +21,12 @@ namespace RFUniverse.Attributes
             if (b is ColliderAttrData)
                 colliderDatas = (b as ColliderAttrData).colliderDatas;
             type = "Collider";
+        }
+        public override void SetAttrData(BaseAttr attr)
+        {
+            base.SetAttrData(attr);
+            ColliderAttr colliderAttr = attr as ColliderAttr;
+            colliderAttr.SetColliderDatas(colliderDatas);
         }
     }
     [Serializable]
@@ -81,15 +87,6 @@ namespace RFUniverse.Attributes
             ColliderAttrData data = new ColliderAttrData(base.GetAttrData());
             data.colliderDatas = GetColliderDatas();
             return data;
-        }
-        public override void SetAttrData(BaseAttrData setData)
-        {
-            base.SetAttrData(setData);
-            if (setData is ColliderAttrData)
-            {
-                ColliderAttrData data = setData as ColliderAttrData;
-                SetColliderDatas(data.colliderDatas);
-            }
         }
 
         private List<ColliderData> colliderDatas;
@@ -170,7 +167,7 @@ namespace RFUniverse.Attributes
             }
             return datas;
         }
-        private void SetColliderDatas(List<ColliderData> datas)
+        public void SetColliderDatas(List<ColliderData> datas)
         {
             foreach (var data in datas)
             {
@@ -269,7 +266,7 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
-        
+
         public void EnabledAllCollider(IncomingMessage msg)
         {
             bool enabled = msg.ReadBoolean();
@@ -295,7 +292,7 @@ namespace RFUniverse.Attributes
                     item.material = material;
             }
         }
-        
+
 #if UNITY_EDITOR
         public static void SaveMeshs(string path, List<Mesh> meshs)
         {
@@ -320,6 +317,8 @@ namespace RFUniverse.Attributes
         {
             base.OnInspectorGUI();
             ColliderAttr script = target as ColliderAttr;
+            GUILayout.Space(10);
+            GUILayout.Label("Editor Tool:");
             GUILayout.BeginHorizontal();
             text = GUILayout.TextField(text);
             if (GUILayout.Button("Generate VHACD Collider"))

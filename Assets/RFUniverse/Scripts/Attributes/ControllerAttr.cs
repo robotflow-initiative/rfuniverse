@@ -20,6 +20,12 @@ namespace RFUniverse.Attributes
         {
             type = "Controller";
         }
+        public override void SetAttrData(BaseAttr attr)
+        {
+            base.SetAttrData(attr);
+            ControllerAttr controllerAttr = attr as ControllerAttr;
+            controllerAttr.SetArticulationDatas(articulationDatas);
+        }
     }
     [Serializable]
     public class MyArticulationDrive
@@ -128,25 +134,13 @@ namespace RFUniverse.Attributes
                 InitBioIK();
             }
         }
-
         public override BaseAttrData GetAttrData()
         {
             ControllerData data = new ControllerData(base.GetAttrData());
-
             data.articulationDatas = GetArticulationDatas();
-
             return data;
         }
-        public override void SetAttrData(BaseAttrData setData)
-        {
-            base.SetAttrData(setData);
-            if (setData is ControllerData)
-            {
-                ControllerData data = setData as ControllerData;
 
-                SetArticulationDatas(data.articulationDatas);
-            }
-        }
         private List<ArticulationData> articulationDatas;
         [EditableAttr("Articulations")]
         [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
@@ -191,7 +185,7 @@ namespace RFUniverse.Attributes
             }
             return datas;
         }
-        private void SetArticulationDatas(List<ArticulationData> datas)
+        public void SetArticulationDatas(List<ArticulationData> datas)
         {
             foreach (var data in datas)
             {
@@ -242,171 +236,6 @@ namespace RFUniverse.Attributes
         {
 #if BIOIK
             if (jointParameters.Count == 0) return;
-
-            // Transform last = transform;
-            // foreach (var item in jointParameters)
-            // {
-            //     Transform current = new GameObject(item.body.transform.name).transform;
-            //     current.transform.SetParent(last);
-            //     iKCopy.Add(current.transform, item.body);
-            //     current.transform.localPosition = item.body.transform.localPosition;
-            //     current.transform.localRotation = item.body.transform.localRotation;
-            //     current.transform.localScale = item.body.transform.localScale;
-            //     last = current;
-            // }
-            //
-            // Transform end = iKCopy.Last().Key;
-            // iKFollow = new GameObject("iKFollowPoint").transform;
-            // iKFollow.SetParent(end);
-            // iKFollow.localPosition = Vector3.zero;
-            // iKFollow.localRotation = Quaternion.identity;
-            //     
-            // iKTarget = new GameObject("iKTargetPoint").transform;
-            // iKTarget.SetParent(transform);
-            // ResetIKTarget();
-            //
-            // bioIK = iKCopy.First().Key.gameObject.AddComponent<BioIK.BioIK>();
-            // //bioIK.isArticulations = true;
-            // bioIK.SetGenerations(3);
-            // bioIK.SetPopulationSize(50);
-            // bioIK.SetElites(1);
-            // bioIK.Smoothing = 0f;
-            // foreach (var item in iKCopy)
-            // {
-            //     BioIK.BioJoint joint = bioIK.FindSegment(item.Key).AddJoint();
-            //     joint.SetAnchor(item.Value.anchorPosition);
-            //     joint.SetOrientation(item.Value.anchorRotation.eulerAngles);
-            //     joint.SetDefaultFrame(item.Value.transform.localPosition, item.Value.transform.localRotation);
-            //     switch (item.Value.jointType)
-            //     {
-            //         case ArticulationJointType.RevoluteJoint:
-            //             joint.JointType = BioIK.JointType.Rotational;
-            //             joint.X.Enabled = true;
-            //             switch (item.Value.twistLock)
-            //             {
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.X.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.X.Constrained = true;
-            //                     joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
-            //                     joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
-            //                     joint.X.SetTargetValue(item.Value.xDrive.target);
-            //                     break;
-            //             }
-            //             joint.Y.Enabled = false;
-            //             joint.Z.Enabled = false;
-            //             break;
-            //         case ArticulationJointType.PrismaticJoint:
-            //             joint.JointType = BioIK.JointType.Translational;
-            //             switch (item.Value.linearLockX)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.X.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.X.Enabled = true;
-            //                     joint.X.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.X.Enabled = true;
-            //                     joint.X.Constrained = true;
-            //                     joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
-            //                     joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
-            //                     joint.X.SetTargetValue(item.Value.xDrive.target);
-            //                     break;
-            //             }
-            //             switch (item.Value.linearLockY)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.Y.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.Y.Enabled = true;
-            //                     joint.Y.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.Y.Enabled = true;
-            //                     joint.Y.Constrained = true;
-            //                     joint.Y.SetUpperLimit(item.Value.yDrive.upperLimit);
-            //                     joint.Y.SetLowerLimit(item.Value.yDrive.lowerLimit);
-            //                     joint.Y.SetTargetValue(item.Value.yDrive.target);
-            //                     break;
-            //             }
-            //             switch (item.Value.linearLockZ)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.Z.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.Z.Enabled = true;
-            //                     joint.Z.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.Z.Enabled = true;
-            //                     joint.Z.Constrained = true;
-            //                     joint.Z.SetUpperLimit(item.Value.zDrive.upperLimit);
-            //                     joint.Z.SetLowerLimit(item.Value.zDrive.lowerLimit);
-            //                     joint.Z.SetTargetValue(item.Value.zDrive.target);
-            //                     break;
-            //             }
-            //             break;
-            //         case ArticulationJointType.SphericalJoint:
-            //             joint.JointType = BioIK.JointType.Rotational;
-            //             switch (item.Value.twistLock)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.X.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.X.Enabled = true;
-            //                     joint.X.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.X.Enabled = true;
-            //                     joint.X.Constrained = true;
-            //                     joint.X.SetUpperLimit(item.Value.xDrive.upperLimit);
-            //                     joint.X.SetLowerLimit(item.Value.xDrive.lowerLimit);
-            //                     joint.X.SetTargetValue(item.Value.xDrive.target);
-            //                     break;
-            //             }
-            //             switch (item.Value.swingYLock)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.Y.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.Y.Enabled = true;
-            //                     joint.Y.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.Y.Enabled = true;
-            //                     joint.Y.Constrained = true;
-            //                     joint.Y.SetUpperLimit(item.Value.yDrive.upperLimit);
-            //                     joint.Y.SetLowerLimit(item.Value.yDrive.lowerLimit);
-            //                     joint.Y.SetTargetValue(item.Value.yDrive.target);
-            //                     break;
-            //             }
-            //             switch (item.Value.swingZLock)
-            //             {
-            //                 case ArticulationDofLock.LockedMotion:
-            //                     joint.Z.Enabled = false;
-            //                     break;
-            //                 case ArticulationDofLock.FreeMotion:
-            //                     joint.Z.Enabled = true;
-            //                     joint.Z.Constrained = false;
-            //                     break;
-            //                 case ArticulationDofLock.LimitedMotion:
-            //                     joint.Z.Enabled = true;
-            //                     joint.Z.Constrained = true;
-            //                     joint.Z.SetUpperLimit(item.Value.zDrive.upperLimit);
-            //                     joint.Z.SetLowerLimit(item.Value.zDrive.lowerLimit);
-            //                     joint.Z.SetTargetValue(item.Value.zDrive.target);
-            //                     break;
-            //             }
-            //             break;
-            //         }
-            // }
 
             Transform first = jointParameters.First().body.transform;
             Transform end = jointParameters.Last().body.transform;
@@ -813,6 +642,9 @@ namespace RFUniverse.Attributes
                     return;
                 case "SetJointVelocity":
                     SetJointVelocity(msg);
+                    return;
+                case "SetIndexJointVelocity":
+                    SetIndexJointVelocity(msg);
                     return;
                 case "AddJointForce":
                     AddJointForce(msg);
@@ -1284,12 +1116,23 @@ namespace RFUniverse.Attributes
             }
             SetJointVelocity(jointTargetVelocitys);
         }
+        private void SetIndexJointVelocity(IncomingMessage msg)
+        {
+            Debug.Log("SetIndexJointVelocity");
+            int index = msg.ReadInt32();
+            float jointTargetVelocity = msg.ReadFloat32();
+            SetIndexJointVelocity(index, jointTargetVelocity);
+        }
         private void SetJointVelocity(List<float> jointTargetVelocitys)
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
                 moveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
             }
+        }
+        private void SetIndexJointVelocity(int index, float jointTargetVelocity)
+        {
+            moveableJoints[index].GetUnit().SetJointTargetVelocity(jointTargetVelocity);
         }
         public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target, List<float> speedScales = null)
         {
@@ -1338,6 +1181,8 @@ namespace RFUniverse.Attributes
         {
             base.OnInspectorGUI();
             ControllerAttr script = target as ControllerAttr;
+            GUILayout.Space(10);
+            GUILayout.Label("Editor Tool:");
             // if (GUILayout.Button("Get Articulation Datas"))
             // {
             //     script.GetArticulationDatas();

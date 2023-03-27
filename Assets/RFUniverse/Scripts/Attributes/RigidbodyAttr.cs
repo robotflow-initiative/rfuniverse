@@ -17,6 +17,12 @@ namespace RFUniverse.Attributes
                 rigidbodyData = (b as RigidbodyAttrData).rigidbodyData;
             type = "Rigidbody";
         }
+        public override void SetAttrData(BaseAttr attr)
+        {
+            base.SetAttrData(attr);
+            RigidbodyAttr rigidbodyAttr = attr as RigidbodyAttr;
+            rigidbodyAttr.SetRigidbodyData(rigidbodyData);
+        }
     }
     [Serializable]
     public class RigidbodyData
@@ -35,12 +41,9 @@ namespace RFUniverse.Attributes
             {
                 if (rigidbody == null)
                     rigidbody = GetComponent<Rigidbody>();
-                if (rigidbody == null)
-                    rigidbody = gameObject.AddComponent<Rigidbody>();
                 return rigidbody;
             }
         }
-
 
         public override void Init()
         {
@@ -53,15 +56,7 @@ namespace RFUniverse.Attributes
             data.rigidbodyData = GetRigidbodyData();
             return data;
         }
-        public override void SetAttrData(BaseAttrData setData)
-        {
-            base.SetAttrData(setData);
-            if (setData is RigidbodyAttrData)
-            {
-                RigidbodyAttrData data = setData as RigidbodyAttrData;
-                SetRigidbodyData(data.rigidbodyData);
-            }
-        }
+
         private RigidbodyData rigidbodyData = new RigidbodyData();
 
         [EditableAttr("Rigidbody")]
@@ -87,7 +82,7 @@ namespace RFUniverse.Attributes
             data.isKinematic = Rigidbody.isKinematic;
             return data;
         }
-        private void SetRigidbodyData(RigidbodyData data)
+        public void SetRigidbodyData(RigidbodyData data)
         {
             Rigidbody.mass = data.mass;
             Rigidbody.useGravity = data.useGravity;

@@ -22,6 +22,14 @@ namespace RFUniverse.Attributes
                 render = (b as GameObjectAttrData).render;
             }
         }
+
+        public override void SetAttrData(BaseAttr attr)
+        {
+            base.SetAttrData(attr);
+            GameObjectAttr gameObjectAttr = attr as GameObjectAttr;
+            gameObjectAttr.Color = new Color(this.color[0], this.color[1], this.color[2], this.color[3]);
+            gameObjectAttr.Render = this.render;
+        }
     }
     public class GameObjectAttr : BaseAttr
     {
@@ -48,24 +56,19 @@ namespace RFUniverse.Attributes
                     materials = new List<Material>();
                     foreach (var item in Renderers)
                     {
-                        materials.AddRange(item.materials);
+                        materials.AddRange(Application.isPlaying ? item.materials : item.sharedMaterials);
                     }
                 }
                 return materials;
             }
         }
 
-        //public Color color;
-        [EditableAttr("Color")]
         [EditAttr("Color", "RFUniverse.EditMode.ColorAttrUI")]
         public Color Color
         {
             get
             {
-                if (Materials.Count > 0l)
-                    return Materials[0].GetColor("_Color");
-                else
-                    return Color.white;
+                return Materials.Count > 0 ? Materials[0].GetColor("_Color") : Color.white;
             }
             set
             {
@@ -77,21 +80,18 @@ namespace RFUniverse.Attributes
             }
         }
 
-        bool render = true;
-        //[EditableAttr("Render")]
         [EditAttr("Render", "RFUniverse.EditMode.RenderAttrUI")]
         public bool Render
         {
             get
             {
-                return render;
+                return Renderers.Count > 0 ? Renderers[0].enabled : false;
             }
             set
             {
-                render = value;
                 foreach (var item in Renderers)
                 {
-                    item.enabled = render;
+                    item.enabled = value;
                 }
             }
         }
@@ -117,16 +117,6 @@ namespace RFUniverse.Attributes
             data.render = Render;
             return data;
         }
-        public override void SetAttrData(BaseAttrData setData)
-        {
-            base.SetAttrData(setData);
-            if (setData is GameObjectAttrData)
-            {
-                GameObjectAttrData data = setData as GameObjectAttrData;
-                Color = new Color(data.color[0], data.color[1], data.color[2], data.color[3]);
-                Render = data.render;
-            }
-        }
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
@@ -135,12 +125,6 @@ namespace RFUniverse.Attributes
         {
             switch (type)
             {
-                // case "Translate":
-                //     Translate(msg);
-                //     return;
-                // case "Rotate":
-                //     Rotate(msg);
-                //     return;
                 case "SetColor":
                     SetColor(msg);
                     return;
@@ -154,25 +138,6 @@ namespace RFUniverse.Attributes
             base.AnalysisMsg(msg, type);
         }
 
-        // private void Translate(IncomingMessage msg)
-        // {
-        //     float x = msg.ReadFloat32();
-        //     float y = msg.ReadFloat32();
-        //     float z = msg.ReadFloat32();
-        //
-        //     transform.Translate(new Vector3(x, y, z), Space.World);
-        // }
-        //
-        // private void Rotate(IncomingMessage msg)
-        // {
-        //     float rx = msg.ReadFloat32();
-        //     float ry = msg.ReadFloat32();
-        //     float rz = msg.ReadFloat32();
-        //
-        //     transform.Rotate(new Vector3(0, 0, 1), rz);
-        //     transform.Rotate(new Vector3(1, 0, 0), rx);
-        //     transform.Rotate(new Vector3(0, 1, 0), ry);
-        // }
         private void SetColor(IncomingMessage msg)
         {
             float cr = msg.ReadFloat32();

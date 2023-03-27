@@ -435,7 +435,7 @@ namespace RFUniverse.Attributes.Digit
             render.transform.rotation = target.transform.rotation;
         }
 
-        protected override void Destroy()
+        public override void Destroy()
         {
             Digits[index] = null;
             base.Destroy();
@@ -448,15 +448,17 @@ namespace RFUniverse.Attributes.Digit
             {
                 base.OnInspectorGUI();
                 DigitAttr script = target as DigitAttr;
+                GUILayout.Space(10);
+                GUILayout.Label("Editor Tool:");
                 if (GUILayout.Button("GetLight"))
                 {
                     Texture2D tex = script.GetLight();
-                    File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageRuntime/DigitLight.png", tex.EncodeToPNG());
+                    File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/DigitLight.png", tex.EncodeToPNG());
                 }
                 if (GUILayout.Button("GetDepth"))
                 {
                     Texture2D tex = script.GetDepth();
-                    File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageRuntime/DigitDepth.png", tex.EncodeToPNG());
+                    File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/DigitDepth.png", tex.EncodeToPNG());
                 }
             }
         }

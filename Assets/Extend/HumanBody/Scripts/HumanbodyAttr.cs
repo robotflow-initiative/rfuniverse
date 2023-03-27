@@ -7,6 +7,7 @@ using System.Linq;
 using Robotflow.RFUniverse.SideChannels;
 using UnityEditor;
 using DG.Tweening;
+using Newtonsoft.Json;
 
 namespace RFUniverse.Attributes
 {
@@ -110,7 +111,7 @@ namespace RFUniverse.Attributes
             bioIK.Smoothing = 0.99f;
             bioIK.Refresh();
             if (!File.Exists(humanBodyBioIKLimitPath)) return;
-            var boneLimits = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>>>(File.ReadAllText(humanBodyBioIKLimitPath));
+            var boneLimits = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>>>(File.ReadAllText(humanBodyBioIKLimitPath), RFUniverseUtility.JsonSerializerSettings);
             foreach (var item in boneLimits)
             {
                 Transform trans = (Transform)bones.GetType().GetField(item.Item1).GetValue(bones);
@@ -184,7 +185,7 @@ namespace RFUniverse.Attributes
                     boneLimits.Add(new Tuple<string, BioIKMotion, BioIKMotion, BioIKMotion>(fieldInfo.Name, new BioIKMotion(joint.X), new BioIKMotion(joint.Y), new BioIKMotion(joint.Z)));
                 }
             }
-            File.WriteAllText($"{UnityEngine.Application.streamingAssetsPath}/HumanBodyBioIKLimit.json", Newtonsoft.Json.JsonConvert.SerializeObject(boneLimits));
+            File.WriteAllText($"{UnityEngine.Application.streamingAssetsPath}/HumanBodyBioIKLimit.json", JsonConvert.SerializeObject(boneLimits, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings));
         }
 #endif
 

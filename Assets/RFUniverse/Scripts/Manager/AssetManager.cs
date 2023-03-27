@@ -48,6 +48,18 @@ namespace RFUniverse.Manager
                 case "LoadSceneAsync":
                     LoadSceneAsync(msg);
                     return;
+                case "Pend":
+                    Pend(msg);
+                    return;
+                case "AlignCamera":
+                    AlignCamera(msg);
+                    return;
+                case "SaveScene":
+                    SaveScene(msg);
+                    return;
+                case "ClearScene":
+                    ClearScene(msg);
+                    return;
                 case "SendMessage":
                     ReceiveMessage(msg);
                     return;
@@ -87,11 +99,23 @@ namespace RFUniverse.Manager
                 case "SetResolution":
                     SetResolution(msg);
                     return;
+                case "ExportOBJ":
+                    ExportOBJ(msg);
+                    return;
+                case "SetShadowDistance":
+                    SetShadowDistance(msg);
+                    return;
                 default:
                     ext.AnalysisMsg(msg, type);
                     return;
             }
         }
+
+        private void SetShadowDistance(IncomingMessage msg)
+        {
+            QualitySettings.shadowDistance = msg.ReadFloat32();
+        }
+
         void PreLoadAssetsAsync(IncomingMessage msg, Action onCompleted = null, bool sendDoneMsg = true)
         {
             int count = msg.ReadInt32();
@@ -129,20 +153,6 @@ namespace RFUniverse.Manager
             {
                 onCompleted?.Invoke();
             }
-            else if (name == "Camera")
-            {
-                GameObject attr = new GameObject(name, typeof(CameraAttr));
-                attr.hideFlags = HideFlags.HideInHierarchy;
-                assets.Add(name, attr);
-                onCompleted?.Invoke();
-            }
-            else if (name == "PointCloud")
-            {
-                GameObject attr = new GameObject(name, typeof(PointCloudAttr));
-                attr.hideFlags = HideFlags.HideInHierarchy;
-                assets.Add(name, attr);
-                onCompleted?.Invoke();
-            }
             else
             {
                 Debug.Log("LoadAsset:" + name);
@@ -169,42 +179,61 @@ namespace RFUniverse.Manager
                 });
             }
         }
-        public void LoadSceneAsync(IncomingMessage msg, Action onCompleted = null, bool sendDoneMsg = true)
+        void LoadSceneAsync(IncomingMessage msg)
         {
-            string fileName = msg.ReadString();
-            LoadSceneAsync(fileName, onCompleted, sendDoneMsg);
-        }
-        void LoadSceneAsync(string fileName, Action onCompleted = null, bool sendDoneMsg = true)
-        {
-            string filePath = $"{Application.streamingAssetsPath}/SceneData/{fileName}";
-            string dataString = File.ReadAllText(filePath);
-            SceneData data = JsonConvert.DeserializeObject<SceneData>(dataString, new JsonSerializerSettings()
+            Debug.Log("LoadSceneAsync");
+            string path = msg.ReadString();
+            LoadScene(path, (_) =>
             {
-                TypeNameHandling = TypeNameHandling.Auto
+                SendLoadDoneMsg();
             });
-            List<string> names = data.assetsData.Select((a) => a.name).ToList();
-            PreLoadAssetsAsync(names, (Action)(() =>
+        }
+        void Pend(IncomingMessage msg)
+        {
+            Debug.Log("Pend");
+            PlayerMain.Instance.Pend();
+        }
+        public void SendPendDoneMsg()
+        {
+            Debug.Log("PendDone");
+            OutgoingMessage metaData = new OutgoingMessage();
+            metaData.WriteString("PendDone");
+            channel.SendMetaDataToPython(metaData);
+        }
+        void AlignCamera(IncomingMessage msg)
+        {
+            int cameraID = msg.ReadInt32();
+            if (!BaseAttr.Attrs.ContainsKey(cameraID)) return;
+            BaseAttr camera = BaseAttr.Attrs[cameraID];
+            PlayerMain.Instance.MainCamera.transform.position = camera.transform.position;
+            PlayerMain.Instance.MainCamera.transform.rotation = camera.transform.rotation;
+        }
+        void SaveScene(IncomingMessage msg)
+        {
+            Debug.Log("SaveScene");
+            string path = msg.ReadString();
+            SaveScene(path, BaseAttr.Attrs.Values.ToList());
+        }
+        void ClearScene(IncomingMessage msg)
+        {
+            Debug.Log("ClearScene");
+            foreach (var item in BaseAttr.Attrs.Values)
             {
-                data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
-                PlayerMain.Instance.GroundActive = data.ground;
-                PlayerMain.Instance.MainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
-                PlayerMain.Instance.MainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
-                PlayerMain.Instance.Ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
-                foreach (var item in data.assetsData)
-                {
-                    InstanceObject(item);
-                }
-                if (sendDoneMsg)
-                {
-                    SendLoadDoneMsg();
-                }
-                onCompleted?.Invoke();
-            }), false);
+                item.Destroy();
+            }
+        }
+
+        public void ClearScene(List<BaseAttr> attrs)
+        {
+            foreach (var item in attrs)
+            {
+                item.Destroy();
+            }
         }
         void SendLoadDoneMsg()
         {
             OutgoingMessage metaData = new OutgoingMessage();
-            metaData.WriteString("PreLoadDone");
+            metaData.WriteString("LoadDone");
             channel.SendMetaDataToPython(metaData);
         }
         Dictionary<string, List<Action<IncomingMessage>>> registeredMessages = new Dictionary<string, List<Action<IncomingMessage>>>();
@@ -282,16 +311,29 @@ namespace RFUniverse.Manager
             int id = msg.ReadInt32();
             InstanceObject(name, id);
         }
-        public void InstanceObject(BaseAttrData baseAttrData, Action<BaseAttr> onCompleted = null)
+        public void InstanceObject(BaseAttrData baseAttrData, Action<BaseAttr> onCompleted = null, bool callInstance = true)
         {
+            Debug.Log("InstanceObject:" + baseAttrData.name);
+            waitingMsg.Add(baseAttrData.id, new List<IncomingMessage>());
             GetGameObject(baseAttrData.name, gameObject =>
             {
                 gameObject = GameObject.Instantiate(gameObject);
                 gameObject.name = gameObject.name.Replace("(Clone)", "");
                 BaseAttr attr = gameObject.GetComponent<BaseAttr>();
-                attr.SetAttrData(baseAttrData);
+                baseAttrData.SetAttrData(attr);
                 Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
-                attr.Instance();
+
+                if (callInstance)
+                {
+                    attr.Instance();
+                    foreach (var item in waitingMsg[baseAttrData.id])
+                    {
+                        Debug.Log("run waiting msg");
+                        InstanceManager.Instance.ReceiveData(item);
+                        item.Dispose();
+                    }
+                }
+                waitingMsg.Remove(baseAttrData.id);
                 onCompleted?.Invoke(attr);
             });
         }
@@ -520,6 +562,84 @@ namespace RFUniverse.Manager
         void SetResolution(IncomingMessage msg)
         {
             Screen.SetResolution(msg.ReadInt32(), msg.ReadInt32(), FullScreenMode.Windowed);
+        }
+
+        void ExportOBJ(IncomingMessage msg)
+        {
+            int count = msg.ReadInt32();
+            List<GameObject> meshs = new List<GameObject>();
+            for (int i = 0; i < count; i++)
+            {
+                int id = msg.ReadInt32();
+                if (BaseAttr.Attrs.ContainsKey(id))
+                    meshs.Add(BaseAttr.Attrs[id].gameObject);
+            }
+            ExportOBJ(meshs.ToArray(), msg.ReadString());
+        }
+
+        public void ExportOBJ(GameObject[] meshs, string path)
+        {
+            new OBJExporter().Export(meshs, path);
+        }
+
+        public void LoadScene(string file, Action<List<BaseAttr>> onCompleted = null, bool callInstance = true)
+        {
+            if (!file.Contains('/') && !file.Contains('\\'))
+                file = $"{Application.streamingAssetsPath}/SceneData/{file}";
+            if (!file.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                file += ".json";
+            if (!File.Exists(file)) return;
+            SceneData data = JsonConvert.DeserializeObject<SceneData>(File.ReadAllText(file), RFUniverseUtility.JsonSerializerSettings);
+            List<string> names = data.assetsData.Select((a) => a.name).ToList();
+            PreLoadAssetsAsync(names, () =>
+            {
+                data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
+                PlayerMain.Instance.GroundActive = data.ground;
+                PlayerMain.Instance.MainCamera.transform.position = new Vector3(data.cameraPosition[0], data.cameraPosition[1], data.cameraPosition[2]);
+                PlayerMain.Instance.MainCamera.transform.eulerAngles = new Vector3(data.cameraRotation[0], data.cameraRotation[1], data.cameraRotation[2]);
+                PlayerMain.Instance.Ground.transform.position = new Vector3(data.groundPosition[0], data.groundPosition[1], data.groundPosition[2]);
+                List<BaseAttr> attrs = new List<BaseAttr>();
+                foreach (var item in data.assetsData)
+                {
+                    InstanceObject(item, (attr) =>
+                    {
+                        attrs.Add(attr);
+                    }, callInstance);
+                }
+                onCompleted?.Invoke(attrs);
+            }, false);
+        }
+        public void SaveScene(string file, List<BaseAttr> attrs)
+        {
+            if (!file.Contains('/') && !file.Contains('\\'))
+                file = $"{Application.streamingAssetsPath}/SceneData/{file}";
+            if (!file.EndsWith(".json"))
+                file += ".json";
+
+            SceneData data = new SceneData();
+            if (PlayerMain.Instance.MainCamera)
+            {
+                data.cameraPosition = new float[] { PlayerMain.Instance.MainCamera.transform.position.x, PlayerMain.Instance.MainCamera.transform.position.y, PlayerMain.Instance.MainCamera.transform.position.z };
+                data.cameraRotation = new float[] { PlayerMain.Instance.MainCamera.transform.eulerAngles.x, PlayerMain.Instance.MainCamera.transform.eulerAngles.y, PlayerMain.Instance.MainCamera.transform.eulerAngles.z };
+            }
+            data.ground = PlayerMain.Instance.GroundActive;
+            if (data.ground)
+                data.groundPosition = new float[] { PlayerMain.Instance.Ground.transform.position.x, PlayerMain.Instance.Ground.transform.position.y, PlayerMain.Instance.Ground.transform.position.z };
+            List<BaseAttr> attrsTmp = new List<BaseAttr>(attrs);
+            foreach (var item in attrsTmp)
+            {
+                foreach (var child in item.childs)
+                {
+                    attrs.Remove(child);
+                }
+            }
+            foreach (var item in attrs)
+            {
+                data.assetsData.Add(item.GetAttrData());
+            }
+            data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
+            Debug.Log(data.assetsData.Count);
+            File.WriteAllText(file, JsonConvert.SerializeObject(data, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings));
         }
     }
 }

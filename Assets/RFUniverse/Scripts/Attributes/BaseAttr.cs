@@ -10,7 +10,7 @@ namespace RFUniverse.Attributes
     public class SceneData
     {
         public bool ground = false;
-        public float[] cameraPosition = { 0, 0, 0 };
+        public float[] cameraPosition = { 0, 1, -3 };
         public float[] cameraRotation = { 0, 0, 0 };
         public float[] groundPosition = { 0, 0, 0 };
 
@@ -42,8 +42,22 @@ namespace RFUniverse.Attributes
             rotation = b.rotation;
             scale = b.scale;
         }
+
+        public virtual void SetAttrData(BaseAttr attr)
+        {
+            attr.Name = name;
+            attr.ID = id;
+            attr.SetParent(parentID, parentName);
+
+            Vector3 position = new Vector3(this.position[0], this.position[1], this.position[2]);
+            Vector3 rotation = new Vector3(this.rotation[0], this.rotation[1], this.rotation[2]);
+            Vector3 scale = new Vector3(this.scale[0], this.scale[1], this.scale[2]);
+
+            attr.SetTransform(true, true, true, position, rotation, scale);
+        }
     }
     [DisallowMultipleComponent]
+    [ExecuteInEditMode]
     public class BaseAttr : MonoBehaviour
     {
         private static Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
@@ -80,7 +94,7 @@ namespace RFUniverse.Attributes
             get
             {
                 if (id < 0)
-                    id = UnityEngine.Random.Range(100000, 999999);
+                    id = UnityEngine.Random.Range(100000, 1000000);
                 return id;
             }
             set
@@ -123,7 +137,6 @@ namespace RFUniverse.Attributes
         {
             Init();
             Rigister();
-            AfterRigister();
         }
         public virtual void Init()
         {
@@ -150,28 +163,15 @@ namespace RFUniverse.Attributes
                 BaseAttr.AddAttr(this);
             }
         }
-
-        protected virtual void AfterRigister()
-        {
-        }
-
-        private void OnDestroy()
-        {
-            RemoveAttr(this);
-        }
-
         public virtual BaseAttrData GetAttrData()
         {
             BaseAttrData data = new BaseAttrData();
 
             data.name = Name;
-
             data.id = ID;
-
             BaseAttr parentAttr = null;
             List<BaseAttr> parents = GetComponentsInParent<BaseAttr>().ToList();
             parents.RemoveAt(0);
-
             if (parents.Count > 1)
             {
                 List<BaseAttr> parentsTmp = new List<BaseAttr>(parents);
@@ -194,24 +194,12 @@ namespace RFUniverse.Attributes
             data.rotation = new float[3] { transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z };
             data.scale = new float[3] { transform.localScale.x, transform.localScale.y, transform.localScale.z };
 
-
             return data;
         }
 
-        public virtual void SetAttrData(BaseAttrData data)
+        private void OnDestroy()
         {
-            Name = data.name;
-
-            ID = data.id;
-
-            SetParent(data.parentID, data.parentName);
-
-            Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
-            Vector3 rotation = new Vector3(data.rotation[0], data.rotation[1], data.rotation[2]);
-            Vector3 scale = new Vector3(data.scale[0], data.scale[1], data.scale[2]);
-
-            SetTransform(true, true, true, position, rotation, scale);
-
+            RemoveAttr(this);
         }
 
         public virtual void CollectData(OutgoingMessage msg)
@@ -285,6 +273,12 @@ namespace RFUniverse.Attributes
                     return;
                 case "SetRotationQuaternion":
                     SetRotationQuaternion(msg);
+                    return;
+                case "Translate":
+                    Translate(msg);
+                    return;
+                case "Rotate":
+                    Rotate(msg);
                     return;
                 case "SetParent":
                     SetParent(msg);
@@ -382,6 +376,26 @@ namespace RFUniverse.Attributes
                 transform.localScale = scale;
             }
         }
+
+        private void Translate(IncomingMessage msg)
+        {
+            float x = msg.ReadFloat32();
+            float y = msg.ReadFloat32();
+            float z = msg.ReadFloat32();
+            Space space = msg.ReadBoolean() ? Space.World : Space.Self;
+            transform.Translate(new Vector3(x, y, z), space);
+        }
+
+        private void Rotate(IncomingMessage msg)
+        {
+            float rx = msg.ReadFloat32();
+            float ry = msg.ReadFloat32();
+            float rz = msg.ReadFloat32();
+            Space space = msg.ReadBoolean() ? Space.World : Space.Self;
+            transform.Rotate(new Vector3(0, 0, 1), rz, space);
+            transform.Rotate(new Vector3(1, 0, 0), rx, space);
+            transform.Rotate(new Vector3(0, 1, 0), ry, space);
+        }
         protected virtual void SetParent(IncomingMessage msg)
         {
             Debug.Log("SetParent");
@@ -433,10 +447,12 @@ namespace RFUniverse.Attributes
             attr.Instance();
         }
 
-        protected virtual void Destroy()
+        public virtual void Destroy()
         {
-            RemoveAttr(this);
-            Destroy(gameObject);
+            if (Application.isEditor)
+                DestroyImmediate(gameObject);
+            else
+                Destroy(gameObject);
         }
 
         protected void SetRFMoveColliderActive(IncomingMessage msg)

@@ -1,52 +1,38 @@
+using Newtonsoft.Json;
+using RFUniverse.Attributes;
+using RFUniverse.Manager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace RFUniverse
 {
     public class RFUniverseMain : MonoBehaviour
     {
-
         [SerializeField]
         private Camera mainCamera;
-        public Camera MainCamera
-        {
-            get
-            {
-                return mainCamera;
-            }
-        }
+        public Camera MainCamera => mainCamera;
 
         [SerializeField]
         private Camera axisCamera;
-        public Camera AxisCamera
-        {
-            get
-            {
-                return axisCamera;
-            }
-        }
 
         [SerializeField]
         private GameObject ground;
-        public GameObject Ground
-        {
-            get
-            {
-                return ground;
-            }
-        }
+        public GameObject Ground => ground;
 
         public bool GroundActive
         {
             get
             {
-                if (ground == null) return false;
-                return ground.activeSelf;
+                if (Ground == null) return false;
+                return Ground.activeSelf;
             }
             set
             {
-                ground.SetActive(value);
+                Ground.SetActive(value);
             }
         }
 
@@ -71,21 +57,21 @@ namespace RFUniverse
         protected virtual void Awake()
         {
             Application.targetFrameRate = 60;
-            string userPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string configPath = $"{userPath}/.rfuniverse/config.json";
-            if (System.IO.File.Exists(configPath))
+            if (File.Exists(configPath))
             {
-                string configString = System.IO.File.ReadAllText(configPath);
-                ConfigData config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigData>(configString);
+                string configString = File.ReadAllText(configPath);
+                ConfigData config = JsonConvert.DeserializeObject<ConfigData>(configString, RFUniverseUtility.JsonSerializerSettings);
                 if (Application.isEditor)
                     config.executable_file = "";
                 else
                     config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                configString = Newtonsoft.Json.JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented);
-                System.IO.File.WriteAllText(configPath, configString);
+                configString = JsonConvert.SerializeObject(config, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings);
+                File.WriteAllText(configPath, configString);
             }
 
-            AxisCamera.cullingMask = 1 << axisLayer;
+            axisCamera.cullingMask = 1 << axisLayer;
         }
     }
 }

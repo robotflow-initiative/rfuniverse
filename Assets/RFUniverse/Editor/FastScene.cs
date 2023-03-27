@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.SceneManagement;
 
 public class FastScene : Editor
@@ -11,6 +11,6 @@ public class FastScene : Editor
     [MenuItem("RFUniverse/Scene/Empty")]
     static void LoadEmpty()
     {
-        EditorSceneManager.OpenScene("Assets/RFUniverse/Scenes/Empty.unity");
+        EditorSceneManager.OpenScene("Assets/RFUniverse/Empty.unity");
     }
 }

@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="version">
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="unity" style="font-size: 20px;" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="python" style="font-size: 20px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="debug" style="left: 0; right: auto; bottom: 0; position: absolute; height: auto; width: 500px; min-height: auto; min-width: auto;">
+        <ui:Button text="Close/Open" display-tooltip-when-elided="true" name="debug-button" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: 30px;" />
+        <ui:ListView focusable="true" name="debug-view" horizontal-scrolling="false" fixed-item-height="50" show-alternating-row-backgrounds="None" selection-type="None" virtualization-method="DynamicHeight" show-border="false" show-add-remove-footer="false" reorderable="true" show-foldout-header="false" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.38); flex-direction: column; align-items: stretch; flex-basis: auto; width: auto; height: auto; flex-shrink: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; max-height: 500px; min-height: auto; display: flex;" />
+    </ui:VisualElement>
+    <ui:Button text="End Pend" display-tooltip-when-elided="true" name="pend-button" style="position: absolute; top: 0; left: 50%; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; font-size: 24px; right: auto; width: 200px; translate: -50% 0;" />
+</ui:UXML>

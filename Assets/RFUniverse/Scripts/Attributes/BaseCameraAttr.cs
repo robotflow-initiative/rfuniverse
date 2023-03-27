@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
 using System.Linq;
+using UnityEngine.UIElements;
 
 
 namespace RFUniverse.Attributes
@@ -17,11 +18,10 @@ namespace RFUniverse.Attributes
             {
                 if (camera == null)
                     camera = GetComponent<Camera>();
-                if (camera == null)
-                    camera = gameObject.AddComponent<Camera>();
                 return camera;
             }
         }
+
         protected Texture2D tex = null;
 
         protected string rgbBase64String = null;
@@ -30,21 +30,14 @@ namespace RFUniverse.Attributes
         protected string depthBase64String = null;
         protected string depthEXRBase64String = null;
         protected string amodalMaskBase64String = null;
+        protected string motionVectorBase64String = null;
 
-        public override string Name
-        {
-            get { return "Camera"; }
-        }
         public override void Init()
         {
             base.Init();
             tex = new Texture2D(1, 1);
 
             Camera.enabled = false;
-            Camera.nearClipPlane = 0.01f;
-            Camera.farClipPlane = 1000f;
-            Camera.clearFlags = CameraClearFlags.SolidColor;
-            Camera.backgroundColor = new Color(1, 1, 1, 0);
             Camera.depth = -100;
             Camera.allowMSAA = true;
             Camera.allowHDR = false;
@@ -52,12 +45,15 @@ namespace RFUniverse.Attributes
             Camera.cullingMask &= ~(1 << PlayerMain.Instance.axisLayer);
             Camera.cullingMask &= ~(1 << PlayerMain.Instance.tempLayer);
         }
+
+        GameObject cameraView;
         private void Awake()
         {
-            GameObject cameraView = GameObject.Instantiate(Resources.Load<GameObject>("CameraView"));
+            if (cameraView != null) return;
+            cameraView = GameObject.Instantiate(Resources.Load<GameObject>("CameraView"));
             cameraView.transform.parent = transform;
             cameraView.transform.localPosition = Vector3.zero;
-            cameraView.transform.rotation = Quaternion.identity;
+            cameraView.transform.localRotation = Quaternion.identity;
         }
         public override void CollectData(OutgoingMessage msg)
         {
@@ -119,10 +115,11 @@ namespace RFUniverse.Attributes
                 msg.WriteInt32(ddBBOX.Count);
                 foreach (var item in ddBBOX)
                 {
-                    msg.WriteFloat32(item.x);
-                    msg.WriteFloat32(item.y);
-                    msg.WriteFloat32(item.width);
-                    msg.WriteFloat32(item.height);
+                    msg.WriteInt32(item.Key);
+                    msg.WriteFloat32(item.Value.x);
+                    msg.WriteFloat32(item.Value.y);
+                    msg.WriteFloat32(item.Value.width);
+                    msg.WriteFloat32(item.Value.height);
                 }
                 ddBBOX = null;
             }
@@ -134,15 +131,16 @@ namespace RFUniverse.Attributes
                 msg.WriteInt32(dddBBOX.Count);
                 foreach (var item in dddBBOX)
                 {
-                    msg.WriteFloat32(item.Item1.x);
-                    msg.WriteFloat32(item.Item1.y);
-                    msg.WriteFloat32(item.Item1.z);
-                    msg.WriteFloat32(item.Item2.x);
-                    msg.WriteFloat32(item.Item2.y);
-                    msg.WriteFloat32(item.Item2.z);
-                    msg.WriteFloat32(item.Item3.x);
-                    msg.WriteFloat32(item.Item3.y);
-                    msg.WriteFloat32(item.Item3.z);
+                    msg.WriteInt32(item.Key);
+                    msg.WriteFloat32(item.Value.Item1.x);
+                    msg.WriteFloat32(item.Value.Item1.y);
+                    msg.WriteFloat32(item.Value.Item1.z);
+                    msg.WriteFloat32(item.Value.Item2.x);
+                    msg.WriteFloat32(item.Value.Item2.y);
+                    msg.WriteFloat32(item.Value.Item2.z);
+                    msg.WriteFloat32(item.Value.Item3.x);
+                    msg.WriteFloat32(item.Value.Item3.y);
+                    msg.WriteFloat32(item.Value.Item3.z);
                 }
                 dddBBOX = null;
             }
@@ -175,8 +173,14 @@ namespace RFUniverse.Attributes
                 case "GetAmodalMask":
                     GetAmodalMask(msg);
                     return;
-                case "Get2DBBOX":
-                    Get2DBBOX();
+                case "GetMotionVector":
+                    GetMotionVector(msg);
+                    return;
+                case "Get2DBBox":
+                    Get2DBBox(msg);
+                    return;
+                case "Get3DBBox":
+                    Get3DBBox();
                     return;
             }
             base.AnalysisMsg(msg, type);
@@ -304,25 +308,48 @@ namespace RFUniverse.Attributes
         public abstract Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null);
         Texture2D GetAmodalMask(IncomingMessage msg)
         {
+            int id = msg.ReadInt32();
             if (msg.ReadBoolean())
             {
                 List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
-                return GetAmodalMask(intrinsicMatrix);
+                return GetAmodalMask(id, intrinsicMatrix);
             }
             else
             {
                 int width = msg.ReadInt32();
                 int height = msg.ReadInt32();
                 float fov = msg.ReadFloat32();
-                return GetAmodalMask(width, height, fov);
+                return GetAmodalMask(id, width, height, fov);
             }
         }
-        public Texture2D GetAmodalMask(List<float> intrinsicMatrix)
+        public Texture2D GetAmodalMask(int id, List<float> intrinsicMatrix)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
-            return GetAmodalMask(size.x, size.y);
+            return GetAmodalMask(size.x, size.y, id);
         }
-        public abstract Texture2D GetAmodalMask(int width, int height, float? unPhysicalFov = null);
+        public abstract Texture2D GetAmodalMask(int id, int width, int height, float? unPhysicalFov = null);
+
+        Texture2D GetMotionVector(IncomingMessage msg)
+        {
+            if (msg.ReadBoolean())
+            {
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                return GetMotionVector(intrinsicMatrix);
+            }
+            else
+            {
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                return GetMotionVector(width, height, fov);
+            }
+        }
+        public Texture2D GetMotionVector(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            return GetMotionVector(size.x, size.y);
+        }
+        public abstract Texture2D GetMotionVector(int width, int height, float? unPhysicalFov = null);
 
         public Vector2Int SetCameraIntrinsicMatrix(Camera set_camera, List<float> intrinsicMatrix)
         {
@@ -345,40 +372,73 @@ namespace RFUniverse.Attributes
             set_camera.lensShift = new Vector2(shiftX, shiftY);
             return new Vector2Int(width, height);
         }
-        List<int> originLayers = new List<int>();
-        protected void SetTempLayer(BaseAttr target)
+
+        protected List<int> SetTempLayer(BaseAttr target)
         {
-            originLayers = new List<int>();
+            List<int> originLayers = new List<int>();
             foreach (var item in target.GetChildComponentFilter<Renderer>())
             {
-                if ((PlayerMain.Instance.simulationLayer.value & item.gameObject.layer) > 0)
-                    item.gameObject.layer = PlayerMain.Instance.tempLayer;
+                //if ((PlayerMain.Instance.simulationLayer.value & item.gameObject.layer) > 0)
+                //{
+                originLayers.Add(item.gameObject.layer);
+                item.gameObject.layer = PlayerMain.Instance.tempLayer;
+                //}
             }
-            Camera.cullingMask = 1 << PlayerMain.Instance.tempLayer;
+            return originLayers;
         }
-        protected void RevertLayer(BaseAttr target)
+        protected void RevertLayer(BaseAttr target, List<int> originLayers)
         {
             List<Renderer> trans = target.GetChildComponentFilter<Renderer>();
             for (int i = 0; i < trans.Count; i++)
             {
-                if ((PlayerMain.Instance.simulationLayer.value & trans[i].gameObject.layer) > 0)
-                    trans[i].gameObject.layer = originLayers[i];
+                //if ((PlayerMain.Instance.simulationLayer.value & trans[i].gameObject.layer) > 0)
+                trans[i].gameObject.layer = originLayers[i];
             }
-            Camera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
 
-        List<Rect> ddBBOX = null;
-        void Get2DBBOX()
+
+        Dictionary<int, Rect> ddBBOX = null;
+
+        void Get2DBBox(IncomingMessage msg)
         {
-            ddBBOX = new List<Rect>();
-            foreach (var item in ActiveAttrs.Values)
+            if (msg.ReadBoolean())
             {
-                Rect rect = Get2DBBOX(item);
-                if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
-                    ddBBOX.Add(rect);
+                List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
+                Get2DBBox(intrinsicMatrix);
+            }
+            else
+            {
+                int width = msg.ReadInt32();
+                int height = msg.ReadInt32();
+                float fov = msg.ReadFloat32();
+                Get2DBBox(width, height, fov);
             }
         }
-        Rect Get2DBBOX(BaseAttr attr)
+        public void Get2DBBox(List<float> intrinsicMatrix)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Get2DBBox(size.x, size.y);
+        }
+
+        void Get2DBBox(int width, int height, float? unPhysicalFov = null)
+        {
+            Debug.Log("Get2DBBox");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height);
+            ddBBOX = new Dictionary<int, Rect>();
+            foreach (var item in ActiveAttrs)
+            {
+                if (item.Value is BaseCameraAttr) continue;
+                Rect rect = Get2DBBox(item.Value);
+                if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
+                    ddBBOX.Add(item.Key, rect);
+            }
+        }
+        Rect Get2DBBox(BaseAttr attr)
         {
             float maxX = float.MinValue;
             float minX = float.MaxValue;
@@ -386,8 +446,7 @@ namespace RFUniverse.Attributes
             float minY = float.MaxValue;
             foreach (var render in attr.GetChildComponentFilter<MeshFilter>())
             {
-                List<Vector3> vertices = new List<Vector3>();
-                render.mesh.GetVertices(vertices);
+                Vector3[] vertices = render.mesh.vertices;
 
                 foreach (var item in vertices)
                 {
@@ -401,19 +460,20 @@ namespace RFUniverse.Attributes
             }
             return new Rect((maxX + minX) / 2, (maxY + minY) / 2, maxX - minX, maxY - minY);
         }
-        List<Tuple<Vector3, Vector3, Vector3>> dddBBOX = null;
-        void Get3DBBOX()
+        Dictionary<int, Tuple<Vector3, Vector3, Vector3>> dddBBOX = null;
+        void Get3DBBox()
         {
-            dddBBOX = new List<Tuple<Vector3, Vector3, Vector3>>();
-            foreach (var item in ActiveAttrs.Values)
+            dddBBOX = new Dictionary<int, Tuple<Vector3, Vector3, Vector3>>();
+            foreach (var item in ActiveAttrs)
             {
-                Tuple<Vector3, Vector3, Vector3> box = Get3DBBOX(item);
+                if (item.Value is BaseCameraAttr) continue;
+                Tuple<Vector3, Vector3, Vector3> box = Get3DBBox(item.Value);
                 Vector3 center = Camera.WorldToScreenPoint(box.Item1);
                 if (center.x > 0 && center.y > 0 && center.x < Camera.pixelWidth && center.y < Camera.pixelHeight)
-                    dddBBOX.Add(box);
+                    dddBBOX.Add(item.Key, box);
             }
         }
-        Tuple<Vector3, Vector3, Vector3> Get3DBBOX(BaseAttr attr)
+        Tuple<Vector3, Vector3, Vector3> Get3DBBox(BaseAttr attr)
         {
             float maxX = float.MinValue;
             float minX = float.MaxValue;
@@ -423,8 +483,8 @@ namespace RFUniverse.Attributes
             float minZ = float.MaxValue;
             foreach (var render in attr.GetChildComponentFilter<MeshFilter>())
             {
-                List<Vector3> vertices = new List<Vector3>();
-                render.mesh.GetVertices(vertices);
+                Vector3[] vertices = render.mesh.vertices;
+
                 foreach (var item in vertices)
                 {
                     Vector3 point = render.transform.TransformPoint(item);
