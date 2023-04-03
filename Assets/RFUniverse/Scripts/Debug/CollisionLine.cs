@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace RFUniverse.DebugTool
     {
         public Transform point1, point2;
         public LineRenderer line;
-        void Update()
+        void FixedUpdate()
         {
             if (point1 && point2)
             {

@@ -196,9 +196,9 @@ namespace RFUniverse.Manager
         public void SendPendDoneMsg()
         {
             Debug.Log("PendDone");
-            OutgoingMessage metaData = new OutgoingMessage();
-            metaData.WriteString("PendDone");
-            channel.SendMetaDataToPython(metaData);
+            OutgoingMessage msg = new OutgoingMessage();
+            msg.WriteString("PendDone");
+            channel.SendMetaDataToPython(msg);
         }
         void AlignCamera(IncomingMessage msg)
         {
@@ -232,9 +232,9 @@ namespace RFUniverse.Manager
         }
         void SendLoadDoneMsg()
         {
-            OutgoingMessage metaData = new OutgoingMessage();
-            metaData.WriteString("LoadDone");
-            channel.SendMetaDataToPython(metaData);
+            OutgoingMessage msg = new OutgoingMessage();
+            msg.WriteString("LoadDone");
+            channel.SendMetaDataToPython(msg);
         }
         Dictionary<string, List<Action<IncomingMessage>>> registeredMessages = new Dictionary<string, List<Action<IncomingMessage>>>();
         private void ReceiveMessage(IncomingMessage msg)
@@ -314,7 +314,7 @@ namespace RFUniverse.Manager
         public void InstanceObject(BaseAttrData baseAttrData, Action<BaseAttr> onCompleted = null, bool callInstance = true)
         {
             Debug.Log("InstanceObject:" + baseAttrData.name);
-            waitingMsg.Add(baseAttrData.id, new List<IncomingMessage>());
+            waitingMsg.TryAdd(baseAttrData.id, new List<IncomingMessage>());
             GetGameObject(baseAttrData.name, gameObject =>
             {
                 gameObject = GameObject.Instantiate(gameObject);
@@ -341,7 +341,7 @@ namespace RFUniverse.Manager
         public void InstanceObject(string name, int id, Action<BaseAttr> onCompleted = null, bool callInstance = true)
         {
             Debug.Log("InstanceObject:" + name);
-            waitingMsg.Add(id, new List<IncomingMessage>());
+            waitingMsg.TryAdd(id, new List<IncomingMessage>());
             GetGameObject(name, (gameObject) =>
             {
                 gameObject = GameObject.Instantiate(gameObject);

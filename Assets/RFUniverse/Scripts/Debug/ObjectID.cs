@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -11,9 +11,9 @@ namespace RFUniverse.DebugTool
         public BaseAttr target;
         public Canvas canvas;
         public TextMeshProUGUI text;
-        void Update()
+        void FixedUpdate()
         {
-            if (target)
+            if (target && target.gameObject.activeInHierarchy)
             {
                 gameObject.SetActive(true);
                 transform.position = target.transform.position;

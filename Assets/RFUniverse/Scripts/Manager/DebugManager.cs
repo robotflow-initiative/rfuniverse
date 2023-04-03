@@ -49,8 +49,17 @@ namespace RFUniverse.Manager
                 case "Debug3DBBox":
                     Debug3DBBox(msg);
                     break;
+                case "Debug2DBBox":
+                    Debug2DBBox(msg);
+                    break;
                 case "DebugObjectID":
                     DebugObjectID(msg);
+                    break;
+                case "DebugJointLink":
+                    DebugJointLink(msg);
+                    break;
+                case "SendLog":
+                    SendLog(msg);
                     break;
                 case "SendVersion":
                     SendVersion(msg);
@@ -86,11 +95,14 @@ namespace RFUniverse.Manager
                 {
                     BaseAttr.OnAttrChange -= RefreshGraspPoint;
                 }
+
+                isDebugGraspPoint = value;
+
                 foreach (var item in graspPoints)
                 {
-                    item.Value.gameObject.SetActive(false);
+                    item.Value.gameObject.SetActive(isDebugGraspPoint);
                 }
-                isDebugGraspPoint = value;
+
             }
         }
 
@@ -143,11 +155,14 @@ namespace RFUniverse.Manager
                 {
                     BaseAttr.OnAttrChange -= RefreshObjectPose;
                 }
+
+                isDebugObjectPose = value;
+
                 foreach (var item in poseGizmos)
                 {
-                    item.Value.gameObject.SetActive(false);
+                    item.Value.gameObject.SetActive(isDebugObjectPose);
                 }
-                isDebugObjectPose = value;
+
             }
         }
         PoseGizmo poseGizmoSource = null;
@@ -193,18 +208,20 @@ namespace RFUniverse.Manager
                     {
                         collisionLineSource = Resources.Load<CollisionLine>("CollisionLine");
                     }
-                    BaseAttr.OnAttrChange += RefreshCollisionPair;
+                    BaseAttr.OnCollisionPairsChange += RefreshCollisionPair;
                     RefreshCollisionPair();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshCollisionPair;
+                    BaseAttr.OnCollisionPairsChange -= RefreshCollisionPair;
                 }
+
+                isDebugCollisionPair = value;
+
                 foreach (var item in collisionLines)
                 {
-                    item.gameObject.SetActive(false);
+                    item.gameObject.SetActive(isDebugCollisionPair);
                 }
-                isDebugCollisionPair = value;
             }
         }
         CollisionLine collisionLineSource = null;
@@ -256,11 +273,14 @@ namespace RFUniverse.Manager
                 {
                     BaseAttr.OnAttrChange -= RefreshColliderBound;
                 }
-                foreach (var item in collisionLines)
-                {
-                    item.gameObject.SetActive(false);
-                }
                 isDebugColliderBound = value;
+                foreach (var item in colliderBounds)
+                {
+                    foreach (var bound in item.Value)
+                    {
+                        bound.gameObject.SetActive(isDebugColliderBound);
+                    }
+                }
             }
         }
 
@@ -296,9 +316,6 @@ namespace RFUniverse.Manager
         }
 
 
-
-
-
         bool isDebugObjectID = false;
         public bool IsDebugObjectID
         {
@@ -322,11 +339,12 @@ namespace RFUniverse.Manager
                 {
                     BaseAttr.OnAttrChange -= RefreshObjectID;
                 }
-                foreach (var item in collisionLines)
+                isDebugObjectID = value;
+                foreach (var item in objectIDs)
                 {
-                    item.gameObject.SetActive(false);
+                    item.Value.gameObject.SetActive(isDebugObjectID);
                 }
-                isDebugColliderBound = value;
+
             }
         }
 
@@ -353,6 +371,66 @@ namespace RFUniverse.Manager
             }
         }
 
+
+        bool isDebugJointLink = false;
+        public bool IsDebugJointLink
+        {
+            get
+            {
+                return isDebugJointLink;
+            }
+            set
+            {
+                if (value == isDebugJointLink) return;
+                if (value)
+                {
+                    if (jointLinkSource == null)
+                    {
+                        jointLinkSource = Resources.Load<JointLink>("JointLink");
+                    }
+                    BaseAttr.OnAttrChange += RefreshJointLink;
+                    RefreshJointLink();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= RefreshJointLink;
+                }
+                isDebugJointLink = value;
+                foreach (var item in jointLinks)
+                {
+                    item.Value.gameObject.SetActive(isDebugJointLink);
+                }
+
+            }
+        }
+
+        JointLink jointLinkSource = null;
+        public void DebugJointLink(IncomingMessage msg)
+        {
+            IsDebugJointLink = msg.ReadBoolean();
+        }
+        Dictionary<int, JointLink> jointLinks = new Dictionary<int, JointLink>();
+        void RefreshJointLink()
+        {
+            if (jointLinkSource == null) return;
+            List<int> current = BaseAttr.Attrs.Keys.ToList();
+            foreach (var item in current.Except(jointLinks.Keys))
+            {
+                if (BaseAttr.Attrs[item] is ControllerAttr)
+                {
+                    JointLink instance = GameObject.Instantiate<JointLink>(jointLinkSource);
+                    jointLinks.Add(item, instance);
+                    instance.Target = BaseAttr.Attrs[item] as ControllerAttr;
+                }
+            }
+            foreach (var item in jointLinks.Keys.Except(current))
+            {
+                GameObject.Destroy(jointLinks[item].gameObject);
+                jointLinks.Remove(item);
+            }
+        }
+
+
         bool isDebug3DBBox = false;
         public bool IsDebug3DBBox
         {
@@ -376,11 +454,12 @@ namespace RFUniverse.Manager
                 {
                     BaseAttr.OnAttrChange -= Refresh3DBBox;
                 }
-                foreach (var item in collisionLines)
+                isDebug3DBBox = value;
+                foreach (var item in dddBBoxs)
                 {
-                    item.gameObject.SetActive(false);
+                    item.Value.gameObject.SetActive(isDebug3DBBox);
                 }
-                isDebugColliderBound = value;
+
             }
         }
 
@@ -396,9 +475,12 @@ namespace RFUniverse.Manager
             List<int> current = BaseAttr.Attrs.Keys.ToList();
             foreach (var item in current.Except(dddBBoxs.Keys))
             {
-                DDDBBox instance = GameObject.Instantiate<DDDBBox>(dddBBoxSource);
-                dddBBoxs.Add(item, instance);
-                instance.target = BaseAttr.Attrs[item];
+                if (BaseAttr.Attrs[item] is GameObjectAttr)
+                {
+                    DDDBBox instance = GameObject.Instantiate<DDDBBox>(dddBBoxSource);
+                    dddBBoxs.Add(item, instance);
+                    instance.target = BaseAttr.Attrs[item] as GameObjectAttr;
+                }
             }
             foreach (var item in dddBBoxs.Keys.Except(current))
             {
@@ -407,6 +489,69 @@ namespace RFUniverse.Manager
             }
         }
 
+
+        bool isDebug2DBBox = false;
+        public bool IsDebug2DBBox
+        {
+            get
+            {
+                return isDebug2DBBox;
+            }
+            set
+            {
+                if (value == isDebug2DBBox) return;
+                if (value)
+                {
+                    if (ddBBoxSource == null)
+                    {
+                        ddBBoxSource = Resources.Load<DDBBox>("2DBBox");
+                    }
+                    BaseAttr.OnAttrChange += Refresh2DBBox;
+                    Refresh2DBBox();
+                }
+                else
+                {
+                    BaseAttr.OnAttrChange -= Refresh2DBBox;
+                }
+                isDebug2DBBox = value;
+                foreach (var item in ddBBoxs)
+                {
+                    item.Value.gameObject.SetActive(isDebug2DBBox);
+                }
+
+            }
+        }
+
+        DDBBox ddBBoxSource = null;
+        public void Debug2DBBox(IncomingMessage msg)
+        {
+            IsDebug2DBBox = msg.ReadBoolean();
+        }
+        Dictionary<int, DDBBox> ddBBoxs = new Dictionary<int, DDBBox>();
+        void Refresh2DBBox()
+        {
+            if (ddBBoxSource == null) return;
+            List<int> current = BaseAttr.Attrs.Keys.ToList();
+            foreach (var item in current.Except(ddBBoxs.Keys))
+            {
+                if (BaseAttr.Attrs[item] is GameObjectAttr)
+                {
+                    DDBBox instance = GameObject.Instantiate<DDBBox>(ddBBoxSource);
+                    ddBBoxs.Add(item, instance);
+                    instance.target = BaseAttr.Attrs[item] as GameObjectAttr;
+                }
+            }
+            foreach (var item in ddBBoxs.Keys.Except(current))
+            {
+                GameObject.Destroy(ddBBoxs[item].gameObject);
+                dddBBoxs.Remove(item);
+            }
+        }
+
+        public void SendLog(IncomingMessage msg)
+        {
+            PlayerMain.Instance.AddLog(msg.ReadString());
+        }
 
         public void SendVersion(IncomingMessage msg)
         {

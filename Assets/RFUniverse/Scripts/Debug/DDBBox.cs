@@ -1,13 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using RFUniverse.Attributes;
+using RFUniverse;
 using System;
+using DG.Tweening.Core.Easing;
 using RFUniverse.Manager;
+using UnityEngine.UI;
 
 namespace RFUniverse.DebugTool
 {
-    public class DDDBBox : MonoBehaviour
+    public class DDBBox : MonoBehaviour
     {
-        public Renderer render;
+        public Image image;
         public GameObjectAttr target;
         int frame = 0;
         public static int total = 50;
@@ -22,17 +27,15 @@ namespace RFUniverse.DebugTool
             if (target && target.gameObject.activeInHierarchy)
             {
                 gameObject.SetActive(true);
-                render.material.SetColor("_Color", RFUniverseUtility.EncodeIDAsColor(target.ID));
-
-                render.bounds = target.GetAppendBounds();
-                Tuple<Vector3, Vector3, Vector3> bound = target.Get3DBBox();
-                transform.position = bound.Item1;
-                transform.eulerAngles = bound.Item2;
-                render.material.SetVector("_Size", bound.Item3);
+                image.color = RFUniverseUtility.EncodeIDAsColor(target.ID);
+                Rect rect = target.Get2DBBox(PlayerMain.Instance.MainCamera);
+                image.rectTransform.position = rect.position;
+                image.rectTransform.sizeDelta = rect.size;
             }
             else
             {
                 gameObject.SetActive(false);
+
             }
         }
     }

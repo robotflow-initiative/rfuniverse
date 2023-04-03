@@ -163,8 +163,7 @@ namespace RFUniverse.Attributes.Digit
 
             Shader.SetGlobalFloat("_CameraZeroDis", gel.transform.localPosition.y * transform.lossyScale.x);
             Shader.SetGlobalFloat("_CameraOneDis", (gel.transform.localPosition.y - config.gelConfig.curvatureMax) * transform.lossyScale.x);
-            // gel.sharedMaterial.SetFloat("r", config.gelConfig.r);
-            // gel.sharedMaterial.SetFloat("max", config.gelConfig.curvatureMax);
+
             if (m == null)
                 m = GenerateGelMesh(config.gelConfig.width, config.gelConfig.height, config.gelConfig.meshVerticesCountW, config.gelConfig.meshVerticesCountH, config.gelConfig.r, config.gelConfig.curvatureMax, config.gelConfig.curvature, gel.transform, cameraDepth);
             gel.GetComponent<MeshFilter>().mesh = m;
@@ -224,16 +223,15 @@ namespace RFUniverse.Attributes.Digit
         void SetProxy()
         {
             proxy.SetParent(null);
-            proxy.position = Vector3.up * 100;
+            proxy.position = Vector3.up * 100 + Vector3.right * index; ;
             //应用相应参数
             cameraLightProxy.transform.localPosition = cameraLight.transform.localPosition;
             cameraLightProxy.transform.localEulerAngles = cameraLight.transform.localEulerAngles;
             cameraLightProxy.fieldOfView = cameraLight.fieldOfView;
             cameraLightProxy.nearClipPlane = cameraLight.nearClipPlane;
 
-            RenderTexture lightTexProxy = RenderTexture.GetTemporary(config.gelConfig.resolutionW, config.gelConfig.resolutionH, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             //将RT赋予相应相机
-            cameraLightProxy.targetTexture = lightTexProxy;
+            cameraLightProxy.targetTexture = RenderTexture.GetTemporary(config.gelConfig.resolutionW, config.gelConfig.resolutionH, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
 
             gelProxy.transform.localPosition = gel.transform.localPosition;
             gelProxy.GetComponent<MeshFilter>().mesh = m;

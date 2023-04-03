@@ -8,6 +8,7 @@ namespace RFUniverse.DebugTool
         public GameObject sphere;
         public MeshRenderer capsule;
         public MeshFilter mesh;
+
         private new Collider collider;
         public Collider Collider
         {
@@ -72,9 +73,9 @@ namespace RFUniverse.DebugTool
                 }
             }
         }
-        void Update()
+        void FixedUpdate()
         {
-            if (Collider)
+            if (Collider && Collider.gameObject.activeInHierarchy)
             {
                 transform.position = Collider.transform.position;
                 transform.rotation = Collider.transform.rotation;

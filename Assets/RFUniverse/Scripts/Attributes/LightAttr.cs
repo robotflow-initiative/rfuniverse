@@ -38,14 +38,17 @@ public class LightData
 [RequireComponent(typeof(Light))]
 public class LightAttr : BaseAttr
 {
-    GameObject lightView;
+    Transform lightView;
     private void Awake()
     {
-        if (lightView != null) return;
-        lightView = GameObject.Instantiate(Resources.Load<GameObject>("LightView"));
-        lightView.transform.parent = transform;
-        lightView.transform.localPosition = Vector3.zero;
-        lightView.transform.localRotation = Quaternion.identity;
+        lightView = transform.Find("LightView(clone)");
+        if (lightView == null)
+        {
+            lightView = GameObject.Instantiate(Resources.Load<GameObject>("LightView")).transform;
+            lightView.parent = transform;
+            lightView.localPosition = Vector3.zero;
+            lightView.localRotation = Quaternion.identity;
+        }
     }
 
     new protected Light light = null;
@@ -67,19 +70,19 @@ public class LightAttr : BaseAttr
         set
         {
             Light.type = value;
-            lightView?.transform.Find("Point").gameObject.SetActive(false);
-            lightView?.transform.Find("Spot").gameObject.SetActive(false);
-            lightView?.transform.Find("Directional").gameObject.SetActive(false);
+            lightView?.Find("Point").gameObject.SetActive(false);
+            lightView?.Find("Spot").gameObject.SetActive(false);
+            lightView?.Find("Directional").gameObject.SetActive(false);
             switch (Light.type)
             {
                 case LightType.Point:
-                    lightView?.transform.Find("Point").gameObject.SetActive(true);
+                    lightView?.Find("Point").gameObject.SetActive(true);
                     break;
                 case LightType.Spot:
-                    lightView?.transform.Find("Spot").gameObject.SetActive(true);
+                    lightView?.Find("Spot").gameObject.SetActive(true);
                     break;
                 case LightType.Directional:
-                    lightView?.transform.Find("Directional").gameObject.SetActive(true);
+                    lightView?.Find("Directional").gameObject.SetActive(true);
                     break;
             }
         }

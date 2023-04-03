@@ -46,14 +46,15 @@ namespace RFUniverse.Attributes
             Camera.cullingMask &= ~(1 << PlayerMain.Instance.tempLayer);
         }
 
-        GameObject cameraView;
         private void Awake()
         {
-            if (cameraView != null) return;
-            cameraView = GameObject.Instantiate(Resources.Load<GameObject>("CameraView"));
-            cameraView.transform.parent = transform;
-            cameraView.transform.localPosition = Vector3.zero;
-            cameraView.transform.localRotation = Quaternion.identity;
+            if (transform.Find("CameraView(clone)") == null)
+            {
+                GameObject cameraView = GameObject.Instantiate(Resources.Load<GameObject>("CameraView"));
+                cameraView.transform.parent = transform;
+                cameraView.transform.localPosition = Vector3.zero;
+                cameraView.transform.localRotation = Quaternion.identity;
+            }
         }
         public override void CollectData(OutgoingMessage msg)
         {
@@ -432,76 +433,26 @@ namespace RFUniverse.Attributes
             ddBBOX = new Dictionary<int, Rect>();
             foreach (var item in ActiveAttrs)
             {
-                if (item.Value is BaseCameraAttr) continue;
-                Rect rect = Get2DBBox(item.Value);
+                if (item.Value is not GameObjectAttr) continue;
+                Rect rect = (item.Value as GameObjectAttr).Get2DBBox(Camera);
                 if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
                     ddBBOX.Add(item.Key, rect);
             }
         }
-        Rect Get2DBBox(BaseAttr attr)
-        {
-            float maxX = float.MinValue;
-            float minX = float.MaxValue;
-            float maxY = float.MinValue;
-            float minY = float.MaxValue;
-            foreach (var render in attr.GetChildComponentFilter<MeshFilter>())
-            {
-                Vector3[] vertices = render.mesh.vertices;
 
-                foreach (var item in vertices)
-                {
-                    Vector3 point = render.transform.TransformPoint(item);
-                    point = Camera.WorldToScreenPoint(point);
-                    if (point.x > maxX) maxX = point.x;
-                    if (point.x < minX) minX = point.x;
-                    if (point.y > maxY) maxY = point.y;
-                    if (point.y < minY) minY = point.y;
-                }
-            }
-            return new Rect((maxX + minX) / 2, (maxY + minY) / 2, maxX - minX, maxY - minY);
-        }
+
         Dictionary<int, Tuple<Vector3, Vector3, Vector3>> dddBBOX = null;
         void Get3DBBox()
         {
             dddBBOX = new Dictionary<int, Tuple<Vector3, Vector3, Vector3>>();
             foreach (var item in ActiveAttrs)
             {
-                if (item.Value is BaseCameraAttr) continue;
-                Tuple<Vector3, Vector3, Vector3> box = Get3DBBox(item.Value);
+                if (item.Value is not GameObjectAttr) continue;
+                Tuple<Vector3, Vector3, Vector3> box = (item.Value as GameObjectAttr).Get3DBBox();
                 Vector3 center = Camera.WorldToScreenPoint(box.Item1);
                 if (center.x > 0 && center.y > 0 && center.x < Camera.pixelWidth && center.y < Camera.pixelHeight)
                     dddBBOX.Add(item.Key, box);
             }
-        }
-        Tuple<Vector3, Vector3, Vector3> Get3DBBox(BaseAttr attr)
-        {
-            float maxX = float.MinValue;
-            float minX = float.MaxValue;
-            float maxY = float.MinValue;
-            float minY = float.MaxValue;
-            float maxZ = float.MinValue;
-            float minZ = float.MaxValue;
-            foreach (var render in attr.GetChildComponentFilter<MeshFilter>())
-            {
-                Vector3[] vertices = render.mesh.vertices;
-
-                foreach (var item in vertices)
-                {
-                    Vector3 point = render.transform.TransformPoint(item);
-                    point = attr.transform.InverseTransformPoint(point);
-                    if (point.x > maxX) maxX = point.x;
-                    if (point.x < minX) minX = point.x;
-                    if (point.y > maxY) maxY = point.y;
-                    if (point.y < minY) minY = point.y;
-                    if (point.z > maxZ) maxZ = point.z;
-                    if (point.z < minZ) minZ = point.z;
-                }
-            }
-            Vector3 position = attr.transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
-            Vector3 rotation = attr.transform.eulerAngles;
-            Vector3 size = new Vector3((maxX - minX) * attr.transform.lossyScale.x, (maxY - minY) * attr.transform.lossyScale.y, (maxZ - minZ) * attr.transform.lossyScale.z);
-
-            return new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
         }
     }
 }

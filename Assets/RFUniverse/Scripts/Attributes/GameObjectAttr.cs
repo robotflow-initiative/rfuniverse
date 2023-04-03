@@ -2,6 +2,7 @@
 using Robotflow.RFUniverse.SideChannels;
 using RFUniverse;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RFUniverse.Attributes
 {
@@ -120,6 +121,20 @@ namespace RFUniverse.Attributes
         public override void CollectData(OutgoingMessage msg)
         {
             base.CollectData(msg);
+            msg.WriteBoolean(dddbbox != null);
+            if (dddbbox != null)
+            {
+                msg.WriteFloat32(dddbbox.Item1.x);
+                msg.WriteFloat32(dddbbox.Item1.y);
+                msg.WriteFloat32(dddbbox.Item1.z);
+                msg.WriteFloat32(dddbbox.Item2.x);
+                msg.WriteFloat32(dddbbox.Item2.y);
+                msg.WriteFloat32(dddbbox.Item2.z);
+                msg.WriteFloat32(dddbbox.Item3.x);
+                msg.WriteFloat32(dddbbox.Item3.y);
+                msg.WriteFloat32(dddbbox.Item3.z);
+                dddbbox = null;
+            }
         }
         public override void AnalysisMsg(IncomingMessage msg, string type)
         {
@@ -133,6 +148,9 @@ namespace RFUniverse.Attributes
                     return;
                 case "SetTexture":
                     SetTexture(msg);
+                    return;
+                case "Get3DBBox":
+                    Get3DBBox(msg);
                     return;
             }
             base.AnalysisMsg(msg, type);
@@ -165,6 +183,84 @@ namespace RFUniverse.Attributes
             Texture2D tex = new Texture2D(1, 1);
             tex.LoadImage(data);
             Texture = tex;
+        }
+
+        Dictionary<Mesh, List<Vector3>> vertices = new Dictionary<Mesh, List<Vector3>>();
+
+        System.Tuple<Vector3, Vector3, Vector3> dddbbox = null;
+        void Get3DBBox(IncomingMessage msg)
+        {
+            dddbbox = Get3DBBox();
+        }
+        public System.Tuple<Vector3, Vector3, Vector3> Get3DBBox()
+        {
+            float maxX = float.NegativeInfinity;
+            float minX = float.PositiveInfinity;
+            float maxY = float.NegativeInfinity;
+            float minY = float.PositiveInfinity;
+            float maxZ = float.NegativeInfinity;
+            float minZ = float.PositiveInfinity;
+            foreach (var render in this.GetChildComponentFilter<MeshFilter>())
+            {
+                if (!vertices.TryGetValue(render.mesh, out List<Vector3> thisVertices))
+                {
+                    thisVertices = render.mesh.vertices.ToList();
+                    vertices.Add(render.mesh, thisVertices);
+                }
+                foreach (var item in thisVertices)
+                {
+                    Vector3 point = render.transform.TransformPoint(item);
+                    point = transform.InverseTransformPoint(point);
+                    maxX = Mathf.Max(maxX, point.x);
+                    minX = Mathf.Min(minX, point.x);
+                    maxY = Mathf.Max(maxY, point.y);
+                    minY = Mathf.Min(minY, point.y);
+                    maxZ = Mathf.Max(maxZ, point.z);
+                    minZ = Mathf.Min(minZ, point.z);
+                }
+            }
+            Vector3 position = transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
+            Vector3 rotation = transform.eulerAngles;
+            Vector3 size = new Vector3((maxX - minX) * transform.lossyScale.x, (maxY - minY) * transform.lossyScale.y, (maxZ - minZ) * transform.lossyScale.z);
+            return new System.Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
+        }
+
+        public Rect Get2DBBox(Camera cam)
+        {
+            float maxX = float.MinValue;
+            float minX = float.MaxValue;
+            float maxY = float.MinValue;
+            float minY = float.MaxValue;
+            foreach (var render in this.GetChildComponentFilter<MeshFilter>())
+            {
+                Vector3[] vertices = render.mesh.vertices;
+
+                foreach (var item in vertices)
+                {
+                    Vector3 point = render.transform.TransformPoint(item);
+                    point = cam.WorldToScreenPoint(point);
+                    if (point.x > maxX) maxX = point.x;
+                    if (point.x < minX) minX = point.x;
+                    if (point.y > maxY) maxY = point.y;
+                    if (point.y < minY) minY = point.y;
+                }
+            }
+            return new Rect((maxX + minX) / 2, (maxY + minY) / 2, maxX - minX, maxY - minY);
+        }
+
+        public Bounds GetAppendBounds()
+        {
+            Bounds bounds = new Bounds();
+            List<Renderer> renders = this.GetChildComponentFilter<Renderer>();
+            if (renders.Count > 0)
+            {
+                bounds = renders[0].bounds;
+                foreach (var item in renders)
+                {
+                    bounds.Encapsulate(item.bounds);
+                }
+            }
+            return bounds;
         }
     }
 }

@@ -176,7 +176,10 @@ namespace RFUniverse.Attributes
                 Transform collider = render.Find("Collider");
                 if (collider != null && data.type != ColliderType.Original)
                 {
-                    Destroy(collider.gameObject);
+                    if (Application.isPlaying)
+                        Destroy(collider.gameObject);
+                    else
+                        DestroyImmediate(collider.gameObject);
                     collider = null;
                 }
                 if (collider == null && (data.type != ColliderType.None || data.type != ColliderType.Original))

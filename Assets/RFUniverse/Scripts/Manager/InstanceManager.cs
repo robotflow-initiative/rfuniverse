@@ -40,15 +40,17 @@ namespace RFUniverse.Manager
         }
         public virtual void CollectData()
         {
-            OutgoingMessage msg = new OutgoingMessage();
-            msg.WriteInt32(BaseAttr.ActiveAttrs.Count);
+            //OutgoingMessage msg = new OutgoingMessage();
+            //msg.WriteInt32(BaseAttr.ActiveAttrs.Count);
             foreach (var attr in BaseAttr.ActiveAttrs.Values)
             {
+                OutgoingMessage msg = new OutgoingMessage();
                 msg.WriteInt32(attr.ID);
                 msg.WriteString(attr.GetType().Name);
                 attr.CollectData(msg);
+                channel.SendMetaDataToPython(msg);
             }
-            channel.SendMetaDataToPython(msg);
+            //channel.SendMetaDataToPython(msg);
         }
     }
 }
