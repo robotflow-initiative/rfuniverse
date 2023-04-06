@@ -12,32 +12,34 @@ Unity端Player：接收python端消息并执行仿真
 
 按照以下步骤配置并通过发布版运行示例场景
 
-1. 创建conda环境，激活并安装pyrfuniverse包：
+1. 下载RFUniverse Release并解压：[RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
+   
+   解压完成后运行一次程序，进入场景后即可关闭：
+   
+   Linux：`RFUniverse_For_Linux/RFUniverse.x86_64`
+   
+   Windows：`RFUniverse_For_Windows/RFUniverse.exe`
+
+2. 创建conda环境并激活，安装与**RFUniverse Release相同的Tag**的pyrfuniverse包：
    
    ```
    conda create -n rfuniverse python=3.9 -y
    conda activate rfuniverse
-   pip install pyrfuniverse
+   pip install pyrfuniverse==0.8.1
    ```
 
-2. 下载RFUniverse可执行程序并解压：[RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
-   
-   解压完成后运行一次程序，进入场景后即可关闭：
-   
-   Linux：`RFUniverse.x86_64`
-   
-   Windows：`RFUniverse.exe`
-
-3. Clone pyrfuniverse仓库，切换到与RFUniverse Release相同的Tag：
+3. Clone pyrfuniverse仓库，切换到与**RFUniverse Release相同的Tag**：
    
    ```
    git clone https://github.com/mvig-robotflow/pyrfuniverse.git
+   cd pyrfuniverse
+   git checkout v0.8.1
    ```
 
-4. 运行 `pyrfuniverse/AtomicActions`，`pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
+4. 运行 `pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
    
    ```
-   cd pyrfuniverse/Test
+   cd Test
    python test_pick_and_place.py
    ```
 
@@ -142,11 +144,7 @@ pyrfuniverse/Test目录的功能示例即可以再Release下运行，也可以�
 
 ---
 
-##### 核心功能
-
-###### Agent
-
-是Python与Unity进行通信的基础
+##### 核心类
 
 ###### Attributes
 
@@ -155,35 +153,43 @@ Attr是RFUniverse中物体的基本单元，所有的物体都是基于BaseAttr�
 ```mermaid
 graph TD
 Base-->BaseCamera
-Base-->...
+
 Base-->GameObject
+Base-->Light
+Base-->PointCloud
 GameObject-->Collider
 BaseCamera-->Camera
 BaseCamera-->HDRPCamera
 Collider-->Rigidbody
 Collider-->Controller
+Base-->...
 ```
 
 其中：
 
 BaseAttr提供了基础的物体加载创建删除移动等属性
 
-GameObject扩展物体简单的视觉效果修改
+GameObjectAttr扩展物体简单的视觉效果修改
 
 ColldierAttr扩展物体碰撞体的修改功能
 
-Rigidbody扩展物体的刚体属性
+RigidbodyAttr扩展物体的刚体属性
 
-Controller扩展机械臂关节体的操作
+ControllerAttr扩展机械臂关节体的操作
 
 CameraAttr扩展相机图像抓取功能
 
+LightAttr扩展灯光控制功能
+
+PointCloudAttr扩展点云导入及渲染功能
+
 ###### Manager
 
-Manager负责接受和发送不同类型的数据，每一个Manager有独立的channel与python保持通信，在运行过程中通过channel接受或发送数据。RFUniverser中有两个重要的Manager：
+Manager负责接受和发送不同类型的数据，每一个Manager有独立的channel与python保持通信，在运行过程中通过channel接受或发送数据。
 
 - AssetManager：负责环境中通用的接口和数据的发送
 - InstanceManager：负责分发和收集面向不同Attr的接口和数据
+- DebugManager：负责Debug功能
 
 ---
 
