@@ -105,6 +105,9 @@ namespace RFUniverse.Manager
                 case "SetShadowDistance":
                     SetShadowDistance(msg);
                     return;
+                case "SetViewTransform":
+                    SetViewTransform(msg);
+                    return;
                 default:
                     ext.AnalysisMsg(msg, type);
                     return;
@@ -114,6 +117,26 @@ namespace RFUniverse.Manager
         private void SetShadowDistance(IncomingMessage msg)
         {
             QualitySettings.shadowDistance = msg.ReadFloat32();
+        }
+        private void SetViewTransform(IncomingMessage msg)
+        {
+            Debug.Log("SetViewTransform");
+            bool set_position = msg.ReadBoolean();
+            bool set_rotation = msg.ReadBoolean();
+            if (set_position)
+            {
+                float x = msg.ReadFloat32();
+                float y = msg.ReadFloat32();
+                float z = msg.ReadFloat32();
+                PlayerMain.Instance.MainCamera.transform.position = new Vector3(x, y, z);
+            }
+            if (set_rotation)
+            {
+                float rx = msg.ReadFloat32();
+                float ry = msg.ReadFloat32();
+                float rz = msg.ReadFloat32();
+                PlayerMain.Instance.MainCamera.transform.eulerAngles = new Vector3(rx, ry, rz);
+            }
         }
 
         void PreLoadAssetsAsync(IncomingMessage msg, Action onCompleted = null, bool sendDoneMsg = true)
@@ -236,6 +259,7 @@ namespace RFUniverse.Manager
             msg.WriteString("LoadDone");
             channel.SendMetaDataToPython(msg);
         }
+
         Dictionary<string, List<Action<IncomingMessage>>> registeredMessages = new Dictionary<string, List<Action<IncomingMessage>>>();
         private void ReceiveMessage(IncomingMessage msg)
         {
