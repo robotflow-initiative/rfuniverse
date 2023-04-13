@@ -1,0 +1,499 @@
+{
+  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "ground": true,
+  "cameraPosition": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      0.660980344,
+      2.57430649,
+      -0.6448805
+    ]
+  },
+  "cameraRotation": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      61.68428,
+      315.80246,
+      -1.43996594E-05
+    ]
+  },
+  "groundPosition": {
+    "$type": "System.Single[], mscorlib",
+    "$values": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "assetsData": {
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$values": [
+      {
+        "$type": "RFUniverse.Attributes.ColliderAttrData, Assembly-CSharp",
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Collider_Box",
+        "id": 779861,
+        "type": "Collider",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -0.5,
+            0.5,
+            0.0
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.1,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.ColliderAttrData, Assembly-CSharp",
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Collider_Box",
+        "id": 411537,
+        "type": "Collider",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.1,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.ColliderAttrData, Assembly-CSharp",
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Collider_Box",
+        "id": 260447,
+        "type": "Collider",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            0.1
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.ColliderAttrData, Assembly-CSharp",
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Collider_Box",
+        "id": 637033,
+        "type": "Collider",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.5,
+            -0.5
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            0.1
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "rigidbodyData": {
+          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "mass": 1.0,
+          "useGravity": true,
+          "isKinematic": false
+        },
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 2,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 0.5,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Rigidbody_Sphere",
+        "id": 980786,
+        "type": "Rigidbody",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.249999955,
+            -1.41358385E-07
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            -3.33499956E-05,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      }
+    ]
+  }
+}

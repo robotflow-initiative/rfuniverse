@@ -52,7 +52,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public Texture2D GetRGBWithAlpha(int width, int height, float? unPhysicalFov = null)
@@ -70,7 +69,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetNormal(int width, int height, float? unPhysicalFov = null)
@@ -88,7 +86,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetID(int width, int height, float? unPhysicalFov = null)
@@ -106,7 +103,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null)
@@ -124,7 +120,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null)
@@ -144,7 +139,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null)
@@ -164,7 +158,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
             return tex;
         }
         public override Texture2D GetAmodalMask(int id, int width, int height, float? unPhysicalFov = null)
@@ -188,7 +181,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
         public override Texture2D GetMotionVector(int width, int height, float? unPhysicalFov = null)
@@ -206,7 +198,6 @@ namespace RFUniverse.Attributes
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            motionVectorBase64String = Convert.ToBase64String(tex.EncodeToPNG());
             return tex;
         }
     }

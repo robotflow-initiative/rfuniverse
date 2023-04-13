@@ -225,8 +225,13 @@ namespace RFUniverse.Manager
         }
         void AlignCamera(IncomingMessage msg)
         {
+            Debug.Log("AlignCamera");
             int cameraID = msg.ReadInt32();
-            if (!BaseAttr.Attrs.ContainsKey(cameraID)) return;
+            if (!BaseAttr.Attrs.ContainsKey(cameraID))
+            {
+                Debug.LogWarning($"not find align target camera {cameraID}");
+                return;
+            }
             BaseAttr camera = BaseAttr.Attrs[cameraID];
             PlayerMain.Instance.MainCamera.transform.position = camera.transform.position;
             PlayerMain.Instance.MainCamera.transform.rotation = camera.transform.rotation;
