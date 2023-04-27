@@ -4,17 +4,17 @@
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
     "$values": [
-      0.660980344,
-      2.57430649,
-      -0.6448805
+      0.0,
+      1.0,
+      -3.0
     ]
   },
   "cameraRotation": {
     "$type": "System.Single[], mscorlib",
     "$values": [
-      61.68428,
-      315.80246,
-      -1.43996594E-05
+      0.0,
+      0.0,
+      0.0
     ]
   },
   "groundPosition": {
@@ -91,7 +91,7 @@
         },
         "render": true,
         "name": "Collider_Box",
-        "id": 779861,
+        "id": 849942,
         "type": "Collider",
         "parentID": -1,
         "parentName": "",
@@ -183,7 +183,7 @@
         },
         "render": true,
         "name": "Collider_Box",
-        "id": 411537,
+        "id": 871455,
         "type": "Collider",
         "parentID": -1,
         "parentName": "",
@@ -275,7 +275,7 @@
         },
         "render": true,
         "name": "Collider_Box",
-        "id": 260447,
+        "id": 435812,
         "type": "Collider",
         "parentID": -1,
         "parentName": "",
@@ -367,7 +367,7 @@
         },
         "render": true,
         "name": "Collider_Box",
-        "id": 637033,
+        "id": 980136,
         "type": "Collider",
         "parentID": -1,
         "parentName": "",
@@ -465,7 +465,7 @@
         },
         "render": true,
         "name": "Rigidbody_Sphere",
-        "id": 980786,
+        "id": 779293,
         "type": "Rigidbody",
         "parentID": -1,
         "parentName": "",

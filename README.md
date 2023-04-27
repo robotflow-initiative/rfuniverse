@@ -10,7 +10,7 @@ RFUniverse是基于Unity开发的用于机器人仿真和强化学习的平台�
 
 Unity端Player：接收python端消息并执行仿真
 
-[Unity端Editor](https://github.com/mvig-robotflow/rfuniverse/blob/main/RFUniverse%20Editor%20User%20Manual.pdf)：用于搭建或编辑仿真场景
+[Unity端Editor](https://github.com/mvig-robotflow/rfuniverse/blob/main/RFUniverse%20Editor%20User%20Manual.pdf)：用于搭建或编辑仿真场景，此部分代码位于[子模块](https://github.com/mvig-robotflow/rfuniverse_editmode)
 
 ---
 
@@ -57,21 +57,26 @@ Unity端Player：接收python端消息并执行仿真
 | [test_articulation_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_articulation_ik.py)                                     | 原生IK                                                                                                     |
 | [test_camera_image](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_camera_image.py)                                           | [相机截图示例](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_camera_image.md)    |
 | [test_custom_message](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py)                                       | 自定义消息和动态消息                                                                                               |
+| [test_debug](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_debug.py)                                                         | 各debug模块循环展示                                                                                             |
+| [test_digit](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_digit.py)                                                         | 交互式Digit传感器仿真                                                                                            |
 | [test_grasp_pose](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_pose.py)                                               | Franka抓点预览                                                                                               |
 | [test_grasp_sim](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_sim.py)                                                 | Franka抓取测试                                                                                               |
+| [test_heat_map](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_heat_map.py)                                                   | 交互式heatmap热力图                                                                                            |
 | [test_humanbody_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_humanbody_ik.py)                                           | 人体IK接口                                                                                                   |
+| [test_label](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_label.py)                                                         | 场景标注2DBBOX                                                                                               |
+| [test_ligth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_light.py)                                                         | 灯光参数设置                                                                                                   |
 | [test_load_mesh](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_mesh.py)                                                 | [obj模型文件导入为刚体](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_load_mesh.md) |
 | [test_load_urdf](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_urdf.py)                                                 | [urdf文件导入](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_load_urdf.md)     |
+| [test_object_data](test_object_data.py)                                                                                                           | 物体基础数据                                                                                                   |
 | [test_pick_and_place](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place.py)                                       | 基础接口和原生IK驱动的抓取                                                                                           |
 | [test_pick_and_place_gym](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place_gym.py)                               | 基础接口和原生IK驱动的抓取训练任务                                                                                       |
 | [test_point_cloud](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud.py)                                             | 使用图像宽高和fov获取深度图并转换点云                                                                                     |
 | [test_point_cloud_render](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_render.py)                               | .ply点云文件导入并显示                                                                                            |
 | [test_point_cloud_with_intrinsic_matrix](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_with_intrinsic_matrix.py) | 使用相机内参获取深度图并转换点云                                                                                         |
-| [test_label](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_label.py)                                                         | 场景标注2DBBOX                                                                                               |
-| [test_ligth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_light.py)                                                         | 灯光接口示例                                                                                                   |
-| [test_object_data](test_object_data.py)                                                                                                           | 物体基础数据                                                                                                   |
-| [test_save_obj](test_save_obj.py)                                                                                                                 | 场景保存为obj模型                                                                                               |
+| [test_save_gripper](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_save_gripper.py)                                           | 夹爪驱动后保存为obj模型                                                                                            |
+| [test_save_obj](test_save_obj.py)                                                                                                                 | 场景多个物体保存为obj模型                                                                                           |
 | [test_scene](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_scene.py)                                                         | 场景搭建/保存/载入                                                                                               |
+| [test_tobor_move](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_tobor_move.py)                                               | tobor车轮驱动移动                                                                                              |
 
 ---
 
@@ -227,7 +232,7 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
   
   Python:
   
-  `env.asset_channel.SendMessage(self, message: str, *args)`
+  `env.SendMessage(self, message: str, *args)`
   
   传入消息名称和任意数量的数据进行发送
 
@@ -235,7 +240,7 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
   
   Python:
   
-  `env.asset_channel.AddListener(self, message: str, fun)`
+  `env.AddListener(self, message: str, fun)`
   
   传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
   
@@ -248,27 +253,5 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
 *请注意，动态消息必须保证接收函数中从 `IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
 
 动态消息接口的具体使用示例请看pyrfuniverse/Test/test_custom_message.py
-
----
-
-##### 添加定制化接口
-
-RFUniverse还在不断开发升级维护中，更新比较频繁，为了保证核心代码的更新不影响二次开发，添加了接口和数据通信的扩展模块。如果你需要在RFUniverse中添加自己的功能，请遵循以下步骤和限制，以保证RFUnivers后续更新不会与你添加的代码冲突
-
-接口分为全局接口(AssetManager)和面向对象接口(InstanceManager)
-
-- ###### 扩展Attr面向对象接口/属性
-  
-  在pyrfuniverse工程中，参照pyrfuniverse/attributes/custom_attr.py，在同目录下新建脚本，添加新增的消息读取代码和新接口，传入参数类型为 `dict`，返回值类型为 `OutgoingMessage`。并在pyrfuniverse/attributes/__init__.py中添加 `import`，并加入 `__all__`
-  
-  在Unity工程中，参照RFUniverse/Scripts/Attributes/CustomAttr.py脚本，新建脚本，继承 `BaseAttr`或其他派生类，重写Type属性值与python脚本_attr前半段命名相同，重写 `CollectData`在其中写入新增的数据，重写 `AnalysisMsg`添加接口实现函数。
-
-- ###### 扩展全局接口/属性
-  
-  在pyrfuniverse工程中，修改pyrfuniverse/rfuniverse_channer/asset_channer_ext.py脚本，参照现有代码，添加新增的消息读取代码和新接口，同样传入类型为 `dict`，返回类型为 `OutgoingMessage`
-  
-  在Unity工程中，修改AssetManagerExt.cs脚本，在 `AnalysisMsg`方法的 `switch`块中添加分支，并添加接口接收函数。数据发送可以在任意位置调用 `AssetManager.Instance.channel.SendMetaDataToPython(sendMsg);`
-
-定制化接口的具体添加示例请看pyrfuniverse/Test/test_custom_message.py
 
 ---
