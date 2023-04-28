@@ -1,88 +1,91 @@
 # RFUniverse
+[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
 
-[Documentation](https://knotty-watch-cad.notion.site/RFUniverse-3afda956497b4c33b5a45f68b49d9816)：It is currently mostly in Chinese, we are working on finishing it and translating to English.
+English|[中文](https://github.com/mvig-robotflow/rfuniverse/blob/main/README_zh.md)
 
----
-
-RFUniverse是基于Unity开发的用于机器人仿真和强化学习的平台，主要有三个功能模块：
-
-[Python接口](https://mvig-robotflow.github.io/pyrfuniverse/)：Python封装的通信接口 [![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
-
-Unity端Player：接收python端消息并执行仿真
-
-[Unity端Editor](https://github.com/mvig-robotflow/rfuniverse/blob/main/RFUniverse%20Editor%20User%20Manual.pdf)：用于搭建或编辑仿真场景，此部分代码位于[子模块](https://github.com/mvig-robotflow/rfuniverse_editmode)
+[Documentation](https://mvig-robotflow.github.io/pyrfuniverse/)
 
 ---
 
-按照以下步骤配置并通过发布版运行示例场景
+RFUniverse is a platform developed in Unity for robot simulation and reinforcement learning, consisting of three main functional modules:
 
-1. 下载RFUniverse Release并解压：[RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases)
+[Python API](https://mvig-robotflow.github.io/pyrfuniverse/)：Python communication interface 
+
+Unity Player：Receiving messages from Python and executing simulations
+
+Unity EditMode：Used for building or editing simulation scenes. This code is located in a [submodule](https://github.com/mvig-robotflow/rfuniverse_editmode)
+
+---
+
+Follow the steps below to configure and run the sample scene through the published version:
+
+1. Download the [RFUniverse Releases](https://github.com/mvig-robotflow/rfuniverse/releases) and unzip it:
    
-   解压完成后运行一次程序，进入场景后即可关闭：
+   Run the program once, enter the scene and then close it:
    
    Linux：`RFUniverse_For_Linux/RFUniverse.x86_64`
    
    Windows：`RFUniverse_For_Windows/RFUniverse.exe`
 
-2. 创建conda环境并激活，安装与**RFUniverse Release相同的Tag**的pyrfuniverse包：
-   
-   ```
-   conda create -n rfuniverse python=3.9 -y
-   conda activate rfuniverse
-   pip install pyrfuniverse==0.8.1
-   ```
+2. Create a conda environment and activate it, install the 'pyrfuniverse' package with the **same version number** as the RFUniverse Release:
+    
+    ```bash
+    conda create -n rfuniverse python=3.9 -y
+    conda activate rfuniverse
+    pip install pyrfuniverse==0.8.3
+    ```
 
-3. Clone pyrfuniverse仓库，切换到与**RFUniverse Release相同的Tag**：
+3. Clone the pyrfuniverse, switch to the Tag with the **same version number** as the RFUniverse Release:
    
-   ```
+   ```bash
    git clone https://github.com/mvig-robotflow/pyrfuniverse.git
    cd pyrfuniverse
-   git checkout v0.8.1
+   git checkout v0.8.3
    ```
 
-4. 运行 `pyrfuniverse/Test`下任意python脚本(某些脚本可能需要安装pybullet，open3d等比较大的包)
+4. Run any Python script under 'pyrfuniverse/Test' (some scripts may require installation of large packages such as 'pybullet', 'open3d', etc.):
    
-   ```
+   ```bash
    cd Test
    python test_pick_and_place.py
    ```
 
 ---
 
-##### Test目录
+## Test directory
 
-| name                                                                                                                                              | feature                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [test_active_depth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_active_depth.py)                                           | [红外深度](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_active_depth.py.md)   |
-| [test_articulation_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_articulation_ik.py)                                     | 原生IK                                                                                                     |
-| [test_camera_image](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_camera_image.py)                                           | [相机截图示例](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_camera_image.md)    |
-| [test_custom_message](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py)                                       | 自定义消息和动态消息                                                                                               |
-| [test_debug](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_debug.py)                                                         | 各debug模块循环展示                                                                                             |
-| [test_digit](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_digit.py)                                                         | 交互式Digit传感器仿真                                                                                            |
-| [test_grasp_pose](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_pose.py)                                               | Franka抓点预览                                                                                               |
-| [test_grasp_sim](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_sim.py)                                                 | Franka抓取测试                                                                                               |
-| [test_heat_map](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_heat_map.py)                                                   | 交互式heatmap热力图                                                                                            |
-| [test_humanbody_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_humanbody_ik.py)                                           | 人体IK接口                                                                                                   |
-| [test_label](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_label.py)                                                         | 场景标注2DBBOX                                                                                               |
-| [test_ligth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_light.py)                                                         | 灯光参数设置                                                                                                   |
-| [test_load_mesh](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_mesh.py)                                                 | [obj模型文件导入为刚体](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_load_mesh.md) |
-| [test_load_urdf](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_urdf.py)                                                 | [urdf文件导入](https://github.com/mvig-robotflow/rfuniverse/blob/main/Docs/tutorial%20test_load_urdf.md)     |
-| [test_object_data](test_object_data.py)                                                                                                           | 物体基础数据                                                                                                   |
-| [test_pick_and_place](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place.py)                                       | 基础接口和原生IK驱动的抓取                                                                                           |
-| [test_pick_and_place_gym](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place_gym.py)                               | 基础接口和原生IK驱动的抓取训练任务                                                                                       |
-| [test_point_cloud](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud.py)                                             | 使用图像宽高和fov获取深度图并转换点云                                                                                     |
-| [test_point_cloud_render](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_render.py)                               | .ply点云文件导入并显示                                                                                            |
-| [test_point_cloud_with_intrinsic_matrix](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_with_intrinsic_matrix.py) | 使用相机内参获取深度图并转换点云                                                                                         |
-| [test_save_gripper](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_save_gripper.py)                                           | 夹爪驱动后保存为obj模型                                                                                            |
-| [test_save_obj](test_save_obj.py)                                                                                                                 | 场景多个物体保存为obj模型                                                                                           |
-| [test_scene](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_scene.py)                                                         | 场景搭建/保存/载入                                                                                               |
-| [test_tobor_move](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_tobor_move.py)                                               | tobor车轮驱动移动                                                                                              |
+| name                                                                                                                                              | feature                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [test_active_depth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_active_depth.py)                                           | IR Depth                                                                                             |
+| [test_articulation_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_articulation_ik.py)                                     | Native IK                                                                                            |
+| [test_camera_image](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_camera_image.py)                                           | Camera screenshot                                                                                    |
+| [test_custom_message](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py)                                       | Custom messages and dynamic messages                                                                 |
+| [test_debug](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_debug.py)                                                         | Loop display of various debug modules                                                                |
+| [test_digit](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_digit.py)                                                         | Interactive Digit sensor simulation                                                                  |
+| [test_grasp_pose](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_pose.py)                                               | Franka grasp point preview                                                                           |
+| [test_grasp_sim](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_grasp_sim.py)                                                 | Franka grasp point test                                                                              |
+| [test_heat_map](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_heat_map.py)                                                   | Interactive heatmap                                                                                  |
+| [test_humanbody_ik](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_humanbody_ik.py)                                           | Human body inverse kinematics                                                                        |
+| [test_label](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_label.py)                                                         | Scene labeling with 2D bounding boxes                                                                |
+| [test_ligth](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_light.py)                                                         | Adjusting lighting parameters                                                                        |
+| [test_load_mesh](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_mesh.py)                                                 | Importing OBJ model files as rigidbody                                                               |
+| [test_load_urdf](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_load_urdf.py)                                                 | Importing URDF files                                                                                 |
+| [test_object_data](test_object_data.py)                                                                                                           | Basic information about objects                                                                      |
+| [test_pick_and_place](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place.py)                                       | Basic interfaces and native IK driven gripping                                                       |
+| [test_pick_and_place_gym](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_pick_and_place_gym.py)                               | Training tasks for basic interfaces and native IK driven gripping                                    |
+| [test_point_cloud](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud.py)                                             | Using image width, height, and field of view to obtain a depth map and convert it into a point cloud |
+| [test_point_cloud_render](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_render.py)                               | Importing and displaying PLY point cloud files                                                       |
+| [test_point_cloud_with_intrinsic_matrix](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_point_cloud_with_intrinsic_matrix.py) | Using camera intrinsic parameters to obtain a depth map and convert it into a point cloud            |
+| [test_save_gripper](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_save_gripper.py)                                           | Saving objects as OBJ models after gripper manipulation                                              |
+| [test_save_obj](test_save_obj.py)                                                                                                                 | Saving multiple objects in a scene as OBJ models                                                     |
+| [test_scene](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_scene.py)                                                         | Building, saving, and loading scenes                                                                 |
+| [test_tobor_move](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_tobor_move.py)                                               | Tobor wheel drive movement                                                                           |
 
 ---
 
-##### 进入Edit模式
+## Enter Edit mode
 
-启动RFUniverse时添加参数<-edit>可进入Edit模式
+Launch RFUniverse with the <-edit> parameter to enter Edit mode:
 
 Linux:
 
@@ -98,66 +101,66 @@ RFUniverse.exe -edit
 
 ---
 
-## Unity源工程与SDK使用说明
+## Instructions for using Unity source project and SDK
 
-*以下步骤说明将默认你对UnityEditor有一定了解*
+*The following steps assume that you have a basic understanding of Unity Editor*
 
-如果你想要在RFUniverse中加入自己的定制资源或功能，可以在RFUniverse开源工程基础上添加
+If you want to add your own custom resources or functions to RFUniverse, you can do so by adding them to the RFUniverse open source project.
 
-如果你想要为自己的项目添加RFUniverse功能，可以导入[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
+If you want to add RFUniverse functionality to your own project, you can import the [RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-**工程中若出现缺失插件的报错，可重启工程后使用菜单RFUniverse/CheckPlugins修复**
-
----
-
-##### 插件与资源补足
-
-打开RFUniverse工程或导入RFUniverse Core SDK后需要自行补充第三方插件和资源，以开启其中的功能
-
-- [Obi](https://assetstore.unity.com/publishers/5170)：Softbody，Cloth，Fluid等物理仿真插件
-- [BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：关节IK解算插件
-
-**请将插件放入Plugins目录，导入插件后使用菜单RFUniverse/CheckPlugins修复依赖**
+**If you encounter missing plugin errors in your project, you can restart the project and use the menu RFUniverse/CheckPlugins to fix them.**
 
 ---
 
-##### Assets目录结构
+### Supplementing missing plugins and resources
 
-* AddressableAssetsData：Unity可寻址资源系统固定目录，管理资源地址和资源打包配置
-* Assets：资源目录，包含所有动态加载资源，**如果不需要使用内置的模型和机器人资源，可以将其删除**
-  * Model：模型/贴图/材质等资源
-  * PhysicalMaterials：物理材质
-  * Prefab：预制体，分配Addressable地址用于资源加载
-* Extend： 各种扩展Attr模块
-* Plugins：扩展插件目录，请将OBI，BioIK等插件放置在此目录下
-* RFUniverse：RFUniverse Core 核心功能资源及脚本
-* StreamingAssets：配置文件保存目录
-  * SceneData：场景JSON文件的保存目录
-* TextMesh Pro：TMP UI 资源
+After opening the RFUniverse project or importing the RFUniverse Core SDK, you need to supplement third-party plugins and resources yourself to enable their functionality:
+
+- [Obi](https://assetstore.unity.com/publishers/5170)：Physical simulation plugins for soft bodies, cloth, fluids, etc.
+- [BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：Joint IK solving plugins
+
+**Please put the plugins in the Plugins directory, import the plugins, and use the menu RFUniverse/CheckPlugins to fix dependencies**
 
 ---
 
-##### Scene场景
+### Assets directory structure
 
-* RFUniverse/First.unity：发布程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景
-* RFUniverse/Empty.unity：Player模式场景
-* EditMode/Edit.unity：Editor模式场景
+* AddressableAssetsData：The Unity Addressable Assets System fixed directory, which manages resource addresses and resource packaging configurations
+* Assets：Resource directory, which contains all dynamically loaded resources. **If you don't need to use built-in model and robot resources, you can delete them**
+  * Model：Model/texture/material resources
+  * PhysicalMaterials：Physical materials
+  * Prefab：Prefabs, assigned Addressable addresses for resource loading.
+* Extend： Various expanded Attr modules
+* Plugins：Expanded plugin directory. Please put OBI, BioIK, and other plugins in this directory
+* RFUniverse：RFUniverse core functionality resources and scripts.
+* StreamingAssets：Configuration file save directory
+  * SceneData：Save directory for scene JSON files
+* TextMesh Pro：UI resources
 
 ---
 
-##### 工程下运行示例场景
+### Scene
 
-pyrfuniverse/Test目录的功能示例即可以再Release下运行，也可以在UnityEditor中运行
-
-先运行一次Empty场景后退出，随后运行某个python脚本，再在UnityEditor中运行Empty场景即可
+* RFUniverse/First.unity：The first scene that the published program runs, which receives command-line parameters and then jumps to other scenes
+* RFUniverse/Empty.unity：Player mode scene
+* EditMode/Edit.unity：Edit mode scebe
 
 ---
 
-##### 核心类
+### Running sample scenes in the project
 
-###### Attributes
+The functional examples in the pyrfuniverse/Test directory can be run in both the Release and UnityEditor.
 
-Attr是RFUniverse中物体的基本单元，所有的物体都是基于BaseAttr派生而来，如GameObjectAttr，RigidbodyAttr，ControllerAttr， CmaeraAttr等
+First, run the Empty scene once and then exit, then run a Python script and run the Empty scene in UnityEditor.
+
+---
+
+## Core classes
+
+### Attributes
+
+Attr is the basic unit of objects in RFUniverse. All objects are derived from BaseAttr, such as GameObjectAttr, RigidbodyAttr, ControllerAttr, CameraAttr, etc.
 
 ```mermaid
 graph TD
@@ -174,53 +177,51 @@ Collider-->Controller
 Base-->...
 ```
 
-其中：
+BaseAttr provides basic object loading, creation, deletion, movement, and other attributes.
 
-BaseAttr提供了基础的物体加载创建删除移动等属性
+GameObjectAttr extends simple visual effect modification for objects.
 
-GameObjectAttr扩展物体简单的视觉效果修改
+ColliderAttr extends modification functions for an object's collider.
 
-ColldierAttr扩展物体碰撞体的修改功能
+RigidbodyAttr extends the rigid body properties of objects.
 
-RigidbodyAttr扩展物体的刚体属性
+ControllerAttr extends the operation of robotic arm joints.
 
-ControllerAttr扩展机械臂关节体的操作
+CameraAttr extends image capture capabilities for cameras.
 
-CameraAttr扩展相机图像抓取功能
+LightAttr extends light control functionality.
 
-LightAttr扩展灯光控制功能
+PointCloudAttr extends point cloud import and rendering functionality.
 
-PointCloudAttr扩展点云导入及渲染功能
+### Manager
 
-###### Manager
+The Manager is responsible for receiving and sending different types of data. Each Manager has an independent channel to communicate with Python, and during runtime, data is received or sent through the channel.
 
-Manager负责接受和发送不同类型的数据，每一个Manager有独立的channel与python保持通信，在运行过程中通过channel接受或发送数据。
-
-- AssetManager：负责环境中通用的接口和数据的发送
-- InstanceManager：负责分发和收集面向不同Attr的接口和数据
-- DebugManager：负责Debug功能
+- AssetManager: Responsible for the common interface and data transmission in the environment.
+- InstanceManager: Responsible for distributing and collecting interfaces and data for different Attrs.
+- DebugManager: Responsible for debugging functionality.
 
 ---
 
-##### 搭建场景
+## Building a Scene
 
-在RFUniverse中，可以将物体按照规则配置成Prefab并在运行时通过python接口动态加载物体，也可以提前搭建好固定的场景来与python通信，两种方式的选择在于你是否需要在一个发布版中运行不同的环境，大部分情况下在UnityEditor中提前搭建场景更简单快捷。
+In RFUniverse, objects can be configured into Prefabs according to rules and dynamically loaded through Python interfaces at runtime. Alternatively, a fixed scene can be built in advance to communicate with Python. The choice between the two methods depends on whether you need to run different environments in a published version. In most cases, it is simpler and more efficient to build a scene in advance in the UnityEditor.
 
-###### 基本流程：
+### Basic Process：
 
-1. 复制一份Empty场景，在此基础上添加自己的物体。
+1. Copy an Empty scene and add your objects. 
    
-   或者将RFUniverse/Assets/Prefab/RFUniverse导入现有场景，同时移除场景中原本的MainCamera和Directional Light
+    Alternatively, import RFUniverse/Assets/Prefab/RFUniverse into an existing scene and remove the original MainCamera and Directional Light.
 
-2. 为需要通信的物体添加BaseAttr脚本，手动设置不同的ID，保证ID没有重复
+2. Add the BaseAttr script to the objects that need to communicate, manually assigning a unique ID to each object to ensure no duplicates.
 
-3. 参照pyrfuniverse/Test编写python脚本，通过ID读取物体上的信息并调用物体上的接口
+3. Refer to pyrfuniverse/Test to write Python scripts that read information from objects using their IDs and call object interfaces.
 
 ---
 
-##### 动态消息接口
+## Dynamic Message
 
-除了固定参数的接口外，AssetManager还支持发送动态消息进行双向数据通信，更加灵活方便
+In addition to fixed parameter interfaces, AssetManager also supports sending dynamic messages to enable two-way data communication, which is more flexible and convenient.
 
 * **Python->Unity**
   
@@ -228,13 +229,13 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
   
   `AssetManger.Instance.AddListener(string message, Action<IncomingMessage> action);`
   
-  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
+  Open the listener by passing the message name and the message receiver function. The parameter type passed to the receiver function is `IncomingMessage`
   
   Python:
   
   `env.SendMessage(self, message: str, *args)`
   
-  传入消息名称和任意数量的数据进行发送
+  Pass the message name and any number of data to send.
 
 * **Unity->Python**
   
@@ -242,16 +243,16 @@ Manager负责接受和发送不同类型的数据，每一个Manager有独立的
   
   `env.AddListener(self, message: str, fun)`
   
-  传入消息名称和消息接收函数开启监听，接受函数的传入参数类型为 `IncomingMessage`
+  Open the listener by passing the message name and the message receiver function. The parameter type passed to the receiver function is `IncomingMessage`
   
   C#:
   
   `AssetManger.Instance.SendMessage(string message, params object[] objects);`
   
-  传入消息名称和任意数量的数据进行发送
+  Pass the message name and any number of data to send.
 
-*请注意，动态消息必须保证接收函数中从 `IncomingMessage`读取数据的类型和顺序与发送消息时传入的类型和顺序相同，否则程序会报错*
+*Please note that dynamic messages must ensure that the types and order of data read from IncomingMessage in the receiver function are the same as those passed in when sending the message. Otherwise, the program will throw an error.*
 
-动态消息接口的具体使用示例请看pyrfuniverse/Test/test_custom_message.py
+Please refer to [pyrfuniverse/Test/test_custom_message.py](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py) for a specific usage example of the dynamic message interface.
 
 ---
