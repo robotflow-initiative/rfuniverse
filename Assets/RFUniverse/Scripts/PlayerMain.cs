@@ -14,7 +14,7 @@ namespace RFUniverse
         private PlayerMainUI playerMainUI;
 
 
-        public Version pythonVersion = new Version();
+        public static Version pythonVersion = new Version();
         Queue<string> logList = new Queue<string>();
         [SerializeField]
         float fixedDeltaTime = 0.02f;

@@ -48,6 +48,9 @@ namespace RFUniverse.Manager
                 case "LoadSceneAsync":
                     LoadSceneAsync(msg);
                     return;
+                case "SwitchSceneAsync":
+                    SwitchSceneAsync(msg);
+                    return;
                 case "Pend":
                     Pend(msg);
                     return;
@@ -211,6 +214,15 @@ namespace RFUniverse.Manager
                 SendLoadDoneMsg();
             });
         }
+        void SwitchSceneAsync(IncomingMessage msg)
+        {
+            Debug.Log("SwitchSceneAsync");
+            string name = msg.ReadString();
+            UnityEngine.AddressableAssets.Addressables.LoadSceneAsync(name).Completed += (_) =>
+            {
+                SendLoadDoneMsg();
+            };
+        }
         void Pend(IncomingMessage msg)
         {
             Debug.Log("Pend");
@@ -265,40 +277,26 @@ namespace RFUniverse.Manager
             channel.SendMetaDataToPython(msg);
         }
 
-        Dictionary<string, List<Action<IncomingMessage>>> registeredMessages = new Dictionary<string, List<Action<IncomingMessage>>>();
+        Dictionary<string, Action<IncomingMessage>> registeredMessages = new Dictionary<string, Action<IncomingMessage>>();
         private void ReceiveMessage(IncomingMessage msg)
         {
             string message = msg.ReadString();
-            //Debug.Log($"Message : {message}");
-            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
+            if (registeredMessages.TryGetValue(message, out var action))
             {
-                foreach (var item in actions)
-                {
-                    item?.Invoke(msg);
-                }
+                action.Invoke(msg);
             }
         }
         public void AddListener(string message, Action<IncomingMessage> action)
         {
-            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
+            if (!registeredMessages.TryAdd(message, action))
             {
-                if (!actions.Contains(action))
-                    actions.Add(action);
-            }
-            else
-            {
-                registeredMessages.Add(message, new List<Action<IncomingMessage>>() { action });
+                registeredMessages[message] = action;
             }
         }
         public void RemoveListener(string message, Action<IncomingMessage> action)
         {
-            if (registeredMessages.TryGetValue(message, out List<Action<IncomingMessage>> actions))
-            {
-                if (actions.Contains(action))
-                    actions.Remove(action);
-                if (actions.Count == 0)
-                    registeredMessages.Remove(message);
-            }
+            if (registeredMessages.ContainsKey(message))
+                registeredMessages.Remove(message);
         }
 
 

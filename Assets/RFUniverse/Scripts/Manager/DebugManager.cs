@@ -555,7 +555,7 @@ namespace RFUniverse.Manager
 
         public void SendVersion(IncomingMessage msg)
         {
-            PlayerMain.Instance.pythonVersion = new Version(msg.ReadString());
+            PlayerMain.pythonVersion = new Version(msg.ReadString());
         }
     }
 }

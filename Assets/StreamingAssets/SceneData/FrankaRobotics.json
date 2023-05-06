@@ -29,6 +29,98 @@
     "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
     "$values": [
       {
+        "$type": "RFUniverse.Attributes.ColliderAttrData, Assembly-CSharp",
+        "colliderDatas": {
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$values": [
+            {
+              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "renderIndexQueue": {
+                "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+                "$values": [
+                  0
+                ]
+              },
+              "type": 1,
+              "position": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "rotation": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "scale": {
+                "$type": "System.Single[], mscorlib",
+                "$values": [
+                  1.0,
+                  1.0,
+                  1.0
+                ]
+              },
+              "radius": 1.0,
+              "height": 1.0,
+              "direction": 0,
+              "physicMateria": {
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "bounciness": 0.0,
+                "dynamicFriction": 0.6,
+                "staticFriction": 0.6,
+                "frictionCombine": 0,
+                "bounceCombine": 0
+              }
+            }
+          ]
+        },
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "Collider_Box",
+        "id": 568451,
+        "type": "Collider",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.3,
+            -0.2,
+            0.0
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.1,
+            0.4,
+            0.7
+          ]
+        }
+      },
+      {
         "$type": "RFUniverse.Attributes.ControllerData, Assembly-CSharp",
         "articulationDatas": {
           "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, Assembly-CSharp]], mscorlib",
@@ -1013,48 +1105,6 @@
             1.0,
             1.0,
             1.0
-          ]
-        }
-      },
-      {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
-        "color": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        },
-        "render": true,
-        "name": "GameObject_Box",
-        "id": 568451,
-        "type": "GameObject",
-        "parentID": -1,
-        "parentName": "",
-        "position": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.3,
-            -0.2,
-            0.0
-          ]
-        },
-        "rotation": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "scale": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            1.1,
-            0.4,
-            0.7
           ]
         }
       }
