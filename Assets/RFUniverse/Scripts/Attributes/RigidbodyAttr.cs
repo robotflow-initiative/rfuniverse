@@ -124,6 +124,9 @@ namespace RFUniverse.Attributes
                 case "SetVelocity":
                     SetVelocity(msg);
                     return;
+                case "SetKinematic":
+                    SetKinematic(msg);
+                    return;
             }
             base.AnalysisMsg(msg, type);
         }
@@ -157,6 +160,12 @@ namespace RFUniverse.Attributes
             Vector3 velocity = new Vector3(x, y, z);
 
             Rigidbody.velocity = velocity;
+        }
+
+        private void SetKinematic(IncomingMessage msg)
+        {
+            bool kinematic = msg.ReadBoolean();
+            Rigidbody.isKinematic = kinematic;
         }
     }
 }
