@@ -24,7 +24,6 @@ public class CheckPlugins : Editor
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
             "com.robotflow.rfuniverse",
-            "com.unity.robotics.urdf-importer"
             };
         string[] packageAddNames =
         {
@@ -32,7 +31,6 @@ public class CheckPlugins : Editor
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
             "https://github.com/mvig-robotflow/rfuniverse_base.git?path=/com.robotflow.rfuniverse",
-            "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.5.2"
             };
 
         ListRequest listRequest = Client.List();
