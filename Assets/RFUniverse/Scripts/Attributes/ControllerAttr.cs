@@ -477,6 +477,12 @@ namespace RFUniverse.Attributes
             msg.WriteFloatList(GetJointPositions());
             // Each part's joint velocity
             msg.WriteFloatList(GetJointVelocities());
+            // Each part's joint acceleration
+            msg.WriteFloatList(GetJointAcceleration());
+            // Each part's joint lower limit
+            msg.WriteFloatList(GetJointLowerLimit());
+            // Each part's joint upper limit
+            msg.WriteFloatList(GetJointUpperLimit());
             // Whether all parts are stable
             msg.WriteBoolean(AllStable());
             msg.WriteBoolean(moveDone);
@@ -608,6 +614,35 @@ namespace RFUniverse.Attributes
             }
 
             return jointVelocities;
+        }
+        public List<float> GetJointAcceleration()
+        {
+            List<float> jointAcceleration = new List<float>();
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                jointAcceleration.Add(moveableJoints[i].jointAcceleration[0]);
+            }
+            return jointAcceleration;
+        }
+
+        public List<float> GetJointLowerLimit()
+        {
+            List<float> jointLowerLimit = new List<float>();
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                jointLowerLimit.Add(moveableJoints[i].xDrive.lowerLimit);
+            }
+            return jointLowerLimit;
+        }
+
+        public List<float> GetJointUpperLimit()
+        {
+            List<float> jointUpperLimit = new List<float>();
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                jointUpperLimit.Add(moveableJoints[i].xDrive.upperLimit);
+            }
+            return jointUpperLimit;
         }
 
         internal bool AllStable()

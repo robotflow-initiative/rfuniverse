@@ -26,13 +26,22 @@ namespace RFUniverse
             }
         }
         static WaitForFixedUpdate waitForFixedUpdate = new();
+        static WaitForEndOfFrame waitForEndOfFrame = new();
 
-        public static IEnumerator WaitFixedUpdateFrame(int count)
+        public static IEnumerator WaitFixedUpdateFrame(int count = 1)
         {
-
+            count = Mathf.Max(1, count);
             for (int i = 0; i < count; i++)
             {
                 yield return waitForFixedUpdate;
+            }
+        }
+        public static IEnumerator WaitForEndOfFrame(int count = 1)
+        {
+            count = Mathf.Max(1, count);
+            for (int i = 0; i < count; i++)
+            {
+                yield return waitForEndOfFrame;
             }
         }
         public static Color EncodeIDAsColor(int instanceId)
@@ -320,6 +329,18 @@ namespace RFUniverse
             }
             return matrix;
         }
+        public static List<float> ListListFloatToListFloat(List<List<float>> llf)
+        {
+            List<float> fs = new();
+            foreach (var item in llf)
+            {
+                foreach (var i in item)
+                {
+                    fs.Add(i);
+                }
+            }
+            return fs;
+        }
         public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
         {
             List<float> fs = new();
@@ -341,6 +362,18 @@ namespace RFUniverse
                 fs.Add(item.y);
                 fs.Add(item.z);
                 f.Add(fs);
+            }
+            return f;
+        }
+        public static List<float> ListMatrixToListFloat(List<Matrix4x4> ms)
+        {
+            List<float> f = new();
+            foreach (var item in ms)
+            {
+                for (int i = 0; i < 16; i++)
+                {
+                    f.Add(item[i]);
+                }
             }
             return f;
         }

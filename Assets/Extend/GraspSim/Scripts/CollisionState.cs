@@ -1,7 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class CollisionState : MonoBehaviour
 {
     public bool collision = false;
@@ -11,7 +12,7 @@ public class CollisionState : MonoBehaviour
     //     collision = true;
     // }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         //print(0);
         collision = true;
@@ -20,4 +21,8 @@ public class CollisionState : MonoBehaviour
     // {
     //     print(2);
     // }
+    //void OnCollisionEnter(Collision col)
+    //{
+    //    collision = true;
+    //}
 }

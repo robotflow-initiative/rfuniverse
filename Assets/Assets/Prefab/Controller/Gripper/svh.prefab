@@ -2024,6 +2024,7 @@ GameObject:
   - component: {fileID: 1659692620349126116}
   - component: {fileID: 7763484727070198176}
   - component: {fileID: 6098310686081290791}
+  - component: {fileID: 1907234526145316980}
   m_Layer: 0
   m_Name: svh
   m_TagString: robot
@@ -2097,6 +2098,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b014878696f363926be33c3c5a1c69fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1907234526145316980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3443712645854784255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4d2caf4d0084551967ee6885c04a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fingers:
+  - body: {fileID: 4589699389529694292}
+    position: {x: 0, y: 100}
+  - body: {fileID: 5359853384826222645}
+    position: {x: 0, y: 100}
+  - body: {fileID: 659040428405790315}
+    position: {x: 0, y: 100}
+  - body: {fileID: 6837844042242383984}
+    position: {x: 0, y: 100}
+  - body: {fileID: 4368060330607390960}
+    position: {x: 0, y: 100}
+  - body: {fileID: 2644542527081855564}
+    position: {x: 0, y: 100}
+  - body: {fileID: 1282655651599514212}
+    position: {x: 0, y: 100}
 --- !u!1 &3493898589973496575
 GameObject:
   m_ObjectHideFlags: 0
