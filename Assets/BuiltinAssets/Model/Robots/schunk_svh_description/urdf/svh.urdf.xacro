@@ -1,0 +1,780 @@
+<?xml version="1.0"?>
+<robot name="svh" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find schunk_svh_description)/urdf/common.xacro" />
+  <xacro:include filename="$(find schunk_svh_description)/urdf/svh.transmission.xacro" />
+  <xacro:include filename="$(find schunk_svh_description)/urdf/svh.gazebo.xacro" />
+
+  <xacro:property name="cyl_radius" value="0.001" />
+  <xacro:macro name="svh" params="parent name side *origin robot_namespace:='/'">
+    <!-- RIGHT HAND = 1, LEFT HAND = -1 -->
+    <!-- BASE_LINE LINKS -->
+
+    <joint name="${name}_base_joint" type="fixed" >
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${name}_base_link" />
+    </joint>
+
+    <link name="${name}_base_link">
+      <xacro:insert_block name="origin" />
+      <visual>
+        <xacro:insert_block name="origin" />
+        <geometry>
+          <mesh filename="package://schunk_svh_description/meshes/base10.dae" />
+	</geometry>
+      </visual>
+      <collision>
+        <xacro:insert_block name="origin" />
+        <geometry>
+          <mesh filename="package://schunk_svh_description/meshes/base10.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.57743"/>
+        <origin xyz="0.0 -2.3e-05 0.139371"/>
+        <inertia ixx="0.04725" ixy="-0.0" ixz="-0.0" iyy="0.04717" iyz="0.0" izz="0.07606" />
+      </inertial>
+    </link>
+
+    <link name="${name}_d">
+      <!-- <visual> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.110" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="${name}_green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <link name="${name}_h">
+      <!-- <visual> -->
+      <!-- 	<origin rpy="0 1.571 0" xyz="${side*(-0.0125)} 0 0.0825" /> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.025" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="${name}_green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <link name="${name}_d2">
+      <!-- <visual> -->
+      <!-- 	<origin rpy="0 0 0" xyz="${side*(-0.025)} 0 0.09625" /> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.0275" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="${name}_green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <!-- LENGTH NOT FOUND IN DATASHEET! GUESSED!!! -->
+    <link name="${name}_e1">
+      <visual>
+	<origin rpy="0 0 0" xyz="0 0.01313 0" />
+	<geometry>
+          <mesh scale="${side*(1)} 1 1" filename="package://schunk_svh_description/meshes/h10.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin rpy="0 0 0" xyz="0 0.01313 0" />
+	<geometry>
+          <mesh scale="${side*(1)} 1 1" filename="package://schunk_svh_description/meshes/h10.dae" />
+	</geometry>
+      </collision>
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <!-- LENGTH NOT FOUND IN DATASHEET! GUESSED!!! -->
+    <link name="${name}_e2">
+      <visual>
+	<origin xyz="${side*(-0.0007)} 0 -0.01002" />
+	<geometry>
+          <mesh scale="${side*(1)} 1 1" filename="package://schunk_svh_description/meshes/h11.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="${side*(-0.0007)} 0 -0.01002" />
+	<geometry>
+          <mesh scale="${side*(1)} 1 1" filename="package://schunk_svh_description/meshes/h11.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.46184"/>
+        <origin xyz="0.145071 -0.037868 0.323449"/>
+        <inertia ixx="0.01908" ixy="-0.00121" ixz="-0.00011" iyy="0.01704" iyz="0.00277" izz="0.00862"/>
+      </inertial>
+    </link>
+
+    <!-- LENGTH NOT FOUND IN DATASHEET! GUESSED!!! -->
+    <link name="${name}_e3">
+      <!-- <visual> -->
+      <!-- 	<origin rpy="0 0 0" xyz="${side*(0.0175)} 0 0.015" /> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.03" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <link name="${name}_e">
+    </link>
+
+    <!-- LENGTH NOT FOUND IN DATASHEET! GUESSED, BUT POSITION CALCULATED: E4 = D-G-F!!! -->
+    <link name="${name}_e4">
+      <!-- <visual> -->
+      <!-- 	<origin rpy="0 0 0" xyz="${side*(0.02825)} 0 0.043" /> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.026" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <!-- LENGTH NOT FOUND IN DATASHEET! GUESSED, BUT POSITION CALCULATED: E5 = D-G!!! -->
+    <link name="${name}_e5">
+      <!-- <visual> -->
+      <!-- 	<origin rpy="0 0 0" xyz="${side*(0.00675)} 0 0.04775" /> -->
+      <!-- 	<geometry> -->
+      <!-- 	  <cylinder length="0.0355" radius="${cyl_radius}" /> -->
+      <!-- 	</geometry> -->
+      <!-- 	<material name="green" /> -->
+      <!-- </visual> -->
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+
+    <!-- THUMB LINKS -->
+    <link name="${name}_z">
+      <visual>
+	<origin xyz="0 0 0.02442" />
+	<geometry>
+          <mesh scale="1 ${side*(1)} 1" filename="package://schunk_svh_description/meshes/d10.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="0 0 0.02442" />
+	<geometry>
+          <mesh scale="1 ${side*(1)} 1" filename="package://schunk_svh_description/meshes/d10.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.0739"/>
+        <origin xyz="0.0 0.002024 0.178636"/>
+        <inertia ixx="0.00103" ixy="-0.0" ixz="-0.0" iyy="0.00165" iyz="4e-05" izz="0.00111"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_virtual_a">
+      <xacro:default_inertial mass="0.01"/>
+    </link>
+
+    <link name="${name}_a">
+      <visual>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d11.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d11.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.41222"/>
+        <origin xyz="0.240205 0.010733 0.00019"/>
+        <inertia ixx="0.00413" ixy="0.00073" ixz="-0.0" iyy="0.01679" iyz="0.0" izz="0.01796"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_b">
+      <visual>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d12.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d12.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.08224"/>
+        <origin xyz="0.123157 -0.008382 -2.7e-05"/>
+        <inertia ixx="0.00089" ixy="5e-05" ixz="0.0" iyy="0.00139" iyz="0.0" izz="0.00103"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_c">
+      <visual>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d13.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh scale="1 ${side*(1)} ${side*(1)}" filename="package://schunk_svh_description/meshes/d13.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.06198"/>
+        <origin xyz="0.113729 0.01094 0.0"/>
+        <inertia ixx="0.00025" ixy="-0.0" ixz="-0.0" iyy="0.00051" iyz="0.0" izz="0.00052"/>
+      </inertial>
+    </link>
+
+
+    <!-- INDEX FINGER LINKS -->
+    <link name="${name}_virtual_l">
+      <visual>
+	<origin xyz="0 0 0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f10.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="0 0 0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f10.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02383"/>
+        <origin xyz="0.003634 0.000206 -0.09885"/>
+        <inertia ixx="0.00021" ixy="-0.0" ixz="-1e-05" iyy="0.00011" iyz="-0.0" izz="0.00019"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_l">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f11.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f11.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.13003"/>
+        <origin xyz="0.261673 0.003521 0.0"/>
+        <inertia ixx="0.00051" ixy="-3e-05" ixz="0.0" iyy="0.00335" iyz="-0.0" izz="0.00344"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_p">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f12.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f12.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03264"/>
+        <origin xyz="0.1384 -0.004609 0.0"/>
+        <inertia ixx="0.00016" ixy="-0.0" ixz="0.0" iyy="0.00031" iyz="-0.0" izz="0.00024"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_t">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f13.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f13.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.0324"/>
+        <origin xyz="0.102924 0.000592 0.0"/>
+        <inertia ixx="9e-05" ixy="-1e-05" ixz="-0.0" iyy="0.00017" iyz="0.0" izz="0.00017"/>
+      </inertial>
+    </link>
+
+
+    <!-- MIDDLE FINGER LINKS -->
+    <link name="${name}_virtual_k">
+      <visual>
+	<origin xyz="0 0 0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f20.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="0 0 0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f20.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02377"/>
+        <origin xyz="0.003357 -8e-06 -0.099643"/>
+        <inertia ixx="0.00021" ixy="-0.0" ixz="-1e-05" iyy="0.00011" iyz="0.0" izz="0.00019"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_k">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f21.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f21.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.13474"/>
+        <origin xyz="0.271122 0.00413 0.0"/>
+        <inertia ixx="0.00052" ixy="-3e-05" ixz="-0.0" iyy="0.0037" iyz="-0.0" izz="0.0038"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_o">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f22.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f22.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.0422"/>
+        <origin xyz="0.16683 -0.003774 0.0"/>
+        <inertia ixx="0.0002" ixy="0.0" ixz="-0.0" iyy="0.00047" iyz="0.0" izz="0.0004"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_s">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f23.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f23.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03239"/>
+        <origin xyz="0.102794 0.00042 0.0"/>
+        <inertia ixx="9e-05" ixy="-1e-05" ixz="0.0" iyy="0.00017" iyz="0.0" izz="0.00017"/>
+      </inertial>
+    </link>
+
+
+    <!-- RING FINGER LINKS -->
+    <link name="${name}_virtual_j">
+      <visual>
+	<origin xyz="0 0 -0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f30.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="0 0 -0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f30.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02377"/>
+        <origin xyz="0.003805 0.000386 0.100079"/>
+        <inertia ixx="0.00021" ixy="0.0" ixz="1e-05" iyy="0.00011" iyz="-0.0" izz="0.00019"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_j">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f31.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f31.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.1377"/>
+        <origin xyz="0.258283 -0.00154 0.0"/>
+        <inertia ixx="0.00055" ixy="0.00018" ixz="-0.0" iyy="0.00411" iyz="0.0" izz="0.00426"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_n">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f32.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f32.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.04207"/>
+        <origin xyz="0.166851 -0.00362 0.0"/>
+        <inertia ixx="0.00019" ixy="0.0" ixz="-0.0" iyy="0.00047" iyz="0.0" izz="0.0004"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_r">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f33.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f33.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03229"/>
+        <origin xyz="0.102676 0.000301 0.0"/>
+        <inertia ixx="9e-05" ixy="-1e-05" ixz="0.0" iyy="0.00017" iyz="-0.0" izz="0.00017"/>
+      </inertial>
+    </link>
+
+
+    <!-- LITTLE FINGER LINKS -->
+    <link name="${name}_virtual_i">
+      <visual>
+	<origin xyz="0 0 -0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f40.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin xyz="0 0 -0.01321" />
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f40.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02377"/>
+        <origin xyz="0.003653 4.4e-05 0.100085"/>
+        <inertia ixx="0.00021" ixy="0.0" ixz="1e-05" iyy="0.00011" iyz="-0.0" izz="0.00019"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_i">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f41.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f41.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.12544"/>
+        <origin xyz="0.232293 0.00622 0.0"/>
+        <inertia ixx="0.00049" ixy="6e-05" ixz="-0.0" iyy="0.00316" iyz="0.0" izz="0.00328"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_m">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f42.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f42.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02488"/>
+        <origin xyz="0.119665 -0.009328 0.0"/>
+        <inertia ixx="0.00013" ixy="-0.0" ixz="-0.0" iyy="0.00023" iyz="0.0" izz="0.00016"/>
+      </inertial>
+    </link>
+
+    <link name="${name}_q">
+      <visual>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f43.dae" />
+	</geometry>
+      </visual>
+      <collision>
+	<geometry>
+          <mesh filename="package://schunk_svh_description/meshes/f43.dae" />
+	</geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03234"/>
+        <origin xyz="0.102896 0.000307 0.0"/>
+        <inertia ixx="9e-05" ixy="-1e-05" ixz="-0.0" iyy="0.00017" iyz="0.0" izz="0.00017"/>
+      </inertial>
+    </link>
+
+
+    <joint name="${name}_Thumb_Flexion" type="revolute">
+      <parent link="${name}_virtual_a" />
+      <child link="${name}_a" />
+      <limit effort="1000.0" lower="0.0" upper="0.9704" velocity="1" />
+      <origin xyz="0 0 0" rpy="0 0 ${side*(-0.9704)}" />
+      <axis xyz="0 0 ${side*(1)}" />
+    </joint>
+
+    <joint name="${name}_Thumb_Helper" type="fixed">
+      <parent link="${name}_z" />
+      <child link="${name}_virtual_a" />
+      <origin xyz="0 0 0.04596" rpy="0 -1.5707 3.1416" />
+    </joint>
+
+
+    <!-- BASE_LINE JOINTS -->
+    <joint name="${name}_Thumb_Opposition" type="revolute">
+      <parent link="${name}_e1" />
+      <child link="${name}_z" />
+      <limit effort="1000.0" lower="0.0" upper="0.9879" velocity="1" />
+      <origin xyz="${side*(-0.01690)} 0.02626 0" rpy="0 0.2618 1.571" />
+      <axis xyz="0 0 ${side*(-1)}" />
+    </joint>
+
+    <!-- JOINT NOT FOR BASE_LINE. BUT WRITTEN DOWN HERE FOR BETTER UX -->
+
+    <joint name="${name}_f1" type="fixed">
+      <parent link="${name}_e1" />
+      <child link="${name}_d" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f2" type="fixed">
+      <parent link="${name}_d" />
+      <child link="${name}_h" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f3" type="fixed">
+      <parent link="${name}_h" />
+      <child link="${name}_d2" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f4" type="fixed">
+      <parent link="${name}_base_link" />
+      <child link="${name}_e1" />
+      <origin xyz="0 -0.01313 0" rpy="0 0 0" />
+    </joint>
+    <!-- J5 JOINTS is set to fixed temporarily due to defective DH algo -->
+    <joint name="${name}_j5" type="fixed">
+      <parent link="${name}_e1"/>
+      <child link="${name}_e2"/>
+      <!--limit effort="1000.0" lower="0.0" upper="0.98786" velocity="1"/-->
+      <origin xyz="${side*(0.01840)} 0.006 0.0375" rpy="0 0 0" />
+      <!--axis xyz="0 0 ${side*(1)}"/-->
+      <!--mimic joint="${name}_Thumb_Opposition" multiplier="1" offset="0"/-->
+    </joint>
+
+    <joint name="${name}_f5" type="fixed">
+      <parent link="${name}_e2" />
+      <child link="${name}_e3" />
+      <origin xyz="0 -0.0060 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f6" type="fixed">
+      <parent link="${name}_e3" />
+      <child link="${name}_e" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f7" type="fixed">
+      <parent link="${name}_e" />
+      <child link="${name}_e4" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="${name}_f8" type="fixed">
+      <parent link="${name}_e" />
+      <child link="${name}_e5" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <!-- THUMB JOINTS -->
+    <joint name="${name}_j3" type="revolute">
+      <parent link="${name}_a" />
+      <child link="${name}_b" />
+      <limit effort="1000.0" lower="0.0" upper="0.98506" velocity="1" />
+      <origin xyz="0.0485 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 ${side*(1)}" />
+      <mimic joint="${name}_Thumb_Flexion" multiplier="1.01511" offset="0" />
+    </joint>
+
+    <joint name="${name}_j4" type="revolute">
+      <parent link="${name}_b" />
+      <child link="${name}_c" />
+      <limit effort="1000.0" lower="0.0" upper="1.406" velocity="1" />
+      <origin xyz="0.030 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 ${side*(1)}" />
+      <mimic joint="${name}_Thumb_Flexion" multiplier="1.44889" offset="0" />
+    </joint>
+
+    <!-- INDEX FINGER JOINTS -->
+    <joint name="${name}_Index_Finger_Distal" type="revolute">
+      <parent link="${name}_l" />
+      <child link="${name}_p" />
+      <limit effort="1000.0" lower="0" upper="1.334" velocity="1" />
+      <origin xyz="0.04804 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="${name}_Index_Finger_Proximal" type="revolute">
+      <parent link="${name}_virtual_l" />
+      <child link="${name}_l" />
+      <limit effort="1000.0" lower="0.0" upper="0.79849" velocity="1" />
+      <origin xyz="0 0 0" rpy="-1.5707 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <!-- JOINT Finger_Spread in BASE_LINE section for better UX -->
+    <joint name="${name}_j14" type="revolute">
+      <parent link="${name}_p" />
+      <child link="${name}_t" />
+      <limit effort="1000.0" lower="0" upper="1.394" velocity="1" />
+      <origin xyz="0.026 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Index_Finger_Distal" multiplier="1.0450" offset="0" />
+    </joint>
+
+    <!-- MIDDLE FINGER JOINTS -->
+    <joint name="${name}_Middle_Finger_Proximal" type="revolute">
+      <parent link="${name}_virtual_k" />
+      <child link="${name}_k" />
+      <limit effort="1000.0" lower="0.0" upper="0.79849" velocity="1" />
+      <origin xyz="0 0 0" rpy="-1.5707 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="${name}_Middle_Finger_Distal" type="revolute">
+      <parent link="${name}_k" />
+      <child link="${name}_o" />
+      <limit effort="1000.0" lower="0" upper="1.334" velocity="1" />
+      <origin xyz="0.05004 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="${name}_j15" type="revolute">
+      <parent link="${name}_o" />
+      <child link="${name}_s" />
+      <limit effort="1000.0" lower="0" upper="1.334" velocity="1" />
+      <origin xyz="0.032 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Middle_Finger_Distal" multiplier="1.0454" offset="0" />
+    </joint>
+
+    <!-- RING FINGER JOINTS -->
+    <joint name="${name}_Ring_Finger" type="revolute">
+      <parent link="${name}_virtual_j" />
+      <child link="${name}_j" />
+      <limit effort="1000.0" lower="0.0" upper="0.98175" velocity="1" />
+      <origin xyz="0 0 0" rpy="1.5707 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="${name}_j12" type="revolute">
+      <parent link="${name}_j" />
+      <child link="${name}_n" />
+      <limit effort="1000.0" lower="0" upper="1.334" velocity="1" />
+      <origin xyz="0.05004 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Ring_Finger" multiplier="1.3588" offset="0" />
+    </joint>
+
+    <joint name="${name}_j16" type="revolute">
+      <parent link="${name}_n" />
+      <child link="${name}_r" />
+      <limit effort="1000.0" lower="0" upper="1.395" velocity="1" />
+      <origin xyz="0.032 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Ring_Finger" multiplier="1.42093" offset="0" />
+    </joint>
+
+    <!-- PINKY JOINTS -->
+    <joint name="${name}_Pinky" type="revolute">
+      <parent link="${name}_virtual_i" />
+      <child link="${name}_i" />
+      <limit effort="1000.0" lower="0.0" upper="0.98175" velocity="1" />
+      <origin xyz="0 0 0" rpy="1.5707 0 0" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="${name}_j13" type="revolute">
+      <parent link="${name}_i" />
+      <child link="${name}_m" />
+      <limit effort="1000.0" lower="0" upper="1.334" velocity="1" />
+      <origin xyz="0.04454 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Pinky" multiplier="1.35880" offset="0" />
+    </joint>
+
+    <joint name="${name}_j17" type="revolute">
+      <parent link="${name}_m" />
+      <child link="${name}_q" />
+      <limit effort="1000.0" lower="0" upper="1.3971" velocity="1" />
+      <origin xyz="0.022 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <mimic joint="${name}_Pinky" multiplier="1.42307" offset="0" />
+    </joint>
+
+    <joint name="${name}_index_spread" type="revolute">
+      <parent link="${name}_d2" />
+      <child link="${name}_virtual_l" />
+      <limit effort="1000.0" lower="0.0" upper="0.28833" velocity="1" />
+      <origin xyz="${side*(-0.025)} 0 0.110" rpy="0 -1.5707 1.5707" />
+      <axis xyz="0 0 ${side*(1)}" />
+      <mimic joint="${name}_Finger_Spread" multiplier="0.5" offset="0" />
+    </joint>
+
+    <joint name="${name}_middle_spread_dummy" type="fixed">
+      <parent link="${name}_d" />
+      <child link="${name}_virtual_k" />
+      <origin xyz="0 0 0.110" rpy="0 -1.5707 1.5707" />
+    </joint>
+
+
+    <joint name="${name}_ring_spread" type="revolute">
+      <parent link="${name}_e5" />
+      <child link="${name}_virtual_j" />
+      <limit effort="1000.0" lower="0.0" upper="0.28833" velocity="1" />
+      <origin xyz="${side*(0.003855)} 0 0.0655" rpy="-1.5707 -1.5707 0" />
+      <axis xyz="0 0 ${side*(1)}" />
+      <mimic joint="${name}_Finger_Spread" multiplier="0.5" offset="0" />
+    </joint>
+
+    <joint name="${name}_Finger_Spread" type="revolute">
+      <parent link="${name}_e4" />
+      <child link="${name}_virtual_i" />
+      <limit effort="1000.0" lower="0.0" upper="0.5829" velocity="1" />
+      <origin xyz="${side*(0.025355)} 0 0.056" rpy="-1.5707 -1.5707 0" />
+      <axis xyz="0 0 ${side*(1)}" />
+    </joint>
+
+    <xacro:svh_transmission name="${name}" />
+    <xacro:svh_gazebo name="${name}" robot_namespace="${robot_namespace}" />
+
+  </xacro:macro>
+</robot>

@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+ Software License Agreement (BSD License)
+ Copyright © 2022-2023 belongs to Shadow Robot Company Ltd.
+ All rights reserved.
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+   1. Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+   3. Neither the name of Shadow Robot Company Ltd nor the names of its contributors
+      may be used to endorse or promote products derived from this software without
+      specific prior written permission.
+ This software is provided by Shadow Robot Company Ltd "as is" and any express
+ or implied warranties, including, but not limited to, the implied warranties of
+ merchantability and fitness for a particular purpose are disclaimed. In no event
+ shall the copyright holder be liable for any direct, indirect, incidental, special,
+ exemplary, or consequential damages (including, but not limited to, procurement of
+ substitute goods or services; loss of use, data, or profits; or business interruption)
+ however caused and on any theory of liability, whether in contract, strict liability,
+ or tort (including negligence or otherwise) arising in any way out of the use of this
+ software, even if advised of the possibility of such damage.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#slider"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
+       xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom">
+
+  <xacro:include filename="$(find sr_description)/hand/xacro/thumb/thmiddle.gazebo.xacro" />
+  <xacro:include filename="$(find sr_description)/hand/xacro/thumb/thmiddle.transmission.xacro" />
+
+  <!-- parent is the parent link for the first joint -->
+  <xacro:macro name="thmiddle" params="mid_sensor:=^ prefix:=^ parent">
+    <link name="${prefix}thmiddle">
+      <inertial>
+        <mass value="0.020" />
+        <origin xyz="0 0 0.016" rpy="0 0 0" />
+        <inertia ixx="0.0000051" ixy="0.0" ixz="0.0" iyy="0.0000051" iyz="0.0" izz="0.00000121" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <xacro:if value="${mid_sensor == 'bt_2p'}">
+          <geometry name="${prefix}thmiddle_visual">
+            <mesh filename="package://sr_description/meshes/components/th_distal/bt_2p/th_distal_bt_2p_adapter.dae"
+            scale="0.001 0.001 0.001" />
+          </geometry>
+        </xacro:if>
+        <xacro:unless value="${mid_sensor == 'bt_2p'}">
+          <geometry name="${prefix}thmiddle_visual">
+            <mesh filename="package://sr_description/meshes/components/th_middle/th_middle_${hand_version}.dae"
+            scale="0.001 0.001 0.001" />
+          </geometry>
+          <material name="shadow_thmiddle_material">
+            <color rgba="0.2 0.2 0.2 1.0" />
+          </material>
+        </xacro:unless>
+      </visual>
+      <xacro:if value="${mid_sensor == 'bt_2p'}">
+        <collision>
+          <origin xyz="0 0 0.005" rpy="0 0 0" />
+          <geometry name="${prefix}thmiddle_collision_geom">
+            <box size="0.001 0.001 0.001" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:unless value="${mid_sensor == 'bt_2p'}">
+        <collision>
+          <origin xyz="0 0 0.012" rpy="0 0 0" />
+          <geometry name="${prefix}thmiddle_collision_geom">
+            <cylinder radius="0.011" length="0.018" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0.019" rpy="0 0 0" />
+          <geometry>
+            <sphere radius="0.011" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0.032" rpy="0 1.5708 0" />
+          <geometry>
+            <cylinder radius="0.010" length="0.014" />
+          </geometry>
+        </collision>
+      </xacro:unless>
+    </link>
+    <joint name="${prefix}THJ2" type="revolute">
+      <parent link="${parent}" />
+      <child link="${prefix}thmiddle" />
+      <xacro:if value="${mid_sensor == 'bt_2p'}">
+        <origin xyz="0 0 0.01" rpy="0 0 0" />
+        <!-- FIXME: z offset is too large -->
+      </xacro:if>
+      <xacro:unless value="${mid_sensor == 'bt_2p'}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:unless>
+      <axis xyz="1 0 0" />
+      <limit lower="${-40/180*pi}" upper="${40/180*pi}" effort="2.0" velocity="2.0" />
+      <dynamics damping="0.1" />
+    </joint>
+    <gazebo reference="${prefix}THJ2">
+      <provideFeedback>1</provideFeedback>
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+    <!-- extensions -->
+    <xacro:thmiddle_transmission />
+    <xacro:thmiddle_gazebo />
+  </xacro:macro>
+</robot>

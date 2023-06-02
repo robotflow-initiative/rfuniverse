@@ -1,0 +1,1492 @@
+<?xml version="1.0"?>
+<!--Active8 Robots, AR10 simple URDF description
+Beta release 1.2
+Written by Nick Hornsey
+Last edited on 15/11/16
+
+
+This URDF file can be opened in Rviz or Moveit!, which can be used for motion control and planning for the AR10 robotic hand
+
+This is a representation of a left handed ar10, for the right handed version please see ar10.urdf
+
+The URDF can be opened in Rviz from the ROS workspace using the command:
+roslaunch src/ar10_description/launch/display.launch model:=src/ar10_description/urdf/ar10l.urdf 
+
+To open this URDF in Moveit!, use the following command in the ROS workspace:
+roslaunch ar10_moveit demo.launch-->
+
+<robot name="ar10">
+<!--robot name="ar10"> -->
+
+****************WRIST PLATE*************************
+  <link name="wrist_plate">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/wrist plate.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz =" -.03645 .0291 -.002 " rpy= "1.57 0 0"/>
+      <material name="blue">
+        <color rgba=".1 .1 .4 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length=".002" radius=".06"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+  <link name="circuit_support">
+    <visual>
+      <geometry>
+        <box size=".05 .05 .05"/>
+      </geometry>
+      <origin xyz="0 0 .025"/>
+      <material name="black">
+        <color rgba=".1 .1 .1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".05 .05 .05"/>
+      </geometry>
+      <origin xyz="0 0 .025"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="wrist_plate_to_circuit_support" type="fixed">
+    <parent link="wrist_plate"/>
+    <child link="circuit_support"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+****************PALM*************************
+
+  <link name="palm">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Palm-LEFT.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz=".05675 -.015 .002" rpy="1.57 0 3.14"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Palm -RIGHT.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.05675 .005 .002" rpy="1.57 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="circuit_support_to_palm" type="fixed">
+    <parent link="circuit_support"/>
+    <child link="palm"/>
+    <origin xyz="0 .0155 .04815"/>
+  </joint>
+
+*******************RBS********************************
+  <link name="rb1">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+        <color rgba=".3 .5 .7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb1_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb1"/>
+    <origin xyz="-.0235 -.012 .08"/>
+  </joint>
+
+  <link name="rb2">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb2_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb2"/>
+    <origin xyz="-.0105 -.012 .08"/>
+  </joint>
+
+  <link name="rb3">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb3_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb3"/>
+    <origin xyz="-.0027 -.012 .09"/>
+  </joint>
+
+  <link name="rb4">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb4_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb4"/>
+    <origin xyz=".011 -.012 .09"/>
+  </joint>
+
+  <link name="rb5">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb5_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb5"/>
+    <origin xyz=".019 -.012 .1"/>
+  </joint>
+
+  <link name="rb6">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb6_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb6"/>
+    <origin xyz=".032 -.012 .1"/>
+  </joint>
+
+  <link name="rb7">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb7_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb7"/>
+    <origin xyz=".04 -.012 .095"/>
+  </joint>
+
+  <link name="rb8">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb8_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb8"/>
+    <origin xyz=".053 -.012 .095"/>
+  </joint>
+
+  <link name="rb9">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb9_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb9"/>
+    <origin xyz=".039 -.012 .0295" rpy="0 1.29 0"/>
+  </joint>
+
+  <link name="rb10">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb10_to_palm" type="fixed">
+    <parent link="palm"/>
+    <child link="rb10"/>
+    <origin xyz=".041 -.012 .022" rpy="0 1.29 0"/>
+  </joint>
+
+  <link name="rb11">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 .00375 .00375" rpy="3.14 1.57 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 1.57 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb11_to_thumb2" type="fixed">
+    <parent link="thumb2"/>
+    <child link="rb11"/>
+    <origin xyz="-.009 .0365 .0065" rpy=" 0 1.57 0"/>
+  </joint>
+
+  <link name="rb12">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 .00375 .00375" rpy="3.14 1.57 1.57"/>
+      <material name="lightblue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/rod-end-2mm-BLUE.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.002 -.00375 .00375" rpy="3.14 1.57 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="rb12_to_thumb2" type="fixed">
+    <parent link="thumb2"/>
+    <child link="rb12"/>
+    <origin xyz="-.009 .0365 -.0065" rpy=" 0 1.57 0"/>
+  </joint>
+
+****************Fingers A*******************************
+
+  <link name="finger1.1a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo2" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb1"/>
+    <child link="finger1.1a"/>
+    <origin xyz=".002 0 0" rpy="3.14 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger1.2a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo2m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb2"/>
+    <child link="finger1.2a"/>
+    <origin xyz="-.002 0 0" rpy="3.14 0 0"/>
+    <mimic joint="servo2" multiplier="1" offset="0" />
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="finger2.1a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo4" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb3"/>
+    <child link="finger2.1a"/>
+    <origin xyz=".002 0 0" rpy="3.14 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger2.2a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo4m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb4"/>
+    <child link="finger2.2a"/>
+    <origin xyz="-.002 0 0" rpy="3.14 0 0"/>
+    <mimic joint="servo4" multiplier="1" offset="0" />
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="finger3.1a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo6" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb5"/>
+    <child link="finger3.1a"/>
+    <origin xyz=".002 0 0" rpy="3.14 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger3.2a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo6m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb6"/>
+    <child link="finger3.2a"/>
+    <origin xyz="-.002 0 0" rpy="3.14 0 0"/>
+    <mimic joint="servo6" multiplier="1" offset="0" />
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="finger4.1a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo8" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb7"/>
+    <child link="finger4.1a"/>
+    <origin xyz=".002 0 0" rpy="3.14 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger4.2a">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/45mm 3 hole.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.00325 .0135" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo8m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="rb8"/>
+    <child link="finger4.2a"/>
+    <origin xyz="-.002 0 0" rpy="3.14 0 0"/>
+    <mimic joint="servo8" multiplier="1" offset="0" />
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+****************Fingers B*******************************
+
+  <link name="finger1.1b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo3" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger1.1a"/>
+    <child link="finger1.1b"/>
+    <origin xyz="-.001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger1.2b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo3m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger1.2a"/>
+    <child link="finger1.2b"/>
+    <origin xyz=".001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo3" multiplier="1" offset="0" />
+  </joint>
+
+
+  <link name="finger2.1b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo5" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger2.1a"/>
+    <child link="finger2.1b"/>
+    <origin xyz="-.001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger2.2b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo5m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger2.2a"/>
+    <child link="finger2.2b"/>
+    <origin xyz=".001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo5" multiplier="1" offset="0" />
+  </joint>
+
+
+  <link name="finger3.1b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo7" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger3.1a"/>
+    <child link="finger3.1b"/>
+    <origin xyz="-.001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger3.2b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo7m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger3.2a"/>
+    <child link="finger3.2b"/>
+    <origin xyz=".001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo7" multiplier="1" offset="0" />
+  </joint>
+
+
+  <link name="finger4.1b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo9" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger4.1a"/>
+    <child link="finger4.1b"/>
+    <origin xyz="-.001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="finger4.2b">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/30mmROSFULL.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .0125" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo9m" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger4.2a"/>
+    <child link="finger4.2b"/>
+    <origin xyz=".001 0 -.045" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo9" multiplier="1" offset="0" />
+  </joint>
+
+****************Fingers C*******************************
+
+  <link name="finger1.1c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip1" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger1.1b"/>
+    <child link="finger1.1c"/>
+    <origin xyz=".001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo3" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger1.2c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip1b" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger1.2b"/>
+    <child link="finger1.2c"/>
+    <origin xyz="-.001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo3" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger2.1c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip2" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger2.1b"/>
+    <child link="finger2.1c"/>
+    <origin xyz=".001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo5" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger2.2c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip2b" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger2.2b"/>
+    <child link="finger2.2c"/>
+    <origin xyz="-.001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo5" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger3.1c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip3" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger3.1b"/>
+    <child link="finger3.1c"/>
+    <origin xyz=".001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo7" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger3.2c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip3b" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger3.2b"/>
+    <child link="finger3.2c"/>
+    <origin xyz="-.001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo7" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger4.1c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip4" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger4.1b"/>
+    <child link="finger4.1c"/>
+    <origin xyz=".001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo9" multiplier=".49" offset=".16" />
+  </joint>
+
+  <link name="finger4.2c">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Fingertip.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0035 .00825" rpy="-1.57 1.57 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="tip4b" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger4.2b"/>
+    <child link="finger4.2c"/>
+    <origin xyz="-.001 0 -.03" rpy="0 0 0"/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo9" multiplier=".49" offset=".16" />
+  </joint>
+
+*********Finger Tips*************************
+
+  <link name="fingertip1">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/fingertip-v9.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.009715 .011 -.015" rpy="1.57 0 0"/>
+      <material name="black">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".015 .015 .03" />
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="ee1" type="fixed">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger1.1c"/>
+    <child link="fingertip1"/>
+    <origin xyz=".005 0 -.02" rpy="0 0 0"/>
+  </joint>
+
+  <link name="fingertip2">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/fingertip-v9.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.009715 .011 -.015" rpy="1.57 0 0"/>
+      <material name="black">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".015 .015 .03" />
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="ee2" type="fixed">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger2.1c"/>
+    <child link="fingertip2"/>
+    <origin xyz=".005 0 -.02" rpy="0 0 0"/>
+  </joint>
+
+  <link name="fingertip3">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/fingertip-v9.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.009715 .011 -.015" rpy="1.57 0 0"/>
+      <material name="black">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".015 .015 .03" />
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="ee3" type="fixed">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger3.1c"/>
+    <child link="fingertip3"/>
+    <origin xyz=".005 0 -.02" rpy="0 0 0"/>
+  </joint>
+
+  <link name="fingertip4">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/fingertip-v9.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="-.009715 .011 -.015" rpy="1.57 0 0"/>
+      <material name="black">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".015 .015 .03" />
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="ee4" type="fixed">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.17" upper="1.57" velocity="0.5"/>
+    <parent link="finger4.1c"/>
+    <child link="fingertip4"/>
+    <origin xyz=".005 0 -.02" rpy="0 0 0"/>
+  </joint>
+
+**********************THUMB**************************************
+
+  <link name="thumb1">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 1.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.02125 -.00325" rpy= "0 0 1.57"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 1.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.02125 -.00325" rpy= "0 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo0" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="0.85" upper="2.15" velocity="0.5"/>
+    <parent link="rb10"/>
+    <child link="thumb1"/>
+    <origin xyz=".0015 0 0" rpy=" -1.57 0 3.14 "/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="thumb2">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0145 -.0095" rpy= "0 0 1.57"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 -.0145 -.0095" rpy= "0 0 1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="thumb2joint" type="fixed">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.0" upper="1.5" velocity="0.5"/>
+    <parent link="thumb1"/>
+    <child link="thumb2"/>
+    <origin xyz=".0068 0 0" rpy=" 3.14 0 0 "/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="thumb3.1">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 3-Rev2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 .0125 -.0095" rpy= "0 0 -1.57"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 3-Rev2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 .0125 -.0095" rpy= "0 0 -1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo1" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="0.34" upper="1.5" velocity="0.5"/>
+    <parent link="rb11"/>
+    <child link="thumb3.1"/>
+    <origin xyz=".002 0 0" rpy=" 3.14 0 0 "/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+  <link name="thumb3.2">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 3-Rev2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 .0125 -.0095" rpy= "0 0 -1.57"/>
+      <material name="blue">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/Thumb 3-Rev2.STL" scale = ".001 .001 .001"/>
+      </geometry>
+      <origin xyz="0 .0125 -.0095" rpy= "0 0 -1.57"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="servo1m" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="0.0" upper="1.5" velocity="0.5"/>
+    <parent link="rb12"/>
+    <child link="thumb3.2"/>
+    <origin xyz="-.002 0 0" rpy=" 3.14 0 0 "/>
+    <joint_properties damping="1.0" friction="0.0"/>
+    <mimic joint="servo1" multiplier="1" offset="0" />
+  </joint>
+
+  <link name="thumbtip">
+    <visual>
+      <geometry>
+        <mesh filename="package://ar10_description/meshes/fingertip-v9.STL" scale = ".001 .001 .001"/>
+      </geometry>
+     <origin xyz=".009715 .005 .005" rpy="2.55 3.14 0"/>
+      <material name="black">
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size=".015 .026 .015"/>
+      </geometry>
+      <origin xyz="0 -.012 .01" rpy="0.59 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+
+
+  <joint name="ee5" type="fixed">
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="0.0" upper="1.5" velocity="0.5"/>
+    <parent link="thumb3.1"/>
+    <child link="thumbtip"/>
+    <origin xyz=".0048575 -.055 0 " rpy=" 3.14 0 0 "/>
+    <joint_properties damping="1.0" friction="0.0"/>
+  </joint>
+
+</robot>

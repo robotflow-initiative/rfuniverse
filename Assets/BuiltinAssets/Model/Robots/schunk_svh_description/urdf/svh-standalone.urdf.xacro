@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="svh" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+ <xacro:include filename="$(find schunk_svh_description)/urdf/svh.urdf.xacro" />
+
+ <xacro:arg name="name_prefix" default="left_hand" />
+
+ <link name="world"/>
+ <joint name="world_joint" type="fixed">
+   <parent link="world"/>
+   <child link="base_link"/>
+   <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+ </joint>
+
+ <link name="base_link" />
+ <xacro:svh parent="base_link" name="$(arg name_prefix)" side="-1">
+    <origin xyz="0 0 0"  rpy= "0 0 0" />
+  </xacro:svh>
+
+</robot>
