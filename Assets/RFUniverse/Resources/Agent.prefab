@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1000753711626497101}
-  - component: {fileID: 5747586769191855856}
-  - component: {fileID: 8880620846014448245}
-  - component: {fileID: 5490758790964886167}
+  - component: {fileID: 7844943393208013811}
+  - component: {fileID: 5750078849604134486}
+  - component: {fileID: 1298176499338161054}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5747586769191855856
+--- !u!114 &7844943393208013811
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7021079474381851485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e2bbcc9854485742a55e95b3d27d35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
---- !u!114 &8880620846014448245
+--- !u!114 &5750078849604134486
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,12 +73,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7021079474381851485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Script: {fileID: 11500000, guid: d55f211c217b2c244a37997a182a7b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DecisionPeriod: 1
   TakeActionsBetweenDecisions: 1
---- !u!114 &5490758790964886167
+--- !u!114 &1298176499338161054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

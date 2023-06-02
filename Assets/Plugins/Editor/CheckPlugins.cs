@@ -23,14 +23,14 @@ public class CheckPlugins : Editor
             "com.unity.textmeshpro",
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
-            "com.robotflow.rfuniverse",
+            "com.unity.barracuda",
             };
         string[] packageAddNames =
         {
             "com.unity.textmeshpro",
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
-            "https://github.com/mvig-robotflow/rfuniverse_base.git?path=/com.robotflow.rfuniverse",
+            "com.unity.barracuda",
             };
 
         ListRequest listRequest = Client.List();

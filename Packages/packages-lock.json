@@ -7,17 +7,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.robotflow.rfuniverse": {
-      "version": "https://github.com/mvig-robotflow/rfuniverse_base.git?path=/com.robotflow.rfuniverse",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.barracuda": "2.0.0-pre.3",
-        "com.unity.modules.imageconversion": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "hash": "5ae70d85c18162550bb2691200dff20b1dfe7c2e"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -40,7 +29,7 @@
     },
     "com.unity.barracuda": {
       "version": "3.0.0",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.6.0",

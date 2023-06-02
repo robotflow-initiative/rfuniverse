@@ -1,0 +1,14 @@
+apiRules:
+- exclude:
+    uidRegex: .*Test.*
+    type: Namespace
+- exclude:
+    uidRegex: ^Robotflow.RFUniverse\.CommunicatorObjects$
+    type: Namespace
+- exclude:
+    uidRegex: ^Robotflow.RFUniverse\.Editor$
+    type: Namespace
+- exclude:
+    uidRegex: ^Robotflow.RFUniverseExamples$
+    type: Namespace
+
