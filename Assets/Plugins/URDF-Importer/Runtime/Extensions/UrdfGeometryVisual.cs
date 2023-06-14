@@ -39,11 +39,11 @@ namespace Unity.Robotics.UrdfImporter
                     geometryGameObject.transform.DestroyImmediateIfExists<SphereCollider>();
                     break;
                 case GeometryTypes.Mesh:
-                        if (geometry != null)
-                        {
-                            geometryGameObject = CreateMeshVisual(geometry.mesh);
-                        }
-                        //else, let user add their own mesh gameObject
+                    if (geometry != null)
+                    {
+                        geometryGameObject = CreateMeshVisual(geometry.mesh);
+                    }
+                    //else, let user add their own mesh gameObject
                     break;
             }
 
@@ -74,7 +74,7 @@ namespace Unity.Robotics.UrdfImporter
             GameObject meshObject = null;
             if (!string.IsNullOrEmpty(mesh.filename))
             {
-                try 
+                try
                 {
                     string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
                     if (meshFilePath.ToLower().EndsWith(".stl"))
@@ -85,7 +85,7 @@ namespace Unity.Robotics.UrdfImporter
                     {
                         float globalScale = ColladaAssetPostProcessor.ReadGlobalScale(meshFilePath);
                         meshObject = MeshImporter.Load(meshFilePath, globalScale, globalScale, globalScale);
-                        if (meshObject != null) 
+                        if (meshObject != null)
                         {
                             ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
                         }
@@ -94,13 +94,15 @@ namespace Unity.Robotics.UrdfImporter
                     {
                         meshObject = MeshImporter.Load(meshFilePath);
                     }
+
+
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Debug.LogAssertion(ex);
                 }
-                
-                if (meshObject == null) 
+
+                if (meshObject == null)
                 {
                     Debug.LogError("Unable to load visual mesh: " + mesh.filename);
                 }

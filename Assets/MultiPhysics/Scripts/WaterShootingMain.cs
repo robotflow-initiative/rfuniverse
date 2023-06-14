@@ -1,11 +1,14 @@
 ﻿using System;
+#if UNITY_STANDALONE_WIN
 using com.zibra.liquid.Manipulators;
+#endif
 using RFUniverse.Manager;
 using Robotflow.RFUniverse.SideChannels;
 using UnityEngine;
 
 public class WaterShootingMain : MonoBehaviour
 {
+#if UNITY_STANDALONE_WIN
     private void Start()
     {
         AssetManager.Instance.AddListener("SetZibraLiquid", new Action<IncomingMessage>(SetZibraLiquid));
@@ -30,4 +33,5 @@ public class WaterShootingMain : MonoBehaviour
     public GameObject zibraLiquid;
 
     public ZibraLiquidEmitter emitter;
+#endif
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (c) 2012-2018 AssimpNet - Nicholas Woodfield
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 /* Note 2019
 * 
 * This file is modified by Dongho Kang to distributed as a Unity package 2019.
-*/ 
+*/
 
 using Assimp.Unmanaged;
 using System.IO;
@@ -38,7 +38,7 @@ namespace Assimp
     public class AssimpUnity
     {
         private const string packageName = "com.unity.robotics.urdf-importer";
-        
+
         private static bool s_triedLoading = false;
         private static bool s_assimpAvailable = false;
 
@@ -72,7 +72,7 @@ namespace Assimp
 
             //First time initialization, need to set a probing path (at least in editor) to resolve the native dependencies
             string pluginsFolder = Path.Combine(Application.dataPath, "Plugins");
-            string editorPluginNativeFolder = Path.Combine(Path.GetFullPath(string.Format($"Packages/{packageName}")), "Runtime", "UnityMeshImporter", "Plugins", "AssimpNet", "Native");
+            string editorPluginNativeFolder = Path.Combine(Path.GetFullPath(string.Format($"Assets/Plugins/URDF-Importer")), "Runtime", "UnityMeshImporter", "Plugins", "AssimpNet", "Native");
             string native64LibPath = null;
             string native32LibPath = null;
 
@@ -82,7 +82,7 @@ namespace Assimp
 
             //Setup DLL paths based on platforms. When run inside the editor, the path will be to the AssimpNet plugin folder structure. When in standalone,
             //Unity copies the native DLLs for the specific target architecture into a single Plugin folder.
-            switch(Application.platform)
+            switch (Application.platform)
             {
                 case RuntimePlatform.WindowsEditor:
                     native64LibPath = Path.Combine(editorPluginNativeFolder, "win", "x86_64");
@@ -107,11 +107,11 @@ namespace Assimp
 
                     //In order to get unity to accept the dylib, had to rename it as *.bundle. Set an override name so we try and load that file. Seems to load
                     //fine.
-                {
-                    string bundlelibName = Path.ChangeExtension(libInstance.DefaultLibraryName, ".bundle");
-                    override64LibName = bundlelibName;
-                    override32LibName = bundlelibName;
-                }
+                    {
+                        string bundlelibName = Path.ChangeExtension(libInstance.DefaultLibraryName, ".bundle");
+                        override64LibName = bundlelibName;
+                        override32LibName = bundlelibName;
+                    }
                     break;
                 case RuntimePlatform.OSXPlayer:
                     native64LibPath = pluginsFolder;
@@ -119,13 +119,13 @@ namespace Assimp
 
                     //In order to get unity to accept the dylib, had to rename it as *.bundle. Set an override name so we try and load that file. Seems to load
                     //fine.
-                {
-                    string bundlelibName = Path.ChangeExtension(libInstance.DefaultLibraryName, ".bundle");
-                    override64LibName = bundlelibName;
-                    override32LibName = bundlelibName;
-                }
+                    {
+                        string bundlelibName = Path.ChangeExtension(libInstance.DefaultLibraryName, ".bundle");
+                        override64LibName = bundlelibName;
+                        override32LibName = bundlelibName;
+                    }
                     break;
-                //TODO: Add more platforms if you have binaries that can run on it
+                    //TODO: Add more platforms if you have binaries that can run on it
             }
 
             //If both null, then we do not support the platform

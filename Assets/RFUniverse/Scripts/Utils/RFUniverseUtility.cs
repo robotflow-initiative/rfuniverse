@@ -429,6 +429,15 @@ namespace RFUniverse
                 qs.Add(new Quaternion(floats[i++], floats[i++], floats[i++], floats[i++]));
             return qs;
         }
+        public static Quaternion ListFloatToQuaternion(List<float> floats)
+        {
+            Quaternion qs = new();
+            qs.x = floats[0];
+            qs.y = floats[1];
+            qs.z = floats[2];
+            qs.w = floats[3];
+            return qs;
+        }
         public static List<float> ListQuaternionToListFloat(List<Quaternion> qs)
         {
             List<float> fs = new List<float>();

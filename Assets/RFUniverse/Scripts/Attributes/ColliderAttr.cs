@@ -327,7 +327,7 @@ namespace RFUniverse.Attributes
             if (GUILayout.Button("Generate VHACD Collider"))
             {
                 if (string.IsNullOrWhiteSpace(text)) return;
-                string path = $"Assets/Model/VHACD_Mesh/{text}_VHACD.asset";
+                string path = $"BuiltinAssets/Model/VHACD_Mesh/{text}_VHACD.asset";
                 AssetDatabase.DeleteAsset($"Assets/{path}");
                 List<Mesh> meshs = script.GenerateVHACDCollider();
                 foreach (var i in meshs)

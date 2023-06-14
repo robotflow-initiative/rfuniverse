@@ -5,7 +5,7 @@ public class TriggerProcess : MonoBehaviour
     public OmplManagerAttr manager;
     public ArticulationBody body;
 
-    private void OnTriggerEnter(Collider col)
+    private void OnTriggerStay(Collider col)
     {
         var other = col.GetComponentInParent<ArticulationBody>();
         if (other)

@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  *  MIT License
  *  
  *  Copyright (c) 2019 UnityMeshImporter - Dongho Kang
@@ -43,8 +43,8 @@ namespace UnityMeshImporter
         private string meshName;
         private UnityEngine.Mesh mesh;
         private UnityEngine.Material material;
-        
-        private MeshMaterialBinding() {}    // Do not allow default constructor
+
+        private MeshMaterialBinding() { }    // Do not allow default constructor
 
         public MeshMaterialBinding(string meshName, Mesh mesh, Material material)
         {
@@ -57,10 +57,10 @@ namespace UnityMeshImporter
         public Material Material { get => material; }
         public string MeshName { get => meshName; }
     }
-    
+
     public class MeshImporter
     {
-        public static GameObject Load(string meshPath, float scaleX=1, float scaleY=1, float scaleZ=1)
+        public static GameObject Load(string meshPath, float scaleX = 1, float scaleY = 1, float scaleZ = 1)
         {
 #if ASSIMP_SUPPORTED
             if (!File.Exists(meshPath))
@@ -70,7 +70,7 @@ namespace UnityMeshImporter
 
             AssimpContext importer = new AssimpContext();
             Scene scene = importer.ImportFile(meshPath);
-            if (scene == null) 
+            if (scene == null)
             {
                 return null;
             }
@@ -108,26 +108,26 @@ namespace UnityMeshImporter
                         );
                         MaterialExtensions.SetMaterialEmissionColor(uMaterial, color);
                     }
-                    
+
                     // Reflectivity
                     if (m.HasReflectivity)
                     {
                         uMaterial.SetFloat("_Glossiness", m.Reflectivity);
                     }
-                    
+
                     // Texture
                     if (m.HasTextureDiffuse)
                     {
-                        Texture2D uTexture = new Texture2D(2,2);
+                        Texture2D uTexture = new Texture2D(2, 2);
                         string texturePath = Path.Combine(parentDir, m.TextureDiffuse.FilePath);
-                        
+
                         byte[] byteArray = File.ReadAllBytes(texturePath);
                         bool isLoaded = uTexture.LoadImage(byteArray);
                         if (!isLoaded)
                         {
                             throw new Exception("Cannot find texture file: " + texturePath);
                         }
-                        
+
                         uMaterial.SetTexture("_MainTex", uTexture);
                     }
 
@@ -145,7 +145,7 @@ namespace UnityMeshImporter
                     List<Vector3> uNormals = new List<Vector3>();
                     List<Vector2> uUv = new List<Vector2>();
                     List<int> uIndices = new List<int>();
-                
+
                     // Vertices
                     if (m.HasVertices)
                     {
@@ -173,10 +173,10 @@ namespace UnityMeshImporter
                             if (f.IndexCount == 1 || f.IndexCount == 2)
                                 continue;
 
-                            for (int i=0;i<(f.IndexCount-2);i++)
+                            for (int i = 0; i < (f.IndexCount - 2); i++)
                             {
-                                uIndices.Add(f.Indices[i+2]);
-                                uIndices.Add(f.Indices[i+1]);
+                                uIndices.Add(f.Indices[i + 2]);
+                                uIndices.Add(f.Indices[i + 1]);
                                 uIndices.Add(f.Indices[0]);
                             }
                         }
@@ -190,8 +190,9 @@ namespace UnityMeshImporter
                             uUv.Add(new Vector2(uv.X, uv.Y));
                         }
                     }
-                
+
                     UnityEngine.Mesh uMesh = new UnityEngine.Mesh();
+                    uMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                     uMesh.vertices = uVertices.ToArray();
                     uMesh.normals = uNormals.ToArray();
                     uMesh.triangles = uIndices.ToArray();
@@ -200,31 +201,31 @@ namespace UnityMeshImporter
                     uMeshAndMats.Add(new MeshMaterialBinding(m.Name, uMesh, uMaterials[m.MaterialIndex]));
                 }
             }
-            
+
             // Create GameObjects from nodes
             GameObject NodeToGameObject(Node node)
             {
                 GameObject uOb = new GameObject(node.Name);
-            
+
                 // Set Mesh
                 if (node.HasMeshes)
                 {
                     foreach (var mIdx in node.MeshIndices)
                     {
                         var uMeshAndMat = uMeshAndMats[mIdx];
-                        
+
                         GameObject uSubOb = new GameObject(uMeshAndMat.MeshName);
                         uSubOb.AddComponent<MeshFilter>();
                         uSubOb.AddComponent<MeshRenderer>();
                         uSubOb.AddComponent<MeshCollider>();
-                    
+
                         uSubOb.GetComponent<MeshFilter>().mesh = uMeshAndMat.Mesh;
                         uSubOb.GetComponent<MeshRenderer>().material = uMeshAndMat.Material;
                         uSubOb.transform.SetParent(uOb.transform, true);
                         uSubOb.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
                     }
                 }
-            
+
                 // Transform
                 // Decompose Assimp transform into scale, rot and translaction 
                 Assimp.Vector3D aScale = new Assimp.Vector3D();
@@ -238,7 +239,7 @@ namespace UnityMeshImporter
                 uOb.transform.localScale = new UnityEngine.Vector3(aScale.X, aScale.Y, aScale.Z);
                 uOb.transform.localPosition = new UnityEngine.Vector3(aTranslation.X, aTranslation.Y, aTranslation.Z);
                 uOb.transform.localRotation = UnityEngine.Quaternion.Euler(euler.x, -euler.y, euler.z);
-            
+
                 if (node.HasChildren)
                 {
                     foreach (var cn in node.Children)
@@ -249,8 +250,8 @@ namespace UnityMeshImporter
                 }
                 return uOb;
             }
-            
-            return NodeToGameObject(scene.RootNode);;
+
+            return NodeToGameObject(scene.RootNode); ;
 #else
             Debug.LogError("Runtime import of collada files is not currently supported in builds created with 'IL2CPP' scripting backend." + 
                            "\nEither create a build with the scripting backend set as 'Mono' in 'Player Settings' or use STL meshes instead of Collada (dae) meshes.");

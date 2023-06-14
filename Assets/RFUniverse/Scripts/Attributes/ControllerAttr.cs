@@ -1181,7 +1181,7 @@ namespace RFUniverse.Attributes
                 moveableJoints[i].GetUnit().SetJointTargetPosition(jointTargetPositions[i], mode, speedScale);
             }
         }
-        private void SetIndexJointPosition(int index, float jointPosition, ControlMode mode = ControlMode.Target)
+        public void SetIndexJointPosition(int index, float jointPosition, ControlMode mode = ControlMode.Target)
         {
             moveableJoints[index].GetUnit().SetJointTargetPosition(jointPosition, mode);
         }

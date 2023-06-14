@@ -6,20 +6,20 @@ using System.Linq;
 using System.IO;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
-using Unity.EditorCoroutines.Editor;
-using System.Collections;
+using System.Threading.Tasks;
 
-public class CheckPlugins : Editor
+public class CheckPlugins
 {
-    [MenuItem("RFUniverse/Check Plugins")]
+    [MenuItem("RFUniverse/Check Plugins (Fix Error)")]
     private static void Check()
     {
-        EditorCoroutineUtility.StartCoroutineOwnerless(Main());
+        Main();
     }
-    private static IEnumerator Main()
+    private static async void Main()
     {
         string[] packageNames =
-{
+        {
+            "com.unity.editorcoroutines",
             "com.unity.textmeshpro",
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
@@ -27,6 +27,7 @@ public class CheckPlugins : Editor
             };
         string[] packageAddNames =
         {
+            "com.unity.editorcoroutines",
             "com.unity.textmeshpro",
             "com.unity.addressables",
             "com.unity.nuget.newtonsoft-json",
@@ -34,21 +35,21 @@ public class CheckPlugins : Editor
             };
 
         ListRequest listRequest = Client.List();
-        yield return new WaitUntil(() => listRequest.IsCompleted);
+        while (!listRequest.IsCompleted)
+        {
+            await Task.Delay(100);
+        }
         string[] packageList = listRequest.Result.Select((s) => s.name).ToArray();
         for (int i = 0; i < packageNames.Length; i++)
         {
             if (!packageList.Contains(packageNames[i]))
             {
-                Debug.Log(packageNames[i]);
+                Debug.Log("Geting " + packageNames[i]);
                 AddRequest addRequest = Client.Add(packageAddNames[i]);
-                yield return new WaitUntil(() =>
+                while (!addRequest.IsCompleted)
                 {
-                    bool userCancel = EditorUtility.DisplayCancelableProgressBar("CheckPlugins", $"Getting Plugin: {packageNames[i]}", 0);
-                    return userCancel || addRequest.IsCompleted;
-                });
-                EditorUtility.ClearProgressBar();
-                yield return null;
+                    await Task.Delay(100);
+                }
             }
         }
 
@@ -85,6 +86,5 @@ public class CheckPlugins : Editor
         }
 
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
-        yield break;
     }
 }
