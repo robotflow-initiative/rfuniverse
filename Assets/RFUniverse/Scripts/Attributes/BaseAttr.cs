@@ -449,10 +449,10 @@ namespace RFUniverse.Attributes
 
         public virtual void Destroy()
         {
-            if (Application.isEditor)
-                DestroyImmediate(gameObject);
-            else
-                Destroy(gameObject);
+            //if (Application.isEditor)
+            DestroyImmediate(gameObject);
+            //else
+            //    Destroy(gameObject);
         }
 
         protected void SetRFMoveColliderActive(IncomingMessage msg)
