@@ -9,50 +9,48 @@ namespace RFUniverse.Attributes
 {
     public class GraspSimAttr : BaseAttr
     {
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "StartGraspSim":
-                    StartGraspSim(msg);
+                    StartGraspSim(data);
                     return;
                 case "StartGraspTest":
-                    StartGraspTest(msg);
+                    StartGraspTest(data);
                     return;
                 case "ShowGraspPose":
-                    ShowGraspPose(msg);
+                    ShowGraspPose(data);
                     return;
                 case "GenerateGraspPose":
-                    GenerateGraspPose(msg);
+                    GenerateGraspPose(data);
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
         int mode = 0;
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
-            msg.WriteBoolean(isDone);
+            Dictionary<string, object> data = base.CollectData();
+            data.Add("done", isDone);
             if (isDone)
             {
                 if (mode == 0)
                 {
-                    msg.WriteInt32(0);
                     List<Vector3> successPoints = allPoints.Where((s, i) => success[i]).ToList();
                     List<Quaternion> successQuaternions = allQuaternions.Where((s, i) => success[i]).ToList();
                     List<float> successGripperWidth = gripperWidth.Where((s, i) => success[i]).ToList();
-                    msg.WriteFloatList(RFUniverseUtility.ListVector3ToListFloat(successPoints));
-                    msg.WriteFloatList(RFUniverseUtility.ListQuaternionToListFloat(successQuaternions));
-                    msg.WriteFloatList(successGripperWidth);
+                    data.Add("points", successPoints);
+                    data.Add("quaternions", successQuaternions);
+                    data.Add("width", successGripperWidth);
                 }
                 if (mode == 1)
                 {
-                    msg.WriteInt32(1);
-                    List<float> successFloat = success.Select((s) => s ? 1f : 0f).ToList();
-                    msg.WriteFloatList(successFloat);
+                    data.Add("success", success);
                 }
                 isDone = false;
             }
+            return data;
         }
         bool isDone = false;
         List<Vector3> allPoints = new List<Vector3>();
@@ -68,19 +66,19 @@ namespace RFUniverse.Attributes
         List<ControllerAttr> grippers = new List<ControllerAttr>();
         List<RigidbodyAttr> targets = new List<RigidbodyAttr>();
 
-        void StartGraspSim(IncomingMessage msg)
+        void StartGraspSim(object[] data)
         {
             mode = 0;
             Debug.Log("StartGraspSim");
-            string meshPath = msg.ReadString();
-            string gripperName = msg.ReadString();
-            List<float> points = msg.ReadFloatList().ToList();
-            List<float> normals = msg.ReadFloatList().ToList();
-            depthRangeMin = msg.ReadFloat32();
-            depthRangeMax = msg.ReadFloat32();
-            depthLerpCount = msg.ReadInt32();
-            angleLerpCount = msg.ReadInt32();
-            parallelCount = msg.ReadInt32();
+            string meshPath = (string)data[0];
+            string gripperName = (string)data[1];
+            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
+            List<float> normals = RFUniverseUtility.ConvertType<List<float>>(data[3]);
+            depthRangeMin = (float)data[4];
+            depthRangeMax = (float)data[5];
+            depthLerpCount = (int)data[6];
+            angleLerpCount = (int)data[7];
+            parallelCount = (int)data[8];
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Vector3> normalsV3 = RFUniverseUtility.ListFloatToListVector3(normals);
             GenerateGraspPose(pointsV3, normalsV3);
@@ -97,12 +95,12 @@ namespace RFUniverse.Attributes
             env.localPosition = Vector3.zero;
             envs.Add(env);
 
-            RigidbodyAttr target = AssetManager.Instance.LoadMesh(ID * 10 + 0, meshPath, false);
+            RigidbodyAttr target = PlayerMain.Instance.LoadMesh(ID * 10 + 0, meshPath, false);
             target.gameObject.AddComponent<CollisionState>();
             target.transform.SetParent(env);
             targets.Add(target);
 
-            AssetManager.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
+            PlayerMain.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
             {
                 ControllerAttr newGripper = attr as ControllerAttr;
 
@@ -121,15 +119,15 @@ namespace RFUniverse.Attributes
                 StartCoroutine(GraspSim());
             }, false);
         }
-        void StartGraspTest(IncomingMessage msg)
+        void StartGraspTest(object[] data)
         {
             mode = 1;
             Debug.Log("StartGraspTest");
-            string meshPath = msg.ReadString();
-            string gripperName = msg.ReadString();
-            List<float> points = msg.ReadFloatList().ToList();
-            List<float> quaternions = msg.ReadFloatList().ToList();
-            parallelCount = msg.ReadInt32();
+            string meshPath = (string)data[0];
+            string gripperName = (string)data[1];
+            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
+            List<float> quaternions = RFUniverseUtility.ConvertType<List<float>>(data[3]);
+            parallelCount = (int)data[4];
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Quaternion> quaternionsQ4 = RFUniverseUtility.ListFloatToListQuaternion(quaternions);
 
@@ -150,12 +148,12 @@ namespace RFUniverse.Attributes
             env.localPosition = Vector3.zero;
             envs.Add(env);
 
-            RigidbodyAttr target = AssetManager.Instance.LoadMesh(ID * 10 + 0, meshPath, false);
+            RigidbodyAttr target = PlayerMain.Instance.LoadMesh(ID * 10 + 0, meshPath, false);
             target.gameObject.AddComponent<CollisionState>();
             target.transform.SetParent(env);
             targets.Add(target);
 
-            AssetManager.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
+            PlayerMain.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
             {
                 ControllerAttr newGripper = attr as ControllerAttr;
 
@@ -343,12 +341,12 @@ namespace RFUniverse.Attributes
             PlayerMain.Instance.GroundActive = sourceGround;
             System.GC.Collect();
         }
-        void ShowGraspPose(IncomingMessage msg)
+        void ShowGraspPose(object[] data)
         {
-            string meshPath = msg.ReadString();
-            string gripperName = msg.ReadString();
-            List<float> positions = msg.ReadFloatList().ToList();
-            List<float> rotations = msg.ReadFloatList().ToList();
+            string meshPath = (string)data[0];
+            string gripperName = (string)data[1];
+            List<float> positions = RFUniverseUtility.ConvertType<List<float>>(data[2]);
+            List<float> rotations = RFUniverseUtility.ConvertType<List<float>>(data[3]);
             List<Vector3> positionsV3 = RFUniverseUtility.ListFloatToListVector3(positions);
             List<Quaternion> rotationsQ4 = RFUniverseUtility.ListFloatToListQuaternion(rotations);
             //ProcessGraspPose(positionsV3, rotationsQ4);
@@ -359,14 +357,14 @@ namespace RFUniverse.Attributes
         {
             if (positionsV3.Count != rotationsQ4.Count) return;
 
-            RigidbodyAttr target = AssetManager.Instance.LoadMesh(ID * 10 + 2, meshPath, false);
+            RigidbodyAttr target = PlayerMain.Instance.LoadMesh(ID * 10 + 2, meshPath, false);
             Transform trans = target.transform;
             GameObject.Destroy(target);
             GameObject.Destroy(target.Rigidbody);
             trans.SetParent(transform);
             trans.position = Vector3.up;
 
-            AssetManager.Instance.GetGameObject(gripperName, (g) =>
+            PlayerMain.Instance.GetGameObject(gripperName, (g) =>
             {
                 for (int i = 0; i < positionsV3.Count; i++)
                 {
@@ -378,18 +376,18 @@ namespace RFUniverse.Attributes
                 }
             });
         }
-        void GenerateGraspPose(IncomingMessage msg)
+        void GenerateGraspPose(object[] data)
         {
             Debug.Log("GenerateGraspPose");
-            string meshPath = msg.ReadString();
-            string gripperName = msg.ReadString();
-            List<float> points = msg.ReadFloatList().ToList();
-            List<float> normals = msg.ReadFloatList().ToList();
-            depthRangeMin = msg.ReadFloat32();
-            depthRangeMax = msg.ReadFloat32();
-            depthLerpCount = msg.ReadInt32();
-            angleLerpCount = msg.ReadInt32();
-            parallelCount = msg.ReadInt32();
+            string meshPath = (string)data[0];
+            string gripperName = (string)data[1];
+            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
+            List<float> normals = RFUniverseUtility.ConvertType<List<float>>(data[3]);
+            depthRangeMin = (float)data[4];
+            depthRangeMax = (float)data[5];
+            depthLerpCount = (int)data[6];
+            angleLerpCount = (int)data[7];
+            parallelCount = (int)data[8];
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Vector3> normalsV3 = RFUniverseUtility.ListFloatToListVector3(normals);
             GenerateGraspPose(pointsV3, normalsV3);

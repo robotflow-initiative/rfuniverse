@@ -7,12 +7,14 @@ public class PlayerMainUI : MonoBehaviour
 {
     ListView debugView;
     Button pend;
-    public void Init(Version pythonVersion, Action onPendDone)
+    Label unityVersionUI;
+    Label pythonVersionUI;
+    public void Init(Action onPendDone)
     {
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
 
-        Label unityVersionUI = root.Q<Label>("unity");
-        Label pythonVersionUI = root.Q<Label>("python");
+        unityVersionUI = root.Q<Label>("unity");
+        pythonVersionUI = root.Q<Label>("python");
         pend = root.Q<Button>("pend-button");
         pend.clicked += () => onPendDone.Invoke();
         pend.style.display = DisplayStyle.None;
@@ -20,8 +22,13 @@ public class PlayerMainUI : MonoBehaviour
         root.Q<Button>("debug-button").clicked += () => debugView.style.display = 1 - debugView.style.display.value;
 
 
+
+        unityVersionUI.text = "RFUniverse Version:" + Application.version;
+
+    }
+    public void SetVersion(Version pythonVersion)
+    {
         Version unityVersion = new Version(Application.version);
-        unityVersionUI.text = "RFUniverse Version:" + unityVersion;
         pythonVersionUI.text = "pyrfuniverse Version:" + pythonVersion;
         if (!(unityVersion.Major == pythonVersion.Major && unityVersion.Minor == pythonVersion.Minor && unityVersion.Build == pythonVersion.Build))
         {

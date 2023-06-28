@@ -1,11 +1,6 @@
 using Newtonsoft.Json;
-using RFUniverse.Attributes;
-using RFUniverse.Manager;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace RFUniverse
@@ -64,7 +59,7 @@ namespace RFUniverse
                 string configString = File.ReadAllText(configPath);
                 ConfigData config = JsonConvert.DeserializeObject<ConfigData>(configString, RFUniverseUtility.JsonSerializerSettings);
                 if (Application.isEditor)
-                    config.executable_file = "";
+                    config.executable_file = "@editor";
                 else
                     config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
                 configString = JsonConvert.SerializeObject(config, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings);

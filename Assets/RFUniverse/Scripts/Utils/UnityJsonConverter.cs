@@ -15,9 +15,8 @@ public class UnityJsonConverter : JsonConverter
         typeof(Vector3) == objectType ||
         typeof(Vector3Int) == objectType ||
         typeof(Vector4) == objectType ||
-        typeof(Color) == objectType ||
-        typeof(Color32) == objectType ||
-        typeof(Quaternion) == objectType;
+        typeof(Quaternion) == objectType ||
+        typeof(Color) == objectType;
     }
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
@@ -30,7 +29,6 @@ public class UnityJsonConverter : JsonConverter
             var t when t == typeof(Vector4) => JsonConvert.DeserializeObject<Vector4>(serializer.Deserialize(reader).ToString()),
             var t when t == typeof(Quaternion) => JsonConvert.DeserializeObject<Quaternion>(serializer.Deserialize(reader).ToString()),
             var t when t == typeof(Color) => JsonConvert.DeserializeObject<Color>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Color32) => JsonConvert.DeserializeObject<Color32>(serializer.Deserialize(reader).ToString()),
             _ => throw new Exception("Unexpected Error Occurred"),
         };
     }
@@ -88,16 +86,6 @@ public class UnityJsonConverter : JsonConverter
                 writer.WriteValue(q.w);
                 break;
             case Color c:
-                writer.WritePropertyName("r");
-                writer.WriteValue(c.r);
-                writer.WritePropertyName("g");
-                writer.WriteValue(c.g);
-                writer.WritePropertyName("b");
-                writer.WriteValue(c.b);
-                writer.WritePropertyName("a");
-                writer.WriteValue(c.a);
-                break;
-            case Color32 c:
                 writer.WritePropertyName("r");
                 writer.WriteValue(c.r);
                 writer.WritePropertyName("g");

@@ -6,6 +6,9 @@ using Unity.Robotics.UrdfImporter;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using System;
+using System.Reflection;
 
 namespace RFUniverse
 {
@@ -216,7 +219,7 @@ namespace RFUniverse
             return attr;
         }
 
-        public static void Destroy(Object obj)
+        public static void Destroy(UnityEngine.Object obj)
         {
             if (Application.isEditor)
                 GameObject.DestroyImmediate(obj);
@@ -243,7 +246,10 @@ namespace RFUniverse
             }
             return datas;
         }
-
+        public static Vector3 ListFloatToVector3(List<float> floats)
+        {
+            return new Vector3(floats[0], floats[1], floats[2]);
+        }
         public static List<Vector3> ListFloatToListVector3(List<float> floats)
         {
             List<Vector3> v3s = new List<Vector3>();
@@ -251,6 +257,31 @@ namespace RFUniverse
             while (i + 2 < floats.Count)
                 v3s.Add(new Vector3(floats[i++], floats[i++], floats[i++]));
             return v3s;
+        }
+        public static List<Vector3> FloatArrayToListVector3(float[,] floats)
+        {
+            List<Vector3> v3s = new List<Vector3>();
+            for (int i = 0; i < floats.Length; i++)
+            {
+                v3s.Add(new Vector3(floats[i, 0], floats[i, 1], floats[i, 2]));
+            }
+            return v3s;
+        }
+        public static List<Color> FloatArrayToListColor(float[,] colors)
+        {
+            List<Color> v3s = new List<Color>();
+            for (int i = 0; i < colors.Length; i++)
+            {
+                v3s.Add(new Color(colors[i, 0], colors[i, 1], colors[i, 2]));
+            }
+            return v3s;
+        }
+
+        public static Color ListFloatToColor(List<float> floats)
+        {
+            if (floats == null || floats.Count != 3)
+                return Color.black;
+            return new Color(floats[0], floats[1], floats[2], 1);
         }
         public static List<Color> ListFloatToListColor(List<float> floats)
         {
@@ -260,21 +291,51 @@ namespace RFUniverse
                 v3s.Add(new Color(floats[i++], floats[i++], floats[i++]));
             return v3s;
         }
-        public static List<List<float>> ListFloatSlicer(List<float> floats, int count)
+        public static List<List<T>> ListSlicer<T>(List<T> sources, int count)
         {
-            Queue<float> que = new Queue<float>(floats);
-            List<List<float>> back = new();
+            if (sources.Count % count != 0) return null;
+            Queue<T> que = new Queue<T>(sources);
+            List<List<T>> result = new();
             while (que.Count >= count)
             {
-                List<float> one = new();
+                List<T> one = new();
                 for (int i = 0; i < count; i++)
                 {
                     one.Add(que.Dequeue());
                 }
-                back.Add(one);
+                result.Add(one);
             }
-            return back;
+            return result;
         }
+        public static T[,] ArraySlicer<T>(T[] sources, int count)
+        {
+            if (sources.Length % count != 0) return null;
+            Queue<T> que = new Queue<T>(sources);
+            T[,] result = new T[sources.Length / count, count];
+            for (int i = 0; i < result.GetLength(0); i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    result[i, j] = que.Dequeue();
+                }
+            }
+            return result;
+        }
+        public static T[,] ListSlicerArray<T>(List<T> sources, int count)
+        {
+            if (sources.Count % count != 0) return null;
+            Queue<T> que = new Queue<T>(sources);
+            T[,] result = new T[sources.Count / count, count];
+            for (int i = 0; i < result.GetLength(0); i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    result[i, j] = que.Dequeue();
+                }
+            }
+            return result;
+        }
+
         public static Matrix4x4 ListFloatToMatrix(List<float> floats)
         {
             Matrix4x4 matrix = new();
@@ -305,78 +366,6 @@ namespace RFUniverse
             }
             return floats;
         }
-        public static Matrix4x4 FloatArrayToMatrix(float[,] floats)
-        {
-            Matrix4x4 matrix = new();
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    matrix[i, j] = floats[i, j];
-                }
-            }
-            return matrix;
-        }
-        public static Matrix4x4 DoubleArrayToMatrix(double[,] floats)
-        {
-            Matrix4x4 matrix = new();
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    matrix[i, j] = (float)floats[i, j];
-                }
-            }
-            return matrix;
-        }
-        public static List<float> ListListFloatToListFloat(List<List<float>> llf)
-        {
-            List<float> fs = new();
-            foreach (var item in llf)
-            {
-                foreach (var i in item)
-                {
-                    fs.Add(i);
-                }
-            }
-            return fs;
-        }
-        public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
-        {
-            List<float> fs = new();
-            foreach (var item in v3s)
-            {
-                fs.Add(item.x);
-                fs.Add(item.y);
-                fs.Add(item.z);
-            }
-            return fs;
-        }
-        public static List<List<float>> ListVector3ToListFloat3(List<Vector3> v3s)
-        {
-            List<List<float>> f = new();
-            foreach (var item in v3s)
-            {
-                List<float> fs = new List<float>();
-                fs.Add(item.x);
-                fs.Add(item.y);
-                fs.Add(item.z);
-                f.Add(fs);
-            }
-            return f;
-        }
-        public static List<float> ListMatrixToListFloat(List<Matrix4x4> ms)
-        {
-            List<float> f = new();
-            foreach (var item in ms)
-            {
-                for (int i = 0; i < 16; i++)
-                {
-                    f.Add(item[i]);
-                }
-            }
-            return f;
-        }
         public static List<float[,]> ListMatrixToListFloatArray(List<Matrix4x4> ms)
         {
             List<float[,]> f = new();
@@ -402,6 +391,82 @@ namespace RFUniverse
                 ms.Add(Matrix4x4.TRS(positioins[i], rotatiobs[i], scales[i]));
             }
             return ms;
+        }
+        public static Matrix4x4 FloatArrayToMatrix(float[,] floats)
+        {
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = floats[i, j];
+                }
+            }
+            return matrix;
+        }
+        public static Matrix4x4 DoubleArrayToMatrix(double[,] floats)
+        {
+            Matrix4x4 matrix = new();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = (float)floats[i, j];
+                }
+            }
+            return matrix;
+        }
+        public static List<float> QuaternionToListFloat(Quaternion qua)
+        {
+            List<float> fs = new()
+            {
+                qua.x,
+                qua.y,
+                qua.z,
+                qua.w
+            };
+            return fs;
+        }
+        public static List<float> Vector3ToListFloat(Vector3 v3)
+        {
+            List<float> fs = new()
+            {
+                v3.x,
+                v3.y,
+                v3.z
+            };
+            return fs;
+        }
+        public static List<float> ListVector3ToListFloat(List<Vector3> v3s)
+        {
+            List<float> fs = new();
+            foreach (var item in v3s)
+            {
+                fs.AddRange(Vector3ToListFloat(item));
+            }
+            return fs;
+        }
+
+        public static List<List<float>> ListVector3ToListFloat3(List<Vector3> v3s)
+        {
+            List<List<float>> f = new();
+            foreach (var item in v3s)
+            {
+                f.Add(Vector3ToListFloat(item));
+            }
+            return f;
+        }
+        public static List<float> ListMatrixToListFloat(List<Matrix4x4> ms)
+        {
+            List<float> f = new();
+            foreach (var item in ms)
+            {
+                for (int i = 0; i < 16; i++)
+                {
+                    f.Add(item[i]);
+                }
+            }
+            return f;
         }
         public static List<Vector3> ListVector3LocalToWorld(List<Vector3> v3s, Transform trans)
         {
@@ -450,6 +515,98 @@ namespace RFUniverse
             }
             return fs;
         }
+
+        public static T ConvertType<T>(this object obj)
+        {
+            if (obj == null)
+                return default;
+
+            if (obj is T)
+                return (T)obj;
+
+            if (obj is IConvertible)
+                return (T)Convert.ChangeType(obj, typeof(T));
+
+            if (typeof(T).IsArray && obj is Array objArr)
+            {
+                return (T)obj;
+                var elementType = typeof(T).GetElementType();
+                int[] rankLength = new int[objArr.Rank];
+                for (int i = 0; i < objArr.Rank; i++)
+                {
+                    rankLength[i] = objArr.GetLength(i);
+                }
+                var convertedArray = Array.CreateInstance(elementType, rankLength);
+                int[] rankIndex = new int[convertedArray.Rank];
+                for (int i = 0; i < convertedArray.Rank; i++)
+                {
+                    for (int j = 0; j < convertedArray.GetLength(i); j++)
+                    {
+                        rankIndex[i] = j;
+                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(elementType);
+                        object convertedItem = convertToMethod.Invoke(null, new object[] { objArr.GetValue(rankIndex) });
+                        convertedArray.SetValue(convertedItem, rankIndex);
+                    }
+                }
+                return (T)(object)convertedArray;
+            }
+
+            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var listType = typeof(T).GetGenericArguments()[0];
+                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
+
+                if (obj is IList objList)
+                {
+                    foreach (var item in objList)
+                    {
+                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(listType);
+                        object convertedItem = convertToMethod.Invoke(null, new object[] { item });
+                        list.Add(convertedItem);
+                    }
+                }
+                return (T)list;
+            }
+
+            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                var keyType = typeof(T).GetGenericArguments()[0];
+                var valueType = typeof(T).GetGenericArguments()[1];
+                var dictionary = (IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(keyType, valueType));
+
+                if (obj is IDictionary objDict)
+                {
+                    foreach (IDictionaryEnumerator item in objDict)
+                    {
+                        MethodInfo convertKeyMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(keyType);
+                        MethodInfo convertValueMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(valueType);
+                        object convertedKey = convertKeyMethod.Invoke(null, new object[] { item.Key });
+                        object convertedValue = convertValueMethod.Invoke(null, new object[] { item.Value });
+                        dictionary.Add(convertedKey, convertedValue);
+                    }
+                }
+                return (T)dictionary;
+            }
+
+            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Tuple))
+            {
+                var tupleTypes = typeof(T).GetGenericArguments();
+                var tuple = Activator.CreateInstance(typeof(Tuple).MakeGenericType(tupleTypes));
+
+                if (obj is ITuple objTuple && objTuple.Length == tupleTypes.Length)
+                {
+                    for (int i = 0; i < tupleTypes.Length; i++)
+                    {
+                        var convertedItem = ConvertType<T>(objTuple[i]);
+                        tuple.GetType().GetProperty($"Item{i + 1}").SetValue(tuple, convertedItem);
+                    }
+                }
+                return (T)tuple;
+            }
+
+            throw new InvalidCastException($"Cannot convert {obj.GetType()} to {typeof(T)}");
+        }
+
         public static List<int> GetChildIndexQueue(this Transform transform, Transform child)
         {
             if (!child.GetComponentsInParent<Transform>().Contains(transform)) return null;
@@ -474,5 +631,6 @@ namespace RFUniverse
             }
             return transform;
         }
+
     }
 }

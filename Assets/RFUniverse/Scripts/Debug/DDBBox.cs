@@ -29,7 +29,7 @@ namespace RFUniverse.DebugTool
                 gameObject.SetActive(true);
                 image.color = RFUniverseUtility.EncodeIDAsColor(target.ID);
                 Rect rect = target.Get2DBBox(PlayerMain.Instance.MainCamera);
-                image.rectTransform.position = rect.position;
+                image.rectTransform.position = rect.center;
                 image.rectTransform.sizeDelta = rect.size;
             }
             else

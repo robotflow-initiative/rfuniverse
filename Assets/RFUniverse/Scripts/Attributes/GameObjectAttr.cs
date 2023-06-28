@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
-using RFUniverse;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,7 +55,7 @@ namespace RFUniverse.Attributes
                     materials = new List<Material>();
                     foreach (var item in Renderers)
                     {
-                        materials.AddRange(Application.isPlaying ? item.materials : item.sharedMaterials);
+                        materials.AddRange(item.materials);
                     }
                 }
                 return materials;
@@ -118,63 +116,44 @@ namespace RFUniverse.Attributes
             data.render = Render;
             return data;
         }
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
-            msg.WriteBoolean(dddbbox != null);
+            Dictionary<string, object> data = base.CollectData();
             if (dddbbox != null)
             {
-                msg.WriteFloat32(dddbbox.Item1.x);
-                msg.WriteFloat32(dddbbox.Item1.y);
-                msg.WriteFloat32(dddbbox.Item1.z);
-                msg.WriteFloat32(dddbbox.Item2.x);
-                msg.WriteFloat32(dddbbox.Item2.y);
-                msg.WriteFloat32(dddbbox.Item2.z);
-                msg.WriteFloat32(dddbbox.Item3.x);
-                msg.WriteFloat32(dddbbox.Item3.y);
-                msg.WriteFloat32(dddbbox.Item3.z);
+                data.Add("3d_bounding_box", dddbbox);
                 dddbbox = null;
             }
+            return data;
         }
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "SetColor":
-                    SetColor(msg);
+                    SetColor(data[0].ConvertType<List<float>>());
                     return;
                 case "EnabledRender":
-                    EnabledRender(msg);
+                    EnabledRender((bool)data[0]);
                     return;
                 case "SetTexture":
-                    SetTexture(msg);
+                    SetTexture((string)data[0]);
                     return;
                 case "Get3DBBox":
-                    Get3DBBox(msg);
+                    Get3DBBox();
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
-        private void SetColor(IncomingMessage msg)
+        private void SetColor(List<float> color)
         {
-            float cr = msg.ReadFloat32();
-            float cg = msg.ReadFloat32();
-            float cb = msg.ReadFloat32();
-            float ca = msg.ReadFloat32();
-            Color = new Color(cr, cg, cb, ca);
+            Color = new Color(color[0], color[1], color[2], color[3]);
         }
 
-        private void EnabledRender(IncomingMessage msg)
+        private void EnabledRender(bool enabled)
         {
-            bool enabled = msg.ReadBoolean();
             Render = enabled;
-        }
-
-        private void SetTexture(IncomingMessage msg)
-        {
-            string path = msg.ReadString();
-            SetTexture(path);
         }
         private void SetTexture(string path)
         {
@@ -188,10 +167,6 @@ namespace RFUniverse.Attributes
         Dictionary<Mesh, List<Vector3>> vertices = new Dictionary<Mesh, List<Vector3>>();
 
         System.Tuple<Vector3, Vector3, Vector3> dddbbox = null;
-        void Get3DBBox(IncomingMessage msg)
-        {
-            dddbbox = Get3DBBox();
-        }
         public System.Tuple<Vector3, Vector3, Vector3> Get3DBBox()
         {
             float maxX = float.NegativeInfinity;
@@ -222,7 +197,8 @@ namespace RFUniverse.Attributes
             Vector3 position = transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
             Vector3 rotation = transform.eulerAngles;
             Vector3 size = new Vector3((maxX - minX) * transform.lossyScale.x, (maxY - minY) * transform.lossyScale.y, (maxZ - minZ) * transform.lossyScale.z);
-            return new System.Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
+            dddbbox = new System.Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
+            return dddbbox;
         }
 
         public Rect Get2DBBox(Camera cam)
@@ -239,13 +215,13 @@ namespace RFUniverse.Attributes
                 {
                     Vector3 point = render.transform.TransformPoint(item);
                     point = cam.WorldToScreenPoint(point);
-                    if (point.x > maxX) maxX = point.x;
-                    if (point.x < minX) minX = point.x;
-                    if (point.y > maxY) maxY = point.y;
-                    if (point.y < minY) minY = point.y;
+                    maxX = Mathf.Max(maxX, point.x);
+                    minX = Mathf.Min(minX, point.x);
+                    maxY = Mathf.Max(maxY, point.y);
+                    minY = Mathf.Min(minY, point.y);
                 }
             }
-            return new Rect((maxX + minX) / 2, (maxY + minY) / 2, maxX - minX, maxY - minY);
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 
         public Bounds GetAppendBounds()

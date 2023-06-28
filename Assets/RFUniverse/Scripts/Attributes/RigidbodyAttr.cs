@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Robotflow.RFUniverse.SideChannels;
 
 namespace RFUniverse.Attributes
@@ -98,73 +99,60 @@ namespace RFUniverse.Attributes
             }
         }
 
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
-            // Velocity
-            msg.WriteFloat32(Rigidbody.velocity.x);
-            msg.WriteFloat32(Rigidbody.velocity.y);
-            msg.WriteFloat32(Rigidbody.velocity.z);
-            // Angular velocity
-            msg.WriteFloat32(Rigidbody.angularVelocity.x);
-            msg.WriteFloat32(Rigidbody.angularVelocity.y);
-            msg.WriteFloat32(Rigidbody.angularVelocity.z);
+            Dictionary<string, object> data = base.CollectData();
+            data.Add("velocity", Rigidbody.velocity);
+            data.Add("angular_vel", Rigidbody.angularVelocity);
+            return data;
         }
 
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "SetMass":
-                    SetMass(msg);
+                    SetMass((float)data[0]);
                     return;
                 case "AddForce":
-                    AddForce(msg);
+                    AddForce((List<float>)data[0]);
                     return;
                 case "SetVelocity":
-                    SetVelocity(msg);
+                    SetVelocity((List<float>)data[0]);
                     return;
                 case "SetKinematic":
-                    SetKinematic(msg);
+                    SetKinematic((bool)data[0]);
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
-        private void SetMass(IncomingMessage msg)
+        private void SetMass(float mass)
         {
-            float mass = msg.ReadFloat32();
             Rigidbody.mass = mass;
         }
-        protected override void SetTransform(IncomingMessage msg)
+        protected override void SetPosition(List<float> position, bool worldSpace = true)
         {
-            base.SetTransform(msg);
+            base.SetPosition(position, worldSpace);
             Rigidbody.velocity = Vector3.zero;
+        }
+        protected override void SetRotation(List<float> rotation, bool worldSpace = true)
+        {
+            base.SetRotation(rotation, worldSpace);
             Rigidbody.angularVelocity = Vector3.zero;
         }
-        private void AddForce(IncomingMessage msg)
+        private void AddForce(List<float> forceArray)
         {
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-
-            force = new Vector3(x, y, z);
+            force = new Vector3(force[0], force[1], force[2]);
         }
 
-        private void SetVelocity(IncomingMessage msg)
+        private void SetVelocity(List<float> velocity)
         {
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-
-            Vector3 velocity = new Vector3(x, y, z);
-
-            Rigidbody.velocity = velocity;
+            Rigidbody.velocity = new Vector3(velocity[0], velocity[1], velocity[2]);
         }
 
-        private void SetKinematic(IncomingMessage msg)
+        private void SetKinematic(bool kinematic)
         {
-            bool kinematic = msg.ReadBoolean();
             Rigidbody.isKinematic = kinematic;
         }
     }

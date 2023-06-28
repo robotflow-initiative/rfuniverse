@@ -3,6 +3,7 @@ using RFUniverse.Manager;
 using UnityEngine;
 using System.Linq;
 using Obi;
+using System.Collections.Generic;
 
 namespace RFUniverse.Attributes
 {
@@ -22,9 +23,9 @@ namespace RFUniverse.Attributes
             lastStepClothPosition = new Vector3(-99, -99, -99);
         }
 
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
+            Dictionary<string, object> data = base.CollectData();
 
             int numParticles = cloth.solverIndices.Length;
             Vector3 avgPosition = Vector3.zero;
@@ -46,72 +47,50 @@ namespace RFUniverse.Attributes
             lastStepClothPosition = avgPosition;
 
             // Number of particles
-            msg.WriteInt32(numParticles);
+            data.Add("num_particles", numParticles);
             // Average position
-            msg.WriteFloat32(avgPosition.x);
-            msg.WriteFloat32(avgPosition.y);
-            msg.WriteFloat32(avgPosition.z);
+            data.Add("avg_position", avgPosition);
             // Average velocity
-            msg.WriteFloat32(avgVelocity.x);
-            msg.WriteFloat32(avgVelocity.y);
-            msg.WriteFloat32(avgVelocity.z);
+            data.Add("avg_velocity", avgVelocity);
             // Force zone parameters
-            msg.WriteFloat32(forceZone.transform.eulerAngles.y);
-            msg.WriteFloat32(forceZone.intensity);
-            msg.WriteFloat32(forceZone.turbulence);
-            msg.WriteFloat32(forceZone.turbulenceFrequency);
+            data.Add("force_zone_orientation", forceZone.transform.eulerAngles.y);
+            data.Add("force_zone_intensity", forceZone.intensity);
+            data.Add("force_zone_turbulence", forceZone.turbulence);
+            data.Add("force_zone_turbulence_frequency", forceZone.turbulenceFrequency);
+            return data;
         }
 
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "SetForceZoneParameters":
-                    SetForceZoneParameters(msg);
+                    SetForceZoneParameters((float)data[0], (float)data[1], (float)data[2], (float)data[3]);
                     return;
                 case "SetSolverParameters":
-                    SetSolverParameters(msg);
+                    SetSolverParameters(RFUniverseUtility.ConvertType<List<float>>(data[0]));
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
 
-        void SetForceZoneParameters(IncomingMessage msg)
+        void SetForceZoneParameters(float orientation, float intensity, float turbulence, float turbulence_frequency)
         {
             // Force zone orientation
-            if (msg.ReadBoolean())
-            {
-                forceZone.transform.eulerAngles = new Vector3(0, msg.ReadFloat32(), 0);
-            }
-
+            forceZone.transform.eulerAngles = new Vector3(0, orientation, 0);
             // Force zone intensity
-            if (msg.ReadBoolean())
-            {
-                forceZone.intensity = msg.ReadFloat32();
-            }
-
+            forceZone.intensity = intensity;
             // Force zone turbulence
-            if (msg.ReadBoolean())
-            {
-                forceZone.turbulence = msg.ReadFloat32();
-            }
-
+            forceZone.turbulence = turbulence;
             // Force zone turbulence frequency
-            if (msg.ReadBoolean())
-            {
-                forceZone.turbulenceFrequency = msg.ReadFloat32();
-            }
+            forceZone.turbulenceFrequency = turbulence_frequency;
         }
 
-        void SetSolverParameters(IncomingMessage msg)
+        void SetSolverParameters(List<float> gravity)
         {
             // Solver gravity
-            if (msg.ReadBoolean())
-            {
-                Vector3 gravity = new Vector3(msg.ReadFloat32(), msg.ReadFloat32(), msg.ReadFloat32());
-                solver.gravity = gravity;
-            }
+            solver.gravity = RFUniverseUtility.ListFloatToVector3(gravity);
         }
     }
 

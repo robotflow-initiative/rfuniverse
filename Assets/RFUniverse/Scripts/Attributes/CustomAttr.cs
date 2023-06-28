@@ -1,8 +1,8 @@
-using Robotflow.RFUniverse.SideChannels;
+﻿using Robotflow.RFUniverse.SideChannels;
 using RFUniverse.Manager;
 using UnityEngine;
 using System.Linq;
-using Google.Protobuf.WellKnownTypes;
+using System.Collections.Generic;
 
 namespace RFUniverse.Attributes
 {
@@ -15,41 +15,40 @@ namespace RFUniverse.Attributes
         {
             base.Init();
             //Register the receiving function of the dynamic message
-            AssetManager.Instance.AddListener("DynamicMessage", ListenerMessage);
+            AssetManager.Instance.AddListener("DynamicMessage", DynamicMessage);
         }
 
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
             //1. First, complete the message parsing in parent class.
-            base.CollectData(msg);
+            Dictionary<string, object> data = base.CollectData();
             //2. Write the message in order.
-            msg.WriteString("This is instance channel custom message");
+            data.Add("custom_message", "This is instance channel custom message");
+            return data;
         }
 
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             //1. Switch to implementation based on message type
             switch (type)
             {
                 case "CustomMessage":
-                    CustomMessage(msg);
+                    CustomMessage((string)data[0]);
                     return;
             }
             //2. The message analysis of the base class continues
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
-        void CustomMessage(IncomingMessage msg)
+        void CustomMessage(string s)
         {
             //Read the message from python in order.
             //Note that the reading order here should align with 
             //the writing order in CustomMessage() of custom_attr.py.
-            string str = msg.ReadString();
-
-            Debug.Log(str);
+            Debug.Log(s);
         }
 
-        void ListenerMessage(IncomingMessage msg)
+        void DynamicMessage(IncomingMessage msg)
         {
             //Read the message from python in order.
             //Note that the reading order here should align with 

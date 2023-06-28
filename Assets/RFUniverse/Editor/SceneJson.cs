@@ -15,7 +15,7 @@ namespace RFUniverse
             string path = EditorUtility.SaveFilePanel("SaveScene", Application.streamingAssetsPath + "/SceneData", "", "json");
             if (path == null) return;
             List<BaseAttr> attrs = FindObjectsOfType<BaseAttr>().ToList();
-            AssetManager.Instance.SaveScene(path, attrs);
+            PlayerMain.Instance.SaveScene(path, attrs);
         }
         [MenuItem("RFUniverse/SceneJson/LoadScene")]
         public static void Load()
@@ -23,13 +23,13 @@ namespace RFUniverse
             string path = EditorUtility.OpenFilePanel("SaveScene", Application.streamingAssetsPath + "/SceneData", "json");
             if (path == null) return;
             Clear();
-            AssetManager.Instance.LoadScene(path, null, false);
+            PlayerMain.Instance.LoadScene(path, null, false);
         }
         [MenuItem("RFUniverse/SceneJson/ClearScene")]
         public static void Clear()
         {
             List<BaseAttr> attrs = FindObjectsOfType<BaseAttr>().ToList();
-            AssetManager.Instance.ClearScene(attrs);
+            PlayerMain.Instance.ClearScene(attrs);
         }
     }
 }

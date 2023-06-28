@@ -1,5 +1,4 @@
-﻿using Robotflow.RFUniverse.SideChannels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
@@ -201,108 +200,85 @@ namespace RFUniverse.Attributes
         {
             RemoveAttr(this);
         }
-
-        public virtual void CollectData(OutgoingMessage msg)
+        public virtual Dictionary<string, object> CollectData()
         {
-            // Name
-            msg.WriteString(Name);
-            // Position
-            msg.WriteFloat32(transform.position.x);
-            msg.WriteFloat32(transform.position.y);
-            msg.WriteFloat32(transform.position.z);
-            // Rotation
-            msg.WriteFloat32(transform.eulerAngles.x);
-            msg.WriteFloat32(transform.eulerAngles.y);
-            msg.WriteFloat32(transform.eulerAngles.z);
-            // Quaternion
-            msg.WriteFloat32(transform.rotation.x);
-            msg.WriteFloat32(transform.rotation.y);
-            msg.WriteFloat32(transform.rotation.z);
-            msg.WriteFloat32(transform.rotation.w);
-            // LocalPosition
-            msg.WriteFloat32(transform.localPosition.x);
-            msg.WriteFloat32(transform.localPosition.y);
-            msg.WriteFloat32(transform.localPosition.z);
-            // LocalRotation
-            msg.WriteFloat32(transform.localEulerAngles.x);
-            msg.WriteFloat32(transform.localEulerAngles.y);
-            msg.WriteFloat32(transform.localEulerAngles.z);
-            // LocalQuaternion
-            msg.WriteFloat32(transform.localRotation.x);
-            msg.WriteFloat32(transform.localRotation.y);
-            msg.WriteFloat32(transform.localRotation.z);
-            msg.WriteFloat32(transform.localRotation.w);
-
-            List<float> matrix = new List<float>();
-            for (int i = 0; i < 16; i++)
-            {
-                matrix.Add(transform.localToWorldMatrix[i]);
-            }
-            msg.WriteFloatList(matrix);
-
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add("name", Name);
+            data.Add("position", transform.position);
+            data.Add("rotation", transform.eulerAngles);
+            data.Add("quaternion", transform.rotation);
+            data.Add("local_position", transform.localPosition);
+            data.Add("local_rotation", transform.localEulerAngles);
+            data.Add("local_quaternion", transform.localRotation);
+            data.Add("local_to_world_matrix", transform.localToWorldMatrix);
             if (resultLocalPoint != null)
             {
-                msg.WriteBoolean(true);
-                msg.WriteFloatList(resultLocalPoint);
+                data.Add("result_local_point", resultLocalPoint.Value);
                 resultLocalPoint = null;
             }
-            else
-                msg.WriteBoolean(false);
             if (resultWorldPoint != null)
             {
-                msg.WriteBoolean(true);
-                msg.WriteFloatList(resultWorldPoint);
+                data.Add("result_world_point", resultWorldPoint.Value);
                 resultWorldPoint = null;
             }
-            else
-                msg.WriteBoolean(false);
+            return data;
         }
 
-        public void ReceiveData(IncomingMessage msg)
+        public void ReceiveData(object[] data)
         {
-            string type = msg.ReadString();
-            AnalysisMsg(msg, type);
+            string type = (string)data[0];
+            data = data.Skip(1).ToArray();
+            AnalysisData(type, data);
         }
 
-        public virtual void AnalysisMsg(IncomingMessage msg, string type)
+        public virtual void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "SetTransform":
-                    SetTransform(msg);
+                    SetTransform(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>(), data[2].ConvertType<List<float>>(), (bool)data[3]);
+                    return;
+                case "SetPosition":
+                    SetPosition(data[0].ConvertType<List<float>>(), (bool)data[1]);
+                    return;
+                case "SetRotation":
+                    SetRotation(data[0].ConvertType<List<float>>(), (bool)data[1]);
                     return;
                 case "SetRotationQuaternion":
-                    SetRotationQuaternion(msg);
+                    SetRotationQuaternion(data[0].ConvertType<List<float>>(), (bool)data[1]);
+                    return;
+                case "SetScale":
+                    SetScale(data[0].ConvertType<List<float>>());
                     return;
                 case "Translate":
-                    Translate(msg);
+                    Translate(data[0].ConvertType<List<float>>(), (bool)data[1]);
                     return;
                 case "Rotate":
-                    Rotate(msg);
+                    Rotate(data[0].ConvertType<List<float>>(), (bool)data[1]);
                     return;
                 case "SetParent":
-                    SetParent(msg);
+                    SetParent((int)data[0], (string)data[1]);
                     return;
                 case "SetActive":
-                    SetActive(msg);
+                    SetActive((bool)data[0]);
                     return;
                 case "SetLayer":
-                    SetLayer(msg);
+                    SetLayer((int)data[0]);
                     return;
                 case "Copy":
-                    Copy(msg);
+                    Copy((int)data[0]);
                     return;
                 case "Destroy":
                     Destroy();
                     return;
                 case "SetRFMoveColliderActive":
-                    SetRFMoveColliderActive(msg);
+                    SetRFMoveColliderActive((bool)data[0]);
                     return;
                 case "GetLoaclPointFromWorld":
-                    GetLoaclPointFromWorld(msg);
+                    GetLoaclPointFromWorld(data[0].ConvertType<List<float>>());
                     return;
                 case "GetWorldPointFromLocal":
-                    GetWorldPointFromLocal(msg);
+                    GetWorldPointFromLocal(data[0].ConvertType<List<float>>());
                     return;
                 default:
                     Debug.Log($"ID:{ID} Dont have mehond:{type}");
@@ -310,101 +286,99 @@ namespace RFUniverse.Attributes
             }
         }
 
-        protected virtual void SetTransform(IncomingMessage msg)
+        public virtual void SetTransform(List<float> position, List<float> rotation, List<float> scale, bool worldSpace = true)
         {
             Debug.Log("SetTransform");
-            bool set_position = msg.ReadBoolean();
-            bool set_rotation = msg.ReadBoolean();
-            bool set_scale = msg.ReadBoolean();
-
-            Vector3 position = Vector3.zero;
-            if (set_position)
+            if (position != null)
             {
-                float x = msg.ReadFloat32();
-                float y = msg.ReadFloat32();
-                float z = msg.ReadFloat32();
-                position = new Vector3(x, y, z);
+                SetPosition(position, worldSpace);
             }
-            Vector3 rotation = Vector3.zero;
-            if (set_rotation)
+            if (rotation != null)
             {
-                float rx = msg.ReadFloat32();
-                float ry = msg.ReadFloat32();
-                float rz = msg.ReadFloat32();
-                rotation = new Vector3(rx, ry, rz);
+                SetRotation(rotation, worldSpace);
             }
-            Vector3 scale = Vector3.one;
-            if (set_scale)
+            if (scale != null)
             {
-                float sx = msg.ReadFloat32();
-                float sy = msg.ReadFloat32();
-                float sz = msg.ReadFloat32();
-                scale = new Vector3(sx, sy, sz);
+                SetScale(scale);
             }
-            bool isWorld = msg.ReadBoolean();
-            SetTransform(set_position, set_rotation, set_scale, position, rotation, scale, isWorld);
-        }
-        protected virtual void SetRotationQuaternion(IncomingMessage msg)
-        {
-            Debug.Log("SetRotationQuaternion");
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            float w = msg.ReadFloat32();
-            bool isWorld = msg.ReadBoolean();
-            Quaternion quaternion = new Quaternion(x, y, z, w);
-            SetTransform(false, true, false, Vector3.zero, quaternion.eulerAngles, Vector3.one, isWorld);
         }
         public virtual void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {
             if (set_position)
             {
-                if (worldSpace)
-                    transform.position = position;
-                else
-                    transform.localPosition = position;
+                SetPosition(position, worldSpace);
             }
             if (set_rotation)
             {
-                if (worldSpace)
-                    transform.eulerAngles = rotation;
-                else
-                    transform.localEulerAngles = rotation;
+                SetRotation(rotation, worldSpace);
             }
             if (set_scale)
             {
-                transform.localScale = scale;
+                SetScale(scale);
             }
         }
-
-        private void Translate(IncomingMessage msg)
+        protected virtual void SetPosition(List<float> position, bool worldSpace = true)
         {
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            Space space = msg.ReadBoolean() ? Space.World : Space.Self;
-            transform.Translate(new Vector3(x, y, z), space);
+            Debug.Log("SetPosition");
+            SetPosition(new Vector3(position[0], position[1], position[2]), worldSpace);
+        }
+        public virtual void SetPosition(Vector3 position, bool worldSpace = true)
+        {
+            if (worldSpace)
+                transform.position = position;
+            else
+                transform.localPosition = position;
+        }
+        protected virtual void SetRotation(List<float> rotation, bool worldSpace = true)
+        {
+            Debug.Log("SetRotation");
+            SetRotation(new Vector3(rotation[0], rotation[1], rotation[2]), worldSpace);
+        }
+        public virtual void SetRotation(Vector3 rotation, bool worldSpace = true)
+        {
+            if (worldSpace)
+                transform.eulerAngles = rotation;
+            else
+                transform.localEulerAngles = rotation;
+        }
+        protected virtual void SetRotationQuaternion(List<float> quaternion, bool worldSpace = true)
+        {
+            Debug.Log("SetRotationQuaternion");
+            SetRotation(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).eulerAngles, worldSpace);
+        }
+        public virtual void SetRotationQuaternion(Quaternion quaternion, bool worldSpace = true)
+        {
+            if (worldSpace)
+                transform.rotation = quaternion;
+            else
+                transform.localRotation = quaternion;
+        }
+        protected virtual void SetScale(List<float> scale)
+        {
+            Debug.Log("SetScale");
+            SetScale(new Vector3(scale[0], scale[1], scale[2]));
+        }
+        public virtual void SetScale(Vector3 scale)
+        {
+            transform.localScale = scale;
         }
 
-        private void Rotate(IncomingMessage msg)
+        private void Translate(List<float> translate, bool worldSpace)
         {
-            float rx = msg.ReadFloat32();
-            float ry = msg.ReadFloat32();
-            float rz = msg.ReadFloat32();
-            Space space = msg.ReadBoolean() ? Space.World : Space.Self;
-            transform.Rotate(new Vector3(0, 0, 1), rz, space);
-            transform.Rotate(new Vector3(1, 0, 0), rx, space);
-            transform.Rotate(new Vector3(0, 1, 0), ry, space);
+            Space space = worldSpace ? Space.World : Space.Self;
+            transform.Translate(new Vector3(translate[0], translate[1], translate[2]), space);
         }
-        protected virtual void SetParent(IncomingMessage msg)
+
+        private void Rotate(List<float> translate, bool worldSpace)
         {
-            Debug.Log("SetParent");
-            int parentID = msg.ReadInt32();
-            string parentName = msg.ReadString();
-            SetParent(parentID, parentName);
+            Space space = worldSpace ? Space.World : Space.Self;
+            transform.Rotate(new Vector3(0, 0, 1), translate[2], space);
+            transform.Rotate(new Vector3(1, 0, 0), translate[0], space);
+            transform.Rotate(new Vector3(0, 1, 0), translate[1], space);
         }
         public virtual void SetParent(int parentID, string parentName)
         {
+            Debug.Log("SetParent");
             Transform parent = null;
             if (Attrs.TryGetValue(parentID, out BaseAttr attr))
             {
@@ -415,35 +389,25 @@ namespace RFUniverse.Attributes
             transform.SetParent(parent);
         }
 
-        protected void SetActive(IncomingMessage msg)
-        {
-            bool active = msg.ReadBoolean();
-            SetActive(active);
-        }
         protected virtual void SetActive(bool active)
         {
+            Debug.Log("SetActive");
             gameObject.SetActive(active);
-        }
-        protected void SetLayer(IncomingMessage msg)
-        {
-            Debug.Log("SetLayer");
-            int layer = msg.ReadInt32();
-            SetLayer(layer);
         }
         public void SetLayer(int layer)
         {
+            Debug.Log("SetLayer");
             foreach (var item in this.GetChildComponentFilter<Transform>())
             {
                 item.gameObject.layer = layer;
             }
         }
-        protected void Copy(IncomingMessage msg)
+        protected void Copy(int newID)
         {
             Debug.Log("Copy");
-            int copyID = msg.ReadInt32();
             GameObject copy = GameObject.Instantiate(gameObject);
             BaseAttr attr = copy.GetComponent<BaseAttr>();
-            attr.ID = copyID;
+            attr.ID = newID;
             attr.Instance();
         }
 
@@ -455,34 +419,28 @@ namespace RFUniverse.Attributes
             //    Destroy(gameObject);
         }
 
-        protected void SetRFMoveColliderActive(IncomingMessage msg)
+        protected void SetRFMoveColliderActive(bool active)
         {
-            IsRFMoveCollider = msg.ReadBoolean();
+            IsRFMoveCollider = active;
         }
 
-        float[] resultLocalPoint = null;
-        void GetLoaclPointFromWorld(IncomingMessage msg)
+        Vector3? resultLocalPoint = null;
+        void GetLoaclPointFromWorld(List<float> world)
         {
             Debug.Log("GetLoaclPointFromWorld");
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            Vector3 local = transform.InverseTransformPoint(new Vector3(x, y, z));
-            resultLocalPoint = new float[] { local.x, local.y, local.z };
+            resultLocalPoint = transform.InverseTransformPoint(new Vector3(world[0], world[1], world[2]));
         }
 
-        float[] resultWorldPoint = null;
-        void GetWorldPointFromLocal(IncomingMessage msg)
+        Vector3? resultWorldPoint = null;
+        void GetWorldPointFromLocal(List<float> local)
         {
             Debug.Log("GetWorldPointFromLocal");
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            Vector3 world = transform.TransformPoint(new Vector3(x, y, z));
-            resultWorldPoint = new float[] { world.x, world.y, world.z };
+            resultWorldPoint = transform.TransformPoint(new Vector3(local[0], local[1], local[2]));
         }
+
         private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
         public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);
+
         public static Action OnCollisionPairsChange;
         private void OnCollisionEnter(Collision other)
         {

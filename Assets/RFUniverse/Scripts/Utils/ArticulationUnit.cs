@@ -32,7 +32,7 @@ public class ArticulationUnit : MonoBehaviour
     public ArticulationBody mimicParent = null;
     public float mimicMultiplier = 1.0f;
     public float mimicOffset = 0.0f;
-    public bool mimicSync = false;
+    //public bool mimicSync = false;
     public event Action OnSetJointPositionDirectly = null;
     private ControlMode controlMode;
     private ArticulationBody articulationBody;
@@ -68,7 +68,12 @@ public class ArticulationUnit : MonoBehaviour
             jointVelocityThres = 0.3f;
         }
         if (mimicParent)
+        {
+            ArticulationDrive articulationDrive = articulationBody.xDrive;
+            articulationDrive.driveType = ArticulationDriveType.Target;
+            articulationBody.xDrive = articulationDrive;
             mimicParent.GetComponent<ArticulationUnit>().OnSetJointPositionDirectly += MimicDirectly;
+        }
     }
 
     enum ForceMode
@@ -101,14 +106,21 @@ public class ArticulationUnit : MonoBehaviour
     private void Mimic()
     {
         if (mimicParent == null) return;
-        var currentDrive = articulationBody.xDrive;
-        if (mimicSync)
+        ArticulationDrive currentDrive = articulationBody.xDrive;
+        switch (mimicParent.jointType)
         {
-            currentDrive.target = mimicParent.xDrive.target * mimicMultiplier + mimicOffset;
-        }
-        else if (mimicParent.jointType != ArticulationJointType.FixedJoint)
-        {
-            currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+            case ArticulationJointType.FixedJoint:
+                break;
+            case ArticulationJointType.PrismaticJoint:
+                currentDrive.target = mimicParent.jointPosition[0] * mimicMultiplier + mimicOffset;
+                break;
+            case ArticulationJointType.RevoluteJoint:
+                currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+                break;
+            case ArticulationJointType.SphericalJoint:
+                break;
+            default:
+                break;
         }
         articulationBody.xDrive = currentDrive;
     }
@@ -178,24 +190,39 @@ public class ArticulationUnit : MonoBehaviour
 
     public float CalculateCurrentJointPosition()
     {
-        if (articulationBody == null)
-        {
-            return 0;
-        }
-
+        if (articulationBody == null) return 0;
         if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
-        {
             return articulationBody.jointPosition[0];
-        }
         else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
-        {
-            // In Articulation Body, joint position for revolute joint is radius, so it need to be converted to degree.
             return articulationBody.jointPosition[0] * Mathf.Rad2Deg;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
+    }
+    public float CalculateCurrentJointVelocity()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointVelocity[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointVelocity[0] * Mathf.Rad2Deg;
+        return 0;
+    }
+    public float CalculateCurrentJointAcceleration()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointAcceleration[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointAcceleration[0] * Mathf.Rad2Deg;
+        return 0;
+    }
+    public float CalculateCurrentJointForce()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointForce[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointForce[0] * Mathf.Rad2Deg;
+        return 0;
     }
     public void SetJointTargetVelocity(float jointTargetVelocity)
     {

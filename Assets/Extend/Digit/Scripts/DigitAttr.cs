@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using System.IO;
 using UnityEngine.UI;
-using Robotflow.RFUniverse.SideChannels;
 using UnityEditor;
 
 namespace RFUniverse.Attributes.Digit
@@ -314,21 +313,19 @@ namespace RFUniverse.Attributes.Digit
             m.triangles = t.ToArray();
             return m;
         }
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
-            if (lightBase64String != null)
+            Dictionary<string, object> data = base.CollectData();
+            if (lightBase64String != null && depthBase64String != null)
             {
-                msg.WriteBoolean(true);
-                msg.WriteString(lightBase64String);
+                data.Add("light", lightBase64String);
                 lightBase64String = null;
-                msg.WriteString(depthBase64String);
+                data.Add("depth", depthBase64String);
                 depthBase64String = null;
             }
-            else
-                msg.WriteBoolean(false);
+            return data;
         }
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
@@ -336,7 +333,7 @@ namespace RFUniverse.Attributes.Digit
                     GetData();
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
         string lightBase64String = null;
         string depthBase64String = null;
