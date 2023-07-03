@@ -1,7 +1,7 @@
 ﻿using RFUniverse;
 using RFUniverse.Attributes;
-using Robotflow.RFUniverse.SideChannels;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LightAttrData : BaseAttrData
@@ -41,7 +41,7 @@ public class LightAttr : BaseAttr
     Transform lightView;
     private void Awake()
     {
-        lightView = transform.Find("LightView(clone)");
+        lightView = transform.Find("LightView(Clone)");
         if (lightView == null)
         {
             lightView = GameObject.Instantiate(Resources.Load<GameObject>("LightView")).transform;
@@ -137,60 +137,60 @@ public class LightAttr : BaseAttr
         data.lightData = GetLightData();
         return data;
     }
-    public override void AnalysisMsg(IncomingMessage msg, string type)
+    public override void AnalysisData(string type, object[] data)
     {
         switch (type)
         {
             case "SetColor":
-                SetColor(msg);
+                SetColor(RFUniverseUtility.ConvertType<List<float>>(data[0]));
                 return;
             case "SetIntensity":
-                SetIntensity(msg);
+                SetIntensity((float)data[0]);
                 return;
             case "SetRange":
-                SetRange(msg);
+                SetRange((float)data[0]);
                 return;
             case "SetType":
-                SetType(msg);
+                SetType((int)data[0]);
                 return;
             case "SetShadow":
-                SetShadow(msg);
+                SetShadow((int)data[0]);
                 return;
             case "SetSpotAngle":
-                SetSpotAngle(msg);
+                SetSpotAngle((float)data[0]);
                 return;
         }
-        base.AnalysisMsg(msg, type);
+        base.AnalysisData(type, data);
     }
 
-    private void SetSpotAngle(IncomingMessage msg)
+    private void SetSpotAngle(float spotAngle)
     {
-        Light.spotAngle = msg.ReadFloat32();
+        Light.spotAngle = spotAngle;
     }
 
-    private void SetShadow(IncomingMessage msg)
+    private void SetShadow(int shadows)
     {
-        Light.shadows = (LightShadows)msg.ReadInt32();
+        Light.shadows = (LightShadows)shadows;
     }
 
-    private void SetType(IncomingMessage msg)
+    private void SetType(int type)
     {
-        Type = (LightType)msg.ReadInt32();
+        Type = (LightType)type;
     }
 
-    private void SetRange(IncomingMessage msg)
+    private void SetRange(float range)
     {
-        Light.range = msg.ReadFloat32();
+        Light.range = range;
     }
 
-    private void SetIntensity(IncomingMessage msg)
+    private void SetIntensity(float intensity)
     {
-        Light.intensity = msg.ReadFloat32();
+        Light.intensity = intensity;
     }
 
-    private void SetColor(IncomingMessage msg)
+    private void SetColor(List<float> color)
     {
-        Light.color = new Color(msg.ReadFloat32(), msg.ReadFloat32(), msg.ReadFloat32(), 1);
+        Light.color = new Color(color[0], color[1], color[2]);
     }
 
 

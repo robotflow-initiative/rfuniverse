@@ -39,7 +39,7 @@ public class GraspSimShow : MonoBehaviour
         List<float> pose = msg.ReadFloatList().ToList();
         List<float> joint = msg.ReadFloatList().ToList();
         parallelCount = msg.ReadInt32();
-        List<List<float>> listPose = RFUniverseUtility.ListFloatSlicer(pose, 16);
+        List<List<float>> listPose = RFUniverseUtility.ListSlicer(pose, 16);
         foreach (var item in listPose)
         {
             Matrix4x4 matrix = RFUniverseUtility.ListFloatToMatrix(item);
@@ -59,7 +59,7 @@ public class GraspSimShow : MonoBehaviour
         {
             joint[i] *= Mathf.Rad2Deg;
         }
-        listJoint = RFUniverseUtility.ListFloatSlicer(joint, jointCount);
+        listJoint = RFUniverseUtility.ListSlicer(joint, jointCount);
 
         success.Clear();
         envs.Clear();

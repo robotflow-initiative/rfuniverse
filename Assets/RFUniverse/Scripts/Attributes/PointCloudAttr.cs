@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -13,31 +12,30 @@ namespace RFUniverse.Attributes
         MeshRenderer render = null;
         List<Vector3> positions = new List<Vector3>();
         List<Color> colors = new List<Color>();
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "ShowPointCloud":
-                    ShowPointCloud(msg);
+                    ShowPointCloud((string)data[0], (float[,])data[1], (float[,])data[2], (float)data[3]);
                     return;
                 case "SetRadius":
-                    SetRadius(msg);
+                    SetRadius((float)data[0]);
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
-        private void ShowPointCloud(IncomingMessage msg)
+        private void ShowPointCloud(string path, float[,] positionArray, float[,] colorsArray, float radius)
         {
             PlayerMain.Instance.GroundActive = false;
-            if (msg.ReadBoolean())
+            if (!string.IsNullOrEmpty(path))
             {
-                string path = msg.ReadString();
                 ImportPointCloud(path);
             }
             else
             {
-                positions = RFUniverseUtility.ListFloatToListVector3(msg.ReadFloatList().ToList());
-                colors = RFUniverseUtility.ListFloatToListColor(msg.ReadFloatList().ToList());
+                positions = RFUniverseUtility.FloatArrayToListVector3(positionArray);
+                colors = RFUniverseUtility.FloatArrayToListColor(colorsArray);
             }
 
             Mesh mesh = CreatePointCloudMesh(positions, colors);
@@ -51,11 +49,11 @@ namespace RFUniverse.Attributes
                 filter = gameObject.AddComponent<MeshFilter>();
             }
             filter.mesh = mesh;
+            SetRadius(radius);
         }
 
-        private void SetRadius(IncomingMessage msg)
+        private void SetRadius(float radius)
         {
-            float radius = msg.ReadFloat32();
             render.material.SetFloat("_Radius", radius);
         }
 

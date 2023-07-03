@@ -7,10 +7,10 @@ namespace RFUniverse
     {
         void Awake()
         {
-            string[] CommandLineArgs = System.Environment.GetCommandLineArgs();
-            for (int i = 0; i < CommandLineArgs.Length; i++)
+            string[] commandLineArgs = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i < commandLineArgs.Length; i++)
             {
-                if (CommandLineArgs[i].ToLower() == "-edit")
+                if (commandLineArgs[i].ToLower() == "-edit")
                 {
                     SceneManager.LoadScene("Edit");
                     return;

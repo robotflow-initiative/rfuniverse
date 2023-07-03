@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
-using System.Linq;
 using UnityEditor;
 using System.IO;
 
@@ -26,16 +23,6 @@ namespace RFUniverse.Attributes
                 cameraIDShader = Shader.Find("RFUniverse/CameraID");
             if (cameraMotionVectorShader == null)
                 cameraMotionVectorShader = Shader.Find("RFUniverse/CameraMotionVector");
-        }
-
-        public override void CollectData(OutgoingMessage msg)
-        {
-            base.CollectData(msg);
-        }
-
-        public override void AnalysisMsg(IncomingMessage msg, string type)
-        {
-            base.AnalysisMsg(msg, type);
         }
         public override Texture2D GetRGB(int width, int height, float? unPhysicalFov = null)
         {

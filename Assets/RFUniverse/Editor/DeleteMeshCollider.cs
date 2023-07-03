@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
-public class DeleteMeshCollider : MonoBehaviour
+public class DeleteMeshCollider : Editor
 {
     [MenuItem("RFUniverse/Delete Mesh Colliders")]
     static void DeleteMeshColliers()

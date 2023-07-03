@@ -3,6 +3,7 @@ using UnityEngine;
 using Robotflow.RFUniverse.SideChannels;
 using RFUniverse.Attributes;
 using System.Linq;
+using RFUniverse;
 
 public class OmplManagerAttr : BaseAttr
 {
@@ -13,31 +14,31 @@ public class OmplManagerAttr : BaseAttr
     {
         base.Init();
     }
-    public override void CollectData(OutgoingMessage msg)
+    public override Dictionary<string, object> CollectData()
     {
-        base.CollectData(msg);
-        msg.WriteBoolean(isCollide);
+        Dictionary<string, object> data = base.CollectData();
+        data.Add("is_collide", isCollide);
+        return data;
     }
 
-    public override void AnalysisMsg(IncomingMessage msg, string type)
+    public override void AnalysisData(string type, object[] data)
     {
         switch (type)
         {
             case "ModifyRobot":
-                ModifyRobot(msg);
+                ModifyRobot((int)data[0]);
                 return;
             case "SetJointState":
-                SetJointState(msg);
+                SetJointState(RFUniverseUtility.ConvertType<List<float>>(data[0]));
                 return;
             case "RestoreRobot":
-                RestoreRobot(msg);
+                RestoreRobot();
                 return;
         }
-        base.AnalysisMsg(msg, type);
+        base.AnalysisData(type, data);
     }
-    void ModifyRobot(IncomingMessage msg)
+    void ModifyRobot(int id)
     {
-        int id = msg.ReadInt32();
         if (!Attrs.ContainsKey(id)) return;
         robot = (ControllerAttr)Attrs[id];
         foreach (var collider in robot.GetComponentsInChildren<Collider>())
@@ -52,14 +53,13 @@ public class OmplManagerAttr : BaseAttr
         }
     }
 
-    void SetJointState(IncomingMessage msg)
+    void SetJointState(List<float> jointPositions)
     {
         if (robot == null) return;
-        List<float> joint_positions = msg.ReadFloatList().ToList();
-        robot.SetJointPosition(joint_positions, ControlMode.Direct);
+        robot.SetJointPosition(jointPositions, ControlMode.Direct);
         isCollide = false;
     }
-    void RestoreRobot(IncomingMessage msg)
+    void RestoreRobot()
     {
         if (robot == null) return;
         foreach (var collider in robot.GetComponentsInChildren<Collider>())

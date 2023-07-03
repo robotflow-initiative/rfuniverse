@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
-using System.Linq;
 
 namespace RFUniverse.Attributes
 {
@@ -27,64 +25,36 @@ namespace RFUniverse.Attributes
             //leftCamera.cullingMask = PlayerMain.Instance.simulationLayer;
             //rightCamera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
+            Dictionary<string, object> data = base.CollectData();
             if (leftLRBase64String != null && rightLRBase64String != null)
             {
-                msg.WriteBoolean(true);
-
-                msg.WriteString(leftLRBase64String);
-                // List<float> matrix = new List<float>();
-                // for (int i = 0; i < 16; i++)
-                // {
-                //     matrix.Add(leftCamera.cameraToWorldMatrix[i]);
-                // }
-                // msg.WriteFloatList(matrix);
-                // matrix.Clear();
-                // for (int i = 0; i < 16; i++)
-                // {
-                //     matrix.Add(leftCamera.projectionMatrix[i]);
-                // }
-                // msg.WriteFloatList(matrix);
+                data.Add("ir_left", leftLRBase64String);
                 leftLRBase64String = null;
-
-                msg.WriteString(rightLRBase64String);
-                // for (int i = 0; i < 16; i++)
-                // {
-                //     matrix.Add(rightCamera.cameraToWorldMatrix[i]);
-                // }
-                // msg.WriteFloatList(matrix);
-                // matrix.Clear();
-                // for (int i = 0; i < 16; i++)
-                // {
-                //     matrix.Add(rightCamera.projectionMatrix[i]);
-                // }
-                // msg.WriteFloatList(matrix);
+                data.Add("ir_right", rightLRBase64String);
                 rightLRBase64String = null;
             }
-            else
-                msg.WriteBoolean(false);
+            return data;
         }
 
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "GetActiveDepth":
-                    GetActiveDepth(msg);
+                    GetActiveDepth((float[,])data[0]);
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
-        void GetActiveDepth(IncomingMessage msg)
+        void GetActiveDepth(float[,] intrinsicMatrix)
         {
             Debug.Log("GetActiveDepth");
-            List<float> intrinsicMatrix = msg.ReadFloatList().ToList();
             leftLRBase64String = Convert.ToBase64String(GetCameraIR(intrinsicMatrix, true).EncodeToPNG());
             rightLRBase64String = Convert.ToBase64String(GetCameraIR(intrinsicMatrix, false).EncodeToPNG());
         }
-        public Texture2D GetCameraIR(List<float> intrinsicMatrix, bool leftOrRight)
+        public Texture2D GetCameraIR(float[,] intrinsicMatrix, bool leftOrRight)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(leftOrRight ? leftCamera : rightCamera, intrinsicMatrix);
             return GetCameraIR(size.x, size.y, leftOrRight ? leftCamera : rightCamera);

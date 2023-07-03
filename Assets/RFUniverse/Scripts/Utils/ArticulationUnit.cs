@@ -1,28 +1,11 @@
 ﻿using System;
 using UnityEngine;
-public enum MovingDirection
-{
-    None = 0,
-    Positive = 1,
-    Negative = -1,
-};
 
-// Direct: Move joint position directly through articulationBody.jointPosition.
-
-// Target: Move joint position through articulationDrive.target, when velocity is smaller 
-//     than a given threshold, stop it.
-
-// TargetWithJointPosition: Move joint position through articulationDrive.target, when 
-//     velocity is smaller than a given threshold, move joint position directly through 
-//     articulationBody.jointPosition.
-
-// Speed: Move 
 public enum ControlMode
 {
     Direct = 0,
     Target = 1,
-    TargetWithJointPosition = 2,
-    Speed = 3
+    Speed = 2
 };
 
 [RequireComponent(typeof(ArticulationBody))]
@@ -32,20 +15,14 @@ public class ArticulationUnit : MonoBehaviour
     public ArticulationBody mimicParent = null;
     public float mimicMultiplier = 1.0f;
     public float mimicOffset = 0.0f;
-    public bool mimicSync = false;
+    //public bool mimicSync = false;
     public event Action OnSetJointPositionDirectly = null;
-    private ControlMode controlMode;
+    //private ControlMode controlMode;
     private ArticulationBody articulationBody;
-    private int dofCount;
-    private float speed = 100.0f;
-    private float speedScale = 1.0f;
-    private float jointArrivingTolerance = 0.3f;
-    private float targetJointPosition = 0;
-    private float jointVelocityThres = 0.1f;
-    private MovingDirection direction = MovingDirection.None;
+    private int dofCount => articulationBody.dofCount;
 
-    private int checkStableFrequency = 5;
-    private int checkStableFrequencyCounter = 0;
+    //private int checkStableFrequency = 5;
+    //private int checkStableFrequencyCounter = 0;
 
     void Awake()
     {
@@ -54,21 +31,28 @@ public class ArticulationUnit : MonoBehaviour
         {
             Debug.LogError($"No ArticulationBody component in {gameObject.name}");
         }
-        dofCount = articulationBody.jointPosition.dofCount;
-        controlMode = ControlMode.Target;
+        //controlMode = ControlMode.Target;
         if (dofCount > 0)
         {
             articulationBody.jointVelocity = new ArticulationReducedSpace(0);
         }
 
-        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
-        {
-            speed = 0.1f;
-            jointArrivingTolerance = 0.001f;
-            jointVelocityThres = 0.3f;
-        }
         if (mimicParent)
+        {
+            ArticulationDrive drive = articulationBody.xDrive;
+            drive.driveType = ArticulationDriveType.Target;
+            articulationBody.xDrive = drive;
+
+            drive = articulationBody.yDrive;
+            drive.driveType = ArticulationDriveType.Target;
+            articulationBody.yDrive = drive;
+
+            drive = articulationBody.zDrive;
+            drive.driveType = ArticulationDriveType.Target;
+            articulationBody.zDrive = drive;
+
             mimicParent.GetComponent<ArticulationUnit>().OnSetJointPositionDirectly += MimicDirectly;
+        }
     }
 
     enum ForceMode
@@ -101,14 +85,21 @@ public class ArticulationUnit : MonoBehaviour
     private void Mimic()
     {
         if (mimicParent == null) return;
-        var currentDrive = articulationBody.xDrive;
-        if (mimicSync)
+        ArticulationDrive currentDrive = articulationBody.xDrive;
+        switch (mimicParent.jointType)
         {
-            currentDrive.target = mimicParent.xDrive.target * mimicMultiplier + mimicOffset;
-        }
-        else if (mimicParent.jointType != ArticulationJointType.FixedJoint)
-        {
-            currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+            case ArticulationJointType.FixedJoint:
+                break;
+            case ArticulationJointType.PrismaticJoint:
+                currentDrive.target = mimicParent.jointPosition[0] * mimicMultiplier + mimicOffset;
+                break;
+            case ArticulationJointType.RevoluteJoint:
+                currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+                break;
+            case ArticulationJointType.SphericalJoint:
+                break;
+            default:
+                break;
         }
         articulationBody.xDrive = currentDrive;
     }
@@ -116,116 +107,118 @@ public class ArticulationUnit : MonoBehaviour
     {
         SetJointPositionDirectly(mimicParent.xDrive.target * mimicMultiplier + mimicOffset);
     }
-    void AttrUpdate()
-    {
-        // No freedom, i.e. Fixed joint
-        if (dofCount == 0)
-        {
-            return;
-        }
-
-        if (direction == MovingDirection.None)
-        {
-            return;
-        }
-
-        float currentTargetJointPosition = 0.0f;
-        if (controlMode == ControlMode.Speed)
-        {
-            currentTargetJointPosition = CalculateCurrentTargetJointPosition();
-        }
-        else
-        {
-            currentTargetJointPosition = targetJointPosition;
-        }
-
-        // Currently, we ignore spherical joint, and suppose each joint has 1DoF at most.
-        // If support sherical joint in the future, the following code needs modification.
-        ArticulationDrive drive = articulationBody.xDrive;
-        drive.target = currentTargetJointPosition;
-        articulationBody.xDrive = drive;
-        // For prismatic joint, we cannot know which drive controls it. So we traverse every drive and promise the movement happens.
-        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
-        {
-            drive = articulationBody.yDrive;
-            drive.target = currentTargetJointPosition;
-            articulationBody.yDrive = drive;
-
-            drive = articulationBody.zDrive;
-            drive.target = currentTargetJointPosition;
-            articulationBody.zDrive = drive;
-        }
-
-        if (controlMode == ControlMode.Direct)
-        {
-            SetJointPositionDirectly(targetJointPosition);
-        }
-        else if (controlMode == ControlMode.Target || controlMode == ControlMode.Speed)
-        {
-            if (IsStable())
-            {
-                direction = MovingDirection.None;
-            }
-        }
-        else if (controlMode == ControlMode.TargetWithJointPosition)
-        {
-            if (IsStable())
-            {
-                SetJointPositionDirectly(targetJointPosition);
-            }
-        }
-    }
 
     public float CalculateCurrentJointPosition()
     {
-        if (articulationBody == null)
-        {
-            return 0;
-        }
-
+        if (articulationBody == null) return 0;
         if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
-        {
             return articulationBody.jointPosition[0];
-        }
         else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
-        {
-            // In Articulation Body, joint position for revolute joint is radius, so it need to be converted to degree.
             return articulationBody.jointPosition[0] * Mathf.Rad2Deg;
-        }
-        else
+        return 0;
+    }
+    public float CalculateCurrentJointVelocity()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointVelocity[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointVelocity[0] * Mathf.Rad2Deg;
+        return 0;
+    }
+    public float CalculateCurrentJointAcceleration()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointAcceleration[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointAcceleration[0] * Mathf.Rad2Deg;
+        return 0;
+    }
+    public float CalculateCurrentJointForce()
+    {
+        if (articulationBody == null) return 0;
+        if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
+            return articulationBody.jointForce[0];
+        else if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
+            return articulationBody.jointForce[0] * Mathf.Rad2Deg;
+        return 0;
+    }
+
+    public void SetJointTarget(float jointPosition, ControlMode controlMode)
+    {
+        switch (controlMode)
         {
-            return 0;
+            case ControlMode.Direct:
+                SetJointPositionDirectly(jointPosition);
+                break;
+            case ControlMode.Target:
+                SetJointPosition(jointPosition);
+                break;
+            case ControlMode.Speed:
+                SetJointTargetVelocity(jointPosition);
+                break;
+            default:
+                break;
         }
+    }
+    public void SetJointPosition(float target)
+    {
+        ArticulationDrive drive = articulationBody.xDrive;
+        drive.driveType = ArticulationDriveType.Force;
+        drive.target = target;
+        articulationBody.xDrive = drive;
+
+        drive = articulationBody.yDrive;
+        drive.driveType = ArticulationDriveType.Force;
+        drive.target = target;
+        articulationBody.yDrive = drive;
+
+        drive = articulationBody.zDrive;
+        drive.driveType = ArticulationDriveType.Force;
+        drive.target = target;
+        articulationBody.zDrive = drive;
+    }
+
+    public void SetJointPositionDirectly(float target)
+    {
+        ArticulationDrive drive = articulationBody.xDrive;
+        drive.driveType = ArticulationDriveType.Target;
+        drive.target = target;
+        articulationBody.xDrive = drive;
+
+        drive = articulationBody.yDrive;
+        drive.driveType = ArticulationDriveType.Target;
+        drive.target = target;
+        articulationBody.yDrive = drive;
+
+        drive = articulationBody.zDrive;
+        drive.driveType = ArticulationDriveType.Target;
+        drive.target = target;
+        articulationBody.zDrive = drive;
+
+        articulationBody.jointPosition = new ArticulationReducedSpace(articulationBody.jointType == ArticulationJointType.PrismaticJoint ? target : target * Mathf.Deg2Rad);
+
+        OnSetJointPositionDirectly?.Invoke();
     }
     public void SetJointTargetVelocity(float jointTargetVelocity)
     {
         ArticulationDrive drive = articulationBody.xDrive;
+        drive.driveType = ArticulationDriveType.Velocity;
         drive.targetVelocity = jointTargetVelocity;
         articulationBody.xDrive = drive;
+
         drive = articulationBody.yDrive;
+        drive.driveType = ArticulationDriveType.Velocity;
         drive.targetVelocity = jointTargetVelocity;
         articulationBody.yDrive = drive;
+
         drive = articulationBody.zDrive;
+        drive.driveType = ArticulationDriveType.Velocity;
         drive.targetVelocity = jointTargetVelocity;
         articulationBody.zDrive = drive;
-        articulationBody.jointVelocity = new ArticulationReducedSpace(jointTargetVelocity);
     }
-    public void SetJointTargetPosition(float jointPosition, ControlMode controlMode, float speedScale = 1f)
-    {
-        this.controlMode = controlMode;
-        this.speedScale = speedScale;
-        targetJointPosition = jointPosition;
-        float currentJointPosition = CalculateCurrentJointPosition();
-        if (targetJointPosition < currentJointPosition)
-        {
-            direction = MovingDirection.Negative;
-        }
-        else
-        {
-            direction = MovingDirection.Positive;
-        }
-        AttrUpdate();
-    }
+
     public void AddJointForce(Vector3 jointForce)
     {
         forceMode = ForceMode.Force;
@@ -242,60 +235,44 @@ public class ArticulationUnit : MonoBehaviour
         forceMode = ForceMode.Torque;
         force = jointForce;
     }
-    public MovingDirection GetMovingDirection()
-    {
-        return direction;
-    }
 
-    private float CalculateCurrentTargetJointPosition()
-    {
-        float currentJointPosition = CalculateCurrentJointPosition();
+    //public MovingDirection GetMovingDirection()
+    //{
+    //    return direction;
+    //}
 
-        // Check whether the joint has reached the target
-        if (Mathf.Abs(currentJointPosition - targetJointPosition) < jointArrivingTolerance)
-        {
-            // Debug.Log(string.Format("{0} Stop.", name));
-            direction = MovingDirection.None;
-        }
+    //private float CalculateCurrentTargetJointPosition()
+    //{
+    //    float currentJointPosition = CalculateCurrentJointPosition();
 
-        float currentTargetJointPosition = currentJointPosition + (float)direction * speedScale * speed * Time.fixedDeltaTime;
+    //    // Check whether the joint has reached the target
+    //    if (Mathf.Abs(currentJointPosition - targetJointPosition) < jointArrivingTolerance)
+    //    {
+    //        // Debug.Log(string.Format("{0} Stop.", name));
+    //        direction = MovingDirection.None;
+    //    }
 
-        return currentTargetJointPosition;
-    }
+    //    float currentTargetJointPosition = currentJointPosition + (float)direction * speedScale * speed * Time.fixedDeltaTime;
 
-    public void SetJointPositionDirectly(float target)
-    {
-        ArticulationDrive drive = articulationBody.xDrive;
-        drive.target = target;
-        articulationBody.xDrive = drive;
+    //    return currentTargetJointPosition;
+    //}
 
-        if (articulationBody.jointType == ArticulationJointType.RevoluteJoint)
-        {
-            articulationBody.jointPosition = new ArticulationReducedSpace(target * Mathf.Deg2Rad);
-        }
-        else if (articulationBody.jointType == ArticulationJointType.PrismaticJoint)
-        {
-            articulationBody.jointPosition = new ArticulationReducedSpace(target);
-        }
-        articulationBody.jointVelocity = new ArticulationReducedSpace(0);
-        direction = MovingDirection.None;
-        OnSetJointPositionDirectly?.Invoke();
-    }
 
-    private bool IsStable()
-    {
-        if (checkStableFrequencyCounter < checkStableFrequency)
-        {
-            checkStableFrequencyCounter += 1;
-            return false;
-        }
 
-        checkStableFrequencyCounter = 0;
-        if (dofCount == 0 || direction == MovingDirection.None)
-        {
-            return true;
-        }
+    //private bool IsStable()
+    //{
+    //    if (checkStableFrequencyCounter < checkStableFrequency)
+    //    {
+    //        checkStableFrequencyCounter += 1;
+    //        return false;
+    //    }
 
-        return articulationBody.jointVelocity[0] < jointVelocityThres;
-    }
+    //    checkStableFrequencyCounter = 0;
+    //    if (dofCount == 0 || direction == MovingDirection.None)
+    //    {
+    //        return true;
+    //    }
+
+    //    return articulationBody.jointVelocity[0] < jointVelocityThres;
+    //}
 }

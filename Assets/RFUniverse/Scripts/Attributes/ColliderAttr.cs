@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using RFUniverse;
-using Robotflow.RFUniverse.SideChannels;
 using System.Linq;
 
 namespace RFUniverse.Attributes
@@ -221,21 +219,21 @@ namespace RFUniverse.Attributes
                 collider.localScale = new Vector3(data.scale[0], data.scale[1], data.scale[2]);
             }
         }
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "EnabledAllCollider":
-                    EnabledAllCollider(msg);
+                    EnabledAllCollider((bool)data[0]);
                     return;
                 case "SetPhysicMaterial":
-                    SetPhysicMaterial(msg);
+                    SetPhysicMaterial((float)data[0], (float)data[1], (float)data[2], (int)data[3], (int)data[4]);
                     return;
                 case "GenerateVHACDColider":
                     GenerateVHACDCollider();
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
         public List<Mesh> GenerateVHACDCollider()
@@ -270,24 +268,23 @@ namespace RFUniverse.Attributes
             return meshAssets;
         }
 
-        public void EnabledAllCollider(IncomingMessage msg)
+        public void EnabledAllCollider(bool enabled)
         {
-            bool enabled = msg.ReadBoolean();
             foreach (var item in this.GetChildComponentFilter<Collider>())
             {
                 if (!item.isTrigger)
                     item.enabled = enabled;
             }
         }
-        public void SetPhysicMaterial(IncomingMessage msg)
+        public void SetPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
             PhysicMaterial material = new PhysicMaterial
             {
-                bounciness = msg.ReadFloat32(),
-                dynamicFriction = msg.ReadFloat32(),
-                staticFriction = msg.ReadFloat32(),
-                frictionCombine = (PhysicMaterialCombine)msg.ReadInt32(),
-                bounceCombine = (PhysicMaterialCombine)msg.ReadInt32()
+                bounciness = bounciness,
+                dynamicFriction = dynamicFriction,
+                staticFriction = staticFriction,
+                frictionCombine = (PhysicMaterialCombine)frictionCombine,
+                bounceCombine = (PhysicMaterialCombine)bounceCombine
             };
             foreach (var item in this.GetChildComponentFilter<Collider>())
             {

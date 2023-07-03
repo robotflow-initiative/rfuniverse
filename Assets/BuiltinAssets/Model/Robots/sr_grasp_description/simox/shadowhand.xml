@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Robot Type="SHADOWHAND" RootNode="shadowhand_hand_base">
+	<RobotNode name="shadowhand_hand_base">
+		<Child name="shadowhand_hand_tcp"/>
+		<Child name="shadowhand_hand_gcp"/>
+		<Child name="forearm"/>
+	</RobotNode>
+	<RobotNode name="shadowhand_hand_tcp">
+		<!--Translation values were set manually!-->
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.375" unitsLength="m"/>
+		</Transform>
+	</RobotNode>
+	<RobotNode name="shadowhand_hand_gcp">
+		<!--Translation and rollpitchyaw values were set manually!-->
+		<Transform>
+			<Translation x="0.000" y="-0.050" z="0.300" unitsLength="m"/>
+			<rollpitchyaw roll="0.750" pitch="0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+	</RobotNode>
+	<RobotNode name="forearm">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/forearm.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/forearm.wrl</File>
+		</CollisionModel>
+		<Child name="WRJ2"/>
+	</RobotNode>
+	<RobotNode name="WRJ2">
+		<Transform>
+			<Translation x="0.000" y="-0.010" z="0.213" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.524" hi="0.175"/>
+		</Joint>
+		<Child name="wrist"/>
+	</RobotNode>
+	<RobotNode name="wrist">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/wrist.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/wrist.wrl</File>
+		</CollisionModel>
+		<Child name="WRJ1"/>
+	</RobotNode>
+	<RobotNode name="WRJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.034" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.785" hi="0.611"/>
+		</Joint>
+		<Child name="palm"/>
+	</RobotNode>
+	<RobotNode name="palm">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/palm.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/palm.wrl</File>
+		</CollisionModel>
+		<Child name="FFJ4"/>
+		<Child name="LFJ5"/>
+		<Child name="MFJ4"/>
+		<Child name="RFJ4"/>
+		<Child name="THJ5"/>
+	</RobotNode>
+	<RobotNode name="FFJ4">
+		<Transform>
+			<Translation x="0.033" y="0.000" z="0.095" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="-1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.436" hi="0.436"/>
+		</Joint>
+		<Child name="ffknuckle"/>
+	</RobotNode>
+	<RobotNode name="ffknuckle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.001" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/knuckle.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/knuckle.wrl</File>
+		</CollisionModel>
+		<Child name="FFJ3"/>
+	</RobotNode>
+	<RobotNode name="FFJ3">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="ffproximal"/>
+	</RobotNode>
+	<RobotNode name="ffproximal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F3.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F3.wrl</File>
+		</CollisionModel>
+		<Child name="FFJ2"/>
+	</RobotNode>
+	<RobotNode name="FFJ2">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.045" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="ffmiddle"/>
+	</RobotNode>
+	<RobotNode name="ffmiddle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F2.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F2.wrl</File>
+		</CollisionModel>
+		<Child name="FFJ1"/>
+	</RobotNode>
+	<RobotNode name="FFJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.025" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="ffdistal"/>
+	</RobotNode>
+	<RobotNode name="ffdistal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</CollisionModel>
+		<Child name="FFtip"/>
+	</RobotNode>
+	<RobotNode name="FFtip">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.026" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="fixed"/>
+	</RobotNode>
+	<RobotNode name="LFJ5">
+		<Transform>
+			<Translation x="-0.033" y="0.000" z="0.021" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.574" y="0.000" z="0.819"/>
+			<Limits unit="radian" lo="0.000" hi="0.698"/>
+		</Joint>
+		<Child name="lfmetacarpal"/>
+	</RobotNode>
+	<RobotNode name="lfmetacarpal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/lfmetacarpal.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/lfmetacarpal.wrl</File>
+		</CollisionModel>
+		<Child name="LFJ4"/>
+	</RobotNode>
+	<RobotNode name="LFJ4">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.066" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.436" hi="0.436"/>
+		</Joint>
+		<Child name="lfknuckle"/>
+	</RobotNode>
+	<RobotNode name="lfknuckle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/knuckle.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/knuckle.wrl</File>
+		</CollisionModel>
+		<Child name="LFJ3"/>
+	</RobotNode>
+	<RobotNode name="LFJ3">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="lfproximal"/>
+	</RobotNode>
+	<RobotNode name="lfproximal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F3.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F3.wrl</File>
+		</CollisionModel>
+		<Child name="LFJ2"/>
+	</RobotNode>
+	<RobotNode name="LFJ2">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.045" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="lfmiddle"/>
+	</RobotNode>
+	<RobotNode name="lfmiddle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F2.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F2.wrl</File>
+		</CollisionModel>
+		<Child name="LFJ1"/>
+	</RobotNode>
+	<RobotNode name="LFJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.025" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="lfdistal"/>
+	</RobotNode>
+	<RobotNode name="lfdistal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</CollisionModel>
+		<Child name="LFtip"/>
+	</RobotNode>
+	<RobotNode name="LFtip">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.026" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="fixed"/>
+	</RobotNode>
+	<RobotNode name="MFJ4">
+		<Transform>
+			<Translation x="0.011" y="0.000" z="0.099" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="-1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.436" hi="0.436"/>
+		</Joint>
+		<Child name="mfknuckle"/>
+	</RobotNode>
+	<RobotNode name="mfknuckle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.001" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/knuckle.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/knuckle.wrl</File>
+		</CollisionModel>
+		<Child name="MFJ3"/>
+	</RobotNode>
+	<RobotNode name="MFJ3">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="mfproximal"/>
+	</RobotNode>
+	<RobotNode name="mfproximal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F3.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F3.wrl</File>
+		</CollisionModel>
+		<Child name="MFJ2"/>
+	</RobotNode>
+	<RobotNode name="MFJ2">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.045" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="mfmiddle"/>
+	</RobotNode>
+	<RobotNode name="mfmiddle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F2.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F2.wrl</File>
+		</CollisionModel>
+		<Child name="MFJ1"/>
+	</RobotNode>
+	<RobotNode name="MFJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.025" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="mfdistal"/>
+	</RobotNode>
+	<RobotNode name="mfdistal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</CollisionModel>
+		<Child name="MFtip"/>
+	</RobotNode>
+	<RobotNode name="MFtip">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.026" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="fixed"/>
+	</RobotNode>
+	<RobotNode name="RFJ4">
+		<Transform>
+			<Translation x="-0.011" y="0.000" z="0.095" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.436" hi="0.436"/>
+		</Joint>
+		<Child name="rfknuckle"/>
+	</RobotNode>
+	<RobotNode name="rfknuckle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.001" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/knuckle.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/knuckle.wrl</File>
+		</CollisionModel>
+		<Child name="RFJ3"/>
+	</RobotNode>
+	<RobotNode name="RFJ3">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="rfproximal"/>
+	</RobotNode>
+	<RobotNode name="rfproximal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F3.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F3.wrl</File>
+		</CollisionModel>
+		<Child name="RFJ2"/>
+	</RobotNode>
+	<RobotNode name="RFJ2">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.045" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="rfmiddle"/>
+	</RobotNode>
+	<RobotNode name="rfmiddle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/F2.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/F2.wrl</File>
+		</CollisionModel>
+		<Child name="RFJ1"/>
+	</RobotNode>
+	<RobotNode name="RFJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.025" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="rfdistal"/>
+	</RobotNode>
+	<RobotNode name="rfdistal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</CollisionModel>
+		<Child name="RFtip"/>
+	</RobotNode>
+	<RobotNode name="RFtip">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.026" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="fixed"/>
+	</RobotNode>
+	<RobotNode name="THJ5">
+		<Transform>
+			<Translation x="0.034" y="-0.009" z="0.029" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="0.785" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="0.000" z="-1.000"/>
+			<Limits unit="radian" lo="-1.047" hi="1.047"/>
+		</Joint>
+		<Child name="thbase"/>
+	</RobotNode>
+	<RobotNode name="thbase">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/thbase_cube.iv</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/thbase_cube.iv</File>
+		</CollisionModel>
+		<Child name="THJ4"/>
+	</RobotNode>
+	<RobotNode name="THJ4">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.309"/>
+		</Joint>
+		<Child name="thproximal"/>
+	</RobotNode>
+	<RobotNode name="thproximal">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/TH3_z.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/TH3_z.wrl</File>
+		</CollisionModel>
+		<Child name="THJ3"/>
+	</RobotNode>
+	<RobotNode name="THJ3">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.038" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.262" hi="0.262"/>
+		</Joint>
+		<Child name="thhub"/>
+	</RobotNode>
+	<RobotNode name="thhub">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/thhub_cube.iv</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/thhub_cube.iv</File>
+		</CollisionModel>
+		<Child name="THJ2"/>
+	</RobotNode>
+	<RobotNode name="THJ2">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="0.000" y="-1.000" z="0.000"/>
+			<Limits unit="radian" lo="-0.524" hi="0.524"/>
+		</Joint>
+		<Child name="thmiddle"/>
+	</RobotNode>
+	<RobotNode name="thmiddle">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.000" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/TH2_z.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/TH2_z.wrl</File>
+		</CollisionModel>
+		<Child name="THJ1"/>
+	</RobotNode>
+	<RobotNode name="THJ1">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.032" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="0.000" yaw="-1.571" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="revolute">
+			<Axis x="1.000" y="0.000" z="0.000"/>
+			<Limits unit="radian" lo="0.000" hi="1.571"/>
+		</Joint>
+		<Child name="thdistal"/>
+	</RobotNode>
+	<RobotNode name="thdistal">
+		<Transform>
+			<Translation x="0.000" y="0.002" z="0.003" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Visualization enable="true">
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</Visualization>
+		<CollisionModel>
+			<File type="Inventor">model/distal_ellipsoid.wrl</File>
+		</CollisionModel>
+		<Child name="thtip"/>
+	</RobotNode>
+	<RobotNode name="thtip">
+		<Transform>
+			<Translation x="0.000" y="0.000" z="0.028" unitsLength="m"/>
+			<rollpitchyaw roll="0.000" pitch="-0.000" yaw="0.000" unitsAngle="radian"/>
+		</Transform>
+		<Joint type="fixed"/>
+	</RobotNode>
+	<Endeffector name="SHADOWHAND" base="shadowhand_hand_base" tcp="shadowhand_hand_tcp" gcp="shadowhand_hand_gcp">
+		<!--This node is for Simox (e.g., GraspPlanner in Simox)!-->
+		<Preshape name="Grasp Preshape">
+			<!--This is just a template. Please set values manually!-->
+			<Node name="FFJ1" unit="radian" value="0.0"/>
+			<Node name="FFJ2" unit="radian" value="0.0"/>
+			<Node name="FFJ3" unit="radian" value="0.0"/>
+			<Node name="FFJ4" unit="radian" value="0.0"/>
+			<Node name="LFJ1" unit="radian" value="0.0"/>
+			<Node name="LFJ2" unit="radian" value="0.0"/>
+			<Node name="LFJ3" unit="radian" value="0.0"/>
+			<Node name="LFJ4" unit="radian" value="0.0"/>
+			<Node name="LFJ5" unit="radian" value="0.0"/>
+			<Node name="MFJ1" unit="radian" value="0.0"/>
+			<Node name="MFJ2" unit="radian" value="0.0"/>
+			<Node name="MFJ3" unit="radian" value="0.0"/>
+			<Node name="MFJ4" unit="radian" value="0.0"/>
+			<Node name="RFJ1" unit="radian" value="0.0"/>
+			<Node name="RFJ2" unit="radian" value="0.0"/>
+			<Node name="RFJ3" unit="radian" value="0.0"/>
+			<Node name="RFJ4" unit="radian" value="0.0"/>
+			<Node name="THJ1" unit="radian" value="0.0"/>
+			<Node name="THJ2" unit="radian" value="0.0"/>
+			<Node name="THJ3" unit="radian" value="0.0"/>
+			<Node name="THJ4" unit="radian" value="1.3"/>
+			<Node name="THJ5" unit="radian" value="0.24"/>
+			<Node name="WRJ1" unit="radian" value="0.0"/>
+			<Node name="WRJ2" unit="radian" value="0.0"/>
+		</Preshape>
+		<Static>
+			<Node name="forearm"/>
+			<Node name="WRJ1"/>
+			<Node name="WRJ2"/>
+			<Node name="FFJ4"/>
+			<Node name="LFJ4"/>
+			<Node name="LFJ5"/>
+			<Node name="MFJ4"/>
+			<Node name="RFJ4"/>
+		</Static>
+		<Actor name="F">
+			<!--Note that considerCollisions = None, Actors, or All!-->
+			<Node name="FFJ1" considerCollisions="None"/>
+			<Node name="FFJ2" considerCollisions="None"/>
+			<Node name="FFJ3" considerCollisions="None"/>
+			<Node name="ffdistal" considerCollisions="All"/>
+			<Node name="ffknuckle" considerCollisions="None"/>
+			<Node name="ffmiddle" considerCollisions="Actors"/>
+			<Node name="ffproximal" considerCollisions="Actors"/>
+		</Actor>
+		<Actor name="L">
+			<!--Note that considerCollisions = None, Actors, or All!-->
+			<Node name="LFJ1" considerCollisions="None"/>
+			<Node name="LFJ2" considerCollisions="None"/>
+			<Node name="LFJ3" considerCollisions="None"/>
+			<Node name="lfdistal" considerCollisions="All"/>
+			<Node name="lfknuckle" considerCollisions="None"/>
+			<Node name="lfmetacarpal" considerCollisions="Actors"/>
+			<Node name="lfmiddle" considerCollisions="Actors"/>
+			<Node name="lfproximal" considerCollisions="Actors"/>
+		</Actor>
+		<Actor name="M">
+			<!--Note that considerCollisions = None, Actors, or All!-->
+			<Node name="MFJ1" considerCollisions="None"/>
+			<Node name="MFJ2" considerCollisions="None"/>
+			<Node name="MFJ3" considerCollisions="None"/>
+			<Node name="mfdistal" considerCollisions="All"/>
+			<Node name="mfknuckle" considerCollisions="None"/>
+			<Node name="mfmiddle" considerCollisions="Actors"/>
+			<Node name="mfproximal" considerCollisions="Actors"/>
+		</Actor>
+		<Actor name="R">
+			<!--Note that considerCollisions = None, Actors, or All!-->
+			<Node name="RFJ1" considerCollisions="None"/>
+			<Node name="RFJ2" considerCollisions="None"/>
+			<Node name="RFJ3" considerCollisions="None"/>
+			<Node name="rfdistal" considerCollisions="All"/>
+			<Node name="rfknuckle" considerCollisions="None"/>
+			<Node name="rfmiddle" considerCollisions="Actors"/>
+			<Node name="rfproximal" considerCollisions="Actors"/>
+		</Actor>
+		<Actor name="T">
+			<!--Note that considerCollisions = None, Actors, or All!-->
+			<Node name="THJ1" considerCollisions="None"/>
+			<Node name="THJ2" considerCollisions="None"/>
+			<Node name="THJ3" considerCollisions="None"/>
+			<Node name="THJ4" considerCollisions="None"/>
+			<Node name="THJ5" considerCollisions="None"/>
+			<Node name="thdistal" considerCollisions="All"/>
+			<Node name="thmiddle" considerCollisions="Actors"/>
+			<Node name="thproximal" considerCollisions="Actors"/>
+		</Actor>
+	</Endeffector>
+	<RobotNodeSet name="SHADOWHAND Joints">
+		<!--This node is for Simox (e.g., GraspPlanner in Simox)!-->
+		<Node name="FFJ1"/>
+		<Node name="FFJ2"/>
+		<Node name="FFJ3"/>
+		<Node name="FFJ4"/>
+		<Node name="FFtip"/>
+		<Node name="LFJ1"/>
+		<Node name="LFJ2"/>
+		<Node name="LFJ3"/>
+		<Node name="LFJ4"/>
+		<Node name="LFJ5"/>
+		<Node name="LFtip"/>
+		<Node name="MFJ1"/>
+		<Node name="MFJ2"/>
+		<Node name="MFJ3"/>
+		<Node name="MFJ4"/>
+		<Node name="MFtip"/>
+		<Node name="RFJ1"/>
+		<Node name="RFJ2"/>
+		<Node name="RFJ3"/>
+		<Node name="RFJ4"/>
+		<Node name="RFtip"/>
+		<Node name="THJ1"/>
+		<Node name="THJ2"/>
+		<Node name="THJ3"/>
+		<Node name="THJ4"/>
+		<Node name="THJ5"/>
+		<Node name="WRJ1"/>
+		<Node name="WRJ2"/>
+		<Node name="thtip"/>
+	</RobotNodeSet>
+</Robot>

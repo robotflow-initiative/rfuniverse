@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using Robotflow.RFUniverse.SideChannels;
 using UnityEditor;
 using DG.Tweening;
 using Newtonsoft.Json;
@@ -199,106 +198,83 @@ namespace RFUniverse.Attributes
             }
 #endif
         }
-        public override void CollectData(OutgoingMessage msg)
+        public override Dictionary<string, object> CollectData()
         {
-            base.CollectData(msg);
-            msg.WriteBoolean(moveDone);
-            msg.WriteBoolean(rotateDone);
+            Dictionary<string, object> data = base.CollectData();
+            data.Add("move_done", moveDone);
+            data.Add("rotate_done", rotateDone);
+            return data;
         }
-        public override void AnalysisMsg(IncomingMessage msg, string type)
+        public override void AnalysisData(string type, object[] data)
         {
             switch (type)
             {
                 case "HumanIKTargetDoMove":
-                    HumanIKTargetDoMove(msg);
+                    HumanIKTargetDoMove((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
                     return;
                 case "HumanIKTargetDoRotate":
-                    HumanIKTargetDoRotate(msg);
+                    HumanIKTargetDoRotate((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
                     return;
                 case "HumanIKTargetDoRotateQuaternion":
-                    HumanIKTargetDoRotateQuaternion(msg);
+                    HumanIKTargetDoRotateQuaternion((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
                     return;
                 case "HumanIKTargetDoComplete":
-                    HumanIKTargetDoComplete(msg);
+                    HumanIKTargetDoComplete((int)data[0]);
                     return;
                 case "HumanIKTargetDoKill":
-                    HumanIKTargetDoKill(msg);
+                    HumanIKTargetDoKill((int)data[0]);
                     return;
             }
-            base.AnalysisMsg(msg, type);
+            base.AnalysisData(type, data);
         }
 
         bool moveDone = true;
         bool rotateDone = true;
-        private void HumanIKTargetDoMove(IncomingMessage msg)
+        private void HumanIKTargetDoMove(int index, List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoMove");
-            int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             moveDone = false;
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            float duration = msg.ReadFloat32();
-            bool isSpeedBased = msg.ReadBoolean();
-            bool isRelative = msg.ReadBoolean();
             Debug.Log(iKTarget.name);
-            iKTarget.DOMove(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            iKTarget.DOMove(new Vector3(position[0], position[1], position[2]), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 moveDone = true;
             };
         }
 
-        private void HumanIKTargetDoRotate(IncomingMessage msg)
+        private void HumanIKTargetDoRotate(int index, List<float> rotation, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoRotate");
-            int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             rotateDone = false;
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            float duration = msg.ReadFloat32();
-            bool isSpeedBased = msg.ReadBoolean();
-            bool isRelative = msg.ReadBoolean();
-            iKTarget.DORotate(new Vector3(x, y, z), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            iKTarget.DORotate(new Vector3(rotation[0], rotation[1], rotation[2]), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 rotateDone = true;
             };
         }
-        private void HumanIKTargetDoRotateQuaternion(IncomingMessage msg)
+        private void HumanIKTargetDoRotateQuaternion(int index, List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoRotateQuaternion");
-            int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             rotateDone = false;
-            float x = msg.ReadFloat32();
-            float y = msg.ReadFloat32();
-            float z = msg.ReadFloat32();
-            float w = msg.ReadFloat32();
-            float duration = msg.ReadFloat32();
-            bool isSpeedBased = msg.ReadBoolean();
-            bool isRelative = msg.ReadBoolean();
-            iKTarget.DORotateQuaternion(new Quaternion(x, y, z, w), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            iKTarget.DORotateQuaternion(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]), duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
             {
                 rotateDone = true;
             };
         }
-        private void HumanIKTargetDoComplete(IncomingMessage msg)
+        private void HumanIKTargetDoComplete(int index)
         {
-            int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             iKTarget.DOComplete();
             moveDone = true;
             rotateDone = true;
         }
-        private void HumanIKTargetDoKill(IncomingMessage msg)
+        private void HumanIKTargetDoKill(int index)
         {
-            int index = msg.ReadInt32();
             if (ikTargets.Count <= index) return;
             Transform iKTarget = ikTargets[index];
             iKTarget.DOKill();

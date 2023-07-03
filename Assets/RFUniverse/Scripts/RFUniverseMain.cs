@@ -1,17 +1,22 @@
 using Newtonsoft.Json;
-using RFUniverse.Attributes;
-using RFUniverse.Manager;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
+
+
 
 namespace RFUniverse
 {
+
+
     public class RFUniverseMain : MonoBehaviour
     {
+        class ConfigData
+        {
+            public string assets_path;
+            public string executable_file;
+        }
+
         [SerializeField]
         private Camera mainCamera;
         public Camera MainCamera => mainCamera;
@@ -49,11 +54,7 @@ namespace RFUniverse
         public int axisLayer = 6;//debug显示层
         public int tempLayer = 21;//相机渲染临时层
 
-        class ConfigData
-        {
-            public string assets_path = "";
-            public string executable_file = "";
-        }
+
         protected virtual void Awake()
         {
             Application.targetFrameRate = 60;
@@ -64,7 +65,7 @@ namespace RFUniverse
                 string configString = File.ReadAllText(configPath);
                 ConfigData config = JsonConvert.DeserializeObject<ConfigData>(configString, RFUniverseUtility.JsonSerializerSettings);
                 if (Application.isEditor)
-                    config.executable_file = "";
+                    config.executable_file = "@editor";
                 else
                     config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
                 configString = JsonConvert.SerializeObject(config, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings);
