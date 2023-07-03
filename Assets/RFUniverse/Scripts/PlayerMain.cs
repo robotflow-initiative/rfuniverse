@@ -19,7 +19,7 @@ namespace RFUniverse
         [SerializeField]
         private PlayerMainUI playerMainUI;
 
-        private RFUniverseCommunicator Communicator;
+        private static RFUniverseCommunicator Communicator;
 
         public Version pythonVersion
         {
@@ -71,16 +71,20 @@ namespace RFUniverse
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
-            string[] commandLineArgs = Environment.GetCommandLineArgs();
-            for (int i = 0; i < commandLineArgs.Length; i++)
+            if (Communicator == null)
             {
-                if (commandLineArgs[i].StartsWith("-port:"))
+                string[] commandLineArgs = Environment.GetCommandLineArgs();
+                for (int i = 0; i < commandLineArgs.Length; i++)
                 {
-                    if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
-                        port = value;
+                    if (commandLineArgs[i].StartsWith("-port:"))
+                    {
+                        if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
+                            port = value;
+                    }
                 }
+                Communicator = new RFUniverseCommunicator("localhost", port, false);
             }
-            Communicator = new RFUniverseCommunicator("localhost", port, false);
+
             if (Communicator.connected)
             {
                 OnStepAction += Step;
@@ -93,7 +97,7 @@ namespace RFUniverse
 #if UNITY_EDITOR
                     EditorApplication.ExitPlaymode();
 #else
-                    Application.Quit();
+                        Application.Quit();
 #endif
                 };
             }
@@ -213,7 +217,7 @@ namespace RFUniverse
                     InstanceObject((string)data[0], (int)data[1]);
                     return;
                 case "LoadURDF":
-                    LoadURDF((int)data[0], (string)data[1], (bool)data[2]);
+                    LoadURDF((int)data[0], (string)data[1], (bool)data[2], (string)data[3]);
                     return;
                 case "LoadMesh":
                     LoadMesh((int)data[0], (string)data[1]);
@@ -361,7 +365,7 @@ namespace RFUniverse
         public void SendPendDoneMsg()
         {
             Debug.Log("PendDone");
-            PlayerMain.Instance.Communicator.SendObject("Env", "PendDone");
+            Communicator.SendObject("Env", "PendDone");
         }
         void AlignCamera(int cameraID)
         {
@@ -405,7 +409,7 @@ namespace RFUniverse
         }
         void SendLoadDoneMsg()
         {
-            PlayerMain.Instance.Communicator.SendObject("Env", "LoadDone");
+            Communicator.SendObject("Env", "LoadDone");
         }
 
         Dictionary<string, Action<IncomingMessage>> registeredMessages = new Dictionary<string, Action<IncomingMessage>>();
@@ -420,7 +424,7 @@ namespace RFUniverse
             }
         }
 
-        [Obsolete]
+        [Obsolete("AddListener is the older interface, and AddListenerObject is the recommended interface for dynamic messaging")]
         public void AddListener(string message, Action<IncomingMessage> action)
         {
             if (registeredMessages.ContainsKey(message))
@@ -433,7 +437,7 @@ namespace RFUniverse
             }
         }
 
-        [Obsolete]
+        [Obsolete("RemoveListener is the older interface, and RemoveListenerObject is the recommended interface for dynamic messaging")]
         public void RemoveListener(string message)
         {
             if (registeredMessages.ContainsKey(message))
@@ -441,7 +445,7 @@ namespace RFUniverse
                 registeredMessages.Remove(message);
             }
         }
-        [Obsolete]
+        [Obsolete("SendMessage is the older interface, and SendObject is the recommended interface for dynamic messaging")]
         public void SendMessage(string message, params object[] objects)
         {
             OutgoingMessage msg = new OutgoingMessage();
@@ -501,7 +505,8 @@ namespace RFUniverse
         }
         public void SendObject(string head, params object[] objects)
         {
-            Communicator.SendObject("Object", head, objects);
+            object[] data = new[] { "Object", head };
+            Communicator.SendObject(data.Concat(objects).ToArray());
         }
 
         public void InstanceObject(BaseAttrData baseAttrData, Action<BaseAttr> onCompleted = null, bool callInstance = true)
@@ -555,10 +560,11 @@ namespace RFUniverse
                 onCompleted?.Invoke(attr);
             });
         }
-        void LoadURDF(int id, string path, bool nativeIK)
+        void LoadURDF(int id, string path, bool nativeIK, string axis)
         {
             Debug.Log("LoadURDF:" + path);
             ImportSettings setting = new ImportSettings();
+            setting.chosenAxis = axis == "z" ? ImportSettings.axisType.zAxis : ImportSettings.axisType.yAxis;
             setting.convexMethod = ImportSettings.convexDecomposer.unity;
             GameObject robot = UrdfRobotExtensions.CreateRuntime(path, setting);
             robot.transform.SetParent(null);
@@ -594,7 +600,7 @@ namespace RFUniverse
         }
         void GetCurrentCollisionPairs()
         {
-            PlayerMain.Instance.Communicator.SendObject("Env", "CurrentCollisionPairs", BaseAttr.CollisionPairs);
+            Communicator.SendObject("Env", "CurrentCollisionPairs", BaseAttr.CollisionPairs);
         }
         void GetRFMoveColliders()
         {
@@ -661,7 +667,7 @@ namespace RFUniverse
                     }
                 }
             }
-            PlayerMain.Instance.Communicator.SendObject("Env", "RFMoveColliders", rfmoveColliders);
+            Communicator.SendObject("Env", "RFMoveColliders", rfmoveColliders);
         }
         void SetGravity(List<float> gravity)
         {

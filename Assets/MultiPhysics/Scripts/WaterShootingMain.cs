@@ -16,7 +16,7 @@ public class WaterShootingMain : MonoBehaviour
     }
     private void SetZibraLiquid(IncomingMessage msg)
     {
-        bool active = msg.ReadBoolean(false);
+        bool active = msg.ReadBoolean();
         this.zibraLiquid.SetActive(active);
     }
 

@@ -220,7 +220,7 @@ namespace RFUniverse.Attributes
                 jointParameters.Add(new ArticulationParameter
                 {
                     body = item,
-                    moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetComponent<MimicJoint>()?.Parent == null,
+                    moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetUnit().mimicParent == null && !item.isRoot,
                     //initPosition = 0,
                     //isGraspPoint = false
                 });
@@ -522,12 +522,12 @@ namespace RFUniverse.Attributes
 
         internal bool AllStable()
         {
-            foreach (ArticulationBody joint in joints)
-            {
-                if (joint.TryGetComponent(out ArticulationUnit unit))
-                    if (unit.GetMovingDirection() != MovingDirection.None)
-                        return false;
-            }
+            //foreach (ArticulationBody joint in joints)
+            //{
+            //    if (joint.TryGetComponent(out ArticulationUnit unit))
+            //        if (unit.GetMovingDirection() != MovingDirection.None)
+            //            return false;
+            //}
             return true;
         }
 
@@ -551,7 +551,7 @@ namespace RFUniverse.Attributes
                     SetJointPositionContinue((int)data[0], data[1].ConvertType<List<List<float>>>());
                     return;
                 case "SetJointVelocity":
-                    SetJointVelocity((List<float>)data[0]);
+                    SetJointVelocity(data[0].ConvertType<List<float>>());
                     return;
                 case "SetIndexJointVelocity":
                     SetIndexJointVelocity((int)data[0], (float)data[1]);
@@ -889,6 +889,7 @@ namespace RFUniverse.Attributes
         }
         private void SetJointVelocity(List<float> jointTargetVelocitys)
         {
+            Debug.Log("SetJointVelocity");
             for (int i = 0; i < moveableJoints.Count; i++)
             {
                 moveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
@@ -903,17 +904,12 @@ namespace RFUniverse.Attributes
         {
             for (int i = 0; i < moveableJoints.Count; i++)
             {
-                float speedScale;
-                if (speedScales != null && speedScales.Count > i)
-                    speedScale = speedScales[i];
-                else
-                    speedScale = 1;
-                moveableJoints[i].GetUnit().SetJointTargetPosition(jointTargetPositions[i], mode, speedScale);
+                moveableJoints[i].GetUnit().SetJointTarget(jointTargetPositions[i], mode);
             }
         }
         private void SetIndexJointPosition(int index, float jointPosition, ControlMode mode = ControlMode.Target)
         {
-            moveableJoints[index].GetUnit().SetJointTargetPosition(jointPosition, mode);
+            moveableJoints[index].GetUnit().SetJointTarget(jointPosition, mode);
         }
         private void AddJointForce(List<List<float>> jointForces)
         {

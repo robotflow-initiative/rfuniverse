@@ -3,10 +3,20 @@ using System;
 using System.IO;
 using UnityEngine;
 
+
+
 namespace RFUniverse
 {
+
+
     public class RFUniverseMain : MonoBehaviour
     {
+        class ConfigData
+        {
+            public string assets_path;
+            public string executable_file;
+        }
+
         [SerializeField]
         private Camera mainCamera;
         public Camera MainCamera => mainCamera;
@@ -44,11 +54,7 @@ namespace RFUniverse
         public int axisLayer = 6;//debug显示层
         public int tempLayer = 21;//相机渲染临时层
 
-        class ConfigData
-        {
-            public string assets_path = "";
-            public string executable_file = "";
-        }
+
         protected virtual void Awake()
         {
             Application.targetFrameRate = 60;

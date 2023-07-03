@@ -16,21 +16,24 @@ namespace RFUniverse
         private NetworkStream stream;
         private bool async = false;
 
-
         public Action<object[]> OnReceivedData;
         public Action OnDisconnect;
-        public bool connected => client.Connected;
+        public bool connected => client != null ? client.Connected : false;
         public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false)
         {
             this.async = async;
             client = new TcpClient();
-            //client.SendBufferSize = 1024 * 1024 * 10;
+            client.SendTimeout = -1;
+            client.ReceiveTimeout = -1;
+            client.SendBufferSize = 1024 * 1024 * 10;
+            client.ReceiveBufferSize = 1024 * 1024 * 10;
             client.NoDelay = true;
+            Debug.Log($"Connecting to server on port: {port}");
             IAsyncResult ar = client.BeginConnect(host, port, null, null);
             ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
             if (connected)
             {
-                Debug.Log("Connected to server.");
+                Debug.Log("Connected successfully");
                 stream = client.GetStream();
                 client.EndConnect(ar);
                 if (async)
@@ -39,7 +42,9 @@ namespace RFUniverse
             else
             {
                 Debug.Log("Connection timeout.");
-                //client.Close();
+                client.Close();
+                client.Dispose();
+                client = null;
             }
         }
 
@@ -71,9 +76,7 @@ namespace RFUniverse
             Queue<object[]> syncReceiveObjectQueue = new Queue<object[]>();
             while (client.Connected)
             {
-
                 byte[] bytes = ReceiveBytes();
-
                 if (bytes != null)
                 {
                     object[] data = ReceiveObject(bytes);
@@ -237,6 +240,7 @@ namespace RFUniverse
                         case 8:
                             return new Tuple<object, object, object, object, object, object, object, object>(ReadObject(bytes), ReadObject(bytes), ReadObject(bytes), ReadObject(bytes), ReadObject(bytes), ReadObject(bytes), ReadObject(bytes), ReadObject(bytes));
                         default:
+                            Debug.LogError($"dont support tuple rank > 8");
                             return null;
                     }
 

@@ -527,28 +527,28 @@ namespace RFUniverse
             if (obj is IConvertible)
                 return (T)Convert.ChangeType(obj, typeof(T));
 
-            if (typeof(T).IsArray && obj is Array objArr)
+            if (typeof(T).IsArray && obj is Array)
             {
                 return (T)obj;
-                var elementType = typeof(T).GetElementType();
-                int[] rankLength = new int[objArr.Rank];
-                for (int i = 0; i < objArr.Rank; i++)
-                {
-                    rankLength[i] = objArr.GetLength(i);
-                }
-                var convertedArray = Array.CreateInstance(elementType, rankLength);
-                int[] rankIndex = new int[convertedArray.Rank];
-                for (int i = 0; i < convertedArray.Rank; i++)
-                {
-                    for (int j = 0; j < convertedArray.GetLength(i); j++)
-                    {
-                        rankIndex[i] = j;
-                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(elementType);
-                        object convertedItem = convertToMethod.Invoke(null, new object[] { objArr.GetValue(rankIndex) });
-                        convertedArray.SetValue(convertedItem, rankIndex);
-                    }
-                }
-                return (T)(object)convertedArray;
+                //var elementType = typeof(T).GetElementType();
+                //int[] rankLength = new int[objArr.Rank];
+                //for (int i = 0; i < objArr.Rank; i++)
+                //{
+                //    rankLength[i] = objArr.GetLength(i);
+                //}
+                //var convertedArray = Array.CreateInstance(elementType, rankLength);
+                //int[] rankIndex = new int[convertedArray.Rank];
+                //for (int i = 0; i < convertedArray.Rank; i++)
+                //{
+                //    for (int j = 0; j < convertedArray.GetLength(i); j++)
+                //    {
+                //        rankIndex[i] = j;
+                //        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(elementType);
+                //        object convertedItem = convertToMethod.Invoke(null, new object[] { objArr.GetValue(rankIndex) });
+                //        convertedArray.SetValue(convertedItem, rankIndex);
+                //    }
+                //}
+                //return (T)(object)convertedArray;
             }
 
             if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
@@ -573,10 +573,9 @@ namespace RFUniverse
                 var keyType = typeof(T).GetGenericArguments()[0];
                 var valueType = typeof(T).GetGenericArguments()[1];
                 var dictionary = (IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(keyType, valueType));
-
                 if (obj is IDictionary objDict)
                 {
-                    foreach (IDictionaryEnumerator item in objDict)
+                    foreach (DictionaryEntry item in objDict)
                     {
                         MethodInfo convertKeyMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(keyType);
                         MethodInfo convertValueMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(valueType);
@@ -588,23 +587,24 @@ namespace RFUniverse
                 return (T)dictionary;
             }
 
-            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Tuple))
+            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition().Name.StartsWith("Tuple") && typeof(T).GetGenericArguments().Length > 0)
             {
                 var tupleTypes = typeof(T).GetGenericArguments();
-                var tuple = Activator.CreateInstance(typeof(Tuple).MakeGenericType(tupleTypes));
-
+                var tuple = Activator.CreateInstance(typeof(T).GetGenericTypeDefinition().MakeGenericType(tupleTypes), new object[tupleTypes.Length]);
                 if (obj is ITuple objTuple && objTuple.Length == tupleTypes.Length)
                 {
                     for (int i = 0; i < tupleTypes.Length; i++)
                     {
-                        var convertedItem = ConvertType<T>(objTuple[i]);
-                        tuple.GetType().GetProperty($"Item{i + 1}").SetValue(tuple, convertedItem);
+                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(tupleTypes[i]);
+                        object convertedItem = convertToMethod.Invoke(null, new object[] { objTuple[i] });
+                        tuple.GetType().GetField($"m_Item{i + 1}", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(tuple, convertedItem);
                     }
                 }
                 return (T)tuple;
             }
 
-            throw new InvalidCastException($"Cannot convert {obj.GetType()} to {typeof(T)}");
+            Debug.LogError($"Cannot convert {obj.GetType()} to {typeof(T)}");
+            return default;
         }
 
         public static List<int> GetChildIndexQueue(this Transform transform, Transform child)

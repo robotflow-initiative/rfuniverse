@@ -3,6 +3,7 @@ using RFUniverse.Manager;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace RFUniverse.Attributes
 {
@@ -16,6 +17,8 @@ namespace RFUniverse.Attributes
             base.Init();
             //Register the receiving function of the dynamic message
             AssetManager.Instance.AddListener("DynamicMessage", DynamicMessage);
+            //Register the receiving function of the dynamic object
+            AssetManager.Instance.AddListenerObject("DynamicObject", DynamicObject);
         }
 
         public override Dictionary<string, object> CollectData()
@@ -53,21 +56,70 @@ namespace RFUniverse.Attributes
             //Read the message from python in order.
             //Note that the reading order here should align with 
             //the writing order in env.SendMessage() of test_custom_message.py.
+            Debug.Log(msg.ReadString());
+            Debug.Log(msg.ReadString());
+            Debug.Log(msg.ReadString());
             Debug.Log(msg.ReadInt32());
             Debug.Log(msg.ReadString());
             Debug.Log(msg.ReadBoolean());
+            Debug.Log(msg.ReadString());
             Debug.Log(msg.ReadFloat32());
+            Debug.Log(msg.ReadString());
             Debug.Log(msg.ReadFloatList());
 
             //The SendMessage function can be called anywhere at any time
             //Supported parameter types: string, int, float, bool, List<float>
             AssetManager.Instance.SendMessage(
                 "DynamicMessage",
+                "string:",
                 "This is dynamic message",
+                "int:",
                 123,
+                "float:",
                 456f,
+                "bool:",
                 false,
+                "list:",
                 (new float[] { 7.89f, 1.11f }).ToList()
+                );
+        }
+        void DynamicObject(object[] objs)
+        {
+            //Read the message from python in order.
+            //Note that the reading order here should align with 
+            //the writing order in env.SendObject() of test_custom_message.py.
+            Debug.Log((string)objs[0]);
+            Debug.Log((string)objs[1]);
+            Debug.Log((string)objs[2]);
+            Debug.Log((int)objs[3]);
+            Debug.Log((string)objs[4]);
+            Debug.Log((bool)objs[5]);
+            Debug.Log((string)objs[6]);
+            Debug.Log((float)objs[7]);
+            Debug.Log((string)objs[8]);
+            Debug.Log(objs[9].ConvertType<List<float>>());
+            Debug.Log((string)objs[10]);
+            Debug.Log(objs[11].ConvertType<Dictionary<string, int>>());
+            Debug.Log((string)objs[12]);
+            Debug.Log(objs[13].ConvertType<Tuple<string, int, float>>());
+            //The SendObject function can be called anywhere at any time
+            //Supported parameter types: string, int, float, bool, List, Dictionary, Tuple, Array
+            AssetManager.Instance.SendObject(
+                "DynamicObject",
+                "string:",
+                "This is dynamic object",
+                "int:",
+                123,
+                "float:",
+                456f,
+                "bool:",
+                false,
+                "list:",
+                (new float[] { 7.89f, 1.11f }).ToList(),
+                "dict:",
+                new Dictionary<string, int>() { { "a", 1 }, { "b", 2 } },
+                "tuple:",
+                new Tuple<string, int, float>("a", 1, 0.562f)
                 );
         }
     }
