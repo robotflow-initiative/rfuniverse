@@ -19,7 +19,8 @@ namespace RFUniverse
             foreach (var item in fingers)
             {
                 ArticulationDrive temp = item.body.xDrive;
-                temp.target = item.position.x;
+                temp.target = Mathf.Clamp(item.position.x, temp.lowerLimit, temp.upperLimit);
+                temp.driveType = ArticulationDriveType.Force;
                 item.body.xDrive = temp;
             }
         }
@@ -28,7 +29,8 @@ namespace RFUniverse
             foreach (var item in fingers)
             {
                 ArticulationDrive temp = item.body.xDrive;
-                temp.target = item.position.y;
+                temp.target = Mathf.Clamp(item.position.y, temp.lowerLimit, temp.upperLimit);
+                temp.driveType = ArticulationDriveType.Force;
                 item.body.xDrive = temp;
             }
         }

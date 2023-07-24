@@ -21,16 +21,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-#if !ENABLE_IL2CPP
-#define ASSIMP_SUPPORTED
-#endif
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if ASSIMP_SUPPORTED
 using Assimp;
-#endif
 using Unity.Robotics;
 using UnityEngine;
 using Material = UnityEngine.Material;
@@ -62,7 +57,6 @@ namespace UnityMeshImporter
     {
         public static GameObject Load(string meshPath, float scaleX = 1, float scaleY = 1, float scaleZ = 1)
         {
-#if ASSIMP_SUPPORTED
             if (!File.Exists(meshPath))
             {
                 return null;
@@ -251,12 +245,7 @@ namespace UnityMeshImporter
                 return uOb;
             }
 
-            return NodeToGameObject(scene.RootNode); ;
-#else
-            Debug.LogError("Runtime import of collada files is not currently supported in builds created with 'IL2CPP' scripting backend." + 
-                           "\nEither create a build with the scripting backend set as 'Mono' in 'Player Settings' or use STL meshes instead of Collada (dae) meshes.");
-            return null;
-#endif
+            return NodeToGameObject(scene.RootNode);
         }
     }
 }

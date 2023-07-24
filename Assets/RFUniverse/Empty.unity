@@ -131,6 +131,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4078245722837548277, guid: 484696e9928c00105b994a533d08f7b6,
+        type: 3}
+      propertyPath: fixedDeltaTime
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 4711449998002923147, guid: 484696e9928c00105b994a533d08f7b6,
         type: 3}
       propertyPath: m_Name
@@ -202,3 +207,8 @@ Light:
     type: 3}
   m_PrefabInstance: {fileID: 8403022067582333421}
   m_PrefabAsset: {fileID: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 8403022067582333421}

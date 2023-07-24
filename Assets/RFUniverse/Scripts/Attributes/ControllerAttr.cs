@@ -782,12 +782,12 @@ namespace RFUniverse.Attributes
         }
         public void GripperOpen()
         {
-            //Debug.Log("GripperOpen");
+            Debug.Log("GripperOpen");
             GetComponent<ICustomGripper>()?.Open();
         }
         public void GripperClose()
         {
-            //Debug.Log("GripperClose");
+            Debug.Log("GripperClose");
             GetComponent<ICustomGripper>()?.Close();
         }
         public override void SetPosition(Vector3 position, bool worldSpace = true)
@@ -806,7 +806,25 @@ namespace RFUniverse.Attributes
                 transform.localEulerAngles = rotation;
             Root.TeleportRoot(transform.position, transform.rotation);
         }
+
+        public override void SetRotationQuaternion(List<float> quaternion, bool worldSpace = true)
+        {
+            SetRotation(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).eulerAngles, worldSpace);
+        }
         public override void SetScale(Vector3 scale)
+        {
+            return;
+        }
+
+        public override void Translate(List<float> translate, bool worldSpace)
+        {
+            return;
+        }
+        public override void Rotate(List<float> translate, bool worldSpace)
+        {
+            return;
+        }
+        public override void LookAt(List<float> target, List<float> worldUp)
         {
             return;
         }
@@ -844,7 +862,7 @@ namespace RFUniverse.Attributes
             }
             SetJointPosition(jointPositions, ControlMode.Direct);
         }
-        private void SetIndexJointPosition(int index, float jointPosition)
+        public void SetIndexJointPosition(int index, float jointPosition)
         {
             if (moveableJoints.Count! > index)
             {
@@ -853,7 +871,7 @@ namespace RFUniverse.Attributes
             }
             SetIndexJointPosition(index, jointPosition, ControlMode.Target);
         }
-        private void SetIndexJointPositionDirectly(int index, float jointPosition)
+        public void SetIndexJointPositionDirectly(int index, float jointPosition)
         {
             if (moveableJoints.Count! > index)
             {

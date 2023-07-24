@@ -64,10 +64,13 @@ namespace RFUniverse
             {
                 string configString = File.ReadAllText(configPath);
                 ConfigData config = JsonConvert.DeserializeObject<ConfigData>(configString, RFUniverseUtility.JsonSerializerSettings);
+#if UNITY_EDITOR
                 if (Application.isEditor)
                     config.executable_file = "@editor";
-                else
-                    config.executable_file = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+#else
+                string platformExtend = Application.platform == RuntimePlatform.WindowsPlayer ? "exe" : "x86_64";
+                config.executable_file = $"{Application.dataPath}/../{Application.productName}.{platformExtend}";
+#endif
                 configString = JsonConvert.SerializeObject(config, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings);
                 File.WriteAllText(configPath, configString);
             }

@@ -7,20 +7,74 @@ using System.Linq;
 
 namespace RFUniverse.Manager
 {
-    public class DebugManager
+    public class DebugManager : IDisposable
     {
+        static DebugManager instance = null;
 
-        private static DebugManager instance = null;
         public static DebugManager Instance
         {
             get
             {
                 if (instance == null)
-                {
                     instance = new DebugManager();
-                }
                 return instance;
             }
+        }
+        public DebugManager()
+        {
+            Application.logMessageReceivedThreaded += OnLogMessageReceived;
+        }
+        void IDisposable.Dispose()
+        {
+            Application.logMessageReceivedThreaded -= OnLogMessageReceived;
+        }
+        void OnLogMessageReceived(string condition, string stackTrace, LogType type)
+        {
+            if (!Application.isPlaying) return;
+            SendLog(type.ToString(), condition, stackTrace);
+            switch (type)
+            {
+                case LogType.Error:
+                case LogType.Exception:
+                case LogType.Assert:
+                    AddLog($"{condition}\n{stackTrace}", type);
+                    break;
+                case LogType.Warning:
+                case LogType.Log:
+                    AddLog($"{condition}", type);
+                    break;
+            }
+        }
+
+        private void SendLog(params string[] strings)
+        {
+            object[] data = new[] { "Debug", "Log" };
+            PlayerMain.Communicator?.SendObject(data.Concat(strings).ToArray());
+        }
+
+        //Queue<string> logList = new Queue<string>();
+        public void AddLog<T>(T log, LogType type = LogType.Log)
+        {
+            string richColor = "#FFFFFF";
+            switch (type)
+            {
+                case LogType.Error:
+                case LogType.Assert:
+                case LogType.Exception:
+                    richColor = "red";
+                    break;
+                case LogType.Warning:
+                    richColor = "#FF9300";
+                    break;
+                case LogType.Log:
+                default:
+                    break;
+            }
+            //logList.Enqueue($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color={richColor}>{log}</color>");
+            //if (logList.Count > 50)
+            //    logList.Dequeue();
+            //PlayerMain.Instance.playerMainUI.RefreshLogList(logList.ToArray());
+            PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color={richColor}>{log}</color>");
         }
         public void ReceiveDebugData(object[] data)
         {
@@ -53,10 +107,10 @@ namespace RFUniverse.Manager
                     DebugJointLink((bool)data[0]);
                     break;
                 case "SendLog":
-                    SendLog((string)data[0]);
+                    AddLog((string)data[0]);
                     break;
-                case "SendVersion":
-                    SendVersion((string)data[0]);
+                case "SetPythonVersion":
+                    SetPythonVersion((string)data[0]);
                     break;
                 default:
                     Debug.Log("Dont have mehond:" + type);
@@ -181,9 +235,6 @@ namespace RFUniverse.Manager
                 poseGizmos.Remove(item);
             }
         }
-
-
-
 
 
         bool isDebugCollisionPair = false;
@@ -542,14 +593,9 @@ namespace RFUniverse.Manager
             }
         }
 
-        public void SendLog(string log)
+        public void SetPythonVersion(string version)
         {
-            PlayerMain.Instance.AddLog(log);
-        }
-
-        public void SendVersion(string version)
-        {
-            PlayerMain.Instance.pythonVersion = new Version(version);
+            PlayerMain.Instance.playerMainUI.SetPythonVersion(new Version(version));
         }
     }
 }

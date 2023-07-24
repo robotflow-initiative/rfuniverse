@@ -18,6 +18,8 @@ namespace RFUniverse
 
         public Action<object[]> OnReceivedData;
         public Action OnDisconnect;
+
+        int bufferSize = 1024 * 10;
         public bool connected => client != null ? client.Connected : false;
         public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false)
         {
@@ -25,8 +27,8 @@ namespace RFUniverse
             client = new TcpClient();
             client.SendTimeout = -1;
             client.ReceiveTimeout = -1;
-            client.SendBufferSize = 1024 * 1024 * 10;
-            client.ReceiveBufferSize = 1024 * 1024 * 10;
+            //client.SendBufferSize = bufferSize;
+            //client.ReceiveBufferSize = bufferSize;
             client.NoDelay = true;
             Debug.Log($"Connecting to server on port: {port}");
             IAsyncResult ar = client.BeginConnect(host, port, null, null);
@@ -50,7 +52,7 @@ namespace RFUniverse
 
         void AsyncReceiveThread()
         {
-            while (client.Connected)
+            while (connected)
             {
                 byte[] bytes = ReceiveBytes();
                 if (bytes != null)
@@ -66,7 +68,7 @@ namespace RFUniverse
         public void SyncStepEnd()
         {
             if (async) return;
-            if (!client.Connected) return;
+            if (!connected) return;
             SendObject("StepEnd");
             //while (client.Connected && syncSendBytesQueue.TryDequeue(out byte[] bytes))
             //{
@@ -74,7 +76,7 @@ namespace RFUniverse
             //}
 
             Queue<object[]> syncReceiveObjectQueue = new Queue<object[]>();
-            while (client.Connected)
+            while (connected)
             {
                 byte[] bytes = ReceiveBytes();
                 if (bytes != null)
@@ -99,12 +101,23 @@ namespace RFUniverse
         {
             try
             {
-                byte[] buffer = new byte[4];
-                stream.Read(buffer, 0, buffer.Length);
-                uint length = BitConverter.ToUInt32(buffer);
-                byte[] bytes = new byte[length];
-                stream.Read(bytes, 0, bytes.Length);
-                return bytes;
+                byte[] data = new byte[4];
+                stream.Read(data, 0, data.Length);
+                int length = BitConverter.ToInt32(data);
+
+                byte[] buffer = new byte[length];
+                int offset = 0;
+                while (offset < length)
+                {
+                    int offsetMax = offset + bufferSize;
+                    if (offsetMax > length)
+                        offsetMax = length;
+                    stream.Read(buffer, offset, offsetMax - offset);
+                    offset = offsetMax;
+                }
+
+                //stream.Read(buffer, 0, buffer.Length);
+                return buffer;
             }
             catch
             {
@@ -119,7 +132,17 @@ namespace RFUniverse
             {
                 byte[] length = BitConverter.GetBytes(bytes.Length);
                 stream.Write(length, 0, length.Length);
-                stream.Write(bytes, 0, bytes.Length);
+
+                int offset = 0;
+                while (offset < bytes.Length)
+                {
+                    int offsetMax = offset + bufferSize;
+                    if (offsetMax > bytes.Length)
+                        offsetMax = bytes.Length;
+                    stream.Write(bytes, offset, offsetMax - offset);
+                    offset = offsetMax;
+                }
+                // stream.Write(bytes, 0, bytes.Length);
             }
             catch
             {
@@ -281,7 +304,7 @@ namespace RFUniverse
 
         public void SendObject(params object[] datas)
         {
-            if (!client.Connected) return;
+            if (!connected) return;
             List<byte> bytes = new List<byte>();
             WriteInt(bytes, datas.Length);
             foreach (var data in datas)
@@ -425,7 +448,7 @@ namespace RFUniverse
         }
         public void Dispose()
         {
-            client.Close();
+            client?.Close();
         }
     }
 }

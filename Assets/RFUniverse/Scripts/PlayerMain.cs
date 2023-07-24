@@ -16,20 +16,10 @@ namespace RFUniverse
     {
         public int port = 5004;
         public static PlayerMain Instance = null;
-        [SerializeField]
-        private PlayerMainUI playerMainUI;
+        public PlayerMainUI playerMainUI;
+        public static RFUniverseCommunicator Communicator;
 
-        private static RFUniverseCommunicator Communicator;
 
-        public Version pythonVersion
-        {
-            set
-            {
-                playerMainUI.SetVersion(value);
-            }
-        }
-
-        Queue<string> logList = new Queue<string>();
         [SerializeField]
         float fixedDeltaTime = 0.02f;
 
@@ -64,12 +54,22 @@ namespace RFUniverse
         {
             Instance = this;
         }
+        DebugManager debugManager;
         protected override void Awake()
         {
             base.Awake();
+
             Instance = this;
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
+
+            playerMainUI.Init(() =>
+            {
+                Debug.Log("PendDone");
+                Communicator.SendObject("Env", "PendDone");
+            });
+
+            debugManager = DebugManager.Instance;
 
             if (Communicator == null)
             {
@@ -123,10 +123,14 @@ namespace RFUniverse
             {
                 render.SetPropertyBlock(mpb);
             }
-
-            playerMainUI.Init(() => SendPendDoneMsg());
         }
 
+        private void OnApplicationQuit()
+        {
+            Communicator?.SendObject("Env", "Close");
+            if (Communicator != null)
+                Communicator.Dispose();
+        }
 
         public Action OnStepAction;
         void FixedUpdate()
@@ -166,7 +170,7 @@ namespace RFUniverse
                     ReceiveObjectData(data);
                     break;
                 case "Debug":
-                    DebugManager.Instance.ReceiveDebugData(data);
+                    debugManager.ReceiveDebugData(data);
                     break;
                 default:
                     break;
@@ -362,11 +366,7 @@ namespace RFUniverse
                 SendLoadDoneMsg();
             });
         }
-        public void SendPendDoneMsg()
-        {
-            Debug.Log("PendDone");
-            Communicator.SendObject("Env", "PendDone");
-        }
+
         void AlignCamera(int cameraID)
         {
             Debug.Log("AlignCamera");
@@ -376,8 +376,8 @@ namespace RFUniverse
                 return;
             }
             BaseAttr camera = BaseAttr.Attrs[cameraID];
-            PlayerMain.Instance.MainCamera.transform.position = camera.transform.position;
-            PlayerMain.Instance.MainCamera.transform.rotation = camera.transform.rotation;
+            MainCamera.transform.position = camera.transform.position;
+            MainCamera.transform.rotation = camera.transform.rotation;
         }
         void SaveScene(string path)
         {
@@ -771,15 +771,6 @@ namespace RFUniverse
             data.assetsData = RFUniverseUtility.SortByParent(data.assetsData);
             Debug.Log(data.assetsData.Count);
             File.WriteAllText(file, JsonConvert.SerializeObject(data, Formatting.Indented, RFUniverseUtility.JsonSerializerSettings));
-        }
-
-
-        public void AddLog<T>(T log)
-        {
-            logList.Enqueue(log.ToString());
-            if (logList.Count > 50)
-                logList.Dequeue();
-            playerMainUI.RefreshLogList(logList.ToArray());
         }
     }
 }

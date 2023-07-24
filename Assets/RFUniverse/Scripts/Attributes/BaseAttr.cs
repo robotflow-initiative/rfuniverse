@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using DG.Tweening;
 
 namespace RFUniverse.Attributes
 {
@@ -256,6 +257,9 @@ namespace RFUniverse.Attributes
                 case "Rotate":
                     Rotate(data[0].ConvertType<List<float>>(), (bool)data[1]);
                     return;
+                case "LookAt":
+                    LookAt(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
+                    return;
                 case "SetParent":
                     SetParent((int)data[0], (string)data[1]);
                     return;
@@ -274,8 +278,8 @@ namespace RFUniverse.Attributes
                 case "SetRFMoveColliderActive":
                     SetRFMoveColliderActive((bool)data[0]);
                     return;
-                case "GetLoaclPointFromWorld":
-                    GetLoaclPointFromWorld(data[0].ConvertType<List<float>>());
+                case "GetLocalPointFromWorld":
+                    GetLocalPointFromWorld(data[0].ConvertType<List<float>>());
                     return;
                 case "GetWorldPointFromLocal":
                     GetWorldPointFromLocal(data[0].ConvertType<List<float>>());
@@ -286,7 +290,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        public virtual void SetTransform(List<float> position, List<float> rotation, List<float> scale, bool worldSpace = true)
+        public void SetTransform(List<float> position, List<float> rotation, List<float> scale, bool worldSpace = true)
         {
             Debug.Log("SetTransform");
             if (position != null)
@@ -302,7 +306,7 @@ namespace RFUniverse.Attributes
                 SetScale(scale);
             }
         }
-        public virtual void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
+        public void SetTransform(bool set_position, bool set_rotation, bool set_scale, Vector3 position, Vector3 rotation, Vector3 scale, bool worldSpace = true)
         {
             if (set_position)
             {
@@ -341,17 +345,10 @@ namespace RFUniverse.Attributes
             else
                 transform.localEulerAngles = rotation;
         }
-        protected virtual void SetRotationQuaternion(List<float> quaternion, bool worldSpace = true)
+        public virtual void SetRotationQuaternion(List<float> quaternion, bool worldSpace = true)
         {
             Debug.Log("SetRotationQuaternion");
             SetRotation(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).eulerAngles, worldSpace);
-        }
-        public virtual void SetRotationQuaternion(Quaternion quaternion, bool worldSpace = true)
-        {
-            if (worldSpace)
-                transform.rotation = quaternion;
-            else
-                transform.localRotation = quaternion;
         }
         protected virtual void SetScale(List<float> scale)
         {
@@ -363,19 +360,25 @@ namespace RFUniverse.Attributes
             transform.localScale = scale;
         }
 
-        private void Translate(List<float> translate, bool worldSpace)
+        public virtual void Translate(List<float> translate, bool worldSpace)
         {
             Space space = worldSpace ? Space.World : Space.Self;
             transform.Translate(new Vector3(translate[0], translate[1], translate[2]), space);
         }
 
-        private void Rotate(List<float> translate, bool worldSpace)
+        public virtual void Rotate(List<float> translate, bool worldSpace)
         {
             Space space = worldSpace ? Space.World : Space.Self;
             transform.Rotate(new Vector3(0, 0, 1), translate[2], space);
             transform.Rotate(new Vector3(1, 0, 0), translate[0], space);
             transform.Rotate(new Vector3(0, 1, 0), translate[1], space);
         }
+
+        public virtual void LookAt(List<float> target, List<float> worldUp)
+        {
+            transform.LookAt(RFUniverseUtility.ListFloatToVector3(target), RFUniverseUtility.ListFloatToVector3(worldUp));
+        }
+
         public virtual void SetParent(int parentID, string parentName)
         {
             Debug.Log("SetParent");
@@ -425,9 +428,9 @@ namespace RFUniverse.Attributes
         }
 
         Vector3? resultLocalPoint = null;
-        void GetLoaclPointFromWorld(List<float> world)
+        void GetLocalPointFromWorld(List<float> world)
         {
-            Debug.Log("GetLoaclPointFromWorld");
+            Debug.Log("GetLocalPointFromWorld");
             resultLocalPoint = transform.InverseTransformPoint(new Vector3(world[0], world[1], world[2]));
         }
 

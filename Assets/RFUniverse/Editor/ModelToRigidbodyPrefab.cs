@@ -20,7 +20,7 @@ public class ModelToRigidbodyPrefab : Editor
             GameObject prefab = GameObject.Instantiate(item);
             RigidbodyAttr attr = prefab.AddComponent<RigidbodyAttr>();
             RigidbodyAttr.SaveMeshs($"{path}/{name}_VHACD.asset", attr.GenerateVHACDCollider());
-            PrefabUtility.SaveAsPrefabAsset(prefab, $"{path}/{name}.prefab");
+            PrefabUtility.SaveAsPrefabAsset(prefab, $"{path}/{name}_RigidbodyAttr.prefab");
             DestroyImmediate(prefab);
         }
         AssetDatabase.Refresh();

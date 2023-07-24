@@ -1,4 +1,4 @@
-﻿/*
+/*
 © Siemens AG, 2017
 Author: Dr. Martin Bischoff (martin.bischoff@siemens.com)
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -206,8 +206,8 @@ namespace Unity.Robotics.UrdfImporter
             {
                 lower = node.Attribute("lower").ReadOptionalDouble(); // optional
                 upper = node.Attribute("upper").ReadOptionalDouble(); // optional
-                effort = (double)node.Attribute("effort"); // required
-                velocity = (double)node.Attribute("velocity"); // required
+                //effort = (double)node.Attribute("effort"); // required
+                //velocity = (double)node.Attribute("velocity"); // required
             }
             
             public Limit(double lower, double upper, double effort, double velocity)
