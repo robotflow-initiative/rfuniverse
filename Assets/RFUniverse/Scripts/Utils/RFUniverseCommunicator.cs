@@ -19,14 +19,14 @@ namespace RFUniverse
         public Action<object[]> OnReceivedData;
         public Action OnDisconnect;
 
-        int bufferSize = 1024 * 10;
+        //int bufferSize = 1024 * 10;
         public bool connected => client != null ? client.Connected : false;
         public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false)
         {
             this.async = async;
             client = new TcpClient();
-            client.SendTimeout = -1;
-            client.ReceiveTimeout = -1;
+            client.SendTimeout = 0;
+            client.ReceiveTimeout = 0;
             //client.SendBufferSize = bufferSize;
             //client.ReceiveBufferSize = bufferSize;
             client.NoDelay = true;
@@ -79,7 +79,7 @@ namespace RFUniverse
             while (connected)
             {
                 byte[] bytes = ReceiveBytes();
-                if (bytes != null)
+                if (bytes != null && bytes.Length > 0)
                 {
                     object[] data = ReceiveObject(bytes);
                     if (data.Length > 0 && data[0] is string && data[0] as string == "StepStart")
@@ -101,23 +101,24 @@ namespace RFUniverse
         {
             try
             {
-                byte[] data = new byte[4];
-                stream.Read(data, 0, data.Length);
-                int length = BitConverter.ToInt32(data);
+                //int lengthOffset = 0;
+                byte[] buffer = new byte[4];
+                //while (lengthOffset < buffer.Length)
+                //{
+                //    lengthOffset += stream.Read(buffer, lengthOffset, buffer.Length - lengthOffset);
+                //}
+                stream.Read(buffer, 0, 4);
+                uint length = BitConverter.ToUInt32(buffer);
+                if (length == 0) return null;
 
-                byte[] buffer = new byte[length];
-                int offset = 0;
-                while (offset < length)
+                int bytesOffset = 0;
+                byte[] bytes = new byte[length];
+                while (bytesOffset < bytes.Length)
                 {
-                    int offsetMax = offset + bufferSize;
-                    if (offsetMax > length)
-                        offsetMax = length;
-                    stream.Read(buffer, offset, offsetMax - offset);
-                    offset = offsetMax;
+                    if (!connected) break;
+                    bytesOffset += stream.Read(bytes, bytesOffset, bytes.Length - bytesOffset);
                 }
-
-                //stream.Read(buffer, 0, buffer.Length);
-                return buffer;
+                return bytes;
             }
             catch
             {
@@ -132,17 +133,16 @@ namespace RFUniverse
             {
                 byte[] length = BitConverter.GetBytes(bytes.Length);
                 stream.Write(length, 0, length.Length);
-
-                int offset = 0;
-                while (offset < bytes.Length)
-                {
-                    int offsetMax = offset + bufferSize;
-                    if (offsetMax > bytes.Length)
-                        offsetMax = bytes.Length;
-                    stream.Write(bytes, offset, offsetMax - offset);
-                    offset = offsetMax;
-                }
-                // stream.Write(bytes, 0, bytes.Length);
+                stream.Write(bytes, 0, bytes.Length);
+                //int offset = 0;
+                //while (offset < bytes.Length)
+                //{
+                //    int offsetMax = offset + bufferSize;
+                //    if (offsetMax > bytes.Length)
+                //        offsetMax = bytes.Length;
+                //    stream.Write(bytes, offset, offsetMax - offset);
+                //    offset = offsetMax;
+                //}
             }
             catch
             {
@@ -163,6 +163,7 @@ namespace RFUniverse
             }
             return data.ToArray();
         }
+
         object ReadObject(byte[] bytes)
         {
             string type = ReadString(bytes);
