@@ -120,6 +120,7 @@ namespace RFUniverse.Attributes
         public override void Init()
         {
             base.Init();
+            IsRFMoveCollider = false;
             joints = jointParameters.Select(s => s.body).ToList();
             moveableJoints = jointParameters.Where(s => s.moveable).Select(s => s.body).ToList();
             if (graspPoint == null) graspPoint = joints.LastOrDefault()?.transform;
@@ -548,7 +549,7 @@ namespace RFUniverse.Attributes
                     SetIndexJointPositionDirectly((int)data[0], (float)data[1]);
                     return;
                 case "SetJointPositionContinue":
-                    SetJointPositionContinue((int)data[0], data[1].ConvertType<List<List<float>>>());
+                    StartCoroutine(SetJointPositionContinue((int)data[0], data[1].ConvertType<List<List<float>>>()));
                     return;
                 case "SetJointVelocity":
                     SetJointVelocity(data[0].ConvertType<List<float>>());
@@ -624,6 +625,7 @@ namespace RFUniverse.Attributes
         public void EnabledNativeIK(bool enabled)
         {
 #if BIOIK
+            Debug.Log($"EnabledNativeIK: ID: {ID} {enabled}");
             if (bioIK == null)
             {
                 Debug.LogWarning($"Controller ID:{ID},Name:{Name},Dont have IK compenent");
@@ -884,7 +886,12 @@ namespace RFUniverse.Attributes
         public IEnumerator SetJointPositionContinue(int interval, List<List<float>> jointPositions)
         {
             Debug.Log("SetJointPositionContinue");
-            if (moveableJoints.Count != jointPositions.Count)
+            if (jointPositions.Count == 0)
+            {
+                Debug.LogError("JointPositions Length is 0");
+                yield break;
+            }
+            if (moveableJoints.Count != jointPositions[0].Count)
             {
                 Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
                 yield break;

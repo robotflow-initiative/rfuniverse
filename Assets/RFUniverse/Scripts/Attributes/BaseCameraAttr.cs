@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Linq;
 using HeatMap;
 using System.Drawing;
+using static UnityEngine.GraphicsBuffer;
+using UnityEditor;
+using System.IO;
 
 namespace RFUniverse.Attributes
 {
@@ -355,7 +358,7 @@ namespace RFUniverse.Attributes
             foreach (var item in ActiveAttrs)
             {
                 if (item.Value is not GameObjectAttr) continue;
-                Tuple<Vector3, Vector3, Vector3> box = (item.Value as GameObjectAttr).Get3DBBox();
+                Tuple<Vector3, Vector3, Vector3> box = (item.Value as GameObjectAttr).Get3DBBox(false);
                 Vector3 center = Camera.WorldToScreenPoint(box.Item1);
                 if (center.x > 0 && center.y > 0 && center.x < Camera.pixelWidth && center.y < Camera.pixelHeight)
                     dddBBOX.Add(item.Key, box);
@@ -450,4 +453,55 @@ namespace RFUniverse.Attributes
             return texture;
         }
     }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(CameraAttr), true)]
+    public class CameraAttrEditor : Editor
+    {
+        Vector2Int size = new Vector2Int(EditorPrefs.GetInt("CAMERA_TEX_W", 512), EditorPrefs.GetInt("CAMERA_TEX_H", 512));
+        float fov = EditorPrefs.GetFloat("CAMERA_TEX_FOV", 60);
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            CameraAttr script = target as CameraAttr;
+            GUILayout.Space(10);
+            GUILayout.Label("Editor Tool:");
+            size = EditorGUILayout.Vector2IntField("Size:", size);
+            fov = EditorGUILayout.FloatField("Fov:", fov);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("GetRGB"))
+            {
+                Texture2D tex = script.GetRGB(size.x, size.y, fov);
+                if (!Directory.Exists($"{Application.streamingAssetsPath}/ImageEditor"))
+                    Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
+                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_RGB.png", tex.EncodeToPNG());
+                SaveEditorPrefs();
+            }
+            if (GUILayout.Button("GetNormal"))
+            {
+                Texture2D tex = script.GetNormal(size.x, size.y, fov);
+                if (!Directory.Exists($"{Application.streamingAssetsPath}/ImageEditor"))
+                    Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
+                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_Normal.png", tex.EncodeToPNG());
+                SaveEditorPrefs();
+            }
+            if (GUILayout.Button("GetDepthEXR"))
+            {
+                Texture2D tex = script.GetDepthEXR(size.x, size.y, fov);
+                if (!Directory.Exists($"{Application.streamingAssetsPath}/ImageEditor"))
+                    Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
+                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_DepthEXR.exr", tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
+                SaveEditorPrefs();
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        void SaveEditorPrefs()
+        {
+            EditorPrefs.SetInt("CAMERA_TEX_W", size.x);
+            EditorPrefs.SetInt("CAMERA_TEX_H", size.y);
+            EditorPrefs.SetFloat("CAMERA_TEX_FOV", fov);
+        }
+    }
+#endif
 }

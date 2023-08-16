@@ -8,7 +8,9 @@ using System.IO;
 using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 namespace RFUniverse
 {
@@ -78,6 +80,7 @@ namespace RFUniverse
                 {
                     if (commandLineArgs[i].StartsWith("-port:"))
                     {
+                        startWithPort = true;
                         if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
                             port = value;
                     }
@@ -125,8 +128,28 @@ namespace RFUniverse
             }
         }
 
-        private void OnApplicationQuit()
+        bool startWithPort = false;
+        void OnApplicationQuit()
         {
+            if (!startWithPort)
+            {
+                string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string configPath = $"{userPath}/.rfuniverse/config.json";
+                if (File.Exists(configPath))
+                {
+                    string configString = File.ReadAllText(configPath);
+                    ConfigData config = JsonConvert.DeserializeObject<ConfigData>(configString);
+#if UNITY_EDITOR
+                    config.executable_file = "@editor";
+#else
+                    string platformExtend = Application.platform == RuntimePlatform.WindowsPlayer ? "exe" : "x86_64";
+                    config.executable_file = $"{Application.dataPath.Replace("_Data", "")}.{platformExtend}";
+#endif
+                    configString = JsonConvert.SerializeObject(config, Formatting.Indented);
+                    File.WriteAllText(configPath, configString);
+                }
+            }
+
             Communicator?.SendObject("Env", "Close");
             if (Communicator != null)
                 Communicator.Dispose();
@@ -184,11 +207,11 @@ namespace RFUniverse
                 BaseAttr.Attrs[id].ReceiveData(data);
             else if (waitingMsg.ContainsKey(id))
             {
-                Debug.LogWarning($"ID:{id} is loading, add in waiting msg");
+                Debug.LogWarning($"ID:{id} is Loading, {data[0]} Join the Waiting Queue");
                 waitingMsg[id].Enqueue(data);
             }
             else
-                Debug.LogError($"ID:{id} not exist");
+                Debug.LogError($"ID:{id} Not Exist");
         }
         void ReceiveEnvData(object[] data)
         {
@@ -329,18 +352,28 @@ namespace RFUniverse
             {
                 Debug.Log("LoadAsset:" + name);
 #if UNITY_EDITOR
-                if (UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).IsDone)
+                AddressableAssetSettings setting = AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAssetSettings.asset");
+                List<AddressableAssetEntry> entrys = new List<AddressableAssetEntry>();
+                setting.GetAllAssets(entrys, false);
+                GameObject asset = (GameObject)entrys.FirstOrDefault(s => s.address == name).MainAsset;
+                if (asset != null)
                 {
+                    assets.Add(name, asset);
                     onCompleted?.Invoke();
-                    return;
                 }
-#endif
+                else
+                {
+                    Debug.LogWarning($"Not Find Editor Asset: {name}");
+                }
+
+#else
                 UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
                 {
                     if (!assets.ContainsKey(name))
                         assets.Add(name, handle.Result);
                     onCompleted?.Invoke();
                 };
+#endif
             }
         }
         public void GetGameObject(string name, Action<GameObject> onCompleted = null)
@@ -351,7 +384,7 @@ namespace RFUniverse
             }
             else
             {
-                Debug.LogWarning($"GameObject {name} not preload");
+                Debug.LogWarning($"GameObject {name} Not Preloaded");
                 PreLoadAssetAsync(name, () =>
                 {
                     onCompleted?.Invoke(assets[name]);
@@ -360,7 +393,7 @@ namespace RFUniverse
         }
         void LoadSceneAsync(string file)
         {
-            Debug.Log("LoadSceneAsync");
+            Debug.Log($"LoadSceneAsync: {file}");
             LoadScene(file, (_) =>
             {
                 SendLoadDoneMsg();
@@ -515,7 +548,7 @@ namespace RFUniverse
             waitingMsg.TryAdd(baseAttrData.id, new Queue<object[]>());
             GetGameObject(baseAttrData.name, gameObject =>
             {
-                gameObject = GameObject.Instantiate(gameObject);
+                gameObject = Instantiate(gameObject);
                 gameObject.name = gameObject.name.Replace("(Clone)", "");
                 BaseAttr attr = gameObject.GetComponent<BaseAttr>();
                 baseAttrData.SetAttrData(attr);
@@ -526,7 +559,7 @@ namespace RFUniverse
                     attr.Instance();
                     foreach (var item in waitingMsg[baseAttrData.id])
                     {
-                        Debug.Log("run waiting msg");
+                        Debug.Log("Execution Waiting Queue");
                         BaseAttr.Attrs[baseAttrData.id].ReceiveData(item);
                     }
                 }
@@ -534,6 +567,7 @@ namespace RFUniverse
                 onCompleted?.Invoke(attr);
             });
         }
+
         public Dictionary<int, Queue<object[]>> waitingMsg = new Dictionary<int, Queue<object[]>>();
         public void InstanceObject(string name, int id, Action<BaseAttr> onCompleted = null, bool callInstance = true)
         {
@@ -541,18 +575,18 @@ namespace RFUniverse
             waitingMsg.TryAdd(id, new Queue<object[]>());
             GetGameObject(name, (gameObject) =>
             {
-                gameObject = GameObject.Instantiate(gameObject);
+                gameObject = Instantiate(gameObject);
                 gameObject.name = gameObject.name.Replace("(Clone)", "");
                 BaseAttr attr = gameObject.GetComponent<BaseAttr>();
                 attr.ID = id;
                 attr.Name = name;
-                Debug.Log("Instance Done " + attr.Name + " id:" + attr.ID);
+                Debug.Log("Instance Done " + attr.Name + " ID:" + attr.ID);
                 if (callInstance)
                 {
                     attr.Instance();
                     foreach (var item in waitingMsg[id])
                     {
-                        Debug.Log("run waiting msg");
+                        Debug.Log("Execution Waiting Queue");
                         BaseAttr.Attrs[id].ReceiveData(item);
                     }
                 }
@@ -560,6 +594,7 @@ namespace RFUniverse
                 onCompleted?.Invoke(attr);
             });
         }
+
         void LoadURDF(int id, string path, bool nativeIK, string axis)
         {
             Debug.Log("LoadURDF:" + path);
@@ -574,6 +609,7 @@ namespace RFUniverse
             attr.initBioIK = nativeIK;
             attr.Instance();
         }
+
         public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true)
         {
             Debug.Log("LoadMesh:" + path);
@@ -594,76 +630,74 @@ namespace RFUniverse
                 attr.Instance();
             return attr;
         }
+
         void IgnoreLayerCollision(int layer1, int layer2, bool ignore)
         {
             Physics.IgnoreLayerCollision(layer1, layer2, ignore);
         }
+
         void GetCurrentCollisionPairs()
         {
             Communicator.SendObject("Env", "CurrentCollisionPairs", BaseAttr.CollisionPairs);
         }
         void GetRFMoveColliders()
         {
-            List<Dictionary<string, object>> rfmoveColliders = new List<Dictionary<string, object>>();
-            List<BaseAttr> colliderAttrs = BaseAttr.ActiveAttrs.Values.Where(s => s.IsRFMoveCollider).ToList();
+            Dictionary<int, List<Dictionary<string, object>>> rfmoveColliders = new();
+            List<ColliderAttr> colliderAttrs = BaseAttr.ActiveAttrs.Values.Select(s => s as ColliderAttr).Where(s => s.IsRFMoveCollider).ToList();
             foreach (var attr in colliderAttrs)
             {
-                Dictionary<string, object> oneAttr = new Dictionary<string, object>();
-                rfmoveColliders.Add(oneAttr);
-                oneAttr.Add("object_id", attr.ID);
-                Dictionary<string, object> oneAttrColliders = new Dictionary<string, object>();
-                oneAttr.Add("collider", oneAttrColliders);
+                List<Dictionary<string, object>> oneAttr = new();
+                rfmoveColliders.Add(attr.ID, oneAttr);
                 List<Collider> colliders = attr.GetComponentsInChildren<Collider>().Where(s => s.enabled && s.gameObject.activeInHierarchy && !s.isTrigger).ToList();
                 foreach (var collider in colliders)
                 {
-                    if (collider is BoxCollider)
+                    Dictionary<string, object> oneAttrColliders = new();
+                    oneAttr.Add(oneAttrColliders);
+                    Vector3 pos;
+                    switch (collider)
                     {
-                        oneAttrColliders.Add("type", "box");
-                        BoxCollider boxCollider = collider as BoxCollider;
-                        Vector3 pos = boxCollider.transform.position + boxCollider.transform.TransformPoint(boxCollider.center);
-                        oneAttrColliders.Add("position", pos);
-                        oneAttrColliders.Add("rotation", collider.transform.rotation);
-                        oneAttrColliders.Add("size", new float[] { boxCollider.transform.lossyScale.x * boxCollider.size.x, boxCollider.transform.lossyScale.y * boxCollider.size.y, boxCollider.transform.lossyScale.z * boxCollider.size.z });
-                    }
-                    else if (collider is SphereCollider)
-                    {
-                        oneAttrColliders.Add("type", "sphere");
-                        SphereCollider sphereCollider = collider as SphereCollider;
-                        Vector3 pos = sphereCollider.transform.position + sphereCollider.transform.TransformPoint(sphereCollider.center);
-                        oneAttrColliders.Add("position", pos);
-                        oneAttrColliders.Add("radius", sphereCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.y, collider.transform.lossyScale.z));
-                    }
-                    else if (collider is CapsuleCollider)
-                    {
-                        oneAttrColliders.Add("type", "capsule");
-                        CapsuleCollider capsuleCollider = collider as CapsuleCollider;
-                        Vector3 pos = capsuleCollider.transform.position + capsuleCollider.transform.TransformPoint(capsuleCollider.center);
-                        oneAttrColliders.Add("position", pos);
-                        oneAttrColliders.Add("rotation", collider.transform.rotation);
-                        oneAttrColliders.Add("direction", capsuleCollider.direction);
-                        switch (capsuleCollider.direction)
-                        {
-                            case 0:
-                                oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.y, collider.transform.lossyScale.z));
-                                oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.x);
-                                break;
-                            case 1:
-                                oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.z));
-                                oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.y);
-                                break;
-                            case 2:
-                            default:
-                                oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.y));
-                                oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.z);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        oneAttrColliders.Add("type", "box");
-                        oneAttrColliders.Add("position", collider.bounds.center);
-                        oneAttrColliders.Add("rotation", Quaternion.identity);
-                        oneAttrColliders.Add("size", collider.bounds.size);
+                        case BoxCollider boxCollider:
+                            oneAttrColliders.Add("type", "box");
+                            pos = boxCollider.transform.TransformPoint(boxCollider.center);
+                            oneAttrColliders.Add("position", pos);
+                            oneAttrColliders.Add("rotation", collider.transform.rotation);
+                            oneAttrColliders.Add("size", new Vector3(boxCollider.transform.lossyScale.x * boxCollider.size.x, boxCollider.transform.lossyScale.y * boxCollider.size.y, boxCollider.transform.lossyScale.z * boxCollider.size.z));
+                            break;
+                        case SphereCollider sphereCollider:
+                            oneAttrColliders.Add("type", "sphere");
+                            pos = sphereCollider.transform.TransformPoint(sphereCollider.center);
+                            oneAttrColliders.Add("position", pos);
+                            oneAttrColliders.Add("radius", sphereCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.y, collider.transform.lossyScale.z));
+                            break;
+                        case CapsuleCollider capsuleCollider:
+                            oneAttrColliders.Add("type", "capsule");
+                            pos = capsuleCollider.transform.TransformPoint(capsuleCollider.center);
+                            oneAttrColliders.Add("position", pos);
+                            oneAttrColliders.Add("rotation", collider.transform.rotation);
+                            oneAttrColliders.Add("direction", capsuleCollider.direction);
+                            switch (capsuleCollider.direction)
+                            {
+                                case 0:
+                                    oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.y, collider.transform.lossyScale.z));
+                                    oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.x);
+                                    break;
+                                case 1:
+                                    oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.z));
+                                    oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.y);
+                                    break;
+                                case 2:
+                                default:
+                                    oneAttrColliders.Add("radius", capsuleCollider.radius * Mathf.Max(collider.transform.lossyScale.x, collider.transform.lossyScale.y));
+                                    oneAttrColliders.Add("height", capsuleCollider.height * collider.transform.lossyScale.z);
+                                    break;
+                            }
+                            break;
+                        default:
+                            oneAttrColliders.Add("type", "box");
+                            oneAttrColliders.Add("position", collider.bounds.center);
+                            oneAttrColliders.Add("rotation", Quaternion.identity);
+                            oneAttrColliders.Add("size", collider.bounds.size);
+                            break;
                     }
                 }
             }
@@ -675,13 +709,15 @@ namespace RFUniverse
             Debug.Log("SetGravity");
             Physics.gravity = new Vector3(gravity[0], gravity[1], gravity[2]);
         }
+
         void SetGroundActive(bool actice)
         {
-            PlayerMain.Instance.GroundActive = actice;
+            GroundActive = actice;
         }
+
         void SetGroundPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
-            PlayerMain.Instance.Ground.GetComponent<Collider>().material = new PhysicMaterial
+            Ground.GetComponent<Collider>().material = new PhysicMaterial
             {
                 bounciness = bounciness,
                 dynamicFriction = dynamicFriction,
@@ -690,14 +726,17 @@ namespace RFUniverse
                 bounceCombine = (PhysicMaterialCombine)bounceCombine
             };
         }
+
         void SetTimeStep(float timeStep)
         {
-            PlayerMain.Instance.FixedDeltaTime = timeStep;
+            FixedDeltaTime = timeStep;
         }
+
         void SetTimeScale(float timeScale)
         {
-            PlayerMain.Instance.TimeScale = timeScale;
+            TimeScale = timeScale;
         }
+
         void SetResolution(int width, int height)
         {
             Screen.SetResolution(width, height, FullScreenMode.Windowed);
@@ -719,7 +758,12 @@ namespace RFUniverse
                 file = $"{Application.streamingAssetsPath}/SceneData/{file}";
             if (!file.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                 file += ".json";
-            if (!File.Exists(file)) return;
+            if (!File.Exists(file))
+            {
+                Debug.LogWarning($"Not Find Scene Json File: {file}");
+                onCompleted(new List<BaseAttr>());
+                return;
+            }
             SceneData data = JsonConvert.DeserializeObject<SceneData>(File.ReadAllText(file), RFUniverseUtility.JsonSerializerSettings);
             List<string> names = data.assetsData.Select((a) => a.name).ToList();
             PreLoadAssetsAsync(names, () =>
@@ -748,14 +792,14 @@ namespace RFUniverse
                 file += ".json";
 
             SceneData data = new SceneData();
-            if (PlayerMain.Instance.MainCamera)
+            if (MainCamera)
             {
-                data.cameraPosition = new float[] { PlayerMain.Instance.MainCamera.transform.position.x, PlayerMain.Instance.MainCamera.transform.position.y, PlayerMain.Instance.MainCamera.transform.position.z };
-                data.cameraRotation = new float[] { PlayerMain.Instance.MainCamera.transform.eulerAngles.x, PlayerMain.Instance.MainCamera.transform.eulerAngles.y, PlayerMain.Instance.MainCamera.transform.eulerAngles.z };
+                data.cameraPosition = new float[] { MainCamera.transform.position.x, MainCamera.transform.position.y, MainCamera.transform.position.z };
+                data.cameraRotation = new float[] { MainCamera.transform.eulerAngles.x, MainCamera.transform.eulerAngles.y, MainCamera.transform.eulerAngles.z };
             }
-            data.ground = PlayerMain.Instance.GroundActive;
+            data.ground = GroundActive;
             if (data.ground)
-                data.groundPosition = new float[] { PlayerMain.Instance.Ground.transform.position.x, PlayerMain.Instance.Ground.transform.position.y, PlayerMain.Instance.Ground.transform.position.z };
+                data.groundPosition = new float[] { Ground.transform.position.x, Ground.transform.position.y, Ground.transform.position.z };
             List<BaseAttr> attrsTmp = new List<BaseAttr>(attrs);
             foreach (var item in attrsTmp)
             {

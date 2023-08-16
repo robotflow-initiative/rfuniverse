@@ -80,6 +80,18 @@ namespace RFUniverse.Attributes
     }
     public class ColliderAttr : GameObjectAttr
     {
+        private bool isRFMoveCollider = true;
+        public bool IsRFMoveCollider
+        {
+            get
+            {
+                return isRFMoveCollider;
+            }
+            set
+            {
+                isRFMoveCollider = value;
+            }
+        }
         public override BaseAttrData GetAttrData()
         {
             ColliderAttrData data = new ColliderAttrData(base.GetAttrData());
@@ -229,6 +241,9 @@ namespace RFUniverse.Attributes
                 case "SetPhysicMaterial":
                     SetPhysicMaterial((float)data[0], (float)data[1], (float)data[2], (int)data[3], (int)data[4]);
                     return;
+                case "SetRFMoveColliderActive":
+                    SetRFMoveColliderActive((bool)data[0]);
+                    return;
                 case "GenerateVHACDColider":
                     GenerateVHACDCollider();
                     return;
@@ -291,6 +306,11 @@ namespace RFUniverse.Attributes
                 if (!item.isTrigger)
                     item.material = material;
             }
+        }
+
+        protected void SetRFMoveColliderActive(bool active)
+        {
+            IsRFMoveCollider = active;
         }
 
 #if UNITY_EDITOR

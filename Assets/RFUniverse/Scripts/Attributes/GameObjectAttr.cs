@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using static UnityEditor.Progress;
 
 namespace RFUniverse.Attributes
 {
@@ -55,7 +57,7 @@ namespace RFUniverse.Attributes
                     materials = new List<Material>();
                     foreach (var item in Renderers)
                     {
-                        materials.AddRange(item.materials);
+                        materials.AddRange(item.sharedMaterials);
                     }
                 }
                 return materials;
@@ -71,11 +73,10 @@ namespace RFUniverse.Attributes
             }
             set
             {
-                foreach (var item in Materials)
+                if (Materials.Count > 0)
                 {
-                    item.SetColor("_Color", value);
+                    Materials[0].SetColor("_Color", value);
                 }
-
             }
         }
 
@@ -98,9 +99,9 @@ namespace RFUniverse.Attributes
         {
             set
             {
-                foreach (var item in Materials)
+                if (Materials.Count > 0)
                 {
-                    item.SetTexture("_MainTex", value);
+                    Materials[0].SetTexture("_MainTex", value);
                 }
             }
         }
@@ -164,63 +165,54 @@ namespace RFUniverse.Attributes
             Texture = tex;
         }
 
-        Dictionary<Mesh, List<Vector3>> vertices = new Dictionary<Mesh, List<Vector3>>();
-
-        System.Tuple<Vector3, Vector3, Vector3> dddbbox = null;
-        public System.Tuple<Vector3, Vector3, Vector3> Get3DBBox()
+        Tuple<Vector3, Vector3, Vector3> dddbbox = null;
+        public Tuple<Vector3, Vector3, Vector3> Get3DBBox(bool send = true)
         {
-            float maxX = float.NegativeInfinity;
-            float minX = float.PositiveInfinity;
-            float maxY = float.NegativeInfinity;
-            float minY = float.PositiveInfinity;
-            float maxZ = float.NegativeInfinity;
-            float minZ = float.PositiveInfinity;
+            List<Vector3> allVertices = new List<Vector3>();
             foreach (var render in this.GetChildComponentFilter<MeshFilter>())
             {
-                if (!vertices.TryGetValue(render.mesh, out List<Vector3> thisVertices))
-                {
-                    thisVertices = render.mesh.vertices.ToList();
-                    vertices.Add(render.mesh, thisVertices);
-                }
-                foreach (var item in thisVertices)
-                {
-                    Vector3 point = render.transform.TransformPoint(item);
-                    point = transform.InverseTransformPoint(point);
-                    maxX = Mathf.Max(maxX, point.x);
-                    minX = Mathf.Min(minX, point.x);
-                    maxY = Mathf.Max(maxY, point.y);
-                    minY = Mathf.Min(minY, point.y);
-                    maxZ = Mathf.Max(maxZ, point.z);
-                    minZ = Mathf.Min(minZ, point.z);
-                }
+                Span<Vector3> spanVertices = new Span<Vector3>(render.sharedMesh.vertices);
+                render.transform.TransformPoints(render.sharedMesh.vertices, spanVertices);
+                transform.InverseTransformPoints(spanVertices, spanVertices);
+                allVertices.AddRange(spanVertices.ToArray());
             }
+            var x = allVertices.Select(s => s.x);
+            var y = allVertices.Select(s => s.y);
+            var z = allVertices.Select(s => s.z);
+            float maxX = x.Max();
+            float minX = x.Min();
+            float maxY = y.Max();
+            float minY = y.Min();
+            float maxZ = z.Max();
+            float minZ = z.Min();
+
             Vector3 position = transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
             Vector3 rotation = transform.eulerAngles;
             Vector3 size = new Vector3((maxX - minX) * transform.lossyScale.x, (maxY - minY) * transform.lossyScale.y, (maxZ - minZ) * transform.lossyScale.z);
-            dddbbox = new System.Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
-            return dddbbox;
+            if (send)
+                dddbbox = new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
+            return new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
         }
 
         public Rect Get2DBBox(Camera cam)
         {
-            float maxX = float.MinValue;
-            float minX = float.MaxValue;
-            float maxY = float.MinValue;
-            float minY = float.MaxValue;
+            List<Vector3> allVertices = new List<Vector3>();
             foreach (var render in this.GetChildComponentFilter<MeshFilter>())
             {
-                Vector3[] vertices = render.mesh.vertices;
-
-                foreach (var item in vertices)
+                Span<Vector3> spanVertices = new Span<Vector3>(render.sharedMesh.vertices);
+                render.transform.TransformPoints(render.sharedMesh.vertices, spanVertices);
+                for (int i = 0; i < spanVertices.Length; i++)
                 {
-                    Vector3 point = render.transform.TransformPoint(item);
-                    point = cam.WorldToScreenPoint(point);
-                    maxX = Mathf.Max(maxX, point.x);
-                    minX = Mathf.Min(minX, point.x);
-                    maxY = Mathf.Max(maxY, point.y);
-                    minY = Mathf.Min(minY, point.y);
+                    spanVertices[i] = cam.WorldToScreenPoint(spanVertices[i]);
                 }
+                allVertices.AddRange(spanVertices.ToArray());
             }
+            var x = allVertices.Select(s => s.x);
+            var y = allVertices.Select(s => s.y);
+            float maxX = x.Max();
+            float minX = x.Min();
+            float maxY = y.Max();
+            float minY = y.Min();
             return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 

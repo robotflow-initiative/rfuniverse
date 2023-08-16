@@ -2,6 +2,7 @@
 using RFUniverse.Attributes;
 using System;
 using RFUniverse.Manager;
+using System.Threading.Tasks;
 
 namespace RFUniverse.DebugTool
 {
@@ -16,6 +17,35 @@ namespace RFUniverse.DebugTool
         {
             index = UnityEngine.Random.Range(0, total);
         }
+        //Task t;
+        //private void OnEnable()
+        //{
+        //    t = Task.Run(() =>
+        //    {
+        //        while (true)
+        //        {
+        //            if (target && target.gameObject.activeInHierarchy)
+        //            {
+        //                gameObject.SetActive(true);
+        //                render.material.SetColor("_Color", RFUniverseUtility.EncodeIDAsColor(target.ID));
+
+        //                render.bounds = target.GetAppendBounds();
+        //                Tuple<Vector3, Vector3, Vector3> bound = target.Get3DBBox();
+        //                transform.position = bound.Item1;
+        //                transform.eulerAngles = bound.Item2;
+        //                render.material.SetVector("_Size", bound.Item3);
+        //            }
+        //            else
+        //            {
+        //                gameObject.SetActive(false);
+        //            }
+        //        }
+        //    });
+        //}
+        //private void OnDisable()
+        //{
+        //    t.Dispose();
+        //}
         void FixedUpdate()
         {
             if ((frame++ % total) != index) return;
@@ -25,7 +55,7 @@ namespace RFUniverse.DebugTool
                 render.material.SetColor("_Color", RFUniverseUtility.EncodeIDAsColor(target.ID));
 
                 render.bounds = target.GetAppendBounds();
-                Tuple<Vector3, Vector3, Vector3> bound = target.Get3DBBox();
+                Tuple<Vector3, Vector3, Vector3> bound = target.Get3DBBox(false);
                 transform.position = bound.Item1;
                 transform.eulerAngles = bound.Item2;
                 render.material.SetVector("_Size", bound.Item3);

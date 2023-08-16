@@ -35,29 +35,13 @@ namespace RFUniverse.Attributes
             Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
             Camera.RenderWithShader(null, "");
             RenderTexture.active = Camera.targetTexture;
-            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
-            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-            tex.Apply();
-            RenderTexture.ReleaseTemporary(Camera.targetTexture);
-            return tex;
-        }
-        public Texture2D GetRGBWithAlpha(int width, int height, float? unPhysicalFov = null)
-        {
-            Debug.Log("GetRGB");
-            if (unPhysicalFov != null)
-            {
-                Camera.usePhysicalProperties = false;
-                Camera.fieldOfView = unPhysicalFov.Value;
-            }
-            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
-            Camera.RenderWithShader(null, "");
-            RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.RGBA32, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
             return tex;
         }
+
         public override Texture2D GetNormal(int width, int height, float? unPhysicalFov = null)
         {
             Debug.Log("GetNormal");
@@ -86,7 +70,7 @@ namespace RFUniverse.Attributes
             Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, 1);
             Camera.RenderWithShader(cameraIDShader, "");
             RenderTexture.active = Camera.targetTexture;
-            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGBA32, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
@@ -164,7 +148,7 @@ namespace RFUniverse.Attributes
             RevertLayer(ActiveAttrs[id], originLayers);
             Camera.cullingMask = originCameraLayers;
             RenderTexture.active = Camera.targetTexture;
-            tex.Reinitialize(width, height, TextureFormat.RGB24, false);
+            tex.Reinitialize(width, height, TextureFormat.RGBA32, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
@@ -190,38 +174,5 @@ namespace RFUniverse.Attributes
     }
 
 
-#if UNITY_EDITOR
-    [CustomEditor(typeof(CameraAttr), true)]
-    public class CameraAttrEditor : Editor
-    {
-        Vector2Int size = new Vector2Int(512, 512);
-        float fov = 60;
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            CameraAttr script = target as CameraAttr;
-            GUILayout.Space(10);
-            GUILayout.Label("Editor Tool:");
-            size = EditorGUILayout.Vector2IntField("Size:", size);
-            fov = EditorGUILayout.FloatField("Fov:", fov);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("GetRGB"))
-            {
-                Texture2D tex = script.GetRGB(size.x, size.y, fov);
-                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_RGB.png", tex.EncodeToPNG());
-            }
-            if (GUILayout.Button("GetNormal"))
-            {
-                Texture2D tex = script.GetNormal(size.x, size.y, fov);
-                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_Normal.ext", tex.EncodeToEXR());
-            }
-            if (GUILayout.Button("GetDepthEXR"))
-            {
-                Texture2D tex = script.GetDepthEXR(size.x, size.y, fov);
-                File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_DepthEXR.ext", tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
-            }
-            GUILayout.EndHorizontal();
-        }
-    }
-#endif
+
 }

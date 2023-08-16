@@ -6,13 +6,13 @@ namespace Unity.Robotics
 {
     public static class MaterialExtensions
     {
-        public enum RenderPipelineType 
+        public enum RenderPipelineType
         {
             Standard,
             URP,
             HDRP,
         }
-        
+
         private static string[] standardShaders = { "Standard" };
         private static string[] hdrpShaders = { "HDRP/Lit" };
         private static string[] urpShaders = { "Universal Render Pipeline/Lit" };
@@ -36,8 +36,8 @@ namespace Unity.Robotics
                     if (shader != null)
                     {
                         var material = new Material(shader);
-                        material.SetFloat("_Metallic", 0.75f);
-                        material.SetFloat("_Glossiness", 0.75f);
+                        material.SetFloat("_Metallic", 0f);
+                        material.SetFloat("_Glossiness", 0f);
                         return material;
                     }
                 }
@@ -53,7 +53,7 @@ namespace Unity.Robotics
         /// Used for creating the proper default material.
         public static RenderPipelineType GetRenderPipelineType()
         {
-            if (GraphicsSettings.renderPipelineAsset != null) 
+            if (GraphicsSettings.renderPipelineAsset != null)
             {
                 if (GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition"))
                 {

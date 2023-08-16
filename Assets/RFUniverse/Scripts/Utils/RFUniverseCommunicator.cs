@@ -79,7 +79,8 @@ namespace RFUniverse
             while (connected)
             {
                 byte[] bytes = ReceiveBytes();
-                if (bytes != null && bytes.Length > 0)
+                if (bytes == null) break;
+                if (bytes.Length > 0)
                 {
                     object[] data = ReceiveObject(bytes);
                     if (data.Length > 0 && data[0] is string && data[0] as string == "StepStart")
@@ -107,7 +108,7 @@ namespace RFUniverse
                 //{
                 //    lengthOffset += stream.Read(buffer, lengthOffset, buffer.Length - lengthOffset);
                 //}
-                stream.Read(buffer, 0, 4);
+                stream.Read(buffer, 0, buffer.Length);
                 uint length = BitConverter.ToUInt32(buffer);
                 if (length == 0) return null;
 
@@ -450,6 +451,8 @@ namespace RFUniverse
         public void Dispose()
         {
             client?.Close();
+            client?.Dispose();
+            client = null;
         }
     }
 }

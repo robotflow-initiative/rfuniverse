@@ -121,18 +121,6 @@ namespace RFUniverse.Attributes
 
         public List<BaseAttr> childs = new List<BaseAttr>();
 
-        private bool isRFMoveCollider = true;
-        public bool IsRFMoveCollider
-        {
-            get
-            {
-                return isRFMoveCollider;
-            }
-            set
-            {
-                isRFMoveCollider = value;
-            }
-        }
         public void Instance()
         {
             Init();
@@ -274,9 +262,6 @@ namespace RFUniverse.Attributes
                     return;
                 case "Destroy":
                     Destroy();
-                    return;
-                case "SetRFMoveColliderActive":
-                    SetRFMoveColliderActive((bool)data[0]);
                     return;
                 case "GetLocalPointFromWorld":
                     GetLocalPointFromWorld(data[0].ConvertType<List<float>>());
@@ -420,11 +405,6 @@ namespace RFUniverse.Attributes
             DestroyImmediate(gameObject);
             //else
             //    Destroy(gameObject);
-        }
-
-        protected void SetRFMoveColliderActive(bool active)
-        {
-            IsRFMoveCollider = active;
         }
 
         Vector3? resultLocalPoint = null;

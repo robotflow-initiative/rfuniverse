@@ -303,8 +303,6 @@ namespace RFUniverse.Attributes
 
         Mesh CreatePointCloudMesh(List<Vector3> positions, List<Color> colors)
         {
-            print(positions.Count);
-            print(colors.Count);
             List<Vector3> meshVertices = new();
             List<Vector3> meshNormals = new();
             List<Color> meshColors = new();
