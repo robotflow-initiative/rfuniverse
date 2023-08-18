@@ -148,7 +148,7 @@ namespace RFUniverse.Attributes
             else
             {
                 Debug.Log($"Rigister ID:{ID} Name:{Name}");
-                BaseAttr.AddAttr(this);
+                AddAttr(this);
             }
         }
         public virtual BaseAttrData GetAttrData()
@@ -270,7 +270,7 @@ namespace RFUniverse.Attributes
                     GetWorldPointFromLocal(data[0].ConvertType<List<float>>());
                     return;
                 default:
-                    Debug.Log($"ID:{ID} Dont have mehond:{type}");
+                    Debug.LogWarning($"ID: {ID} Type: {GetType().Name}Dont have mehond: {type}");
                     return;
             }
         }

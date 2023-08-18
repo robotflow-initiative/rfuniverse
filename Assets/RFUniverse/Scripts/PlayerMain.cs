@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.Robotics.UrdfImporter;
+using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
-using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
+#endif
 
 namespace RFUniverse
 {
@@ -88,7 +89,7 @@ namespace RFUniverse
                 Communicator = new RFUniverseCommunicator("localhost", port, false);
             }
 
-            if (Communicator.connected)
+            if (Communicator.Connected)
             {
                 OnStepAction += Step;
                 Communicator.OnReceivedData += (data) =>
@@ -163,7 +164,7 @@ namespace RFUniverse
 
         void Step()
         {
-            if (Communicator.connected)
+            if (Communicator.Connected)
             {
                 foreach (var attr in BaseAttr.ActiveAttrs.Values)
                 {
@@ -285,13 +286,18 @@ namespace RFUniverse
                 case "SetViewTransform":
                     SetViewTransform(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
                     return;
+                case "ViewLookAt":
+                    ViewLookAt(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
+                    return;
                 case "SetViewBackGround":
                     SetViewBackGround(data[0].ConvertType<List<float>>());
                     return;
                 default:
-                    return;
+                    Debug.LogWarning("Dont have mehond:" + type);
+                    break;
             }
         }
+
 
         private Dictionary<string, GameObject> assets = new Dictionary<string, GameObject>();
         private void SetShadowDistance(float dis)
@@ -310,13 +316,22 @@ namespace RFUniverse
                 MainCamera.transform.eulerAngles = RFUniverseUtility.ListFloatToVector3(rotation);
             }
         }
+
+        public virtual void ViewLookAt(List<float> target, List<float> worldUp)
+        {
+            MainCamera.transform.LookAt(RFUniverseUtility.ListFloatToVector3(target), RFUniverseUtility.ListFloatToVector3(worldUp));
+        }
+
         private void SetViewBackGround(List<float> color)
         {
             Debug.Log("SetViewBackGround");
             if (color == null)
                 MainCamera.clearFlags = CameraClearFlags.Skybox;
             else
+            {
+                MainCamera.clearFlags = CameraClearFlags.SolidColor;
                 MainCamera.backgroundColor = RFUniverseUtility.ListFloatToColor(color);
+            }
         }
         public void Pend()
         {
@@ -355,7 +370,8 @@ namespace RFUniverse
                 AddressableAssetSettings setting = AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAssetSettings.asset");
                 List<AddressableAssetEntry> entrys = new List<AddressableAssetEntry>();
                 setting.GetAllAssets(entrys, false);
-                GameObject asset = (GameObject)entrys.FirstOrDefault(s => s.address == name).MainAsset;
+                AddressableAssetEntry entry = entrys.FirstOrDefault(s => s.address == name);
+                GameObject asset = (GameObject)entry.MainAsset;
                 if (asset != null)
                 {
                     assets.Add(name, asset);
@@ -597,7 +613,7 @@ namespace RFUniverse
 
         void LoadURDF(int id, string path, bool nativeIK, string axis)
         {
-            Debug.Log("LoadURDF:" + path);
+            Debug.Log($@"LoadURDF: {path}");
             ImportSettings setting = new ImportSettings();
             setting.chosenAxis = axis == "z" ? ImportSettings.axisType.zAxis : ImportSettings.axisType.yAxis;
             setting.convexMethod = ImportSettings.convexDecomposer.unity;

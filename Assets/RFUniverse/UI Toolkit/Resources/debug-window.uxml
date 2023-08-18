@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="debug-window" style="left: auto; right: auto; bottom: auto; position: relative; height: auto; width: auto; min-height: auto; min-width: auto; flex-direction: column; justify-content: flex-start;">
+        <ui:Button text="DebugWindow-Open/Close" display-tooltip-when-elided="false" name="debug-button" enable-rich-text="false" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; height: 40px; border-top-left-radius: 10px; border-top-right-radius: 10px; font-size: 20px;" />
+        <ui:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" name="debug-view" vertical-page-size="-1" style="flex-grow: 1; max-height: 500px; min-height: auto; height: auto; background-color: rgba(101, 101, 101, 0.78); -unity-text-align: upper-left;" />
+    </ui:VisualElement>
+</ui:UXML>

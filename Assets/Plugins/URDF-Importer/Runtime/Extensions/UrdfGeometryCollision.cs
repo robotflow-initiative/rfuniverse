@@ -16,6 +16,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using MeshProcess;
 using System.IO;
+using UnityMeshImporter;
 
 namespace Unity.Robotics.UrdfImporter
 {
@@ -24,11 +25,11 @@ namespace Unity.Robotics.UrdfImporter
         public static List<string> UsedTemplateFiles => s_UsedTemplateFiles;
         static List<string> s_UsedTemplateFiles = new List<string>();
         static List<string> s_CreatedAssetNames = new List<string>();
-        
+
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
-            
+
             switch (geometryType)
             {
                 case GeometryTypes.Box:
@@ -77,7 +78,7 @@ namespace Unity.Robotics.UrdfImporter
                 }
 
                 GameObject meshObject = (GameObject)RuntimeUrdf.PrefabUtility_InstantiatePrefab(prefabObject);
-                ConvertMeshToColliders(meshObject, location:mesh.filename);
+                ConvertMeshToColliders(meshObject, location: mesh.filename);
 
                 return meshObject;
             }
@@ -92,11 +93,24 @@ namespace Unity.Robotics.UrdfImporter
             {
                 meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
             }
+            else if (meshFilePath.ToLower().EndsWith(".dae"))
+            {
+                float globalScale = ColladaAssetPostProcessor.ReadGlobalScale(meshFilePath);
+                meshObject = MeshImporter.Load(meshFilePath, globalScale, globalScale, globalScale);
+                if (meshObject != null)
+                {
+                    ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
+                }
+            }
+            else if (meshFilePath.ToLower().EndsWith(".obj"))
+            {
+                meshObject = MeshImporter.Load(meshFilePath);
+            }
             else
             {
                 Debug.LogError("Unable to create mesh collider for the mesh: " + mesh.filename);
             }
-            
+
             if (meshObject != null)
             {
                 ConvertMeshToColliders(meshObject);
@@ -126,13 +140,13 @@ namespace Unity.Robotics.UrdfImporter
             {
                 var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
                 var filePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(RuntimeUrdf.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
-                var name =$"{filePath}/Cylinder.asset";
+                var name = $"{filePath}/Cylinder.asset";
                 // Only create new asset if one doesn't exist
                 if (!RuntimeUrdf.AssetExists(name))
                 {
                     Debug.Log($"Creating new cylinder file: {name}");
-                    RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
-                    RuntimeUrdf.AssetDatabase_SaveAssets();       
+                    RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath: true);
+                    RuntimeUrdf.AssetDatabase_SaveAssets();
                 }
                 else
                 {
@@ -202,7 +216,7 @@ namespace Unity.Robotics.UrdfImporter
                 }
 
                 foreach (MeshFilter meshFilter in meshFilters)
-                {                  
+                {
                     GameObject child = meshFilter.gameObject;
                     VHACD decomposer = child.AddComponent<VHACD>();
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);

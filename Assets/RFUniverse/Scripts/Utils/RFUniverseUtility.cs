@@ -151,6 +151,7 @@ namespace RFUniverse
                 {
                     body.immovable = true;
                 }
+                body.useGravity = false;
 
                 var xDrive = body.xDrive;
                 xDrive.stiffness = 100000;
@@ -279,9 +280,9 @@ namespace RFUniverse
 
         public static Color ListFloatToColor(List<float> floats)
         {
-            if (floats == null || floats.Count != 3)
+            if (floats == null)
                 return Color.black;
-            return new Color(floats[0], floats[1], floats[2], 1);
+            return new Color(floats.Count > 0 ? floats[0] : 0, floats.Count > 1 ? floats[1] : 0, floats.Count > 2 ? floats[2] : 0, floats.Count > 3 ? floats[3] : 0);
         }
         public static List<Color> ListFloatToListColor(List<float> floats)
         {

@@ -112,13 +112,27 @@ namespace RFUniverse.Manager
                 case "SetPythonVersion":
                     SetPythonVersion((string)data[0]);
                     break;
+                case "ShowArticulationParameter":
+                    ShowArticulationParameter((int)data[0]);
+                    return;
                 default:
-                    Debug.Log("Dont have mehond:" + type);
+                    Debug.LogWarning("Dont have mehond:" + type);
                     break;
             }
         }
 
-
+        public void ShowArticulationParameter(int controllerID)
+        {
+            Debug.Log($"ShowArticulationParameter ID: {controllerID}");
+            if (BaseAttr.Attrs.TryGetValue(controllerID, out BaseAttr target) && target is ControllerAttr)
+            {
+                PlayerMain.Instance.playerMainUI.ShowArticulationParameter((target as ControllerAttr).moveableJoints);
+            }
+            else
+            {
+                Debug.LogWarning($"ID {controllerID} is Not Exists or Not ControllerAttr");
+            }
+        }
 
         bool isDebugGraspPoint = false;
         public bool IsDebugGraspPoint

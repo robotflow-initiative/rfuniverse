@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="articulation-window" style="flex-grow: 0; background-color: rgb(188, 188, 188); position: relative; right: auto; bottom: auto; width: auto; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <ui:Label tabindex="-1" text="Articulation Parameter" display-tooltip-when-elided="true" name="title" style="-unity-text-align: middle-center; font-size: 20px; height: 40px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+        <ui:ScrollView name="articulation-view" horizontal-scroller-visibility="Hidden" style="height: auto; max-height: none;" />
+    </ui:VisualElement>
+</ui:UXML>

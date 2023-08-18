@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum ControlMode
 {
@@ -15,14 +17,9 @@ public class ArticulationUnit : MonoBehaviour
     public ArticulationBody mimicParent = null;
     public float mimicMultiplier = 1.0f;
     public float mimicOffset = 0.0f;
-    //public bool mimicSync = false;
     public event Action OnSetJointPositionDirectly = null;
-    //private ControlMode controlMode;
     private ArticulationBody articulationBody;
     private int dofCount => articulationBody.dofCount;
-
-    //private int checkStableFrequency = 5;
-    //private int checkStableFrequencyCounter = 0;
 
     void Awake()
     {
@@ -164,45 +161,21 @@ public class ArticulationUnit : MonoBehaviour
     }
     public void SetJointPosition(float target)
     {
-        ArticulationDrive drive = articulationBody.xDrive;
-        drive.driveType = ArticulationDriveType.Force;
-        drive.target = target;
-        articulationBody.xDrive = drive;
-
-        drive = articulationBody.yDrive;
-        drive.driveType = ArticulationDriveType.Force;
-        drive.target = target;
-        articulationBody.yDrive = drive;
-
-        drive = articulationBody.zDrive;
-        drive.driveType = ArticulationDriveType.Force;
-        drive.target = target;
-        articulationBody.zDrive = drive;
+        articulationBody.SetDriveTarget(ArticulationDriveAxis.X, target);
+        articulationBody.SetDriveTarget(ArticulationDriveAxis.Y, target);
+        articulationBody.SetDriveTarget(ArticulationDriveAxis.Z, target);
     }
 
     public void SetJointPositionDirectly(float target)
     {
-        ArticulationDrive drive = articulationBody.xDrive;
-        drive.driveType = ArticulationDriveType.Target;
-        drive.target = target;
-        articulationBody.xDrive = drive;
-
-        drive = articulationBody.yDrive;
-        drive.driveType = ArticulationDriveType.Target;
-        drive.target = target;
-        articulationBody.yDrive = drive;
-
-        drive = articulationBody.zDrive;
-        drive.driveType = ArticulationDriveType.Target;
-        drive.target = target;
-        articulationBody.zDrive = drive;
-
-        articulationBody.jointPosition = new ArticulationReducedSpace(articulationBody.jointType == ArticulationJointType.PrismaticJoint ? target : target * Mathf.Deg2Rad);
-
+        SetJointPosition(target);
+        target = articulationBody.jointType == ArticulationJointType.PrismaticJoint ? target : target * Mathf.Deg2Rad;
+        articulationBody.jointPosition = new ArticulationReducedSpace(target, target, target);
         OnSetJointPositionDirectly?.Invoke();
     }
     public void SetJointTargetVelocity(float jointTargetVelocity)
     {
+        //articulationBody.SetJointVelocities(new float[] { jointTargetVelocity, jointTargetVelocity, jointTargetVelocity }.ToList());
         ArticulationDrive drive = articulationBody.xDrive;
         drive.driveType = ArticulationDriveType.Velocity;
         drive.targetVelocity = jointTargetVelocity;
@@ -219,6 +192,20 @@ public class ArticulationUnit : MonoBehaviour
         articulationBody.zDrive = drive;
     }
 
+    public float GetJointPosition()
+    {
+        switch (articulationBody.jointType)
+        {
+            case ArticulationJointType.FixedJoint:
+            default:
+                return 0;
+            case ArticulationJointType.PrismaticJoint:
+                return articulationBody.jointPosition[0];
+            case ArticulationJointType.RevoluteJoint:
+            case ArticulationJointType.SphericalJoint:
+                return articulationBody.jointPosition[0] * Mathf.Rad2Deg;
+        }
+    }
     public void AddJointForce(Vector3 jointForce)
     {
         forceMode = ForceMode.Force;

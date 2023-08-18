@@ -20,7 +20,7 @@ namespace RFUniverse
         public Action OnDisconnect;
 
         //int bufferSize = 1024 * 10;
-        public bool connected => client != null ? client.Connected : false;
+        public bool Connected => client != null ? client.Connected : false;
         public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false)
         {
             this.async = async;
@@ -33,7 +33,7 @@ namespace RFUniverse
             Debug.Log($"Connecting to server on port: {port}");
             IAsyncResult ar = client.BeginConnect(host, port, null, null);
             ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-            if (connected)
+            if (Connected)
             {
                 Debug.Log("Connected successfully");
                 stream = client.GetStream();
@@ -52,7 +52,7 @@ namespace RFUniverse
 
         void AsyncReceiveThread()
         {
-            while (connected)
+            while (Connected)
             {
                 byte[] bytes = ReceiveBytes();
                 if (bytes != null)
@@ -68,7 +68,7 @@ namespace RFUniverse
         public void SyncStepEnd()
         {
             if (async) return;
-            if (!connected) return;
+            if (!Connected) return;
             SendObject("StepEnd");
             //while (client.Connected && syncSendBytesQueue.TryDequeue(out byte[] bytes))
             //{
@@ -76,7 +76,7 @@ namespace RFUniverse
             //}
 
             Queue<object[]> syncReceiveObjectQueue = new Queue<object[]>();
-            while (connected)
+            while (Connected)
             {
                 byte[] bytes = ReceiveBytes();
                 if (bytes == null) break;
@@ -116,7 +116,7 @@ namespace RFUniverse
                 byte[] bytes = new byte[length];
                 while (bytesOffset < bytes.Length)
                 {
-                    if (!connected) break;
+                    if (!Connected) break;
                     bytesOffset += stream.Read(bytes, bytesOffset, bytes.Length - bytesOffset);
                 }
                 return bytes;
@@ -306,7 +306,7 @@ namespace RFUniverse
 
         public void SendObject(params object[] datas)
         {
-            if (!connected) return;
+            if (!Connected) return;
             List<byte> bytes = new List<byte>();
             WriteInt(bytes, datas.Length);
             foreach (var data in datas)

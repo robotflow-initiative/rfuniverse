@@ -442,9 +442,7 @@ namespace RFUniverse.Attributes
                     bioIK.FixedUpdate1();
                     foreach (var item in bioIK.targets)
                     {
-                        ArticulationDrive drive = iKCopy[item.Key].xDrive;
-                        drive.target = item.Value;
-                        iKCopy[item.Key].xDrive = drive;
+                        iKCopy[item.Key].GetUnit().SetJointPosition(item.Value);
                     }
                 }
             }

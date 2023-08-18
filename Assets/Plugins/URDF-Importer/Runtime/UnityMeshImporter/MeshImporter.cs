@@ -114,15 +114,17 @@ namespace UnityMeshImporter
                     {
                         Texture2D uTexture = new Texture2D(2, 2);
                         string texturePath = Path.Combine(parentDir, m.TextureDiffuse.FilePath);
-
-                        byte[] byteArray = File.ReadAllBytes(texturePath);
-                        bool isLoaded = uTexture.LoadImage(byteArray);
-                        if (!isLoaded)
+                        if (File.Exists(texturePath))
                         {
-                            throw new Exception("Cannot find texture file: " + texturePath);
-                        }
+                            byte[] byteArray = File.ReadAllBytes(texturePath);
+                            bool isLoaded = uTexture.LoadImage(byteArray);
+                            if (!isLoaded)
+                            {
+                                throw new Exception("Cannot find texture file: " + texturePath);
+                            }
 
-                        uMaterial.SetTexture("_MainTex", uTexture);
+                            uMaterial.SetTexture("_MainTex", uTexture);
+                        }
                     }
 
                     uMaterials.Add(uMaterial);
@@ -211,7 +213,7 @@ namespace UnityMeshImporter
                         GameObject uSubOb = new GameObject(uMeshAndMat.MeshName);
                         uSubOb.AddComponent<MeshFilter>();
                         uSubOb.AddComponent<MeshRenderer>();
-                        uSubOb.AddComponent<MeshCollider>();
+                        //uSubOb.AddComponent<MeshCollider>();
 
                         uSubOb.GetComponent<MeshFilter>().mesh = uMeshAndMat.Mesh;
                         uSubOb.GetComponent<MeshRenderer>().material = uMeshAndMat.Material;
