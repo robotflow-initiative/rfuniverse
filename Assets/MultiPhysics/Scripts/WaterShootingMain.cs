@@ -26,8 +26,8 @@ public class WaterShootingMain : MonoBehaviour
         float x = msg.ReadFloat32();
         float y = msg.ReadFloat32();
         float z = msg.ReadFloat32();
-        this.emitter.VolumePerSimTime = volumePerSimTime;
-        this.emitter.InitialVelocity = new Vector3(x, y, z);
+        emitter.VolumePerSimTime = volumePerSimTime;
+        emitter.InitialVelocity = new Vector3(x, y, z);
     }
 
     public GameObject zibraLiquid;

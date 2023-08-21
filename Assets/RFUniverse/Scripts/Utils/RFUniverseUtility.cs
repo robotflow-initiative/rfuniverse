@@ -116,11 +116,6 @@ namespace RFUniverse
             {
                 Destroy(item);
             }
-            UrdfJoint[] urdfJoint = root.GetComponentsInChildren<UrdfJoint>();
-            foreach (var item in urdfJoint)
-            {
-                Destroy(item);
-            }
 
             UrdfVisual[] urdfVisual = root.GetComponentsInChildren<UrdfVisual>();
             foreach (var item in urdfVisual)

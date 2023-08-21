@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,7 +28,7 @@ namespace RFUniverse
                 TemplateContainer oneArticulationItem = articulationItem.Instantiate();
                 articulationView.Add(oneArticulationItem);
                 Label label = oneArticulationItem.Q<Label>("articulation-name");
-                label.text = item.name;
+                label.text = item.GetComponent<UrdfJoint>()?.jointName ?? item.name;
                 Slider slider = oneArticulationItem.Q<Slider>("value-slider");
                 currentBodys.Add(item, slider);
                 Label min = oneArticulationItem.Q<Label>("min-value");
@@ -54,10 +55,6 @@ namespace RFUniverse
                     item.GetUnit().SetJointPosition(f.newValue);
                 });
             }
-        }
-
-        void Update()
-        {
         }
     }
 }
