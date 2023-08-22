@@ -108,10 +108,9 @@ namespace RFUniverse
                 //{
                 //    lengthOffset += stream.Read(buffer, lengthOffset, buffer.Length - lengthOffset);
                 //}
-                stream.Read(buffer, 0, buffer.Length);
+                if (stream.Read(buffer, 0, buffer.Length) < 0) return null;
                 uint length = BitConverter.ToUInt32(buffer);
                 if (length == 0) return null;
-
                 int bytesOffset = 0;
                 byte[] bytes = new byte[length];
                 while (bytesOffset < bytes.Length)
