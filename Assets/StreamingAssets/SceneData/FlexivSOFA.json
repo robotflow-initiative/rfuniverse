@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": true,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -26,10 +26,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "SceneReloader",
         "id": 100,
         "type": "Base",

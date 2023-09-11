@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": false,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -18,10 +18,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "button",
         "id": 369855,
         "type": "Base",
@@ -53,7 +53,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Hallettsville_mesh_texture",
         "id": 445589,
         "type": "Base",
@@ -85,13 +85,13 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.ControllerData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.ControllerData, RFUniverse",
         "articulationDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, RFUniverse]], mscorlib",
           "$values": []
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "tobor_robotiq85_robotiq85",

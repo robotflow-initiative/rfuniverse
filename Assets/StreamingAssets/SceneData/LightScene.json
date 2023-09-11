@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": true,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -26,56 +26,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "LightAttrData, Assembly-CSharp",
-        "lightData": {
-          "$type": "LightData, Assembly-CSharp",
-          "color": {
-            "r": 1.0,
-            "g": 1.0,
-            "b": 1.0,
-            "a": 1.0
-          },
-          "type": "Point",
-          "shadow": "Hard",
-          "intensity": 1.0,
-          "range": 10.0,
-          "spotAngle": 30.0
-        },
-        "name": "Light",
-        "id": 885275,
-        "type": "Light",
-        "parentID": -1,
-        "parentName": "",
-        "position": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.999,
-            1.923,
-            -1.11
-          ]
-        },
-        "rotation": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "scale": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      },
-      {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -87,16 +41,16 @@
         },
         "render": true,
         "name": "GameObject_Cylinder",
-        "id": 517388,
+        "id": 500379,
         "type": "GameObject",
         "parentID": -1,
         "parentName": "",
         "position": {
           "$type": "System.Single[], mscorlib",
           "$values": [
-            2.49,
+            0.0,
             2.949,
-            -0.23
+            0.0
           ]
         },
         "rotation": {
@@ -117,49 +71,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
-        "color": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        },
-        "render": true,
-        "name": "GameObject_Cylinder",
-        "id": 620945,
-        "type": "GameObject",
-        "parentID": -1,
-        "parentName": "",
-        "position": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            2.49,
-            2.949,
-            -2.5
-          ]
-        },
-        "rotation": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "scale": {
-          "$type": "System.Single[], mscorlib",
-          "$values": [
-            1.0,
-            5.7766,
-            1.0
-          ]
-        }
-      },
-      {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -201,7 +113,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -213,16 +125,16 @@
         },
         "render": true,
         "name": "GameObject_Cylinder",
-        "id": 500379,
+        "id": 620945,
         "type": "GameObject",
         "parentID": -1,
         "parentName": "",
         "position": {
           "$type": "System.Single[], mscorlib",
           "$values": [
-            0.0,
+            2.49,
             2.949,
-            0.0
+            -2.5
           ]
         },
         "rotation": {
@@ -238,6 +150,94 @@
           "$values": [
             1.0,
             5.7766,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
+        "color": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "render": true,
+        "name": "GameObject_Cylinder",
+        "id": 517388,
+        "type": "GameObject",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            2.49,
+            2.949,
+            -0.23
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            5.7766,
+            1.0
+          ]
+        }
+      },
+      {
+        "$type": "RFUniverse.Attributes.LightAttrData, RFUniverse",
+        "lightData": {
+          "$type": "RFUniverse.Attributes.LightData, RFUniverse",
+          "color": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0,
+            "a": 1.0
+          },
+          "type": 2,
+          "shadow": 1,
+          "intensity": 1.0,
+          "range": 10.0,
+          "spotAngle": 30.0
+        },
+        "name": "Light",
+        "id": 885275,
+        "type": "Light",
+        "parentID": -1,
+        "parentName": "",
+        "position": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.999,
+            1.923,
+            -1.11
+          ]
+        },
+        "rotation": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "scale": {
+          "$type": "System.Single[], mscorlib",
+          "$values": [
+            1.0,
+            1.0,
             1.0
           ]
         }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using SofaUnity;
 
 public class LaserCuttingController : MonoBehaviour
 {
@@ -11,21 +8,21 @@ public class LaserCuttingController : MonoBehaviour
 
     private SofaLaserModel laserModel;
     private ParticleSystem particleSystem;
-    
+
     void Start()
     {
         laserModel = GetComponentInChildren<SofaLaserModel>();
         particleSystem = GetComponentInChildren<ParticleSystem>();
 
         if (needActive)
-        {            
+        {
             var psmain = particleSystem.main;
             psmain.startLifetime = laserModel.Length / psmain.startSpeed.constant;
         }
     }
 
     void FixedUpdate()
-    {   
+    {
         // This code segment must be in the Update() function;
         // If these code is in Start(), cutting will be somehow disabled.
         // Holy shit!!!!!!!! F**k SOFA!!!!!!!!

@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": false,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -18,10 +18,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "007_tuna_fish_can_obi",
         "id": 998654,
         "type": "Base",
@@ -53,7 +53,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Obi Solver For Grasp 3",
         "id": 233648,
         "type": "Base",
@@ -85,7 +85,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Hambleton_mesh_texture",
         "id": 112468,
         "type": "Base",
@@ -117,13 +117,13 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.ControllerData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.ControllerData, RFUniverse",
         "articulationDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, RFUniverse]], mscorlib",
           "$values": []
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "tobor_robotiq85_robotiq85",
@@ -157,7 +157,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -168,10 +168,10 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "meshName": "Render",
               "type": 5,
               "position": {
@@ -202,7 +202,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.0,
                 "staticFriction": 0.0,

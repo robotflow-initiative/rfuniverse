@@ -1,4 +1,5 @@
-﻿using System;
+﻿# if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -11,11 +12,7 @@ using System.Threading.Tasks;
 public class CheckPlugins
 {
     [MenuItem("RFUniverse/Check Plugins (Fix Error)")]
-    private static void Check()
-    {
-        Main();
-    }
-    private static async void Main()
+    private static async void FixError()
     {
         string[] packageNames =
         {
@@ -55,7 +52,7 @@ public class CheckPlugins
 
         List<string> defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';').ToList();
 
-        bool exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/BioIK");
+        bool exist = Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup");
         if (exist && !defines.Contains("BIOIK"))
         {
             Debug.Log("BIOIK plugin detected,Add BIOIK DefineSymbols");
@@ -69,22 +66,28 @@ public class CheckPlugins
         }
         else if (!exist && defines.Contains("BIOIK"))
         {
-            UnityEngine.Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
+            Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
             defines.Remove("BIOIK");
         }
 
-        exist = System.IO.Directory.Exists($"{Application.dataPath}/Plugins/Obi");
+        exist = Directory.Exists($"{Application.dataPath}/Plugins/Obi");
         if (exist && !defines.Contains("OBI"))
         {
-            UnityEngine.Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
+            Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
             defines.Add("OBI");
         }
         else if (!exist && defines.Contains("OBI"))
         {
-            UnityEngine.Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
+            Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
             defines.Remove("OBI");
         }
 
+        if (defines.Contains("HYBRID_CLR"))
+        {
+            Debug.Log("Remove HYBRID_CLR DefineSymbols");
+            defines.Remove("HYBRID_CLR");
+        }
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
     }
 }
+#endif

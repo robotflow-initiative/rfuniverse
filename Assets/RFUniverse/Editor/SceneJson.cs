@@ -23,7 +23,7 @@ namespace RFUniverse
             string path = EditorUtility.OpenFilePanel("SaveScene", Application.streamingAssetsPath + "/SceneData", "json");
             if (path == null) return;
             Clear();
-            PlayerMain.Instance.LoadScene(path, null, false);
+            PlayerMain.Instance.LoadScene(path, false);
         }
         [MenuItem("RFUniverse/SceneJson/ClearScene")]
         public static void Clear()

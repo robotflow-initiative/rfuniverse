@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": true,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -26,10 +26,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Camera",
         "id": 698550,
         "type": "Base",
@@ -61,7 +61,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -72,10 +72,10 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "meshName": "Capsule",
               "type": 3,
               "position": {
@@ -106,7 +106,7 @@
               "height": 2.0,
               "direction": 1,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -147,7 +147,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -158,10 +158,10 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "meshName": "GameObject_Box",
               "type": 1,
               "position": {
@@ -192,7 +192,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -233,7 +233,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -244,10 +244,10 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "meshName": "GameObject_Sphere",
               "type": 2,
               "position": {
@@ -278,7 +278,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -319,7 +319,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Camera",
         "id": 698548,
         "type": "Base",

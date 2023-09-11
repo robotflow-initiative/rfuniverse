@@ -1,16 +1,19 @@
 ﻿using UnityEditor;
 using UnityEditor.SceneManagement;
 
-public class FastScene : Editor
+namespace RFUniverse
 {
-    [MenuItem("RFUniverse/Scene/Edit")]
-    static void LoadEdit()
+    public class FastScene : Editor
     {
-        EditorSceneManager.OpenScene("Assets/EditMode/Edit.unity");
-    }
-    [MenuItem("RFUniverse/Scene/Empty")]
-    static void LoadEmpty()
-    {
-        EditorSceneManager.OpenScene("Assets/RFUniverse/Empty.unity");
+        [MenuItem("RFUniverse/Scene/Edit")]
+        static void LoadEdit()
+        {
+            EditorSceneManager.OpenScene("Assets/EditMode/Runtime/Edit.unity");
+        }
+        [MenuItem("RFUniverse/Scene/Empty")]
+        static void LoadEmpty()
+        {
+            EditorSceneManager.OpenScene("Assets/RFUniverse/Runtime/Empty.unity");
+        }
     }
 }

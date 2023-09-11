@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": false,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -18,10 +18,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Hercules_mesh_texture",
         "id": 984315,
         "type": "Base",
@@ -53,7 +53,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "BasketSquare",
         "id": 452183,
         "type": "Base",
@@ -85,7 +85,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "bottle1",
         "id": 135686,
         "type": "Base",
@@ -117,7 +117,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "wastepaper-basket",
         "id": 754289,
         "type": "Base",
@@ -149,7 +149,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -160,10 +160,10 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "meshName": "Render",
               "type": 1,
               "position": {
@@ -194,7 +194,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -235,13 +235,13 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.ControllerData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.ControllerData, RFUniverse",
         "articulationDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ArticulationData, RFUniverse]], mscorlib",
           "$values": []
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "tobor_robotiq85_robotiq85",

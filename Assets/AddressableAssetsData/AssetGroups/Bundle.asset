@@ -52,43 +52,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4166a010311cd1832abaa99e3d9fb25a
-    m_Address: GameObject_Box
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5180954217c214bb189bcabbb5c77a3e
-    m_Address: GameObject_Cylinder
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 83db73417271f9162a590ec6bc58ad87
-    m_Address: GameObject_Sphere
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0787e6365e056338f9a8edb260ba8d2a
     m_Address: ur5
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6075306faa5269252abe4392381b48e3
-    m_Address: Rigidbody_Box
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 92da844ccc1eab810bb3d17e2e7aa927
-    m_Address: Rigidbody_Cylinder
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 07439a7c3057861059ecdbf8961c1024
-    m_Address: Rigidbody_Sphere
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 788cf1fe594820bd3b73ff6732812d89
-    m_Address: GameObject_Quad
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -487,11 +452,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c8838393cd58bcf4481a4f9800c39492
-    m_Address: Collider_ObiBox
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 659737742319f1e8c984269568acda32
     m_Address: Obi Solver For Grasp 1
     m_ReadOnly: 0
@@ -577,11 +537,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 47953456a20cc364fb936d24932fc2fa
-    m_Address: Collider_Box
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 87c768d901d407c4bab7dcfc0cb43915
     m_Address: franka_panda
     m_ReadOnly: 0
@@ -654,16 +609,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d716400dcbbaf274699c421cb99ef9e9
     m_Address: 007_tuna_fish_can_obi
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0aa668691811ef36094554d9e49fa875
-    m_Address: GameObject_Capsule
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ba6a5e82a287a6fe2b273c0e88401235
-    m_Address: Rigidbody_Capsule
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -747,63 +692,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c8945d616eea9db428dcf52ce9560ad1
-    m_Address: AssetsData
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 55bcbf4a0679d4849bcdba0982d2c1a5
-    m_Address: Camera
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 744422607e6f01742bed371dbf6e5e3b
-    m_Address: PointCloud
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 13c1824c2d2d46743bfb976c42f19af6
-    m_Address: Light
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5918dc62ac47b21438ce6bacde4099ea
-    m_Address: Collider_Quad
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2a5f31aaa738ed144bf5992892850dee
-    m_Address: Collider_Sphere
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 930c40967697b434f913411bd2778cdc
-    m_Address: Collider_Capsule
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3a401368091afa24a8f47c4c793989ab
-    m_Address: Collider_Cylinder
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60ef684fe2453354cbf3b5abc8aa8011
     m_Address: DigitTarget
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8ac4ed8d32c4d484f87a7fba56c35bfc
-    m_Address: Rigidbody_Sphere_Draggable
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9619ee226ffa05f4881b3582a820e3ba
     m_Address: OmplManager
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: de0fa8ccc2654b941b0d7245b09eaaa3
-    m_Address: Empty
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

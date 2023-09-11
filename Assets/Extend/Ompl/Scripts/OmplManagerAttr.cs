@@ -1,79 +1,79 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
-using RFUniverse.Attributes;
-using System.Linq;
-using RFUniverse;
 
-public class OmplManagerAttr : BaseAttr
+namespace RFUniverse.Attributes
 {
-    bool isCollide = false;
-    ControllerAttr robot;
 
-    public override void Init()
+    public class OmplManagerAttr : BaseAttr
     {
-        base.Init();
-    }
-    public override Dictionary<string, object> CollectData()
-    {
-        Dictionary<string, object> data = base.CollectData();
-        data.Add("is_collide", isCollide);
-        return data;
-    }
+        bool isCollide = false;
+        ControllerAttr robot;
 
-    public override void AnalysisData(string type, object[] data)
-    {
-        switch (type)
+        public override void Init()
         {
-            case "ModifyRobot":
-                ModifyRobot((int)data[0]);
-                return;
-            case "SetJointState":
-                SetJointState(RFUniverseUtility.ConvertType<List<float>>(data[0]));
-                return;
-            case "RestoreRobot":
-                RestoreRobot();
-                return;
+            base.Init();
         }
-        base.AnalysisData(type, data);
-    }
-    void ModifyRobot(int id)
-    {
-        if (!Attrs.ContainsKey(id)) return;
-        robot = (ControllerAttr)Attrs[id];
-        foreach (var collider in robot.GetComponentsInChildren<Collider>())
+        public override Dictionary<string, object> CollectData()
         {
-            collider.isTrigger = true;
+            Dictionary<string, object> data = base.CollectData();
+            data.Add("is_collide", isCollide);
+            return data;
         }
-        foreach (var body in robot.GetComponentsInChildren<ArticulationBody>())
-        {
-            TriggerProcess trigger = body.gameObject.AddComponent<TriggerProcess>();
-            trigger.manager = this;
-            trigger.body = body;
-        }
-    }
 
-    void SetJointState(List<float> jointPositions)
-    {
-        if (robot == null) return;
-        robot.SetJointPosition(jointPositions, ControlMode.Direct);
-        isCollide = false;
-    }
-    void RestoreRobot()
-    {
-        if (robot == null) return;
-        foreach (var collider in robot.GetComponentsInChildren<Collider>())
+        public override void AnalysisData(string type, object[] data)
         {
-            collider.isTrigger = false;
+            switch (type)
+            {
+                case "ModifyRobot":
+                    ModifyRobot((int)data[0]);
+                    return;
+                case "SetJointState":
+                    SetJointState(RFUniverseUtility.ConvertType<List<float>>(data[0]));
+                    return;
+                case "RestoreRobot":
+                    RestoreRobot();
+                    return;
+            }
+            base.AnalysisData(type, data);
         }
-        foreach (var trigger in robot.GetComponentsInChildren<TriggerProcess>())
+        void ModifyRobot(int id)
         {
-            Destroy(trigger);
+            if (!Attrs.ContainsKey(id)) return;
+            robot = (ControllerAttr)Attrs[id];
+            foreach (var collider in robot.GetComponentsInChildren<Collider>())
+            {
+                collider.isTrigger = true;
+            }
+            foreach (var body in robot.GetComponentsInChildren<ArticulationBody>())
+            {
+                TriggerProcess trigger = body.gameObject.AddComponent<TriggerProcess>();
+                trigger.manager = this;
+                trigger.body = body;
+            }
         }
-    }
 
-    public void TriggerHandle()
-    {
-        isCollide = true;
+        void SetJointState(List<float> jointPositions)
+        {
+            if (robot == null) return;
+            robot.SetJointPosition(jointPositions, ControlMode.Direct);
+            isCollide = false;
+        }
+        void RestoreRobot()
+        {
+            if (robot == null) return;
+            foreach (var collider in robot.GetComponentsInChildren<Collider>())
+            {
+                collider.isTrigger = false;
+            }
+            foreach (var trigger in robot.GetComponentsInChildren<TriggerProcess>())
+            {
+                Destroy(trigger);
+            }
+        }
+
+        public void TriggerHandle()
+        {
+            isCollide = true;
+        }
     }
 }

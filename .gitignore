@@ -48,8 +48,8 @@ Assets/Plugins/*
 !Assets/Plugins/HeatMap.meta
 !Assets/Plugins/URDF-Importer/
 !Assets/Plugins/URDF-Importer.meta
-!Assets/Plugins/RFUniverse-Base/
-!Assets/Plugins/RFUniverse-Base.meta
+!Assets/Plugins/BioIK/BioIK.asmref
+!Assets/Plugins/BioIK/BioIK.asmref.meta
 
 
 ObiEditorSettings.asset
@@ -72,3 +72,17 @@ Assets/StreamingAssets/ImageEditor.meta
 
 Assets/AddressableAssetsData/link.xml
 Assets/AddressableAssetsData/link.xml.meta
+
+HybridCLRData/
+
+ServerData/
+
+Assets/HotUpdateDlls/
+
+Assets/HybridCLRGenerate/
+
+Assets/HotUpdateDlls.meta
+
+Assets/HybridCLRGenerate.meta
+
+ProjectSettings/HybridCLRSettings.asset

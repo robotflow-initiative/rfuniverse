@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RFUniverse.Attributes;
 
 public class TriggerProcess : MonoBehaviour
 {
