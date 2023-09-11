@@ -1,12 +1,18 @@
 # RFUniverse
 
+![RFUniverse.png](.\Image\RFUniverse.png)
+
+[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
+
 [English](https://github.com/mvig-robotflow/rfuniverse/blob/main/README.md)|中文
+
+[Documentation](https://mvig-robotflow.github.io/pyrfuniverse/)
 
 ---
 
 RFUniverse是基于Unity开发的用于机器人仿真和强化学习的平台，主要有三个功能模块：
 
-[Python接口](https://mvig-robotflow.github.io/pyrfuniverse/)：Python封装的通信接口 [![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
+[Python接口](https://mvig-robotflow.github.io/pyrfuniverse/)：Python封装的通信接口
 
 Unity端Player：接收python端消息并执行仿真
 
@@ -26,6 +32,8 @@ Unity端Player：接收python端消息并执行仿真
 
 2. 创建conda环境并激活，安装与**RFUniverse Release 版本号相同**的pyrfuniverse包：
    
+   > :warning:请将以下命令中的[0.8.3]替换为你所下载的RFUniverse Releases的版本号
+   
    ```
    conda create -n rfuniverse python=3.9 -y
    conda activate rfuniverse
@@ -33,6 +41,8 @@ Unity端Player：接收python端消息并执行仿真
    ```
 
 3. Clone pyrfuniverse仓库，切换到与**RFUniverse Release版本号相同的Tag**：
+   
+   > :warning:请将以下命令中的[0.8.3]替换为你所下载的RFUniverse Releases的版本号
    
    ```
    git clone https://github.com/mvig-robotflow/pyrfuniverse.git
@@ -139,9 +149,9 @@ RFUniverse.exe -edit
 
 ##### Scene场景
 
-* RFUniverse/First.unity：发布程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景
-* RFUniverse/Empty.unity：Player模式场景
-* EditMode/Edit.unity：Editor模式场景
+* First：发布程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景
+* Empty：Player模式场景
+* Edit：Editor模式场景
 
 ---
 

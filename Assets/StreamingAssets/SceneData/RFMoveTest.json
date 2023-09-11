@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": true,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -18,15 +18,15 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Controllers.ControllerData, Assembly-CSharp",
+        "$type": "RFUniverse.Controllers.ControllerData, RFUniverse",
         "articulationDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Controllers.ArticulationData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Controllers.ArticulationData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link1",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -53,7 +53,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -170.0023,
                 "upperLimit": 170.0023,
                 "stiffness": 100000.0,
@@ -63,7 +63,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -73,7 +73,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -84,7 +84,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link2",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -111,7 +111,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -105.000244,
                 "upperLimit": 105.000244,
                 "stiffness": 100000.0,
@@ -121,7 +121,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -131,7 +131,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -142,7 +142,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link3",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -169,7 +169,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -170.0023,
                 "upperLimit": 170.0023,
                 "stiffness": 100000.0,
@@ -179,7 +179,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -189,7 +189,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -200,7 +200,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link4",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -227,7 +227,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -180.000427,
                 "upperLimit": 0.0,
                 "stiffness": 100000.0,
@@ -237,7 +237,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -247,7 +247,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -258,7 +258,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link5",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -285,7 +285,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -170.0023,
                 "upperLimit": 170.0023,
                 "stiffness": 100000.0,
@@ -295,7 +295,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -305,7 +305,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -316,7 +316,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link6",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -343,7 +343,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -5.00192165,
                 "upperLimit": 219.001663,
                 "stiffness": 100000.0,
@@ -353,7 +353,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -363,7 +363,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -374,7 +374,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link7",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -401,7 +401,7 @@
               "swingZLock": 2,
               "twistLock": 1,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": -170.0023,
                 "upperLimit": 170.0023,
                 "stiffness": 100000.0,
@@ -411,7 +411,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -421,7 +421,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -432,7 +432,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_link8",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -459,7 +459,7 @@
               "swingZLock": 2,
               "twistLock": 2,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -469,7 +469,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -479,7 +479,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -490,7 +490,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_hand",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -517,7 +517,7 @@
               "swingZLock": 2,
               "twistLock": 2,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -527,7 +527,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -537,7 +537,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -548,7 +548,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_rightfinger",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -575,7 +575,7 @@
               "swingZLock": 2,
               "twistLock": 2,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.04,
                 "stiffness": 100000.0,
@@ -585,7 +585,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -595,7 +595,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -606,7 +606,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_leftfinger",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -633,7 +633,7 @@
               "swingZLock": 2,
               "twistLock": 2,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.04,
                 "stiffness": 100000.0,
@@ -643,7 +643,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -653,7 +653,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -664,7 +664,7 @@
               }
             },
             {
-              "$type": "RFUniverse.Controllers.ArticulationData, Assembly-CSharp",
+              "$type": "RFUniverse.Controllers.ArticulationData, RFUniverse",
               "bodyName": "panda_grasptarget",
               "anchorPosition": {
                 "$type": "System.Single[], mscorlib",
@@ -691,7 +691,7 @@
               "swingZLock": 2,
               "twistLock": 2,
               "xDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -701,7 +701,7 @@
                 "targetVelocity": 0.0
               },
               "yDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -711,7 +711,7 @@
                 "targetVelocity": 0.0
               },
               "zDrive": {
-                "$type": "RFUniverse.Controllers.MyArticulationDrive, Assembly-CSharp",
+                "$type": "RFUniverse.Controllers.MyArticulationDrive, RFUniverse",
                 "lowerLimit": 0.0,
                 "upperLimit": 0.0,
                 "stiffness": 0.0,
@@ -724,7 +724,7 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "franka_panda",
@@ -758,7 +758,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -769,7 +769,7 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "GameObject_Box",
@@ -803,7 +803,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -814,7 +814,7 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "GameObject_Sphere",
@@ -848,7 +848,7 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.GameObjectAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.GameObjectAttrData, RFUniverse",
         "color": {
           "$type": "System.Single[], mscorlib",
           "$values": [
@@ -859,7 +859,7 @@
           ]
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": []
         },
         "name": "GameObject_Capsule",

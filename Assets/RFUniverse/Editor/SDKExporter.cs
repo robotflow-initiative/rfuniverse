@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using Unity.EditorCoroutines.Editor;
+using System.Collections;
 
 namespace RFUniverse
 {
@@ -12,11 +14,14 @@ namespace RFUniverse
             //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, new string[0]);
             string[] filePaths = new[]
             {
-                "Assets/RFUniverse",
+                "Assets/AddressableAssetsData",
+                "Assets/RFUniverse/Editor",
+                "Assets/RFUniverse/Runtime",
                 "Assets/Plugins/Editor",
                 "Assets/Plugins/Demigiant",
                 "Assets/Plugins/HeatMap",
-                "Assets/Plugins/URDF-Importer"
+                "Assets/Plugins/URDF-Importer",
+                "Assets/Plugins/BioIK/BioIK.asmref"
             };
             AssetDatabase.ExportPackage(filePaths, $"{System.Environment.CurrentDirectory}/Build/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse | ExportPackageOptions.IncludeLibraryAssets);
             //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines);

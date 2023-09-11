@@ -568,7 +568,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3837395583160601164}
   - component: {fileID: 1246687983713661874}
-  - component: {fileID: 7096341617850995193}
   - component: {fileID: 6970141599775708137}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_1
@@ -660,18 +659,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &7096341617850995193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 736542707635929759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6970141599775708137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1143,7 +1130,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3299691201178914563}
   - component: {fileID: 8112770446609408564}
-  - component: {fileID: 976163035683062001}
   - component: {fileID: 4042604992332884549}
   m_Layer: 0
   m_Name: root
@@ -1236,18 +1222,6 @@ ArticulationBody:
   m_Immovable: 1
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &976163035683062001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1790197110893613774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4042604992332884549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,7 +1247,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6680463217915480565}
   - component: {fileID: 5531234887885797543}
-  - component: {fileID: 6666132472801840286}
   - component: {fileID: 8324853288629641294}
   m_Layer: 0
   m_Name: j2s7s300_link_6
@@ -1365,18 +1338,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &6666132472801840286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847353946091079602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8324853288629641294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1829,7 +1790,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4495202080266958144}
   - component: {fileID: 3359226859226189767}
-  - component: {fileID: 8650861252802867449}
   - component: {fileID: 22253043386639199}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_tip_3
@@ -1922,18 +1882,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &8650861252802867449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2036649701538970530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &22253043386639199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1959,7 +1907,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3327594860170247232}
   - component: {fileID: 4089822209380597552}
-  - component: {fileID: 1954640680281039945}
   - component: {fileID: 2030612080011867469}
   m_Layer: 0
   m_Name: j2s7s300_link_3
@@ -2051,18 +1998,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &1954640680281039945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138255205446210680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2030612080011867469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2088,7 +2023,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1586655909853497753}
   - component: {fileID: 1771315128904519641}
-  - component: {fileID: 2035568319006874419}
   - component: {fileID: 7515127211180268190}
   m_Layer: 0
   m_Name: j2s7s300_link_4
@@ -2180,18 +2114,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &2035568319006874419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2161818007403698086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7515127211180268190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3006,7 +2928,6 @@ GameObject:
   m_Component:
   - component: {fileID: 63629946526858051}
   - component: {fileID: 8410350239328158217}
-  - component: {fileID: 4793564065396871761}
   - component: {fileID: 1098189588238906020}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_2
@@ -3098,18 +3019,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &4793564065396871761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3815958835414026351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1098189588238906020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3324,7 +3233,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8918772205305238534}
   - component: {fileID: 3669337679134971152}
-  - component: {fileID: 6352590442321196892}
   - component: {fileID: 3639430500208481488}
   m_Layer: 0
   m_Name: j2s7s300_link_7
@@ -3419,18 +3327,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &6352590442321196892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3988504726803214930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3639430500208481488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3803,7 +3699,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3838382013680066089}
   - component: {fileID: 1764940888710675652}
-  - component: {fileID: 4987261730271973053}
   - component: {fileID: 7759710416901275941}
   m_Layer: 0
   m_Name: j2s7s300_link_2
@@ -3895,18 +3790,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &4987261730271973053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4598381690589925428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7759710416901275941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3994,7 +3877,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9009237721280494488}
   - component: {fileID: 2699416676134004532}
-  - component: {fileID: 66531612242448123}
   - component: {fileID: 2954671026582303467}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_3
@@ -4086,18 +3968,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &66531612242448123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4929856016513307520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2954671026582303467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4220,7 +4090,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3660396445256203515}
   - component: {fileID: 3460990582001469427}
-  - component: {fileID: 3291121624048231390}
   - component: {fileID: 879235550120469003}
   m_Layer: 0
   m_Name: j2s7s300_end_effector
@@ -4312,18 +4181,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &3291121624048231390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5352569390715763378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &879235550120469003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4573,7 +4430,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4771350731717217616}
   - component: {fileID: 6600304712986511208}
-  - component: {fileID: 1432123254428814329}
   - component: {fileID: 3623435218253744501}
   m_Layer: 0
   m_Name: j2s7s300_link_5
@@ -4665,18 +4521,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &1432123254428814329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5923968028467985466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3623435218253744501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5110,7 +4954,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8187088436580675577}
   - component: {fileID: 57913542558453046}
-  - component: {fileID: 4866429949856656730}
   - component: {fileID: 6489013840851613182}
   m_Layer: 0
   m_Name: j2s7s300_link_1
@@ -5202,18 +5045,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &4866429949856656730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6328055237830063494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6489013840851613182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5364,7 +5195,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3092914075151762162}
   - component: {fileID: 1455649367730353173}
-  - component: {fileID: 5095089817307207243}
   - component: {fileID: 4278939775609488990}
   m_Layer: 0
   m_Name: j2s7s300_link_base
@@ -5456,18 +5286,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &5095089817307207243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6463346095662951225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4278939775609488990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5493,7 +5311,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4828284598070158565}
   - component: {fileID: 5413742793160235953}
-  - component: {fileID: 4132846259792821914}
   - component: {fileID: 6947663146126575439}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_tip_2
@@ -5586,18 +5403,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &4132846259792821914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6741109729585586048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6947663146126575439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6603,7 +6408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1678252308066674442}
   - component: {fileID: 8499443846158979943}
-  - component: {fileID: 3211752215471811648}
   - component: {fileID: 196372303093799364}
   m_Layer: 0
   m_Name: j2s7s300_link_finger_tip_1
@@ -6696,18 +6500,6 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
---- !u!114 &3211752215471811648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8097876719055879530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de75ff92c5e874b4e9a21c6d371729b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &196372303093799364
 MonoBehaviour:
   m_ObjectHideFlags: 0

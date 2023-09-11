@@ -1,4 +1,7 @@
 # RFUniverse
+
+![RFUniverse.png](.\Image\RFUniverse.png)
+
 [![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
 
 English|[中文](https://github.com/mvig-robotflow/rfuniverse/blob/main/README_zh.md)
@@ -28,14 +31,18 @@ Follow the steps below to configure and run the sample scene through the publish
    Windows：`RFUniverse_For_Windows/RFUniverse.exe`
 
 2. Create a conda environment and activate it, install the 'pyrfuniverse' package with the **same version number** as the RFUniverse Release:
-    
-    ```bash
-    conda create -n rfuniverse python=3.9 -y
-    conda activate rfuniverse
-    pip install pyrfuniverse==0.8.3
-    ```
+   
+   > :warning:Please replace [0.8.3] in the following command with the version number of the RFUniverse Releases you downloaded.
+   
+   ```bash
+   conda create -n rfuniverse python=3.9 -y
+   conda activate rfuniverse
+   pip install pyrfuniverse==0.8.3
+   ```
 
 3. Clone the pyrfuniverse, switch to the Tag with the **same version number** as the RFUniverse Release:
+   
+   > :warning:Please replace [0.8.3] in the following command with the version number of the RFUniverse Releases you downloaded.
    
    ```bash
    git clone https://github.com/mvig-robotflow/pyrfuniverse.git
@@ -142,9 +149,9 @@ After opening the RFUniverse project or importing the RFUniverse Core SDK, you n
 
 ### Scene
 
-* RFUniverse/First.unity：The first scene that the published program runs, which receives command-line parameters and then jumps to other scenes
-* RFUniverse/Empty.unity：Player mode scene
-* EditMode/Edit.unity：Edit mode scebe
+* First：The first scene that the published program runs, which receives command-line parameters and then jumps to other scenes
+* Empty：Player mode scene
+* Edit：Edit mode scebe
 
 ---
 

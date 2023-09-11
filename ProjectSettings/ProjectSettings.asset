@@ -133,7 +133,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 0.9.20
+  bundleVersion: 0.10.0
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 0}
@@ -651,7 +651,7 @@ PlayerSettings:
     PS4: UNITY_POST_PROCESSING_STACK_V2
     PS5: UNITY_POST_PROCESSING_STACK_V2
     Stadia: UNITY_POST_PROCESSING_STACK_V2
-    Standalone: OBI_ONI_SUPPORTED;AMPLIFY_SHADER_EDITOR;BIOIK;OBI
+    Standalone: OBI_ONI_SUPPORTED;AMPLIFY_SHADER_EDITOR;BIOIK;OBI;HYBRID_CLR
     WebGL: UNITY_POST_PROCESSING_STACK_V2
     Windows Store Apps: UNITY_POST_PROCESSING_STACK_V2
     XboxOne: UNITY_POST_PROCESSING_STACK_V2
@@ -683,7 +683,7 @@ PlayerSettings:
   useDeterministicCompilation: 1
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
-  gcIncremental: 1
+  gcIncremental: 0
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform:
     Standalone: 3
@@ -772,11 +772,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 3452b8bc-e39d-419d-869b-0f067d79a832
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: RFUniverse
-  organizationId: 
+  organizationId: yxzh26252
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   hmiLoadingImage: {fileID: 0}

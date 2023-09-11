@@ -100,24 +100,21 @@ namespace RFUniverse.Attributes
             target.transform.SetParent(env);
             targets.Add(target);
 
-            PlayerMain.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
-            {
-                ControllerAttr newGripper = attr as ControllerAttr;
+            var newGripper = PlayerMain.Instance.InstanceObject<ControllerAttr>(gripperName, ID * 10 + 1, false);
 
-                //计算抓点与Root间旋转
-                Transform graspPoint = newGripper.jointParameters.LastOrDefault().body.transform;
-                Quaternion graspPointToGripperQuaternion = Quaternion.FromToRotation(graspPoint.transform.eulerAngles, newGripper.transform.eulerAngles);
+            //计算抓点与Root间旋转
+            Transform graspPoint = newGripper.jointParameters.LastOrDefault().body.transform;
+            Quaternion graspPointToGripperQuaternion = Quaternion.FromToRotation(graspPoint.transform.eulerAngles, newGripper.transform.eulerAngles);
 
-                newGripper.Init();
-                newGripper.transform.SetParent(env);
-                grippers.Add(newGripper);
-                newGripper.SetTransform(true, true, false, Vector3.up, graspPointToGripperQuaternion * Quaternion.AngleAxis(180, Vector3.left).eulerAngles, Vector3.zero, false);
+            newGripper.Init();
+            newGripper.transform.SetParent(env);
+            grippers.Add(newGripper);
+            newGripper.SetTransform(true, true, false, Vector3.up, graspPointToGripperQuaternion * Quaternion.AngleAxis(180, Vector3.left).eulerAngles, Vector3.zero, false);
 
-                graspPointPosition = env.InverseTransformPoint(graspPoint.position);
-                graspPointRotaion = graspPoint.rotation * env.rotation;
+            graspPointPosition = env.InverseTransformPoint(graspPoint.position);
+            graspPointRotaion = graspPoint.rotation * env.rotation;
 
-                StartCoroutine(GraspSim());
-            }, false);
+            StartCoroutine(GraspSim());
         }
         void StartGraspTest(object[] data)
         {
@@ -153,24 +150,21 @@ namespace RFUniverse.Attributes
             target.transform.SetParent(env);
             targets.Add(target);
 
-            PlayerMain.Instance.InstanceObject(gripperName, ID * 10 + 1, (attr) =>
-            {
-                ControllerAttr newGripper = attr as ControllerAttr;
+            var newGripper = PlayerMain.Instance.InstanceObject<ControllerAttr>(gripperName, ID * 10 + 1, false);
 
-                //计算抓点与Root间旋转
-                Transform graspPoint = newGripper.jointParameters.LastOrDefault().body.transform;
-                Quaternion graspPointToGripperQuaternion = Quaternion.FromToRotation(graspPoint.transform.eulerAngles, newGripper.transform.eulerAngles);
+            //计算抓点与Root间旋转
+            Transform graspPoint = newGripper.jointParameters.LastOrDefault().body.transform;
+            Quaternion graspPointToGripperQuaternion = Quaternion.FromToRotation(graspPoint.transform.eulerAngles, newGripper.transform.eulerAngles);
 
-                newGripper.Init();
-                newGripper.transform.SetParent(env);
-                grippers.Add(newGripper);
-                newGripper.SetTransform(true, true, false, Vector3.up, graspPointToGripperQuaternion * Quaternion.AngleAxis(180, Vector3.left).eulerAngles, Vector3.zero, false);
+            newGripper.Init();
+            newGripper.transform.SetParent(env);
+            grippers.Add(newGripper);
+            newGripper.SetTransform(true, true, false, Vector3.up, graspPointToGripperQuaternion * Quaternion.AngleAxis(180, Vector3.left).eulerAngles, Vector3.zero, false);
 
-                graspPointPosition = env.InverseTransformPoint(graspPoint.position);
-                graspPointRotaion = graspPoint.rotation * env.rotation;
+            graspPointPosition = env.InverseTransformPoint(graspPoint.position);
+            graspPointRotaion = graspPoint.rotation * env.rotation;
 
-                StartCoroutine(GraspSim());
-            }, false);
+            StartCoroutine(GraspSim());
         }
         Vector3 graspPointPosition;
         Quaternion graspPointRotaion;
@@ -359,22 +353,20 @@ namespace RFUniverse.Attributes
 
             RigidbodyAttr target = PlayerMain.Instance.LoadMesh(ID * 10 + 2, meshPath, false);
             Transform trans = target.transform;
-            GameObject.Destroy(target);
-            GameObject.Destroy(target.Rigidbody);
+            Destroy(target);
+            Destroy(target.Rigidbody);
             trans.SetParent(transform);
             trans.position = Vector3.up;
 
-            PlayerMain.Instance.GetGameObject(gripperName, (g) =>
+            var g = PlayerMain.Instance.GetGameObject(gripperName);
+            for (int i = 0; i < positionsV3.Count; i++)
             {
-                for (int i = 0; i < positionsV3.Count; i++)
-                {
-                    Vector3 position = positionsV3[i];
-                    Quaternion rotation = rotationsQ4[i];
-                    GameObject obj = GameObject.Instantiate(g, trans);
-                    obj.transform.localPosition = position;
-                    obj.transform.localRotation = rotation;
-                }
-            });
+                Vector3 position = positionsV3[i];
+                Quaternion rotation = rotationsQ4[i];
+                GameObject obj = Instantiate(g, trans);
+                obj.transform.localPosition = position;
+                obj.transform.localRotation = rotation;
+            }
         }
         void GenerateGraspPose(object[] data)
         {

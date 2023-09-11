@@ -219,7 +219,7 @@ namespace Unity.Robotics.UrdfImporter
                 {
                     GameObject child = meshFilter.gameObject;
                     VHACD decomposer = child.AddComponent<VHACD>();
-                    List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
+                    List<Mesh> colliderMeshes = VHACD.GenerateConvexMeshes(decomposer.m_parameters, meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
                         var c = collider;

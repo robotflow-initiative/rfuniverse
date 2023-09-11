@@ -1,5 +1,5 @@
 {
-  "$type": "RFUniverse.Attributes.SceneData, Assembly-CSharp",
+  "$type": "RFUniverse.Attributes.SceneData, RFUniverse",
   "ground": true,
   "cameraPosition": {
     "$type": "System.Single[], mscorlib",
@@ -26,10 +26,10 @@
     ]
   },
   "assetsData": {
-    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, Assembly-CSharp]], mscorlib",
+    "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.BaseAttrData, RFUniverse]], mscorlib",
     "$values": [
       {
-        "$type": "RFUniverse.Attributes.BaseAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.BaseAttrData, RFUniverse",
         "name": "Camera",
         "id": 981613,
         "type": "Base",
@@ -61,18 +61,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -108,7 +108,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -159,18 +159,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -206,7 +206,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -257,18 +257,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -304,7 +304,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -355,18 +355,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -402,7 +402,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -453,18 +453,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -500,7 +500,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -551,18 +551,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -598,7 +598,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -649,18 +649,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -696,7 +696,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -747,18 +747,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -794,7 +794,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -845,18 +845,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -892,7 +892,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,
@@ -943,18 +943,18 @@
         }
       },
       {
-        "$type": "RFUniverse.Attributes.RigidbodyAttrData, Assembly-CSharp",
+        "$type": "RFUniverse.Attributes.RigidbodyAttrData, RFUniverse",
         "rigidbodyData": {
-          "$type": "RFUniverse.Attributes.RigidbodyData, Assembly-CSharp",
+          "$type": "RFUniverse.Attributes.RigidbodyData, RFUniverse",
           "mass": 0.1,
           "useGravity": true,
           "isKinematic": false
         },
         "colliderDatas": {
-          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, Assembly-CSharp]], mscorlib",
+          "$type": "System.Collections.Generic.List`1[[RFUniverse.Attributes.ColliderData, RFUniverse]], mscorlib",
           "$values": [
             {
-              "$type": "RFUniverse.Attributes.ColliderData, Assembly-CSharp",
+              "$type": "RFUniverse.Attributes.ColliderData, RFUniverse",
               "renderIndexQueue": {
                 "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
                 "$values": [
@@ -990,7 +990,7 @@
               "height": 1.0,
               "direction": 0,
               "physicMateria": {
-                "$type": "RFUniverse.Attributes.PhysicMaterialData, Assembly-CSharp",
+                "$type": "RFUniverse.Attributes.PhysicMaterialData, RFUniverse",
                 "bounciness": 0.0,
                 "dynamicFriction": 0.6,
                 "staticFriction": 0.6,

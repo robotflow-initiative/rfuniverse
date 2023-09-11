@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using RFUniverse;
 
-public class ArticulationHelper : Editor
+namespace RFUniverse
 {
-    [MenuItem("RFUniverse/Articulation Helper/Normalize RFUniverse Articulation")]
-    static void NormalizeRFUniverseArticulation()
+    public class ArticulationHelper : Editor
     {
-        if (Selection.activeGameObject == null)
+        [MenuItem("RFUniverse/Articulation Helper/Normalize RFUniverse Articulation")]
+        static void NormalizeRFUniverseArticulation()
         {
-            Debug.LogError("No gameobject selected");
-            return;
+            if (Selection.activeGameObject == null)
+            {
+                Debug.LogError("No gameobject selected");
+                return;
+            }
+            RFUniverseUtility.NormalizeRFUniverseArticulation(Selection.activeGameObject);
         }
-        RFUniverseUtility.NormalizeRFUniverseArticulation(Selection.activeGameObject);
     }
 }

@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: d0544a7909edbef049e13f4c9d8e750e
   m_currentHash:
     serializedVersion: 2
-    Hash: 9b13c6e169a9cab75aab3cc5730a3182
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -35,18 +35,19 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: d9fb581f6388a571bbfd4f0bf1eedb8a
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 2c5d8147f48f0c7bb84ebd1a9bb2156e
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
-  m_BuildAddressablesWithPlayerBuild: 1
+  m_BuildAddressablesWithPlayerBuild: 2
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 75cce27b5e33e40f99bf801c9edeef0b, type: 2}
+  - {fileID: 11400000, guid: 756f37ac556b64d42baf9f7e694aa8c5, type: 2}
   - {fileID: 11400000, guid: 05391d0244dd1042faed6c1b08cd6ba0, type: 2}
-  - {fileID: 11400000, guid: 7b673ea0152bd37e5a57b9c29eaa247f, type: 2}
+  - {fileID: 11400000, guid: 2320f987adee9234cb67e1dea97b4389, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -67,7 +68,15 @@ MonoBehaviour:
       - m_Id: d9fb581f6388a571bbfd4f0bf1eedb8a
         m_Value: ServerData/[BuildTarget]
       - m_Id: 2c5d8147f48f0c7bb84ebd1a9bb2156e
-        m_Value: http://localhost/[BuildTarget]
+        m_Value: https://[ProjectID].client-api.unity3dusercontent.com/client_api/v1/environments/[EnvironmentName]/buckets/[BucketID]/release_by_badge/[Version]/entry_by_path/content/?path=
+      - m_Id: 791bcc3afe3dba24a82d94bd19784abd
+        m_Value: '[RFUniverse.FirstMain.Version]'
+      - m_Id: 243d40970c62c2d4f85accc81c0ded72
+        m_Value: 3452b8bc-e39d-419d-869b-0f067d79a832
+      - m_Id: 179895b5af4b29b4cbe3e7eb3fcc9431
+        m_Value: test
+      - m_Id: 421c4fbeb1747bc4c9f9dbeb250e6013
+        m_Value: 282571f5-e347-4235-975f-89969843d184
     m_ProfileEntryNames:
     - m_Id: da3344f313203ff09b4326f5ca4fe711
       m_Name: BuildTarget
@@ -83,6 +92,18 @@ MonoBehaviour:
       m_InlineUsage: 0
     - m_Id: 2c5d8147f48f0c7bb84ebd1a9bb2156e
       m_Name: RemoteLoadPath
+      m_InlineUsage: 0
+    - m_Id: 791bcc3afe3dba24a82d94bd19784abd
+      m_Name: Version
+      m_InlineUsage: 0
+    - m_Id: 243d40970c62c2d4f85accc81c0ded72
+      m_Name: ProjectID
+      m_InlineUsage: 0
+    - m_Id: 179895b5af4b29b4cbe3e7eb3fcc9431
+      m_Name: EnvironmentName
+      m_InlineUsage: 0
+    - m_Id: 421c4fbeb1747bc4c9f9dbeb250e6013
+      m_Name: BucketID
       m_InlineUsage: 0
     m_ProfileVersion: 1
   m_LabelTable:

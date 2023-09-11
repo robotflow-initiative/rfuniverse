@@ -79,17 +79,13 @@ public class GraspSimShow : MonoBehaviour
         Destroy(target.GetComponent<Rigidbody>());
         target.transform.SetParent(env);
 
-        AssetManager.Instance.InstanceObject(gripperName, 987654, (attr) =>
+        var attr = PlayerMain.Instance.InstanceObject<BaseAttr>(gripperName, 987654, false);
+        foreach (var item in allPoints)
         {
-            foreach (var item in allPoints)
-            {
-                GameObject gg = Instantiate(attr.gameObject);
-                gg.transform.SetParent(target.transform);
-                gg.transform.localPosition = item;
-                gg.transform.localRotation = allQuaternions[allPoints.IndexOf(item)];
-            }
-        }, false);
-
-
+            GameObject gg = Instantiate(attr.gameObject);
+            gg.transform.SetParent(target.transform);
+            gg.transform.localPosition = item;
+            gg.transform.localRotation = allQuaternions[allPoints.IndexOf(item)];
+        }
     }
 }
