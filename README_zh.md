@@ -1,6 +1,6 @@
 # RFUniverse
 
-![RFUniverse.png](.\Image\RFUniverse.png)
+![RFUniverse.png](https://github.com/mvig-robotflow/rfuniverse/blob/main/Image/RFUniverse.png)
 
 [![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
 
