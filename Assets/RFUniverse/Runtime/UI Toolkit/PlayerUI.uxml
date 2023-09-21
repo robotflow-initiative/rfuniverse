@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="version" style="-unity-font: url(&apos;project://database/Assets/RFUniverse/Assets/SmileySans-Oblique.ttf?fileID=12800000&amp;guid=3b40901443fdca24bbb960d9f05b81b4&amp;type=3#SmileySans-Oblique&apos;); -unity-font-definition: initial;">
+    <ui:VisualElement name="version">
         <ui:Label display-tooltip-when-elided="true" name="unity" style="font-size: 20px;" />
         <ui:Label display-tooltip-when-elided="true" name="python" style="font-size: 20px;" />
     </ui:VisualElement>
-    <ui:Button text="End Pend" display-tooltip-when-elided="true" name="pend-button" style="position: absolute; top: 0; left: 50%; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; font-size: 24px; right: auto; width: 200px; translate: -50% 0; -unity-font-definition: initial; -unity-font: url(&apos;project://database/Assets/RFUniverse/Assets/SmileySans-Oblique.ttf?fileID=12800000&amp;guid=3b40901443fdca24bbb960d9f05b81b4&amp;type=3#SmileySans-Oblique&apos;); -unity-font-style: bold; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" />
-    <RFUniverse.DebugWindow name="debug-window" style="position: absolute; left: 0; bottom: 0; -unity-font: url(&apos;project://database/Assets/RFUniverse/Assets/SmileySans-Oblique.ttf?fileID=12800000&amp;guid=3b40901443fdca24bbb960d9f05b81b4&amp;type=3#SmileySans-Oblique&apos;); -unity-font-definition: initial; width: 500px;" />
-    <RFUniverse.ArticulationWindow name="articulation-window" style="left: auto; position: absolute; bottom: 0; right: 0; width: 500px; -unity-font: url(&apos;project://database/Assets/RFUniverse/Assets/SmileySans-Oblique.ttf?fileID=12800000&amp;guid=3b40901443fdca24bbb960d9f05b81b4&amp;type=3#SmileySans-Oblique&apos;); -unity-font-definition: initial; max-height: 1000px;" />
+    <ui:Button text="End Pend" display-tooltip-when-elided="true" name="pend-button" style="position: absolute; top: 0; left: 50%; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; font-size: 24px; right: auto; width: 200px; translate: -50% 0; -unity-font-style: bold; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" />
+    <RFUniverse.DebugWindow name="debug-window" style="position: absolute; left: 0; bottom: 0; width: 500px;" />
+    <RFUniverse.ArticulationWindow name="articulation-window" style="left: auto; position: absolute; bottom: 0; right: 0; width: 500px; max-height: 1000px;" />
 </ui:UXML>

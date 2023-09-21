@@ -49,6 +49,15 @@ namespace RFUniverse.Attributes
                 lightView.parent = transform;
                 lightView.localPosition = Vector3.zero;
                 lightView.localRotation = Quaternion.identity;
+                lightView.hideFlags = HideFlags.HideAndDontSave;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (lightView != null)
+            {
+                DestroyImmediate(lightView.gameObject);
             }
         }
 

@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using HeatMap;
 using System.Drawing;
-using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
 using System.IO;
 using UnityEngine.AddressableAssets;
@@ -50,14 +49,23 @@ namespace RFUniverse.Attributes
             Camera.cullingMask &= ~(1 << PlayerMain.Instance.tempLayer);
         }
 
+        GameObject cameraView;
         private void Awake()
         {
             if (transform.Find("CameraView(Clone)") == null)
             {
-                GameObject cameraView = Instantiate(Addressables.LoadAssetAsync<GameObject>("CameraView").WaitForCompletion());
+                cameraView = Instantiate(Addressables.LoadAssetAsync<GameObject>("CameraView").WaitForCompletion());
                 cameraView.transform.parent = transform;
                 cameraView.transform.localPosition = Vector3.zero;
                 cameraView.transform.localRotation = Quaternion.identity;
+                cameraView.hideFlags = HideFlags.HideAndDontSave;
+            }
+        }
+        private void OnDestroy()
+        {
+            if (cameraView != null)
+            {
+                DestroyImmediate(cameraView.gameObject);
             }
         }
         public override Dictionary<string, object> CollectData()

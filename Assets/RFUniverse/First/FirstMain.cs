@@ -6,7 +6,16 @@ namespace RFUniverse
 {
     public class FirstMain : MonoBehaviour
     {
-        public static string Version => Application.version.Replace('.','_');
+        public static string Version => Application.version.Replace('.', '_');
+        public static string BucketID =>
+#if UNITY_STANDALONE_WIN
+            "[BucketID_Win]";
+#elif UNITY_STANDALONE_LINUX
+            "[BucketID_Linux]";
+#else
+            "[BucketID_Linux]";
+#endif
+
         void Awake()
         {
             //Addressables.InitializeAsync().WaitForCompletion();

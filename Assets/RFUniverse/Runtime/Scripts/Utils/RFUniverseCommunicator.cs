@@ -22,7 +22,7 @@ namespace RFUniverse
         //int bufferSize = 1024 * 10;
         public bool Connected => client != null ? client.Connected : false;
         Thread link;
-        public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false, Action onConnected = null)
+        public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false, int clientTime = 30, Action onConnected = null)
         {
             this.async = async;
             client = new TcpClient();
@@ -31,11 +31,11 @@ namespace RFUniverse
             //client.SendBufferSize = bufferSize;
             //client.ReceiveBufferSize = bufferSize;
             client.NoDelay = true;
+            Debug.Log($"Connecting to server on port: {port}");
             link = new Thread(() =>
             {
-                Debug.Log($"Connecting to server on port: {port}");
                 int connectCount = 0;
-                while (!Connected && connectCount < 30)
+                while (!Connected && connectCount < clientTime)
                 {
                     connectCount++;
                     try
@@ -51,7 +51,6 @@ namespace RFUniverse
                 //ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
                 if (Connected)
                 {
-                    Debug.Log("Connected successfully");
                     onConnected?.Invoke();
                     //client.EndConnect(ar);
                     if (async)

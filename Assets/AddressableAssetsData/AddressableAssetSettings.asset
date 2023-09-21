@@ -47,7 +47,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 75cce27b5e33e40f99bf801c9edeef0b, type: 2}
   - {fileID: 11400000, guid: 756f37ac556b64d42baf9f7e694aa8c5, type: 2}
   - {fileID: 11400000, guid: 05391d0244dd1042faed6c1b08cd6ba0, type: 2}
-  - {fileID: 11400000, guid: 2320f987adee9234cb67e1dea97b4389, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -76,7 +75,11 @@ MonoBehaviour:
       - m_Id: 179895b5af4b29b4cbe3e7eb3fcc9431
         m_Value: test
       - m_Id: 421c4fbeb1747bc4c9f9dbeb250e6013
+        m_Value: '[RFUniverse.FirstMain.BucketID]'
+      - m_Id: b4e85e98a99b1734e82f35ca47c161a1
         m_Value: 282571f5-e347-4235-975f-89969843d184
+      - m_Id: 2dd02aa6d0a3c0447a155e5ae8a034db
+        m_Value: 38473e72-9671-4817-bb36-de59420238b7
     m_ProfileEntryNames:
     - m_Id: da3344f313203ff09b4326f5ca4fe711
       m_Name: BuildTarget
@@ -104,6 +107,12 @@ MonoBehaviour:
       m_InlineUsage: 0
     - m_Id: 421c4fbeb1747bc4c9f9dbeb250e6013
       m_Name: BucketID
+      m_InlineUsage: 0
+    - m_Id: b4e85e98a99b1734e82f35ca47c161a1
+      m_Name: BucketID_Win
+      m_InlineUsage: 0
+    - m_Id: 2dd02aa6d0a3c0447a155e5ae8a034db
+      m_Name: BucketID_Linux
       m_InlineUsage: 0
     m_ProfileVersion: 1
   m_LabelTable:

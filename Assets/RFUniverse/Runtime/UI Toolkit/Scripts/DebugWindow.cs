@@ -23,7 +23,7 @@ namespace RFUniverse
             debugView.contentContainer.RegisterCallback<GeometryChangedEvent>(GeometryChanged);
             this.Q<Button>("debug-button").clicked += () =>
             {
-                debugView.style.display = 1 - debugView.style.display.value;
+                debugView.style.display = 1 - debugView.resolvedStyle.display;
             };
         }
         bool isBottom;

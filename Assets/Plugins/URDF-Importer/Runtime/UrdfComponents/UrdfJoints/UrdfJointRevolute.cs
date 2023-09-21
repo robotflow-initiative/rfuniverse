@@ -106,7 +106,8 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData((-(unityJoint.anchorRotation * Vector3.right)).Unity2Ros());
+            //joint.axis = GetAxisData(axisofMotion);
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else

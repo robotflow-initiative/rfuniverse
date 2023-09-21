@@ -88,6 +88,9 @@ public class CheckPlugins
             defines.Remove("HYBRID_CLR");
         }
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
+
+        PlayerSettings.allowUnsafeCode = true;
+        PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_Unity_4_8);
     }
 }
 #endif

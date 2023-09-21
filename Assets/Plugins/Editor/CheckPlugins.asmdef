@@ -1,7 +1,9 @@
 {
     "name": "CheckPlugins",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "Unity.Addressables.Editor"
+    ],
     "includePlatforms": [
         "Editor"
     ],

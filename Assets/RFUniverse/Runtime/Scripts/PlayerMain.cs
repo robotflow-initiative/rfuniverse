@@ -12,6 +12,7 @@ using UnityEngine.AddressableAssets;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets;
 #endif
 
 namespace RFUniverse
@@ -23,7 +24,7 @@ namespace RFUniverse
         public int patchNumber;
         public PlayerMainUI playerMainUI;
         public static RFUniverseCommunicator Communicator;
-
+        public int clientTime = 30;
 
         [SerializeField]
         float fixedDeltaTime = 0.02f;
@@ -88,8 +89,9 @@ namespace RFUniverse
                             port = value;
                     }
                 }
-                Communicator = new RFUniverseCommunicator("localhost", port, false, () =>
+                Communicator = new RFUniverseCommunicator("localhost", port, false, clientTime, () =>
                 {
+                    Debug.Log("Connected successfully");
                     OnStepAction += Step;
                     Communicator.OnReceivedData += (data) =>
                     {
@@ -361,7 +363,7 @@ namespace RFUniverse
             {
                 Debug.Log("LoadAsset:" + name);
 #if UNITY_EDITOR
-                AddressableAssetSettings setting = AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAssetSettings.asset");
+                AddressableAssetSettings setting = AddressableAssetSettingsDefaultObject.Settings;
                 List<AddressableAssetEntry> entrys = new List<AddressableAssetEntry>();
                 setting.GetAllAssets(entrys, false);
                 AddressableAssetEntry entry = entrys.FirstOrDefault(s => s.address == name);
