@@ -8,12 +8,14 @@ using System.IO;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 public class CheckPlugins
 {
     [MenuItem("RFUniverse/Check Plugins (Fix Error)")]
     private static async void FixError()
     {
+        Debug.Log("Begin Check Plugins (Fix Error), Please wait a moment ");
         string[] packageNames =
         {
             "com.unity.editorcoroutines",
@@ -62,35 +64,39 @@ public class CheckPlugins
             if (File.Exists(tmpPath))
             {
                 File.Copy(tmpPath, bioikPath, true);
+                Debug.Log("BioIK.cs modified");
             }
         }
         else if (!exist && defines.Contains("BIOIK"))
         {
-            Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
             defines.Remove("BIOIK");
+            Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
         }
 
         exist = Directory.Exists($"{Application.dataPath}/Plugins/Obi");
         if (exist && !defines.Contains("OBI"))
         {
-            Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
             defines.Add("OBI");
+            Debug.Log("OBI plugin detected,Add OBI DefineSymbols");
         }
         else if (!exist && defines.Contains("OBI"))
         {
-            Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
             defines.Remove("OBI");
+            Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
         }
 
         if (defines.Contains("HYBRID_CLR"))
         {
-            Debug.Log("Remove HYBRID_CLR DefineSymbols");
             defines.Remove("HYBRID_CLR");
+            Debug.Log("Remove HYBRID_CLR DefineSymbols");
         }
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
-
         PlayerSettings.allowUnsafeCode = true;
+        Debug.Log("PlayerSettings.allowUnsafeCode has been set to true");
         PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_Unity_4_8);
+        Debug.Log("PlayerSettings.ApiCompatibilityLevel has been set to NET_Unity_4_8");
+
+        Debug.Log("Check Plugins (Fix Error) Done");
     }
 }
 #endif
