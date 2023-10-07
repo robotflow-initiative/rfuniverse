@@ -59,6 +59,15 @@ public class CheckPlugins
         {
             Debug.Log("BIOIK plugin detected,Add BIOIK DefineSymbols");
             defines.Add("BIOIK");
+        }
+        else if (!exist && defines.Contains("BIOIK"))
+        {
+            defines.Remove("BIOIK");
+            Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
+        }
+
+        if(Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup/BioIK.cs"))
+        {
             string tmpPath = $"{Application.dataPath}/Plugins/Editor/BioIK.cs.backup";
             string bioikPath = $"{Application.dataPath}/Plugins/BioIK/BioIK.cs";
             if (File.Exists(tmpPath))
@@ -66,11 +75,6 @@ public class CheckPlugins
                 File.Copy(tmpPath, bioikPath, true);
                 Debug.Log("BioIK.cs modified");
             }
-        }
-        else if (!exist && defines.Contains("BIOIK"))
-        {
-            defines.Remove("BIOIK");
-            Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
         }
 
         exist = Directory.Exists($"{Application.dataPath}/Plugins/Obi");

@@ -30,11 +30,6 @@ namespace RFUniverse
         {
             Version unityVersion = new Version(Application.version);
             pythonVersionUI.text = "pyrfuniverse Version:" + pythonVersion;
-            if (unityVersion.Major != pythonVersion.Major || unityVersion.Minor != pythonVersion.Minor)
-            {
-                unityVersionUI.style.color = Color.red;
-                pythonVersionUI.style.color = Color.red;
-            }
         }
 
         public void ShowArticulationParameter(List<ArticulationBody> bodys)

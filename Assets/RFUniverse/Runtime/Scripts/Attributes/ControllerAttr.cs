@@ -618,7 +618,7 @@ namespace RFUniverse.Attributes
             if (first.isRoot)
                 first.immovable = immovable;
             else
-                Debug.LogWarning($"Controller ID:{ID},Name:{Name},is not root ArticulationBody");
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Is not root ArticulationBody");
         }
         public void EnabledNativeIK(bool enabled)
         {
@@ -626,7 +626,7 @@ namespace RFUniverse.Attributes
             Debug.Log($"EnabledNativeIK: ID: {ID} {enabled}");
             if (bioIK == null)
             {
-                Debug.LogWarning($"Controller ID:{ID},Name:{Name},Dont have IK compenent");
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Dont have IK compenent");
                 return;
             }
             if (enabled)
@@ -652,6 +652,18 @@ namespace RFUniverse.Attributes
         private void IKTargetDoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("IKTargetDoMove");
+#if BIOIK
+            if (bioIK == null)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Dont have IK compenent");
+                return;
+            }
+            if (!bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to open NativeIK");
+                return;
+            }
+#endif
             if (iKTarget == null) return;
             moveDone = false;
             Vector3 pos = new Vector3(position[0], position[1], position[2]);
@@ -684,6 +696,18 @@ namespace RFUniverse.Attributes
         private void IKTargetDoRotateQuaternion(Quaternion target, float duration, bool isSpeedBased = true, bool isRelative = false)
         {
             Debug.Log("IKTargetDoRotateQuaternion");
+#if BIOIK
+            if (bioIK == null)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Dont have IK compenent");
+                return;
+            }
+            if (!bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to open NativeIK");
+                return;
+            }
+#endif
             if (iKTarget == null) return;
             rotateDone = false;
             if (duration == 0)
@@ -845,6 +869,13 @@ namespace RFUniverse.Attributes
         }
         private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
         {
+#if BIOIK
+            if(bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
             if (moveableJoints.Count != jointPositions.Count)
             {
                 Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
@@ -855,6 +886,13 @@ namespace RFUniverse.Attributes
         private void SetJointPositionDirectly(List<float> jointPositions)
         {
             Debug.Log("SetJointPositionDirectly");
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
             if (moveableJoints.Count != jointPositions.Count)
             {
                 Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
@@ -864,7 +902,14 @@ namespace RFUniverse.Attributes
         }
         public void SetIndexJointPosition(int index, float jointPosition)
         {
-            if (moveableJoints.Count! > index)
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
+            if (index >= moveableJoints.Count)
             {
                 Debug.LogError($"The index of target joint positions is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
                 return;
@@ -873,7 +918,14 @@ namespace RFUniverse.Attributes
         }
         public void SetIndexJointPositionDirectly(int index, float jointPosition)
         {
-            if (moveableJoints.Count! > index)
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
+            if (index >= moveableJoints.Count)
             {
                 Debug.LogError($"The index of target joint positions is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
                 return;
@@ -883,6 +935,13 @@ namespace RFUniverse.Attributes
 
         public IEnumerator SetJointPositionContinue(int interval, List<List<float>> jointPositions)
         {
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                yield break;
+            }
+#endif
             Debug.Log("SetJointPositionContinue");
             if (jointPositions.Count == 0)
             {
@@ -913,6 +972,13 @@ namespace RFUniverse.Attributes
         private void SetJointVelocity(List<float> jointTargetVelocitys)
         {
             Debug.Log("SetJointVelocity");
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
             for (int i = 0; i < moveableJoints.Count; i++)
             {
                 moveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
@@ -921,6 +987,13 @@ namespace RFUniverse.Attributes
         private void SetIndexJointVelocity(int index, float jointTargetVelocity)
         {
             Debug.Log("SetIndexJointVelocity");
+#if BIOIK
+            if (bioIK != null && bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
+                return;
+            }
+#endif
             moveableJoints[index].GetUnit().SetJointTargetVelocity(jointTargetVelocity);
         }
         public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target, List<float> speedScales = null)
