@@ -390,10 +390,10 @@ namespace RFUniverse
         }
         public static Matrix4x4 FloatArrayToMatrix(float[,] floats)
         {
-            Matrix4x4 matrix = new();
-            for (int i = 0; i < 4; i++)
+            Matrix4x4 matrix = Matrix4x4.identity;
+            for (int i = 0; i < floats.GetLength(0); i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < floats.GetLength(1); j++)
                 {
                     matrix[i, j] = floats[i, j];
                 }

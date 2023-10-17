@@ -176,90 +176,90 @@ namespace RFUniverse.Attributes
         void GetRGB(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetRGB(intrinsicMatrix);
+                GetRGB(intrinsicMatrix, width, height);
             else
                 GetRGB(width, height, fov);
             rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetRGB(float[,] intrinsicMatrix)
+        public Texture2D GetRGB(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetRGB(size.x, size.y);
         }
         public abstract Texture2D GetRGB(int width, int height, float? fov = null);
         void GetNormal(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetNormal(intrinsicMatrix);
+                GetNormal(intrinsicMatrix, width, height);
             else
                 GetNormal(width, height, fov);
             normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetNormal(float[,] intrinsicMatrix)
+        public Texture2D GetNormal(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetNormal(size.x, size.y);
         }
         public abstract Texture2D GetNormal(int width, int height, float? unPhysicalFov = null);
         void GetID(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetID(intrinsicMatrix);
+                GetID(intrinsicMatrix, width, height);
             else
                 GetID(width, height, fov);
             idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetID(float[,] intrinsicMatrix)
+        public Texture2D GetID(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetID(size.x, size.y);
         }
         public abstract Texture2D GetID(int width, int height, float? unPhysicalFov = null);
-        public Texture2D GetIDSingleChannel(float[,] intrinsicMatrix)
+        public Texture2D GetIDSingleChannel(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetIDSingleChannel(size.x, size.y);
         }
         public abstract Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null);
         void GetDepth(float near, float far, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetDepth(intrinsicMatrix, near, far);
+                GetDepth(intrinsicMatrix, width, height, near, far);
             else
                 GetDepth(width, height, near, far, fov);
             depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetDepth(float[,] intrinsicMatrix, float near, float far)
+        public Texture2D GetDepth(float[,] intrinsicMatrix, int width, int height, float near, float far)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetDepth(size.x, size.y, near, far);
         }
         public abstract Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null);
         void GetDepthEXR(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetDepthEXR(intrinsicMatrix);
+                GetDepthEXR(intrinsicMatrix, width, height);
             else
                 GetDepthEXR(width, height, fov);
             depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
         }
-        public Texture2D GetDepthEXR(float[,] intrinsicMatrix)
+        public Texture2D GetDepthEXR(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetDepthEXR(size.x, size.y);
         }
         public abstract Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null);
         void GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetAmodalMask(id, intrinsicMatrix);
+                GetAmodalMask(id, intrinsicMatrix, width, height);
             else
                 GetAmodalMask(id, width, height, fov);
             amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix)
+        public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetAmodalMask(size.x, size.y, id);
         }
         public abstract Texture2D GetAmodalMask(int id, int width, int height, float? unPhysicalFov = null);
@@ -267,19 +267,19 @@ namespace RFUniverse.Attributes
         void GetMotionVector(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
-                GetMotionVector(intrinsicMatrix);
+                GetMotionVector(intrinsicMatrix, width, height);
             else
                 GetMotionVector(width, height, fov);
             motionVectorBase64String = Convert.ToBase64String(tex.EncodeToPNG());
         }
-        public Texture2D GetMotionVector(float[,] intrinsicMatrix)
+        public Texture2D GetMotionVector(float[,] intrinsicMatrix, int width, int height)
         {
-            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix);
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetMotionVector(size.x, size.y);
         }
         public abstract Texture2D GetMotionVector(int width, int height, float? unPhysicalFov = null);
 
-        public Vector2Int SetCameraIntrinsicMatrix(Camera set_camera, float[,] intrinsicMatrix)
+        public static Vector2Int SetCameraIntrinsicMatrix(Camera set_camera, float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             set_camera.usePhysicalProperties = true;
             float focal = 35;
@@ -289,8 +289,10 @@ namespace RFUniverse.Attributes
             ay = intrinsicMatrix[1, 1];
             x0 = intrinsicMatrix[0, 2];
             y0 = intrinsicMatrix[1, 2];
-            int width = (int)x0 * 2;
-            int height = (int)y0 * 2;
+            if (width <= 0)
+                width = (int)x0 * 2;
+            if (height <= 0)
+                height = (int)y0 * 2;
             sizeX = focal * width / ax;
             sizeY = focal * height / ay;
             shiftX = -(x0 - width / 2.0f) / width;
@@ -474,7 +476,7 @@ namespace RFUniverse.Attributes
             size = new Vector2Int(EditorPrefs.GetInt("CAMERA_TEX_W", 512), EditorPrefs.GetInt("CAMERA_TEX_H", 512));
             fov = EditorPrefs.GetFloat("CAMERA_TEX_FOV", 60);
         }
-        
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();

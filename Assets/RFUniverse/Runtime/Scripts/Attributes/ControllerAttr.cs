@@ -769,7 +769,7 @@ namespace RFUniverse.Attributes
             moveDone = true;
             rotateDone = true;
         }
-        private void SetIKTargetOffset(List<float> position, List<float> rotation, List<float> quaternion)
+        public void SetIKTargetOffset(List<float> position, List<float> rotation, List<float> quaternion)
         {
             if (iKFollow == null) return;
             iKFollow.localPosition = new Vector3(position[0], position[1], position[2]);
@@ -870,7 +870,7 @@ namespace RFUniverse.Attributes
         private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
         {
 #if BIOIK
-            if(bioIK != null && bioIK.enabled)
+            if (bioIK != null && bioIK.enabled)
             {
                 Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to close NativeIK");
                 return;

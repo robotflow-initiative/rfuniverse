@@ -59,6 +59,12 @@ Follow the steps below to configure and run the sample scene through the publish
 
 ---
 
+Additional operations that may be required on Linux systems: 
+
+If an error occurs during runtime, please check this [document](https://github.com/mvig-robotflow/rfuniverse/issues/3) to supplement dependencies
+
+---
+
 ## Test directory
 
 | name                                                                                                                                              | feature                                                                                              |

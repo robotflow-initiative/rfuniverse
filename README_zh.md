@@ -59,6 +59,12 @@ Unity端Player：接收python端消息并执行仿真
 
 ---
 
+Linux系统可能需要进行的额外操作：
+
+如果运行时出现报错请查看该[文档](https://github.com/mvig-robotflow/rfuniverse/issues/3)补充依赖
+
+---
+
 ##### Test目录
 
 | name                                                                                                                                              | feature                                                                                                  |
