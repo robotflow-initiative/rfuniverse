@@ -397,7 +397,7 @@ namespace RFUniverse
             else
             {
                 var locations = Addressables.LoadResourceLocationsAsync(name).WaitForCompletion();
-                if(locations.Count>0)
+                if (locations.Count > 0)
                 {
                     GameObject obj = Addressables.LoadAssetAsync<GameObject>(name).WaitForCompletion();
                     assets.Add(name, obj);

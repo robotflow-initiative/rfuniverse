@@ -84,6 +84,7 @@ namespace Unity.Robotics.UrdfImporter
                     else if (meshFilePath.ToLower().EndsWith(".dae"))
                     {
                         float globalScale = ColladaAssetPostProcessor.ReadGlobalScale(meshFilePath);
+                        globalScale = 1;
                         meshObject = MeshImporter.Load(meshFilePath, globalScale, globalScale, globalScale);
                         if (meshObject != null)
                         {
