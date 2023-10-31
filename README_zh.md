@@ -203,19 +203,11 @@ RigidbodyAttr扩展物体的刚体属性
 
 ControllerAttr扩展机械臂关节体的操作
 
-CameraAttr扩展相机图像抓取功能
+CameraAttr相机图像抓取功能
 
-LightAttr扩展灯光控制功能
+LightAttr灯光控制功能
 
-PointCloudAttr扩展点云导入及渲染功能
-
-###### Manager
-
-Manager负责接受和发送不同类型的数据，每一个Manager有独立的channel与python保持通信，在运行过程中通过channel接受或发送数据。
-
-- AssetManager：负责环境中通用的接口和数据的发送
-- InstanceManager：负责分发和收集面向不同Attr的接口和数据
-- DebugManager：负责Debug功能
+PointCloudAttr点云导入及渲染功能
 
 ---
 

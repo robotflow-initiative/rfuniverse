@@ -207,13 +207,7 @@ LightAttr extends light control functionality.
 
 PointCloudAttr extends point cloud import and rendering functionality.
 
-### Manager
-
-The Manager is responsible for receiving and sending different types of data. Each Manager has an independent channel to communicate with Python, and during runtime, data is received or sent through the channel.
-
-- AssetManager: Responsible for the common interface and data transmission in the environment.
-- InstanceManager: Responsible for distributing and collecting interfaces and data for different Attrs.
-- DebugManager: Responsible for debugging functionality.
+# 
 
 ---
 
