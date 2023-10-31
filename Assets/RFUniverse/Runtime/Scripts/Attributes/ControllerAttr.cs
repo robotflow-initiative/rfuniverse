@@ -142,8 +142,8 @@ namespace RFUniverse.Attributes
         }
 
         private List<ArticulationData> articulationDatas;
-        [EditableAttr("Articulations")]
-        [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
+        //[EditableAttr("Articulations")]
+        //[EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
         public List<ArticulationData> ArticulationDatas
         {
             get

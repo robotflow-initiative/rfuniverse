@@ -23,7 +23,7 @@ namespace RFUniverse
                 "Assets/Plugins/URDF-Importer",
                 "Assets/Plugins/BioIK/BioIK.asmref"
             };
-            AssetDatabase.ExportPackage(filePaths, $"{System.Environment.CurrentDirectory}/Build/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
+            AssetDatabase.ExportPackage(filePaths, $"{Application.dataPath}/../Build/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
             //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines);
         }
     }

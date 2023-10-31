@@ -8,7 +8,6 @@ using System.IO;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
 public class CheckPlugins
 {
