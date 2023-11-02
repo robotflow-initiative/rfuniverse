@@ -123,7 +123,7 @@ If you want to add your own custom resources or functions to RFUniverse, you can
 
 If you want to add RFUniverse functionality to your own project, you can import the [RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-**If you encounter missing plugin errors in your project, you can restart the project and use the menu RFUniverse/CheckPlugins to fix them.**
+**If you encounter missing plugin errors in your project, you can restart the project and use the menu RFUniverse/CheckPlugins and RFUniverse/Fix Addressable to fix them.**
 
 ---
 
@@ -133,6 +133,7 @@ After opening the RFUniverse project or importing the RFUniverse Core SDK, you n
 
 - [Obi](https://assetstore.unity.com/publishers/5170)：Physical simulation plugins for soft bodies, cloth, fluids, etc.
 - [BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：Joint IK solving plugins
+- YCB Dataset and IGibson Scene：Please download and import the project from [here](https://github.com/mvig-robotflow/rfuniverse/releases/tag/Dataset)
 
 **Please put the plugins in the Plugins directory, import the plugins, and use the menu RFUniverse/CheckPlugins to fix dependencies**
 
@@ -156,9 +157,9 @@ After opening the RFUniverse project or importing the RFUniverse Core SDK, you n
 
 ### Scene
 
-* First：The first scene that the published program runs, which receives command-line parameters and then jumps to other scenes
+* First：The first scene that the published program runs, which receives command-line parameters and then jumps to other scenes (not included in SDK)
 * Empty：Player mode scene
-* Edit：Edit mode scebe
+* Edit：Edit mode scebe, In the Editmode submodule
 
 ---
 

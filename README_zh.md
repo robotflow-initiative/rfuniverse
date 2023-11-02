@@ -123,7 +123,7 @@ RFUniverse.exe -edit
 
 如果你想要为自己的项目添加RFUniverse功能，可以导入[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-**工程中若出现缺失插件的报错，可重启工程后使用菜单RFUniverse/CheckPlugins修复**
+**工程中若出现缺失插件的报错，可重启工程后使用菜单RFUniverse/Check Plugins以及RFUniverse/Fix Addressable修复**
 
 ---
 
@@ -133,8 +133,9 @@ RFUniverse.exe -edit
 
 - [Obi](https://assetstore.unity.com/publishers/5170)：Softbody，Cloth，Fluid等物理仿真插件
 - [BioIK](https://assetstore.unity.com/packages/tools/animation/bio-ik-67819)：关节IK解算插件
+- YCB数据集和IGibson场景：请从[这里](https://github.com/mvig-robotflow/rfuniverse/releases/tag/Dataset)下载并导入工程
 
-**请将插件放入Plugins目录，导入插件后使用菜单RFUniverse/CheckPlugins修复依赖**
+**请将插件放入Plugins目录，导入插件后使用菜单RFUniverse/Check Plugins修复依赖**
 
 ---
 
@@ -156,9 +157,9 @@ RFUniverse.exe -edit
 
 ##### Scene场景
 
-* First：发布程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景
+* First：发布程序运行的首个场景，在该场景接收命令行参数后跳转至其他场景（未包含在SDK中）
 * Empty：Player模式场景
-* Edit：Editor模式场景
+* Edit：Editor模式场景，在Editmode子模块中
 
 ---
 

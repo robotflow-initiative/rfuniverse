@@ -25,7 +25,7 @@ RFUniverse.x86_64 -edit
 * A：镜头左平移
 * D：镜头右平移
 * Space：镜头上升
-* Shift：镜头下降
+* Ctrl：镜头下降
 * 鼠标右键拖拽：镜头旋转
 
 <div STYLE="page-break-after: always;"></div>
