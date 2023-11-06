@@ -134,6 +134,7 @@ namespace RFUniverse.Attributes
                 InitBioIK();
             }
         }
+
         public override BaseAttrData GetAttrData()
         {
             ControllerData data = new ControllerData(base.GetAttrData());
@@ -157,6 +158,7 @@ namespace RFUniverse.Attributes
                 articulationDatas = value;
             }
         }
+
         public List<ArticulationData> GetArticulationDatas()
         {
             List<ArticulationData> datas = new List<ArticulationData>();
@@ -211,6 +213,7 @@ namespace RFUniverse.Attributes
                 body.zDrive = data.zDrive.ToArticulationDrive();
             }
         }
+
         public void GetJointParameters()
         {
             jointParameters = new List<ArticulationParameter>();
@@ -227,6 +230,8 @@ namespace RFUniverse.Attributes
                 });
             }
         }
+
+
 #if BIOIK
         private BioIK.BioIK bioIK = null;
 #endif
@@ -412,6 +417,7 @@ namespace RFUniverse.Attributes
             bioIK.Refresh();
 #endif
         }
+
         void ResetIKTarget()
         {
             if (iKFollow != null && iKTarget != null)
@@ -468,9 +474,9 @@ namespace RFUniverse.Attributes
             data.Add("local_quaternions", joints.Select(s => s.transform.localRotation).ToList());
             // Velocity
             data.Add("velocities", joints.Select(s => s.velocity).ToList());
+
             // Number of Articulation Moveable Joints
             data.Add("number_of_moveable_joints", moveableJoints.Count);
-
             // Each part's joint position
             data.Add("joint_positions", moveableJoints.Select(s => s.GetUnit().CalculateCurrentJointPosition()).ToList());
             // Each part's joint velocity
@@ -485,6 +491,11 @@ namespace RFUniverse.Attributes
             data.Add("joint_lower_limit", moveableJoints.Select(s => s.xDrive.lowerLimit).ToList());
             // Each part's joint upper limit
             data.Add("joint_upper_limit", moveableJoints.Select(s => s.xDrive.upperLimit).ToList());
+            // Each part's joint upper limit
+            data.Add("joint_stiffness", moveableJoints.Select(s => s.xDrive.stiffness).ToList());
+            // Each part's joint upper limit
+            data.Add("joint_damping", moveableJoints.Select(s => s.xDrive.damping).ToList());
+
             // Whether all parts are stable
             data.Add("all_stable", AllStable());
             data.Add("move_done", moveDone);
@@ -507,7 +518,6 @@ namespace RFUniverse.Attributes
 #endif
             return data;
         }
-
 
         public List<float> GetJointPositions()
         {
@@ -548,6 +558,15 @@ namespace RFUniverse.Attributes
                     return;
                 case "SetJointPositionContinue":
                     StartCoroutine(SetJointPositionContinue((int)data[0], data[1].ConvertType<List<List<float>>>()));
+                    return;
+                case "SetJointLimit":
+                    SetJointLimit(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
+                    return;
+                case "SetJointStiffness":
+                    SetJointStiffness(data[0].ConvertType<List<float>>());
+                    return;
+                case "SetJointDamping":
+                    SetJointDamping(data[0].ConvertType<List<float>>());
                     return;
                 case "SetJointVelocity":
                     SetJointVelocity(data[0].ConvertType<List<float>>());
@@ -612,6 +631,8 @@ namespace RFUniverse.Attributes
             }
             base.AnalysisData(type, data);
         }
+
+
         private void SetImmovable(bool immovable)
         {
             ArticulationBody first = GetComponentInChildren<ArticulationBody>();
@@ -878,7 +899,7 @@ namespace RFUniverse.Attributes
 #endif
             if (moveableJoints.Count != jointPositions.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
                 return;
             }
             SetJointPosition(jointPositions, ControlMode.Target, speedScales);
@@ -895,7 +916,7 @@ namespace RFUniverse.Attributes
 #endif
             if (moveableJoints.Count != jointPositions.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
                 return;
             }
             SetJointPosition(jointPositions, ControlMode.Direct);
@@ -911,7 +932,7 @@ namespace RFUniverse.Attributes
 #endif
             if (index >= moveableJoints.Count)
             {
-                Debug.LogError($"The index of target joint positions is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
+                Debug.LogError($"The index of target joint is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
                 return;
             }
             SetIndexJointPosition(index, jointPosition, ControlMode.Target);
@@ -927,7 +948,7 @@ namespace RFUniverse.Attributes
 #endif
             if (index >= moveableJoints.Count)
             {
-                Debug.LogError($"The index of target joint positions is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
+                Debug.LogError($"The index of target joint is {index}, but the valid number of joints in robot arm is {moveableJoints.Count}");
                 return;
             }
             SetIndexJointPosition(index, jointPosition, ControlMode.Direct);
@@ -950,7 +971,7 @@ namespace RFUniverse.Attributes
             }
             if (moveableJoints.Count != jointPositions[0].Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, moveableJoints.Count));
                 yield break;
             }
             float startTime = Time.time * 1000;
@@ -969,6 +990,45 @@ namespace RFUniverse.Attributes
                 SetJointPosition(jointPositions[i], ControlMode.Target);
             }
         }
+        private void SetJointDamping(List<float> list)
+        {
+            if (moveableJoints.Count != list.Count)
+            {
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", list.Count, moveableJoints.Count));
+                return;
+            }
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                moveableJoints[i].GetUnit().SetJointDamping(list[i]);
+            }
+        }
+
+        private void SetJointStiffness(List<float> list)
+        {
+            if (moveableJoints.Count != list.Count)
+            {
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", list.Count, moveableJoints.Count));
+                return;
+            }
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                moveableJoints[i].GetUnit().SetJointStiffness(list[i]);
+            }
+        }
+
+        private void SetJointLimit(List<float> upper, List<float> lower)
+        {
+            if (moveableJoints.Count != upper.Count || moveableJoints.Count != lower.Count)
+            {
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", upper.Count, moveableJoints.Count));
+                return;
+            }
+            for (int i = 0; i < moveableJoints.Count; i++)
+            {
+                moveableJoints[i].GetUnit().SetJointLimit(upper[i], lower[i]);
+            }
+        }
+
         private void SetJointVelocity(List<float> jointTargetVelocitys)
         {
             Debug.Log("SetJointVelocity");
@@ -984,6 +1044,7 @@ namespace RFUniverse.Attributes
                 moveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
             }
         }
+
         private void SetIndexJointVelocity(int index, float jointTargetVelocity)
         {
             Debug.Log("SetIndexJointVelocity");
@@ -1011,7 +1072,7 @@ namespace RFUniverse.Attributes
         {
             if (moveableJoints.Count != jointForces.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, moveableJoints.Count));
                 return;
             }
             for (int i = 0; i < moveableJoints.Count; i++)
@@ -1023,7 +1084,7 @@ namespace RFUniverse.Attributes
         {
             if (moveableJoints.Count != jointForces.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, moveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, moveableJoints.Count));
                 return;
             }
             for (int i = 0; i < moveableJoints.Count; i++)

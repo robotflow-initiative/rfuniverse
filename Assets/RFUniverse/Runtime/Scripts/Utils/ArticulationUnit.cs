@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public enum ControlMode
 {
@@ -175,21 +173,9 @@ public class ArticulationUnit : MonoBehaviour
     }
     public void SetJointTargetVelocity(float jointTargetVelocity)
     {
-        //articulationBody.SetJointVelocities(new float[] { jointTargetVelocity, jointTargetVelocity, jointTargetVelocity }.ToList());
-        ArticulationDrive drive = articulationBody.xDrive;
-        drive.driveType = ArticulationDriveType.Velocity;
-        drive.targetVelocity = jointTargetVelocity;
-        articulationBody.xDrive = drive;
-
-        drive = articulationBody.yDrive;
-        drive.driveType = ArticulationDriveType.Velocity;
-        drive.targetVelocity = jointTargetVelocity;
-        articulationBody.yDrive = drive;
-
-        drive = articulationBody.zDrive;
-        drive.driveType = ArticulationDriveType.Velocity;
-        drive.targetVelocity = jointTargetVelocity;
-        articulationBody.zDrive = drive;
+        articulationBody.SetDriveTargetVelocity(ArticulationDriveAxis.X, jointTargetVelocity);
+        articulationBody.SetDriveTargetVelocity(ArticulationDriveAxis.Y, jointTargetVelocity);
+        articulationBody.SetDriveTargetVelocity(ArticulationDriveAxis.Z, jointTargetVelocity);
     }
 
     public float GetJointPosition()
@@ -221,6 +207,34 @@ public class ArticulationUnit : MonoBehaviour
     {
         forceMode = ForceMode.Torque;
         force = jointForce;
+    }
+
+    public void SetJointDamping(float f)
+    {
+        articulationBody.SetDriveDamping(ArticulationDriveAxis.X, f);
+        articulationBody.SetDriveDamping(ArticulationDriveAxis.Y, f);
+        articulationBody.SetDriveDamping(ArticulationDriveAxis.Z, f);
+    }
+
+    public void SetJointStiffness(float f)
+    {
+        articulationBody.SetDriveStiffness(ArticulationDriveAxis.X, f);
+        articulationBody.SetDriveStiffness(ArticulationDriveAxis.Y, f);
+        articulationBody.SetDriveStiffness(ArticulationDriveAxis.Z, f);
+    }
+
+    public void SetJointLimit(float upper, float lower)
+    {
+        articulationBody.SetDriveLimits(ArticulationDriveAxis.X, upper, lower);
+        articulationBody.SetDriveLimits(ArticulationDriveAxis.Y, upper, lower);
+        articulationBody.SetDriveLimits(ArticulationDriveAxis.Z, upper, lower);
+    }
+
+    public void SetJointForceLimit(float f)
+    {
+        articulationBody.SetDriveForceLimit(ArticulationDriveAxis.X, f);
+        articulationBody.SetDriveForceLimit(ArticulationDriveAxis.Y, f);
+        articulationBody.SetDriveForceLimit(ArticulationDriveAxis.Z, f);
     }
 
     //public MovingDirection GetMovingDirection()
