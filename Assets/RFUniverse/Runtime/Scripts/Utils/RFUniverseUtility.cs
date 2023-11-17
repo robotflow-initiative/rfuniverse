@@ -23,7 +23,8 @@ namespace RFUniverse
                 {
                     jsonSerializerSettings = new JsonSerializerSettings();
                     jsonSerializerSettings.Converters = new[] { new UnityJsonConverter() };
-                    jsonSerializerSettings.TypeNameHandling = TypeNameHandling.All;
+                    jsonSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    jsonSerializerSettings.Formatting = Formatting.Indented;
                 }
                 return jsonSerializerSettings;
             }
@@ -231,8 +232,9 @@ namespace RFUniverse
             {
                 if (datas[i].parentID > 0 && !headID.Contains(datas[i].parentID))
                 {
-                    datas.Remove(datas[i]);
-                    datas.Add(datas[i]);
+                    BaseAttrData t = datas[i];
+                    datas.Remove(t);
+                    datas.Add(t);
                 }
                 else
                 {

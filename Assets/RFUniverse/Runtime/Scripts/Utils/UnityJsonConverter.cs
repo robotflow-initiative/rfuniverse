@@ -1,103 +1,109 @@
 ﻿using Newtonsoft.Json;
-using System;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
-/// <summary>
-/// 使Json.Net可以正确序列化或反序列化Unity中的Vector数据
-/// </summary>
+
 public class UnityJsonConverter : JsonConverter
 {
-    public override bool CanRead => true;
-    public override bool CanWrite => true;
-    public override bool CanConvert(Type objectType)
+    public override bool CanConvert(System.Type objectType)
     {
-        return typeof(Vector2) == objectType ||
-        typeof(Vector2Int) == objectType ||
-        typeof(Vector3) == objectType ||
-        typeof(Vector3Int) == objectType ||
-        typeof(Vector4) == objectType ||
-        typeof(Quaternion) == objectType ||
-        typeof(Color) == objectType;
+        return objectType == typeof(Vector2) ||
+               objectType == typeof(Vector2Int) ||
+               objectType == typeof(Vector3) ||
+               objectType == typeof(Vector3Int) ||
+               objectType == typeof(Quaternion) ||
+               objectType == typeof(Matrix4x4) ||
+               objectType == typeof(Color);
     }
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    {
-        return objectType switch
-        {
-            var t when t == typeof(Vector2) => JsonConvert.DeserializeObject<Vector2>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Vector2Int) => JsonConvert.DeserializeObject<Vector2Int>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Vector3) => JsonConvert.DeserializeObject<Vector3>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Vector3Int) => JsonConvert.DeserializeObject<Vector3Int>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Vector4) => JsonConvert.DeserializeObject<Vector4>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Quaternion) => JsonConvert.DeserializeObject<Quaternion>(serializer.Deserialize(reader).ToString()),
-            var t when t == typeof(Color) => JsonConvert.DeserializeObject<Color>(serializer.Deserialize(reader).ToString()),
-            _ => throw new Exception("Unexpected Error Occurred"),
-        };
-    }
+
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        writer.WriteStartObject();
-        switch (value)
+        JObject obj = new JObject();
+
+        if (value is Vector2 vector2)
         {
-            case Vector2 v:
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.y);
-                break;
-            case Vector2Int v:
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.y);
-                break;
-            case Vector3 v:
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.y);
-                writer.WritePropertyName("z");
-                writer.WriteValue(v.z);
-                break;
-            case Vector3Int v:
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.y);
-                writer.WritePropertyName("z");
-                writer.WriteValue(v.z);
-                break;
-            case Vector4 v:
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.y);
-                writer.WritePropertyName("z");
-                writer.WriteValue(v.z);
-                writer.WritePropertyName("w");
-                writer.WriteValue(v.w);
-                break;
-            case Quaternion q:
-                writer.WritePropertyName("x");
-                writer.WriteValue(q.x);
-                writer.WritePropertyName("y");
-                writer.WriteValue(q.y);
-                writer.WritePropertyName("z");
-                writer.WriteValue(q.z);
-                writer.WritePropertyName("w");
-                writer.WriteValue(q.w);
-                break;
-            case Color c:
-                writer.WritePropertyName("r");
-                writer.WriteValue(c.r);
-                writer.WritePropertyName("g");
-                writer.WriteValue(c.g);
-                writer.WritePropertyName("b");
-                writer.WriteValue(c.b);
-                writer.WritePropertyName("a");
-                writer.WriteValue(c.a);
-                break;
-            default:
-                throw new Exception("Unexpected Error Occurred");
+            obj.Add("x", vector2.x);
+            obj.Add("y", vector2.y);
         }
-        writer.WriteEndObject();
+        else if (value is Vector2Int vector2Int)
+        {
+            obj.Add("x", vector2Int.x);
+            obj.Add("y", vector2Int.y);
+        }
+        else if (value is Vector3 vector3)
+        {
+            obj.Add("x", vector3.x);
+            obj.Add("y", vector3.y);
+            obj.Add("z", vector3.z);
+        }
+        else if (value is Vector3Int vector3Int)
+        {
+            obj.Add("x", vector3Int.x);
+            obj.Add("y", vector3Int.y);
+            obj.Add("z", vector3Int.z);
+        }
+        else if (value is Quaternion quaternion)
+        {
+            obj.Add("x", quaternion.x);
+            obj.Add("y", quaternion.y);
+            obj.Add("z", quaternion.z);
+            obj.Add("w", quaternion.w);
+        }
+        else if (value is Matrix4x4 matrix4x4)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                obj.Add($"m{i / 4}{i % 4}", matrix4x4[i / 4, i % 4]);
+            }
+        }
+        else if (value is Color color)
+        {
+            obj.Add("r", color.r);
+            obj.Add("g", color.g);
+            obj.Add("b", color.b);
+            obj.Add("a", color.a);
+        }
+
+        obj.WriteTo(writer);
+    }
+
+    public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        JObject obj = JObject.Load(reader);
+
+        if (objectType == typeof(Vector2))
+        {
+            return new Vector2((float)obj["x"], (float)obj["y"]);
+        }
+        else if (objectType == typeof(Vector2Int))
+        {
+            return new Vector2Int((int)obj["x"], (int)obj["y"]);
+        }
+        else if (objectType == typeof(Vector3))
+        {
+            return new Vector3((float)obj["x"], (float)obj["y"], (float)obj["z"]);
+        }
+        else if (objectType == typeof(Vector3Int))
+        {
+            return new Vector3Int((int)obj["x"], (int)obj["y"], (int)obj["z"]);
+        }
+        else if (objectType == typeof(Quaternion))
+        {
+            return new Quaternion((float)obj["x"], (float)obj["y"], (float)obj["z"], (float)obj["w"]);
+        }
+        else if (objectType == typeof(Matrix4x4))
+        {
+            Matrix4x4 matrix4x4 = new Matrix4x4();
+            for (int i = 0; i < 16; i++)
+            {
+                matrix4x4[i / 4, i % 4] = (float)obj[$"m{i / 4}{i % 4}"];
+            }
+            return matrix4x4;
+        }
+        else if (objectType == typeof(Color))
+        {
+            return new Color((float)obj["r"], (float)obj["g"], (float)obj["b"], (float)obj["a"]);
+        }
+
+        return null;
     }
 }

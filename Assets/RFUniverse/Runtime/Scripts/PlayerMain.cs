@@ -435,6 +435,7 @@ namespace RFUniverse
             {
                 item.Destroy();
             }
+            GroundActive = true;
         }
         void SendLoadDoneMsg()
         {

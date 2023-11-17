@@ -155,7 +155,7 @@ namespace RFUniverse.Attributes
             BaseAttr parentAttr = null;
             List<BaseAttr> parents = GetComponentsInParent<BaseAttr>().ToList();
             parents.RemoveAt(0);
-            if (parents.Count > 1)
+            if (parents.Count > 0)
             {
                 List<BaseAttr> parentsTmp = new List<BaseAttr>(parents);
                 foreach (var item in parentsTmp)

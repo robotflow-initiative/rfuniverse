@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace RFUniverse
 {
@@ -55,6 +58,7 @@ namespace RFUniverse
 
         protected virtual void Awake()
         {
+            JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
             //Application.targetFrameRate = 60;
             axisCamera.cullingMask = 1 << axisLayer;
         }
@@ -64,7 +68,11 @@ namespace RFUniverse
         {
             Debug.Log("InstanceObject:" + baseAttrData.name);
             GameObject gameObject = GetGameObject(baseAttrData.name);
+#if UNITY_EDITOR
+            gameObject = (GameObject)PrefabUtility.InstantiatePrefab(gameObject);
+#else
             gameObject = Instantiate(gameObject);
+#endif
             gameObject.name = gameObject.name.Replace("(Clone)", "");
             T attr = gameObject.GetComponent<T>();
             if (attr != null)
