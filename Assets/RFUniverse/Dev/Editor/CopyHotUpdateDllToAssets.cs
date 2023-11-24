@@ -43,7 +43,7 @@ public class CopyHotUpdateDllToAssets : Editor
 
         HotUpdateAsset hotUpdateAsset = AssetDatabase.LoadAssetAtPath<HotUpdateAsset>("Assets/RFUniverse/Dev/HotUpdateAsset.asset");
         hotUpdateAsset.patchNumber++;
-        EditorUtility.IsDirty(hotUpdateAsset);
+        EditorUtility.SetDirty(hotUpdateAsset);
         AssetDatabase.SaveAssetIfDirty(hotUpdateAsset);
         AssetDatabase.Refresh();
     }

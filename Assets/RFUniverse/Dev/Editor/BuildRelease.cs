@@ -1,29 +1,21 @@
 using HybridCLR.Editor.Commands;
 using RFUniverse;
-using System.Collections;
 using System.IO.Compression;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build.Reporting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class BuildRelease : MonoBehaviour
+public class BuildRelease
 {
-
     [MenuItem("RFUniverse/Build Release")]
     static void Build()
     {
-        EditorCoroutineUtility.StartCoroutineOwnerless(BuildCoroutine());
-    }
-
-    static IEnumerator BuildCoroutine()
-    {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
-        yield return null;
+        Client.Resolve();
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
-        yield return null;
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
@@ -40,12 +32,14 @@ public class BuildRelease : MonoBehaviour
             System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame", true);
         if (System.IO.Directory.Exists($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
             System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
+        if (System.IO.File.Exists($"{windowsPath}.zip"))
+            System.IO.File.Delete($"{windowsPath}.zip");
+        ZipFile.CreateFromDirectory($"{windowsPath}", $"{windowsPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
 
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
-        yield return null;
+        Client.Resolve();
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
-        yield return null;
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
@@ -63,14 +57,10 @@ public class BuildRelease : MonoBehaviour
         if (System.IO.Directory.Exists($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
             System.IO.Directory.Delete($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
 
-        SDKExporter.Export();
-
-        if (System.IO.File.Exists($"{windowsPath}.zip"))
-            System.IO.File.Delete($"{windowsPath}.zip");
-        ZipFile.CreateFromDirectory($"{windowsPath}", $"{windowsPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
-
         if (System.IO.File.Exists($"{linuxPath}.zip"))
             System.IO.File.Delete($"{linuxPath}.zip");
         ZipFile.CreateFromDirectory($"{linuxPath}", $"{linuxPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
+
+        SDKExporter.Export();
     }
 }

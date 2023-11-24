@@ -34,7 +34,7 @@ namespace RFUniverse.DebugTool
                         jointTextPool.Release(item.Value);
                     }
                     jointTexts.Clear();
-                    foreach (var item in target.moveableJoints)
+                    foreach (var item in target.MoveableJoints)
                     {
                         jointTexts.Add(item, jointTextPool.Get());
                     }

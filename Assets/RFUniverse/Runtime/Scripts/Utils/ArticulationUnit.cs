@@ -22,15 +22,6 @@ public class ArticulationUnit : MonoBehaviour
     void Awake()
     {
         articulationBody = gameObject.GetComponent<ArticulationBody>();
-        if (articulationBody == null)
-        {
-            Debug.LogError($"No ArticulationBody component in {gameObject.name}");
-        }
-        //controlMode = ControlMode.Target;
-        if (dofCount > 0)
-        {
-            articulationBody.jointVelocity = new ArticulationReducedSpace(0);
-        }
 
         if (mimicParent)
         {
@@ -57,6 +48,7 @@ public class ArticulationUnit : MonoBehaviour
         ForceAtPosition,
         Torque
     }
+
     private ForceMode forceMode = ForceMode.None;
     private Vector3 force = Vector3.zero;
     private Vector3 position = Vector3.zero;
@@ -191,6 +183,10 @@ public class ArticulationUnit : MonoBehaviour
             case ArticulationJointType.SphericalJoint:
                 return articulationBody.jointPosition[0] * Mathf.Rad2Deg;
         }
+    }
+    public void SetJointForce(float force)
+    {
+        articulationBody.jointForce = new ArticulationReducedSpace(force, force, force);
     }
     public void AddJointForce(Vector3 jointForce)
     {

@@ -165,7 +165,7 @@ namespace RFUniverse.Manager
             Debug.Log($"ShowArticulationParameter ID: {controllerID}");
             if (BaseAttr.Attrs.TryGetValue(controllerID, out BaseAttr target) && target is ControllerAttr)
             {
-                PlayerMain.Instance.playerMainUI.ShowArticulationParameter((target as ControllerAttr).moveableJoints);
+                PlayerMain.Instance.playerMainUI.ShowArticulationParameter((target as ControllerAttr).MoveableJoints);
             }
             else
             {
@@ -201,7 +201,7 @@ namespace RFUniverse.Manager
         void RefreshGraspPoint()
         {
             if (graspPointSource == null) return;
-            List<ControllerAttr> current = BaseAttr.ActiveAttrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).joints.Count > 0).Select(s => s.Value as ControllerAttr).ToList();
+            List<ControllerAttr> current = BaseAttr.ActiveAttrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).Joints.Count > 0).Select(s => s.Value as ControllerAttr).ToList();
             foreach (var item in current.Except(graspPoints.Keys))
             {
                 GraspPoint instance = graspPointPool.Get();
@@ -420,7 +420,7 @@ namespace RFUniverse.Manager
         void RefreshJointLink()
         {
             if (jointLinkSource == null) return;
-            List<ControllerAttr> current = BaseAttr.ActiveAttrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).joints.Count > 0).Select(s => s.Value as ControllerAttr).ToList();
+            List<ControllerAttr> current = BaseAttr.ActiveAttrs.Where(s => (s.Value is ControllerAttr) && (s.Value as ControllerAttr).Joints.Count > 0).Select(s => s.Value as ControllerAttr).ToList();
             foreach (var item in current.Except(jointLinks.Keys))
             {
                 JointLink instance = jointLinkPool.Get();
