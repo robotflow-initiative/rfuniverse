@@ -11,11 +11,6 @@ using UnityEditor;
 
 namespace RFUniverse
 {
-    public class ConfigData
-    {
-        public string assets_path;
-        public string executable_file;
-    }
     public class RFUniverseMain : MonoBehaviour
     {
         [SerializeField]
@@ -58,7 +53,7 @@ namespace RFUniverse
 
         protected virtual void Awake()
         {
-            JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
+            //JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
             //Application.targetFrameRate = 60;
             axisCamera.cullingMask = 1 << axisLayer;
         }

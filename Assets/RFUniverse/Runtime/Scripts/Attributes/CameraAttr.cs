@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using System.IO;
 using UnityEngine.AddressableAssets;
 
 namespace RFUniverse.Attributes
@@ -108,6 +106,26 @@ namespace RFUniverse.Attributes
             Camera.RenderWithShader(cameraDepthShader, "");
             RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.R8, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            RenderTexture.ReleaseTemporary(Camera.targetTexture);
+            return tex;
+        }
+
+        public override Texture2D GetDepth16Bit(int width, int height, float? unPhysicalFov = null)
+        {
+            Debug.Log("GetDepth");
+            if (unPhysicalFov != null)
+            {
+                Camera.usePhysicalProperties = false;
+                Camera.fieldOfView = unPhysicalFov.Value;
+            }
+            Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.R16, RenderTextureReadWrite.Linear, 1);
+            Shader.SetGlobalFloat("_CameraZeroDis", 0);
+            Shader.SetGlobalFloat("_CameraOneDis", 1);
+            Camera.RenderWithShader(cameraDepthShader, "");
+            RenderTexture.active = Camera.targetTexture;
+            tex.Reinitialize(width, height, TextureFormat.R16, false);
             tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             tex.Apply();
             RenderTexture.ReleaseTemporary(Camera.targetTexture);

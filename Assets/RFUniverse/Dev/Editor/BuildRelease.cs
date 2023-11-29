@@ -1,4 +1,4 @@
-using HybridCLR.Editor.Commands;
+Ôªøusing HybridCLR.Editor.Commands;
 using RFUniverse;
 using System.IO.Compression;
 using UnityEditor;
@@ -9,8 +9,15 @@ using UnityEngine;
 
 public class BuildRelease
 {
-    [MenuItem("RFUniverse/Build Release")]
+    [MenuItem("RFUniverse/Build Release/All", false, 0)]
     static void Build()
+    {
+        BuildWindows();
+        BuildLinux();
+        SDKExporter.Export();
+    }
+    [MenuItem("RFUniverse/Build Release/Windows", false, 1)]
+    static void BuildWindows()
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         Client.Resolve();
@@ -25,17 +32,22 @@ public class BuildRelease
         System.IO.Directory.CreateDirectory(windowsPath);
         BuildReport buildReport = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, $"{windowsPath}/RFUniverse.exe", BuildTarget.StandaloneWindows64, BuildOptions.CompressWithLz4);
         if (buildReport.summary.result == BuildResult.Succeeded)
-            Debug.Log("Windows∑¢≤ºÕÍ≥…£°");
+        {
+            Debug.Log("WindowsÂèëÂ∏ÉÂÆåÊàêÔºÅ");
+            if (System.IO.Directory.Exists($"{windowsPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame"))
+                System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame", true);
+            if (System.IO.Directory.Exists($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
+                System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
+            if (System.IO.File.Exists($"{windowsPath}.zip"))
+                System.IO.File.Delete($"{windowsPath}.zip");
+            ZipFile.CreateFromDirectory($"{windowsPath}", $"{windowsPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
+        }
         else
-            Debug.Log("Windows∑¢≤º ß∞‹£°");
-        if (System.IO.Directory.Exists($"{windowsPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame"))
-            System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame", true);
-        if (System.IO.Directory.Exists($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
-            System.IO.Directory.Delete($"{windowsPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
-        if (System.IO.File.Exists($"{windowsPath}.zip"))
-            System.IO.File.Delete($"{windowsPath}.zip");
-        ZipFile.CreateFromDirectory($"{windowsPath}", $"{windowsPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
-
+            Debug.Log("WindowsÂèëÂ∏ÉÂ§±Ë¥•ÔºÅ");
+    }
+    [MenuItem("RFUniverse/Build Release/Linux", false, 2)]
+    static void BuildLinux()
+    {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
         Client.Resolve();
         PrebuildCommand.GenerateAll();
@@ -47,20 +59,19 @@ public class BuildRelease
         if (System.IO.Directory.Exists(linuxPath))
             System.IO.Directory.Delete(linuxPath, true);
         System.IO.Directory.CreateDirectory(linuxPath);
-        buildReport = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, $"{linuxPath}/RFUniverse.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.CompressWithLz4);
+        BuildReport buildReport = BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, $"{linuxPath}/RFUniverse.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.CompressWithLz4);
         if (buildReport.summary.result == BuildResult.Succeeded)
-            Debug.Log("Linux∑¢≤ºÕÍ≥…£°");
+        {
+            Debug.Log("LinuxÂèëÂ∏ÉÂÆåÊàêÔºÅ");
+            if (System.IO.Directory.Exists($"{linuxPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame"))
+                System.IO.Directory.Delete($"{linuxPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame", true);
+            if (System.IO.Directory.Exists($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
+                System.IO.Directory.Delete($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
+            if (System.IO.File.Exists($"{linuxPath}.zip"))
+                System.IO.File.Delete($"{linuxPath}.zip");
+            ZipFile.CreateFromDirectory($"{linuxPath}", $"{linuxPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
+        }
         else
-            Debug.Log("Linux∑¢≤º ß∞‹£°");
-        if (System.IO.Directory.Exists($"{linuxPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame"))
-            System.IO.Directory.Delete($"{linuxPath}/RFUniverse_BackUpThisFolder_ButDontShipItWithYourGame", true);
-        if (System.IO.Directory.Exists($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip"))
-            System.IO.Directory.Delete($"{linuxPath}/RFUniverse_BurstDebugInformation_DoNotShip", true);
-
-        if (System.IO.File.Exists($"{linuxPath}.zip"))
-            System.IO.File.Delete($"{linuxPath}.zip");
-        ZipFile.CreateFromDirectory($"{linuxPath}", $"{linuxPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
-
-        SDKExporter.Export();
+            Debug.Log("LinuxÂèëÂ∏ÉÂ§±Ë¥•ÔºÅ");
     }
 }

@@ -141,6 +141,9 @@ namespace RFUniverse.Attributes
                 case "GetDepth":
                     GetDepth((float)data[0], (float)data[1], (float[,])data[2], (int)data[3], (int)data[4], (float)data[5]);
                     return;
+                case "GetDepth16Bit":
+                    GetDepth16Bit((float[,])data[2], (int)data[3], (int)data[4], (float)data[5]);
+                    return;
                 case "GetDepthEXR":
                     GetDepthEXR(data[0].ConvertType<float[,]>(), (int)data[1], (int)data[2], (float)data[3]);
                     return;
@@ -235,6 +238,22 @@ namespace RFUniverse.Attributes
             return GetDepth(size.x, size.y, near, far);
         }
         public abstract Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null);
+
+        void GetDepth16Bit(float[,] intrinsicMatrix, int width, int height, float fov)
+        {
+            if (intrinsicMatrix != null)
+                GetDepth16Bit(intrinsicMatrix, width, height);
+            else
+                GetDepth16Bit(width, height, fov);
+            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+        }
+
+        public Texture2D GetDepth16Bit(float[,] intrinsicMatrix, int width, int height)
+        {
+            Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
+            return GetDepth16Bit(size.x, size.y);
+        }
+        public abstract Texture2D GetDepth16Bit(int width, int height, float? unPhysicalFov = null);
         void GetDepthEXR(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)

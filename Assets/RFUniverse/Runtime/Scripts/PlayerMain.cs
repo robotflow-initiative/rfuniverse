@@ -130,6 +130,11 @@ namespace RFUniverse
                 render.SetPropertyBlock(mpb);
             }
         }
+        public class ConfigData
+        {
+            public string assets_path;
+            public string executable_file;
+        }
 
         bool startWithPort = false;
         void OnApplicationQuit()
