@@ -65,7 +65,7 @@ public class CheckPlugins
             Debug.Log("BIOIK plugin undetected,Remove BIOIK DefineSymbols");
         }
 
-        if(Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup/BioIK.cs"))
+        if (Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup/BioIK.cs"))
         {
             string tmpPath = $"{Application.dataPath}/Plugins/Editor/BioIK.cs.backup";
             string bioikPath = $"{Application.dataPath}/Plugins/BioIK/BioIK.cs";
@@ -94,11 +94,16 @@ public class CheckPlugins
             Debug.Log("Remove HYBRID_CLR DefineSymbols");
         }
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
+
         PlayerSettings.allowUnsafeCode = true;
         Debug.Log("PlayerSettings.allowUnsafeCode has been set to true");
+
         PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_Unity_4_8);
         Debug.Log("PlayerSettings.ApiCompatibilityLevel has been set to NET_Unity_4_8");
 
+        var folder = AssetDatabase.LoadAssetAtPath("Assets/RFUniverse", typeof(DefaultAsset));
+        Selection.activeObject = folder;
+        EditorApplication.ExecuteMenuItem("Assets/Reimport");
         Debug.Log("Check Plugins (Fix Error) Done");
     }
 }

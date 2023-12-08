@@ -281,6 +281,13 @@ namespace RFUniverse
                 return Color.black;
             return new Color(floats.Count > 0 ? floats[0] : 0, floats.Count > 1 ? floats[1] : 0, floats.Count > 2 ? floats[2] : 0, floats.Count > 3 ? floats[3] : 0);
         }
+
+        public static Color32 ListFloatToColor32(List<int> ints)
+        {
+            if (ints == null)
+                return Color.black;
+            return new Color32((byte)(ints.Count > 0 ? ints[0] : 0), (byte)(ints.Count > 1 ? ints[1] : 0), (byte)(ints.Count > 2 ? ints[2] : 0), (byte)(ints.Count > 3 ? ints[3] : 0));
+        }
         public static List<Color> ListFloatToListColor(List<float> floats)
         {
             List<Color> v3s = new List<Color>();

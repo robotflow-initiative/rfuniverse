@@ -1,4 +1,5 @@
-﻿using HybridCLR.Editor.Commands;
+﻿#if UNITY_EDITOR && HYBRID_CLR
+using HybridCLR.Editor.Commands;
 using RFUniverse;
 using System.IO.Compression;
 using UnityEditor;
@@ -75,3 +76,4 @@ public class BuildRelease
             Debug.Log("Linux发布失败！");
     }
 }
+#endif
