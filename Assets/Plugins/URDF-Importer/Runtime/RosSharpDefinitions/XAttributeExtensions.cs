@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System;
 using System.Collections.Generic;
@@ -29,9 +29,9 @@ namespace Unity.Robotics.UrdfImporter
                 i => Convert.ToDouble(i, CultureInfo.InvariantCulture));
         }
 
-        public static double ReadOptionalDouble(this XAttribute attribute)
+        public static double ReadOptionalDouble(this XAttribute attribute, double defaultValue = 0)
         {
-            return (attribute != null) ? (double)attribute : double.NaN;
+            return (attribute != null) ? (double)attribute : defaultValue;
         }
 
         public static string DoubleArrayToString(this IEnumerable<double> arr)

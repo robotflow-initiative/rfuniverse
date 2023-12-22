@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using RFUniverse.Manager;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -49,13 +51,17 @@ namespace RFUniverse
         public LayerMask simulationLayer = 1 << 0;//常规显示层
         public int axisLayer = 6;//debug显示层
         public int tempLayer = 21;//相机渲染临时层
+        public LayerMask managedLayer;
 
+
+        LayerManager layerManager;
 
         protected virtual void Awake()
         {
             //JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
             //Application.targetFrameRate = 60;
             axisCamera.cullingMask = 1 << axisLayer;
+            layerManager = new LayerManager(managedLayer);
         }
 
         protected Dictionary<string, GameObject> assets = new Dictionary<string, GameObject>();
@@ -63,11 +69,11 @@ namespace RFUniverse
         {
             Debug.Log("InstanceObject:" + baseAttrData.name);
             GameObject gameObject = GetGameObject(baseAttrData.name);
-#if UNITY_EDITOR
-            gameObject = (GameObject)PrefabUtility.InstantiatePrefab(gameObject);
-#else
+            //#if UNITY_EDITOR
+            //            gameObject = (GameObject)PrefabUtility.InstantiatePrefab(gameObject);
+            //#else
             gameObject = Instantiate(gameObject);
-#endif
+            //#endif
             gameObject.name = gameObject.name.Replace("(Clone)", "");
             T attr = gameObject.GetComponent<T>();
             if (attr != null)

@@ -1,3 +1,5 @@
+﻿using RFUniverse.Attributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -34,6 +36,23 @@ namespace RFUniverse
                 item.body.xDrive = temp;
             }
         }
+
+        public void OpenDirect()
+        {
+            foreach (var item in fingers)
+            {
+                ArticulationDrive temp = item.body.xDrive;
+                item.body.GetUnit().SetJointPositionDirectly(Mathf.Clamp(item.position.x, temp.lowerLimit, temp.upperLimit));
+            }
+        }
+        public void CloseDirect()
+        {
+            foreach (var item in fingers)
+            {
+                ArticulationDrive temp = item.body.xDrive;
+                item.body.GetUnit().SetJointPositionDirectly(Mathf.Clamp(item.position.y, temp.lowerLimit, temp.upperLimit));
+            }
+        }
     }
 
 
@@ -46,12 +65,25 @@ namespace RFUniverse
             base.OnInspectorGUI();
             GeneralGripper script = target as GeneralGripper;
 
+            if (GUILayout.Button("GetMoveableJointData"))
+            {
+                script.fingers = new List<GeneralGripper.FingerData>();
+                foreach (var item in script.GetComponent<ControllerAttr>().jointParameters)
+                {
+                    if (item.moveable)
+                        script.fingers.Add(new GeneralGripper.FingerData
+                        {
+                            body = item.body,
+                            position = new Vector2(item.body.xDrive.lowerLimit, item.body.xDrive.upperLimit)
+                        }); ;
+                    ;
+                }
+            }
             if (EditorApplication.isPlaying)
             {
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Open"))
                 {
-
                     script.Open();
                 }
                 if (GUILayout.Button("Close"))

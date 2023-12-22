@@ -139,15 +139,26 @@ namespace RFUniverse
             ArticulationBody[] articulationBodies = root.GetComponentsInChildren<ArticulationBody>();
             foreach (var body in articulationBodies)
             {
-                if (body.gameObject.GetComponent<ArticulationUnit>() == null)
+                ArticulationUnit unit = body.GetUnit();
+                UrdfJoint joint = body.GetComponent<UrdfJoint>();
+                unit.jointName = body.name;
+                if (joint)
                 {
-                    body.gameObject.AddComponent<ArticulationUnit>();
+                    unit.jointName = joint.jointName;
+                    if (!string.IsNullOrEmpty(joint.minicJointParentName))
+                    {
+                        ArticulationBody mimicParent = articulationBodies.FirstOrDefault(s => s.GetComponent<UrdfJoint>()?.jointName == joint.minicJointParentName);
+                        unit.mimicParent = mimicParent;
+                        unit.mimicMultiplier = joint.multiplier;
+                        unit.mimicOffset = joint.offset;
+                    }
                 }
-                if (body.isRoot)
-                {
-                    body.immovable = true;
-                }
+                body.immovable = true;
                 body.useGravity = false;
+
+                body.linearDamping = 0.05f;
+                body.angularDamping = 0.05f;
+                body.jointFriction = 0.05f;
 
                 var xDrive = body.xDrive;
                 xDrive.stiffness = 100000;
@@ -207,6 +218,11 @@ namespace RFUniverse
             foreach (var item in urdfCollisions)
             {
                 Destroy(item.gameObject);
+            }
+            UrdfJoint[] urdfJoints = root.GetComponentsInChildren<UrdfJoint>();
+            foreach (var item in urdfJoints)
+            {
+                Destroy(item);
             }
 
             attr.GetJointParameters();
@@ -631,6 +647,7 @@ namespace RFUniverse
             if (indexQueue.Count == 0) return null;
             foreach (var item in indexQueue)
             {
+                if (transform.childCount <= item) return null;
                 transform = transform.GetChild(item);
                 if (transform == null) return null;
             }

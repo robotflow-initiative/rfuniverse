@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -9,5 +9,8 @@ namespace RFUniverse
     {
         void Open();
         void Close();
+
+        void OpenDirect();
+        void CloseDirect();
     }
 }

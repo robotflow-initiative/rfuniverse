@@ -21,6 +21,7 @@ namespace RFUniverse
     {
         public int port = 5004;
         public static PlayerMain Instance = null;
+        [HideInInspector]
         public int patchNumber;
         public PlayerMainUI playerMainUI;
         public static RFUniverseCommunicator Communicator;
@@ -76,6 +77,7 @@ namespace RFUniverse
             });
 
             debugManager = DebugManager.Instance;
+
 
             if (Communicator == null)
             {

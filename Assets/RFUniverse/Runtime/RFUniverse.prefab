@@ -210,9 +210,12 @@ MonoBehaviour:
   sun: {fileID: 1891555477}
   simulationLayer:
     serializedVersion: 2
-    m_Bits: 2031647
+    m_Bits: 9
   axisLayer: 6
-  tempLayer: 21
+  tempLayer: 7
+  managedLayer:
+    serializedVersion: 2
+    m_Bits: 2146435072
   port: 5004
   patchNumber: 0
   playerMainUI: {fileID: 1280934636246423064}
@@ -293,7 +296,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2031775
+    m_Bits: 983071
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

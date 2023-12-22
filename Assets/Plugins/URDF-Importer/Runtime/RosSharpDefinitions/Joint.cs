@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System.Xml;
 using System.Xml.Linq;
@@ -209,7 +209,7 @@ namespace Unity.Robotics.UrdfImporter
                 //effort = (double)node.Attribute("effort"); // required
                 //velocity = (double)node.Attribute("velocity"); // required
             }
-            
+
             public Limit(double lower, double upper, double effort, double velocity)
             {
                 this.lower = lower;
@@ -235,13 +235,13 @@ namespace Unity.Robotics.UrdfImporter
         public class Mimic
         {
             public string joint;
-            public double multiplier;
-            public double offset;
+            public double multiplier = 1;
+            public double offset = 0;
 
             public Mimic(XElement node)
             {
                 joint = (string)node.Attribute("joint"); // required
-                multiplier = node.Attribute("multiplier").ReadOptionalDouble(); // optional
+                multiplier = node.Attribute("multiplier").ReadOptionalDouble(1); // optional
                 offset = node.Attribute("offset").ReadOptionalDouble(); // optional   
             }
 

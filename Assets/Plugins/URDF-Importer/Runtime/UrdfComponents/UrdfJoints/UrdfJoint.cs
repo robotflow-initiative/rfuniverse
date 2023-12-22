@@ -44,6 +44,10 @@ namespace Unity.Robotics.UrdfImporter
 #endif
         public string jointName;
 
+        public string minicJointParentName;
+        public float multiplier;
+        public float offset;
+
         public abstract JointTypes JointType { get; } // Clear out syntax
         public bool IsRevoluteOrContinuous => JointType == JointTypes.Revolute || JointType == JointTypes.Revolute;
         public double EffortLimit = 1e3;
@@ -67,6 +71,12 @@ namespace Unity.Robotics.UrdfImporter
             if (joint != null)
             {
                 urdfJoint.jointName = joint.name;
+                if (joint.mimic != null)
+                {
+                    urdfJoint.minicJointParentName = joint.mimic.joint;
+                    urdfJoint.multiplier = (float)joint.mimic.multiplier;
+                    urdfJoint.offset = (float)joint.mimic.offset;
+                }
                 urdfJoint.ImportJointData(joint);
             }
             return urdfJoint;

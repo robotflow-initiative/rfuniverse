@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5768176060411706267}
   m_Layer: 0
-  m_Name: ChildPoint
+  m_Name: ChildPoint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -709,6 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -948,6 +949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -1410,6 +1412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -1754,6 +1757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -1871,6 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -2399,6 +2404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -2552,6 +2558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -3590,6 +3597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -3707,6 +3715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -3826,6 +3835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -4080,6 +4090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -4443,6 +4454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -4614,6 +4626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -4731,6 +4744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -5539,6 +5553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -5658,6 +5673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -5775,6 +5791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -5892,6 +5909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -6010,6 +6028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -6353,6 +6372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -6678,6 +6698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -6849,6 +6870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf49f81d0cf61b9dafdcd640970ae53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointName: 
   mimicParent: {fileID: 0}
   mimicMultiplier: 1
   mimicOffset: 0
@@ -9450,7 +9472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6357603436016573072}
   m_Layer: 0
-  m_Name: ChildPoint
+  m_Name: ChildPoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

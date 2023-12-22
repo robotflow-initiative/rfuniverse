@@ -13,6 +13,7 @@ namespace RFUniverse.Attributes.Digit
 
         private void OnCollisionStay(Collision other)
         {
+            if (other.contacts.Length == 0) return;
             DigitCollider collider = other.collider.GetComponentInParent<DigitCollider>();
             if (collider == null) return;
             GameObject copyRender = GetOrCreateRender(collider.digit);

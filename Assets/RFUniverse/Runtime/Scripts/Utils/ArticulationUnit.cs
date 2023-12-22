@@ -12,12 +12,16 @@ public enum ControlMode
 [DisallowMultipleComponent]
 public class ArticulationUnit : MonoBehaviour
 {
+    private ArticulationBody articulationBody;
+
+    public string jointName = null;
     public ArticulationBody mimicParent = null;
     public float mimicMultiplier = 1.0f;
     public float mimicOffset = 0.0f;
+
     public event Action OnSetJointPositionDirectly = null;
-    private ArticulationBody articulationBody;
-    private int dofCount => articulationBody.dofCount;
+
+
 
     void Awake()
     {
@@ -25,48 +29,28 @@ public class ArticulationUnit : MonoBehaviour
 
         if (mimicParent)
         {
-            ArticulationDrive drive = articulationBody.xDrive;
-            drive.driveType = ArticulationDriveType.Target;
-            articulationBody.xDrive = drive;
+            //articulationBody.SetDriveStiffness(ArticulationDriveAxis.X, 200000);
+            //articulationBody.SetDriveStiffness(ArticulationDriveAxis.Y, 200000);
+            //articulationBody.SetDriveStiffness(ArticulationDriveAxis.Z, 200000);
 
-            drive = articulationBody.yDrive;
-            drive.driveType = ArticulationDriveType.Target;
-            articulationBody.yDrive = drive;
+            //ArticulationDrive drive = articulationBody.xDrive;
+            //drive.driveType = ArticulationDriveType.Target;
+            //articulationBody.xDrive = drive;
 
-            drive = articulationBody.zDrive;
-            drive.driveType = ArticulationDriveType.Target;
-            articulationBody.zDrive = drive;
+            //drive = articulationBody.yDrive;
+            //drive.driveType = ArticulationDriveType.Target;
+            //articulationBody.yDrive = drive;
+
+            //drive = articulationBody.zDrive;
+            //drive.driveType = ArticulationDriveType.Target;
+            //articulationBody.zDrive = drive;
 
             mimicParent.GetComponent<ArticulationUnit>().OnSetJointPositionDirectly += MimicDirectly;
         }
     }
 
-    enum ForceMode
-    {
-        None,
-        Force,
-        ForceAtPosition,
-        Torque
-    }
-
-    private ForceMode forceMode = ForceMode.None;
-    private Vector3 force = Vector3.zero;
-    private Vector3 position = Vector3.zero;
     void FixedUpdate()
     {
-        switch (forceMode)
-        {
-            case ForceMode.Force:
-                articulationBody.AddForce(force);
-                break;
-            case ForceMode.ForceAtPosition:
-                articulationBody.AddForceAtPosition(force, position);
-                break;
-            case ForceMode.Torque:
-                articulationBody.AddTorque(force);
-                break;
-        }
-        forceMode = ForceMode.None;
         Mimic();
     }
     private void Mimic()
@@ -82,6 +66,7 @@ public class ArticulationUnit : MonoBehaviour
                 break;
             case ArticulationJointType.RevoluteJoint:
                 currentDrive.target = mimicParent.jointPosition[0] * Mathf.Rad2Deg * mimicMultiplier + mimicOffset;
+                //currentDrive.target = mimicParent.xDrive.target * mimicMultiplier + mimicOffset;
                 break;
             case ArticulationJointType.SphericalJoint:
                 break;
@@ -142,9 +127,6 @@ public class ArticulationUnit : MonoBehaviour
             case ControlMode.Target:
                 SetJointPosition(jointPosition);
                 break;
-            case ControlMode.Speed:
-                SetJointTargetVelocity(jointPosition);
-                break;
             default:
                 break;
         }
@@ -187,22 +169,6 @@ public class ArticulationUnit : MonoBehaviour
     public void SetJointForce(float force)
     {
         articulationBody.jointForce = new ArticulationReducedSpace(force, force, force);
-    }
-    public void AddJointForce(Vector3 jointForce)
-    {
-        forceMode = ForceMode.Force;
-        force = jointForce;
-    }
-    public void AddJointForceAtPosition(Vector3 jointForce, Vector3 forcesPosition)
-    {
-        forceMode = ForceMode.ForceAtPosition;
-        force = jointForce;
-        position = forcesPosition;
-    }
-    public void AddJointTorque(Vector3 jointForce)
-    {
-        forceMode = ForceMode.Torque;
-        force = jointForce;
     }
 
     public void SetJointDamping(float f)

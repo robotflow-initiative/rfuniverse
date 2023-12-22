@@ -112,7 +112,7 @@ namespace RFUniverse.Attributes
             get
             {
                 if (joints == null)
-                    joints = jointParameters.Select(s => s.body).ToList();
+                    joints = jointParameters.Where(s => s.body != null).Select(s => s.body).ToList();
                 return joints;
             }
         }
@@ -123,7 +123,7 @@ namespace RFUniverse.Attributes
             get
             {
                 if (moveableJoints == null)
-                    moveableJoints = jointParameters.Where(s => s.moveable).Select(s => s.body).ToList();
+                    moveableJoints = jointParameters.Where(s => s.body != null && s.moveable).Select(s => s.body).ToList();
                 return moveableJoints;
             }
         }
@@ -1120,7 +1120,7 @@ namespace RFUniverse.Attributes
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().AddJointForce(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]));
+                MoveableJoints[i].AddForce(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]));
             }
         }
         private void AddJointForceAtPosition(List<List<float>> jointForces, List<List<float>> forcesPosition)
@@ -1132,7 +1132,7 @@ namespace RFUniverse.Attributes
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().AddJointForceAtPosition(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]), new Vector3(forcesPosition[i][0], forcesPosition[i][1], forcesPosition[i][2]));
+                MoveableJoints[i].AddForceAtPosition(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]), new Vector3(forcesPosition[i][0], forcesPosition[i][1], forcesPosition[i][2]));
             }
         }
         private void AddJointTorque(List<List<float>> jointTorques)
@@ -1144,7 +1144,7 @@ namespace RFUniverse.Attributes
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().AddJointTorque(new Vector3(jointTorques[i][0], jointTorques[i][1], jointTorques[i][2]));
+                MoveableJoints[i].AddTorque(new Vector3(jointTorques[i][0], jointTorques[i][1], jointTorques[i][2]));
             }
         }
     }

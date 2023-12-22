@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -28,7 +28,7 @@ namespace RFUniverse
                 TemplateContainer oneArticulationItem = articulationItem.Instantiate();
                 articulationView.Add(oneArticulationItem);
                 Label label = oneArticulationItem.Q<Label>("articulation-name");
-                label.text = item.GetComponent<UrdfJoint>()?.jointName ?? item.name;
+                label.text = item.GetUnit().jointName ?? item.name;
                 Slider slider = oneArticulationItem.Q<Slider>("value-slider");
                 currentBodys.Add(item, slider);
                 Label min = oneArticulationItem.Q<Label>("min-value");
