@@ -16,9 +16,9 @@ namespace RFUniverse.Attributes
         {
             base.Init();
             //Register the receiving function of the dynamic message
-            AssetManager.Instance.AddListener("DynamicMessage", DynamicMessage);
+            PlayerMain.Instance.AddListener("DynamicMessage", DynamicMessage);
             //Register the receiving function of the dynamic object
-            AssetManager.Instance.AddListenerObject("DynamicObject", DynamicObject);
+            PlayerMain.Instance.AddListenerObject("DynamicObject", DynamicObject);
         }
 
         public override Dictionary<string, object> CollectData()
@@ -26,7 +26,7 @@ namespace RFUniverse.Attributes
             //1. First, complete the message parsing in parent class.
             Dictionary<string, object> data = base.CollectData();
             //2. Write the message in order.
-            data.Add("custom_message", "This is instance channel custom message");
+            data["custom_message"] = "This is instance channel custom message";
             return data;
         }
 
@@ -69,7 +69,7 @@ namespace RFUniverse.Attributes
 
             //The SendMessage function can be called anywhere at any time
             //Supported parameter types: string, int, float, bool, List<float>
-            AssetManager.Instance.SendMessage(
+            PlayerMain.Instance.SendMessage(
                 "DynamicMessage",
                 "string:",
                 "This is dynamic message",
@@ -104,7 +104,7 @@ namespace RFUniverse.Attributes
             Debug.Log(objs[13].ConvertType<Tuple<string, int, float>>());
             //The SendObject function can be called anywhere at any time
             //Supported parameter types: string, int, float, bool, List, Dictionary, Tuple, Array
-            AssetManager.Instance.SendObject(
+            PlayerMain.Instance.SendObject(
                 "DynamicObject",
                 "string:",
                 "This is dynamic object",

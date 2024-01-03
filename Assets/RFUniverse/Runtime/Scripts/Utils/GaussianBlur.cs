@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 
-public class GaussianBlur
+public class GaussianBlur : IDisposable
 {
     KeyValuePair<Vector2Int, float>[] kernelArray;
+    Texture2D result;
     public GaussianBlur(int radius, float sigma)
     {
         SetGaussianKernel(radius, sigma);
+        result = new Texture2D(1, 1);
     }
 
     Color[,] colors;
@@ -27,7 +28,8 @@ public class GaussianBlur
                 resultColor[i, j] = GetBlurColor(new Vector2Int(i, j));
             });
         });
-        Texture2D result = new Texture2D(tex.width, tex.height, tex.graphicsFormat, TextureCreationFlags.None);
+
+        result.Reinitialize(tex.width, tex.height, tex.graphicsFormat, false);
         result.SetPixels(Flatten(resultColor));
         result.Apply();
         return result;
@@ -91,5 +93,10 @@ public class GaussianBlur
         }
 
         kernelArray = kernel.ToArray();
+    }
+
+    public void Dispose()
+    {
+        GameObject.Destroy(result);
     }
 }

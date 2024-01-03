@@ -2,6 +2,9 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using BioIK;
+using DG.Tweening;
+using static UnityEngine.GraphicsBuffer;
 
 namespace RFUniverse.Attributes
 {
@@ -187,24 +190,27 @@ namespace RFUniverse.Attributes
         public virtual Dictionary<string, object> CollectData()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
-            data.Add("name", Name);
-            data.Add("position", transform.position);
-            data.Add("rotation", transform.eulerAngles);
-            data.Add("quaternion", transform.rotation);
-            data.Add("local_position", transform.localPosition);
-            data.Add("local_rotation", transform.localEulerAngles);
-            data.Add("local_quaternion", transform.localRotation);
-            data.Add("local_to_world_matrix", transform.localToWorldMatrix);
+            data["name"] = Name;
+            data["position"] = transform.position;
+            data["rotation"] = transform.eulerAngles;
+            data["quaternion"] = transform.rotation;
+            data["local_position"] = transform.localPosition;
+            data["local_rotation"] = transform.localEulerAngles;
+            data["local_quaternion"] = transform.localRotation;
+            data["local_to_world_matrix"] = transform.localToWorldMatrix;
+
             if (resultLocalPoint != null)
             {
-                data.Add("result_local_point", resultLocalPoint.Value);
+                data["result_local_point"] = resultLocalPoint.Value;
                 resultLocalPoint = null;
             }
             if (resultWorldPoint != null)
             {
-                data.Add("result_world_point", resultWorldPoint.Value);
+                data["result_world_point"] = resultWorldPoint.Value;
                 resultWorldPoint = null;
             }
+            data["move_done"] = moveDone;
+            data["rotate_done"] = rotateDone;
             return data;
         }
 
@@ -263,6 +269,21 @@ namespace RFUniverse.Attributes
                     return;
                 case "GetWorldPointFromLocal":
                     GetWorldPointFromLocal(data[0].ConvertType<List<float>>());
+                    return;
+                case "DoMove":
+                    DoMove(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
+                    return;
+                case "DoRotate":
+                    DoRotate(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
+                    return;
+                case "DoRotateQuaternion":
+                    DoRotateQuaternion(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
+                    return;
+                case "DoComplete":
+                    DoComplete();
+                    return;
+                case "DoKill":
+                    DoKill();
                     return;
                 default:
                     Debug.LogWarning($"ID: {ID} Type: {GetType().Name}Dont have mehond: {type}");
@@ -416,6 +437,54 @@ namespace RFUniverse.Attributes
             Debug.Log("GetWorldPointFromLocal");
             resultWorldPoint = transform.TransformPoint(new Vector3(local[0], local[1], local[2]));
         }
+
+        protected bool moveDone = true;
+        protected bool rotateDone = true;
+
+        protected virtual void DoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
+        {
+            Debug.Log("DoMove");
+            moveDone = false;
+            Vector3 pos = new Vector3(position[0], position[1], position[2]);
+            transform.DOMove(pos, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                moveDone = true;
+            };
+        }
+
+        protected virtual void DoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
+        {
+            Debug.Log("DoRotate");
+            Quaternion target = Quaternion.Euler(eulerAngle[0], eulerAngle[1], eulerAngle[2]);
+            DoRotateQuaternion(target, duration, isSpeedBased, isRelative);
+        }
+        protected virtual void DoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
+        {
+            Debug.Log("DoRotateQuaternion");
+            Quaternion target = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
+            DoRotateQuaternion(target, duration, isSpeedBased, isRelative);
+        }
+        protected virtual void DoRotateQuaternion(Quaternion target, float duration, bool isSpeedBased = true, bool isRelative = false)
+        {
+            rotateDone = false;
+            transform.DORotateQuaternion(target, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
+            {
+                rotateDone = true;
+            };
+        }
+        protected virtual void DoComplete()
+        {
+            transform.DOComplete();
+            moveDone = true;
+            rotateDone = true;
+        }
+        protected virtual void DoKill()
+        {
+            transform.DOKill();
+            moveDone = true;
+            rotateDone = true;
+        }
+
 
         private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
         public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);

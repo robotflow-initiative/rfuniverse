@@ -328,6 +328,9 @@ MonoBehaviour:
   - {fileID: 3085864328403937128}
   - {fileID: 8802084887982568201}
   renderParent: {fileID: 3914062231268010790}
+  enableForceOffset: 1
+  maxForce: 0.05
+  maxDeformation: 0.005
   layer: 0
   renders: []
 --- !u!1 &2244342936446543199
@@ -725,7 +728,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3800094792727083266}
   m_Layer: 0
-  m_Name: 1
+  m_Name: GelSlimModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -769,7 +772,7 @@ GameObject:
   - component: {fileID: 5110322714065339531}
   - component: {fileID: 5110322714065339533}
   m_Layer: 0
-  m_Name: Gel
+  m_Name: GelHighMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1705,6 +1708,7 @@ GameObject:
   - component: {fileID: 426539304752575005}
   - component: {fileID: 8403972016803388240}
   - component: {fileID: 9155449739920589091}
+  - component: {fileID: 1026834556836893424}
   m_Layer: 0
   m_Name: Gel
   m_TagString: Untagged
@@ -1812,3 +1816,30 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6896559944331333128, guid: fa07e618196a9d04eafdd8c68f7df0f4, type: 3}
+--- !u!54 &1026834556836893424
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8781991218687256810}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &723318020619863243
+--- !u!1 &2815847015317701988
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8412603802622990320}
-  - component: {fileID: 6658780726232854202}
-  - component: {fileID: 7875960030966614574}
+  - component: {fileID: 6459791957740033631}
+  - component: {fileID: 8174848969091264277}
+  - component: {fileID: 4636279835084458881}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -18,36 +18,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8412603802622990320
+--- !u!4 &6459791957740033631
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723318020619863243}
+  m_GameObject: {fileID: 2815847015317701988}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8993590206837597864}
+  m_Father: {fileID: 5896899378345944839}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6658780726232854202
+--- !u!33 &8174848969091264277
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723318020619863243}
-  m_Mesh: {fileID: -2432090755550338912, guid: 44375b165d14bb946a1ab517e1c86dec, type: 3}
---- !u!23 &7875960030966614574
+  m_GameObject: {fileID: 2815847015317701988}
+  m_Mesh: {fileID: -2432090755550338912, guid: c617899d240102447a69463d35882261, type: 3}
+--- !u!23 &4636279835084458881
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723318020619863243}
+  m_GameObject: {fileID: 2815847015317701988}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4c1b59c92a39f1b4eaf11138c00d0478, type: 2}
+  - {fileID: 2100000, guid: 894f22fcb390c1946af755caa4ada32b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,7 +83,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &8612138164293532690
+--- !u!1 &6529707161494781373
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,43 +91,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8993590206837597864}
-  - component: {fileID: -3076653375783417730}
+  - component: {fileID: 5896899378345944839}
+  - component: {fileID: -8959503389060306381}
   m_Layer: 0
-  m_Name: Highspire_mesh_texture
+  m_Name: Hercules_mesh_texture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8993590206837597864
+--- !u!4 &5896899378345944839
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8612138164293532690}
+  m_GameObject: {fileID: 6529707161494781373}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 1.402, y: -0.16, z: 2.351}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 4.61, y: -0, z: 4.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8412603802622990320}
+  - {fileID: 6459791957740033631}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -90}
---- !u!114 &-3076653375783417730
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 180}
+--- !u!114 &-8959503389060306381
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8612138164293532690}
+  m_GameObject: {fileID: 6529707161494781373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c4e6fc8bc81c9deeac3cf61bb4bfd6e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a491ac9c38b66d438c0b7af2003e8c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 986213
-  attrName: Highspire_mesh_texture
+  id: -1
+  attrName: 
   childs: []

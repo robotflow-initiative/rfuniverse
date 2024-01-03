@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5578736039177352149}
-  - component: {fileID: -3353523733191039430}
+  - component: {fileID: -7692791452631526818}
   m_Layer: 0
   m_Name: Hammon_mesh_texture
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   - {fileID: 4979735357183017613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -90}
---- !u!114 &-3353523733191039430
+--- !u!114 &-7692791452631526818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,9 +125,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5053169015458212207}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c4e6fc8bc81c9deeac3cf61bb4bfd6e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a491ac9c38b66d438c0b7af2003e8c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 698674
-  attrName: Hammon_mesh_texture
+  id: -1
+  attrName: 
   childs: []

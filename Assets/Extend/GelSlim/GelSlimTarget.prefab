@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7737812585135603888
+--- !u!1 &7704422528108349652
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7737812585135603891}
-  - component: {fileID: 7737812585135603890}
-  - component: {fileID: 7737812585135603889}
+  - component: {fileID: 1467526992910113775}
+  - component: {fileID: 4362470000139068069}
+  - component: {fileID: 986043656038598193}
   m_Layer: 0
-  m_Name: Render
+  m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7737812585135603891
+--- !u!4 &1467526992910113775
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737812585135603888}
+  m_GameObject: {fileID: 7704422528108349652}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7737812585550295446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7737812585135603890
+--- !u!33 &4362470000139068069
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737812585135603888}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7737812585135603889
+  m_GameObject: {fileID: 7704422528108349652}
+  m_Mesh: {fileID: -2432090755550338912, guid: d3f45dae0a5a4744d94177a43476283c, type: 3}
+--- !u!23 &986043656038598193
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737812585135603888}
+  m_GameObject: {fileID: 7704422528108349652}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 0
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -3033667219593020291, guid: d3f45dae0a5a4744d94177a43476283c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,11 +92,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7737812585550295446}
-  - component: {fileID: 7737812585550295445}
   - component: {fileID: 7737812585550295447}
   - component: {fileID: 1418338528}
-  - component: {fileID: -6820701099985983088}
   - component: {fileID: 3481234866283576965}
+  - component: {fileID: -7288931473998063439}
+  - component: {fileID: 2299388779511627814}
   m_Layer: 0
   m_Name: GelSlimTarget
   m_TagString: Untagged
@@ -112,35 +112,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7737812585550295443}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0002, y: 0.05363, z: 0.0164}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 7737812585135603891}
+  - {fileID: 1467526992910113775}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &7737812585550295445
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737812585550295443}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!54 &7737812585550295447
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -181,21 +160,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 10
---- !u!114 &-6820701099985983088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737812585550295443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c4e6fc8bc81c9deeac3cf61bb4bfd6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: -1
-  attrName: GelSlimTarget
-  childs: []
 --- !u!114 &3481234866283576965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +172,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1535a68f38c814f409b574bc690f3abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  render: {fileID: 7737812585135603888}
+  render: {fileID: 7704422528108349652}
   lightMaterial:
-  - {fileID: 2100000, guid: 8ae3ccbded18c8a62939463bf4e6a727, type: 2}
+  - {fileID: 2100000, guid: 0ed09858dbaafbf46b04c4680cecbdec, type: 2}
+--- !u!114 &-7288931473998063439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737812585550295443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b7e39ac5db5a51fb268a3ea9867a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: -1
+  attrName: 
+  childs: []
+--- !u!65 &2299388779511627814
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737812585550295443}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 14.954542, y: 15.181324, z: 2.5580251}
+  m_Center: {x: -0.020868143, y: -0.059606504, z: -1.5859412}

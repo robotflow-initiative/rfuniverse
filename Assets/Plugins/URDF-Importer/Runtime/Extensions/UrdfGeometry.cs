@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System;
 using UnityEngine;
@@ -44,7 +44,7 @@ namespace Unity.Robotics.UrdfImporter
 
             return geometry;
         }
-        
+
         #region Import Helpers
 
         public static GeometryTypes GetGeometryType(Link.Geometry geometry)
@@ -335,7 +335,8 @@ namespace Unity.Robotics.UrdfImporter
         {
             return transform.localPosition != Vector3.zero
                    || transform.localScale != Vector3.one
-                   || (type != GeometryTypes.Mesh && transform.localRotation != Quaternion.identity);
+                   //|| (type != GeometryTypes.Mesh && transform.localRotation != Quaternion.identity)
+                   || transform.localRotation != Quaternion.identity;
         }
 
         #endregion

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1337352440946319798}
-  - component: {fileID: 8834596042635048041}
+  - component: {fileID: 1031127993358457880}
   m_Layer: 0
   m_Name: Hallettsville_mesh_texture
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 1945289812589564142}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!114 &8834596042635048041
+--- !u!114 &1031127993358457880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,11 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1856866614434806540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c4e6fc8bc81c9deeac3cf61bb4bfd6e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a491ac9c38b66d438c0b7af2003e8c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 445589
-  attrName: Hallettsville_mesh_texture
+  id: -1
+  attrName: 
   childs: []
 --- !u!1 &7226344156841919445
 GameObject:

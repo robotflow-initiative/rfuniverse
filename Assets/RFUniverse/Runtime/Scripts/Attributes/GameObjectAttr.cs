@@ -121,7 +121,7 @@ namespace RFUniverse.Attributes
             Dictionary<string, object> data = base.CollectData();
             if (dddbbox != null)
             {
-                data.Add("3d_bounding_box", dddbbox);
+                data["3d_bounding_box"] = dddbbox;
                 dddbbox = null;
             }
             return data;

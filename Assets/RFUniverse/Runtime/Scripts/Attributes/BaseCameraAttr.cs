@@ -71,52 +71,49 @@ namespace RFUniverse.Attributes
         public override Dictionary<string, object> CollectData()
         {
             Dictionary<string, object> data = base.CollectData();
-            data.Add("width", Camera.pixelWidth);
-            data.Add("height", Camera.pixelHeight);
-            data.Add("fov", Camera.fieldOfView);
             if (rgbBase64String != null)
             {
-                data.Add("rgb", rgbBase64String);
+                data["rgb"] = rgbBase64String;
                 rgbBase64String = null;
             }
             if (normalBase64String != null)
             {
-                data.Add("normal", normalBase64String);
+                data["normal"] = normalBase64String;
                 normalBase64String = null;
             }
             if (idBase64String != null)
             {
-                data.Add("id_map", idBase64String);
+                data["id_map"] = idBase64String;
                 idBase64String = null;
             }
             if (depthBase64String != null)
             {
-                data.Add("depth", depthBase64String);
+                data["depth"] = depthBase64String;
                 depthBase64String = null;
             }
             if (depthEXRBase64String != null)
             {
-                data.Add("depth_exr", depthEXRBase64String);
+                data["depth_exr"] = depthEXRBase64String;
                 depthEXRBase64String = null;
             }
             if (amodalMaskBase64String != null)
             {
-                data.Add("amodal_mask", amodalMaskBase64String);
+                data["amodal_mask"] = amodalMaskBase64String;
                 amodalMaskBase64String = null;
             }
             if (heatMapBase64String != null)
             {
-                data.Add("heat_map", heatMapBase64String);
+                data["heat_map"] = heatMapBase64String;
                 heatMapBase64String = null;
             }
             if (ddBBOX != null)
             {
-                data.Add("2d_bounding_box", ddBBOX);
+                data["2d_bounding_box"] = ddBBOX;
                 ddBBOX = null;
             }
             if (dddBBOX != null)
             {
-                data.Add("3d_bounding_box", dddBBOX);
+                data["3d_bounding_box"] = dddBBOX;
                 dddBBOX = null;
             }
             return data;

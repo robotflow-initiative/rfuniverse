@@ -30,9 +30,9 @@ namespace RFUniverse.Attributes
             Dictionary<string, object> data = base.CollectData();
             if (leftLRBase64String != null && rightLRBase64String != null)
             {
-                data.Add("ir_left", leftLRBase64String);
+                data["ir_left"] = leftLRBase64String;
+                data["ir_right"] = rightLRBase64String;
                 leftLRBase64String = null;
-                data.Add("ir_right", rightLRBase64String);
                 rightLRBase64String = null;
             }
             return data;

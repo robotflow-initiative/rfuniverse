@@ -318,9 +318,9 @@ namespace RFUniverse.Attributes.Digit
             Dictionary<string, object> data = base.CollectData();
             if (lightBase64String != null && depthBase64String != null)
             {
-                data.Add("light", lightBase64String);
+                data["light"] = lightBase64String;
+                data["depth"] = depthBase64String;
                 lightBase64String = null;
-                data.Add("depth", depthBase64String);
                 depthBase64String = null;
             }
             return data;

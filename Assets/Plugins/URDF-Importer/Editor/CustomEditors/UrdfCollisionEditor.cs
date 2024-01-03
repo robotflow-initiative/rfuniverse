@@ -53,7 +53,8 @@ namespace Unity.Robotics.UrdfImporter.Editor
                 {
                     //Only transfer rotation if geometry is not a mesh
                     bool transferRotation = urdfCollision.geometryType != GeometryTypes.Mesh;
-                    urdfCollision.transform.MoveChildTransformToParent(transferRotation);
+                    //urdfCollision.transform.MoveChildTransformToParent(transferRotation);
+                    urdfCollision.transform.MoveChildTransformToParent(true);
                 }
                 GUILayout.EndVertical();
             }

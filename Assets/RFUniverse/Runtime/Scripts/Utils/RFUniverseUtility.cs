@@ -153,7 +153,8 @@ namespace RFUniverse
                         unit.mimicOffset = joint.offset;
                     }
                 }
-                body.immovable = true;
+                if (body.isRoot)
+                    body.immovable = true;
                 body.useGravity = false;
 
                 body.linearDamping = 0.05f;
@@ -654,5 +655,57 @@ namespace RFUniverse
             return transform;
         }
 
+        public static void FlipMesh(Mesh mesh)
+        {
+            Vector3[] normals = mesh.normals;
+            for (int i = 0; i < normals.Length; i++)
+            {
+                normals[i] = -normals[i];
+            }
+            mesh.normals = normals;
+
+            int[] triangles = mesh.triangles;
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                int temp = triangles[i];
+                triangles[i] = triangles[i + 1];
+                triangles[i + 1] = temp;
+            }
+            mesh.triangles = triangles;
+        }
+        public static void SmoothNormals(Mesh mesh)
+        {
+            Vector3[] normals = mesh.normals;
+            Vector3[] vertices = mesh.vertices;
+            Dictionary<Vector3, List<int>> vertexToNormalIndex = new Dictionary<Vector3, List<int>>();
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                if (vertexToNormalIndex.ContainsKey(vertices[i]))
+                    vertexToNormalIndex[vertices[i]].Add(i);
+                else
+                    vertexToNormalIndex.Add(vertices[i], new List<int> { i });
+            }
+
+            foreach (var group in vertexToNormalIndex)
+            {
+                if (group.Value.Count == 1) continue;
+                Vector3 avg = Vector3.zero;
+
+                foreach (int index in group.Value)
+                {
+                    avg += normals[index];
+                }
+
+                avg /= group.Value.Count;
+
+                foreach (int index in group.Value)
+                {
+                    normals[index] = avg;
+                }
+            }
+
+            mesh.normals = normals;
+        }
     }
 }

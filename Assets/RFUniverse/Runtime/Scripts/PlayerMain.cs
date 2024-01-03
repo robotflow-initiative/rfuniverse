@@ -9,6 +9,8 @@ using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using Obi;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
@@ -295,6 +297,14 @@ namespace RFUniverse
                 case "SetViewBackGround":
                     SetViewBackGround(data[0].ConvertType<List<float>>());
                     return;
+#if OBI
+                case "LoadCloth":
+                    LoadCloth((string)data[0], (int)data[1]);
+                    return;
+                case "EnabledGroundObiCollider":
+                    EnabledGroundObiCollider((bool)data[0]);
+                    return;
+#endif
                 default:
                     Debug.LogWarning("Dont have mehond:" + type);
                     break;
@@ -336,6 +346,30 @@ namespace RFUniverse
                 MainCamera.backgroundColor = RFUniverseUtility.ListFloatToColor(color);
             }
         }
+
+#if OBI
+        public ClothAttr LoadCloth(string path, int id)
+        {
+            Debug.Log($"LoadCloth: {path}");
+            GameObject obj = UnityMeshImporter.MeshImporter.Load("E:\\ClothDynamics\\Assets\\Tshirt.obj");
+            Mesh mesh = obj.GetComponentInChildren<MeshFilter>().sharedMesh;
+            ObiSolver obiSolver = Addressables.LoadAssetAsync<GameObject>("ObiClothStencil").WaitForCompletion().GetComponent<ObiSolver>();
+            obiSolver.GetComponentInChildren<ObiCloth>().clothBlueprint = ObiUtility.GenerateClothBlueprints(mesh);
+            Destroy(obj);
+            ObiSolver instance = Instantiate(obiSolver);
+            ClothAttr clothAttr = instance.GetComponent<ClothAttr>();
+            clothAttr.ID = id;
+            clothAttr.Instance();
+            return clothAttr;
+        }
+
+        public void EnabledGroundObiCollider(bool enabled)
+        {
+            ObiCollider collider = Ground.GetComponent<ObiCollider>() ?? Ground.AddComponent<ObiCollider>();
+            collider.enabled = enabled;
+        }
+#endif
+
         public void Pend()
         {
             playerMainUI.ShowPend();
@@ -374,6 +408,7 @@ namespace RFUniverse
                 List<AddressableAssetEntry> entrys = new List<AddressableAssetEntry>();
                 setting.GetAllAssets(entrys, false);
                 AddressableAssetEntry entry = entrys.FirstOrDefault(s => s.address == name);
+                if (entry == null) return;
                 GameObject asset = (GameObject)entry.MainAsset;
                 if (asset != null)
                 {

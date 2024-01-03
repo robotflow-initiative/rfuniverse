@@ -69,7 +69,7 @@ namespace RFUniverse.Manager
         void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
             if (!Application.isPlaying) return;
-            SendLog(type.ToString(), condition, stackTrace);
+            SendLogToPython(type.ToString(), condition, stackTrace);
             switch (type)
             {
                 case LogType.Error:
@@ -84,13 +84,17 @@ namespace RFUniverse.Manager
             }
         }
 
-        private void SendLog(params string[] strings)
+        private void SendLogToPython(params string[] strings)
         {
             object[] data = new[] { "Debug", "Log" };
             PlayerMain.Communicator?.SendObject(data.Concat(strings).ToArray());
         }
 
-        //Queue<string> logList = new Queue<string>();
+        private void ReceiveLog(string log)
+        {
+            PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color=blue>pyrfuniverse Message: {log}</color>");
+        }
+
         public void AddLog<T>(T log, LogType type = LogType.Log)
         {
             string richColor = "#FFFFFF";
@@ -146,7 +150,7 @@ namespace RFUniverse.Manager
                     IsDebugJointLink = (bool)data[0];
                     break;
                 case "SendLog":
-                    AddLog((string)data[0]);
+                    ReceiveLog((string)data[0]);
                     break;
                 case "SetPythonVersion":
                     SetPythonVersion((string)data[0]);

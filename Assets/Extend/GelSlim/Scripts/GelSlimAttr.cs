@@ -52,9 +52,9 @@ public class GelSlimAttr : BaseAttr
         Dictionary<string, object> data = base.CollectData();
         if (lightBase64String != null && depthBase64String != null)
         {
-            data.Add("light", lightBase64String);
+            data["light"] = lightBase64String;
+            data["depth"] = depthBase64String;
             lightBase64String = null;
-            data.Add("depth", depthBase64String);
             depthBase64String = null;
         }
         return data;
@@ -67,7 +67,7 @@ public class GelSlimAttr : BaseAttr
                 GetData();
                 return;
             case "BlurGel":
-                BlurGel();
+                BlurGel((int)data[0], (float)data[1]);
                 return;
             case "RestoreGel":
                 RestoreGel();
@@ -87,13 +87,14 @@ public class GelSlimAttr : BaseAttr
 
     public Texture2D GetLight()
     {
-        cameraLight.targetTexture = RenderTexture.GetTemporary(1600, 1200, 24, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
+        cameraLight.targetTexture = RenderTexture.GetTemporary(1600, 1200, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Default, QualitySettings.antiAliasing);
         cameraLight.Render();
         RenderTexture.active = cameraLight.targetTexture;
         tex.Reinitialize(RenderTexture.active.width, RenderTexture.active.height, TextureFormat.RGBA32, false);
         tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
         tex.Apply();
         RenderTexture.ReleaseTemporary(cameraLight.targetTexture);
+        cameraLight.targetTexture = null;
         return tex;
     }
     public Texture2D GetDepth()
@@ -106,39 +107,41 @@ public class GelSlimAttr : BaseAttr
         tex.Reinitialize(RenderTexture.active.width, RenderTexture.active.height, TextureFormat.R8, false);
         tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
         tex.Apply();
-        RenderTexture.ReleaseTemporary(cameraLight.targetTexture);
+        RenderTexture.ReleaseTemporary(cameraDepth.targetTexture);
+        cameraDepth.targetTexture = null;
         return tex;
     }
 
 
-    public void BlurGel()
+    public void BlurGel(int radius = 5, float sigma = 2)
     {
         cameraDepth.orthographic = true;
         Texture2D tex = GetDepth();
         cameraDepth.orthographic = false;
-        //GaussianBlur gauss = new GaussianBlur(10, 50f);
-        GaussianBlurGPU gauss = GetComponent<GaussianBlurGPU>();
-        gauss.SetGaussianKernel(10, 50f);
+        GaussianBlur gauss = new GaussianBlur(radius, sigma);
+        //GaussianBlurGPU gauss = GetComponent<GaussianBlurGPU>();
+        //gauss.SetGaussianKernel(20, 10);
         tex = gauss.Blur(tex);
-        MoveGelPlane(gel.GetComponent<MeshFilter>().mesh, tex, 0.003f);
+        gel.GetComponent<MeshFilter>().sharedMesh = MoveGelPlane(sourceMesh, tex, 0.003f);
         renderParent.gameObject.SetActive(false);
     }
 
     public void RestoreGel()
     {
         renderParent.gameObject.SetActive(true);
-        gel.GetComponent<MeshFilter>().mesh = sourceMesh;
+        gel.GetComponent<MeshFilter>().sharedMesh = sourceMesh;
     }
 
-    void MoveGelPlane(Mesh mesh, Texture2D depth, float scale)
+    Mesh MoveGelPlane(Mesh sourceMesh, Texture2D depth, float scale)
     {
-        Vector3[] originalVertices = mesh.vertices;
-        Vector3[] displacedVertices = new Vector3[originalVertices.Length];
-        Vector2[] uvs = mesh.uv;
+        Mesh mesh = Instantiate(sourceMesh);
+        Vector3[] vertices = sourceMesh.vertices;
+        Vector2[] uvs = sourceMesh.uv;
         Color[] colors = depth.GetPixels();
         int height = depth.height;
         int width = depth.width;
-        Parallel.ForEach(originalVertices, (ver, _, i) =>
+
+        Parallel.For(0, vertices.Length, i =>
         {
             Vector2 uv = uvs[i];
             // 获取灰度值（0到1之间）
@@ -148,11 +151,11 @@ public class GelSlimAttr : BaseAttr
             float displacementAmount = displacementColor.r * scale;
             Vector3 displacement = Vector3.forward * displacementAmount;
 
-            displacedVertices[i] = originalVertices[i] + displacement;
+            vertices[i] += displacement;
         });
-
-        mesh.vertices = displacedVertices;
+        mesh.vertices = vertices;
         mesh.RecalculateNormals();
+        return mesh;
     }
 
 

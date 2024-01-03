@@ -270,149 +270,145 @@ namespace RFUniverse.Attributes
 
             bioIK = first.GetComponent<BioIK.BioIK>() ?? first.gameObject.AddComponent<BioIK.BioIK>();
             bioIK.isArticulations = true;
-            bioIK.SetGenerations(3);
+            bioIK.SetGenerations(10);
             bioIK.SetPopulationSize(50);
             bioIK.SetElites(1);
             bioIK.Smoothing = 0;
-            for (int i = 0; i < jointParameters.Count; i++)
+            foreach (var item in MoveableJoints)
             {
-                ArticulationParameter item = jointParameters[i];
-                if (item.moveable)
+                BioIK.BioJoint joint = bioIK.FindSegment(item.transform).AddJoint();
+                iKCopy.Add(item.transform, item);
+                joint.SetAnchor(item.anchorPosition);
+                joint.SetOrientation(item.anchorRotation.eulerAngles);
+                joint.SetDefaultFrame(item.transform.localPosition, item.transform.localRotation);
+                switch (item.jointType)
                 {
-                    BioIK.BioJoint joint = bioIK.FindSegment(item.body.transform).AddJoint();
-                    iKCopy.Add(item.body.transform, item.body);
-                    joint.SetAnchor(item.body.anchorPosition);
-                    joint.SetOrientation(item.body.anchorRotation.eulerAngles);
-                    joint.SetDefaultFrame(item.body.transform.localPosition, item.body.transform.localRotation);
-                    switch (item.body.jointType)
-                    {
-                        case ArticulationJointType.RevoluteJoint:
-                            joint.JointType = BioIK.JointType.Rotational;
-                            joint.X.Enabled = true;
-                            switch (item.body.twistLock)
-                            {
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            joint.Y.Enabled = false;
-                            joint.Z.Enabled = false;
-                            break;
-                        case ArticulationJointType.PrismaticJoint:
-                            joint.JointType = BioIK.JointType.Translational;
-                            switch (item.body.linearLockX)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.X.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            switch (item.body.linearLockY)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Y.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = true;
-                                    joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
-                                    joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
-                                    joint.Y.SetTargetValue(item.body.yDrive.target);
-                                    break;
-                            }
-                            switch (item.body.linearLockZ)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Z.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = true;
-                                    joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
-                                    joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
-                                    joint.Z.SetTargetValue(item.body.zDrive.target);
-                                    break;
-                            }
-                            break;
-                        case ArticulationJointType.SphericalJoint:
-                            joint.JointType = BioIK.JointType.Rotational;
-                            switch (item.body.twistLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.X.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.X.Enabled = true;
-                                    joint.X.Constrained = true;
-                                    joint.X.SetUpperLimit(item.body.xDrive.upperLimit);
-                                    joint.X.SetLowerLimit(item.body.xDrive.lowerLimit);
-                                    joint.X.SetTargetValue(item.body.xDrive.target);
-                                    break;
-                            }
-                            switch (item.body.swingYLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Y.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Y.Enabled = true;
-                                    joint.Y.Constrained = true;
-                                    joint.Y.SetUpperLimit(item.body.yDrive.upperLimit);
-                                    joint.Y.SetLowerLimit(item.body.yDrive.lowerLimit);
-                                    joint.Y.SetTargetValue(item.body.yDrive.target);
-                                    break;
-                            }
-                            switch (item.body.swingZLock)
-                            {
-                                case ArticulationDofLock.LockedMotion:
-                                    joint.Z.Enabled = false;
-                                    break;
-                                case ArticulationDofLock.FreeMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = false;
-                                    break;
-                                case ArticulationDofLock.LimitedMotion:
-                                    joint.Z.Enabled = true;
-                                    joint.Z.Constrained = true;
-                                    joint.Z.SetUpperLimit(item.body.zDrive.upperLimit);
-                                    joint.Z.SetLowerLimit(item.body.zDrive.lowerLimit);
-                                    joint.Z.SetTargetValue(item.body.zDrive.target);
-                                    break;
-                            }
-                            break;
-                    }
+                    case ArticulationJointType.RevoluteJoint:
+                        joint.JointType = BioIK.JointType.Rotational;
+                        joint.X.Enabled = true;
+                        switch (item.twistLock)
+                        {
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.xDrive.target);
+                                break;
+                        }
+                        joint.Y.Enabled = false;
+                        joint.Z.Enabled = false;
+                        break;
+                    case ArticulationJointType.PrismaticJoint:
+                        joint.JointType = BioIK.JointType.Translational;
+                        switch (item.linearLockX)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.X.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.xDrive.target);
+                                break;
+                        }
+                        switch (item.linearLockY)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Y.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = true;
+                                joint.Y.SetUpperLimit(item.yDrive.upperLimit);
+                                joint.Y.SetLowerLimit(item.yDrive.lowerLimit);
+                                joint.Y.SetTargetValue(item.yDrive.target);
+                                break;
+                        }
+                        switch (item.linearLockZ)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Z.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = true;
+                                joint.Z.SetUpperLimit(item.zDrive.upperLimit);
+                                joint.Z.SetLowerLimit(item.zDrive.lowerLimit);
+                                joint.Z.SetTargetValue(item.zDrive.target);
+                                break;
+                        }
+                        break;
+                    case ArticulationJointType.SphericalJoint:
+                        joint.JointType = BioIK.JointType.Rotational;
+                        switch (item.twistLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.X.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.X.Enabled = true;
+                                joint.X.Constrained = true;
+                                joint.X.SetUpperLimit(item.xDrive.upperLimit);
+                                joint.X.SetLowerLimit(item.xDrive.lowerLimit);
+                                joint.X.SetTargetValue(item.xDrive.target);
+                                break;
+                        }
+                        switch (item.swingYLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Y.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Y.Enabled = true;
+                                joint.Y.Constrained = true;
+                                joint.Y.SetUpperLimit(item.yDrive.upperLimit);
+                                joint.Y.SetLowerLimit(item.yDrive.lowerLimit);
+                                joint.Y.SetTargetValue(item.yDrive.target);
+                                break;
+                        }
+                        switch (item.swingZLock)
+                        {
+                            case ArticulationDofLock.LockedMotion:
+                                joint.Z.Enabled = false;
+                                break;
+                            case ArticulationDofLock.FreeMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = false;
+                                break;
+                            case ArticulationDofLock.LimitedMotion:
+                                joint.Z.Enabled = true;
+                                joint.Z.Constrained = true;
+                                joint.Z.SetUpperLimit(item.zDrive.upperLimit);
+                                joint.Z.SetLowerLimit(item.zDrive.lowerLimit);
+                                joint.Z.SetTargetValue(item.zDrive.target);
+                                break;
+                        }
+                        break;
                 }
             }
 
@@ -438,7 +434,7 @@ namespace RFUniverse.Attributes
         {
             if (iKFollow != null && iKTarget != null)
             {
-                Transform last = jointParameters.Last().body.transform;
+                //Transform last = jointParameters.Last().body.transform;
                 iKTarget.position = iKFollow.position;
                 iKTarget.rotation = iKFollow.rotation;
                 //iKTarget.position = last.TransformPoint(iKFollow.localPosition);
@@ -475,47 +471,45 @@ namespace RFUniverse.Attributes
         {
             Dictionary<string, object> data = base.CollectData();
             // Number of Articulation Joints
-            data.Add("number_of_joints", Joints.Count);
+            data["number_of_joints"] = Joints.Count;
             // Position
-            data.Add("positions", Joints.Select(s => s.transform.position).ToList());
+            data["positions"] = Joints.Select(s => s.transform.position).ToList();
             // Rotation
-            data.Add("rotations", Joints.Select(s => s.transform.eulerAngles).ToList());
+            data["rotations"] = Joints.Select(s => s.transform.eulerAngles).ToList();
             // Quaternion
-            data.Add("quaternions", Joints.Select(s => s.transform.rotation).ToList());
+            data["quaternions"] = Joints.Select(s => s.transform.rotation).ToList();
             // LocalPosition
-            data.Add("local_positions", Joints.Select(s => s.transform.localPosition).ToList());
+            data["local_positions"] = Joints.Select(s => s.transform.localPosition).ToList();
             // LocalRotation
-            data.Add("local_rotations", Joints.Select(s => s.transform.localEulerAngles).ToList());
+            data["local_rotations"] = Joints.Select(s => s.transform.localEulerAngles).ToList();
             // LocalQuaternion
-            data.Add("local_quaternions", Joints.Select(s => s.transform.localRotation).ToList());
+            data["local_quaternions"] = Joints.Select(s => s.transform.localRotation).ToList();
             // Velocity
-            data.Add("velocities", Joints.Select(s => s.velocity).ToList());
+            data["velocities"] = Joints.Select(s => s.velocity).ToList();
 
             // Number of Articulation Moveable Joints
-            data.Add("number_of_moveable_joints", MoveableJoints.Count);
+            data["number_of_moveable_joints"] = MoveableJoints.Count;
             // Each part's joint position
-            data.Add("joint_positions", MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointPosition()).ToList());
+            data["joint_positions"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointPosition()).ToList();
             // Each part's joint velocity
-            data.Add("joint_velocities", MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointVelocity()).ToList());
+            data["joint_velocities"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointVelocity()).ToList();
             // Each part's joint acceleration
-            data.Add("joint_accelerations", MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointAcceleration()).ToList());
+            data["joint_accelerations"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointAcceleration()).ToList();
             // Each part's joint force
-            data.Add("joint_force", MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointForce()).ToList());
+            data["joint_force"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointForce()).ToList();
             // Each part's joint type
-            data.Add("joint_types", MoveableJoints.Select(s => s.jointType.ToString()).ToList());
+            data["joint_types"] = MoveableJoints.Select(s => s.jointType.ToString()).ToList();
             // Each part's joint lower limit
-            data.Add("joint_lower_limit", MoveableJoints.Select(s => s.xDrive.lowerLimit).ToList());
+            data["joint_lower_limit"] = MoveableJoints.Select(s => s.xDrive.lowerLimit).ToList();
             // Each part's joint upper limit
-            data.Add("joint_upper_limit", MoveableJoints.Select(s => s.xDrive.upperLimit).ToList());
+            data["joint_upper_limit"] = MoveableJoints.Select(s => s.xDrive.upperLimit).ToList();
             // Each part's joint upper limit
-            data.Add("joint_stiffness", MoveableJoints.Select(s => s.xDrive.stiffness).ToList());
+            data["joint_stiffness"] = MoveableJoints.Select(s => s.xDrive.stiffness).ToList();
             // Each part's joint upper limit
-            data.Add("joint_damping", MoveableJoints.Select(s => s.xDrive.damping).ToList());
+            data["joint_damping"] = MoveableJoints.Select(s => s.xDrive.damping).ToList();
 
             // Whether all parts are stable
-            data.Add("all_stable", AllStable());
-            data.Add("move_done", moveDone);
-            data.Add("rotate_done", rotateDone);
+            data["all_stable"] = AllStable();
 #if UNITY_2022_1_OR_NEWER
             if (sendJointInverseDynamicsForce)
             {
@@ -690,8 +684,6 @@ namespace RFUniverse.Attributes
         Vector3? tempIKTargetPosition;
         Quaternion? tempIKTargetRotation;
 
-        bool moveDone = true;
-        bool rotateDone = true;
         private void IKTargetDoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("IKTargetDoMove");
@@ -726,19 +718,20 @@ namespace RFUniverse.Attributes
 
         private void IKTargetDoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
         {
+            Debug.Log("IKTargetDoRotate");
             if (iKTarget == null) return;
             Quaternion target = Quaternion.Euler(eulerAngle[0], eulerAngle[1], eulerAngle[2]);
             IKTargetDoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
         private void IKTargetDoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
+            Debug.Log("IKTargetDoRotateQuaternion");
             if (iKTarget == null) return;
             Quaternion target = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
             IKTargetDoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
         private void IKTargetDoRotateQuaternion(Quaternion target, float duration, bool isSpeedBased = true, bool isRelative = false)
         {
-            Debug.Log("IKTargetDoRotateQuaternion");
 #if BIOIK
             if (bioIK == null)
             {
@@ -783,6 +776,11 @@ namespace RFUniverse.Attributes
             int lerpCount = Mathf.Max(lerpCountPos, lerpCountRot, 5);
             Vector3 startPosition = iKTarget.position;
             Quaternion startQuaternion = iKTarget.rotation;
+            //foreach (var item in MoveableJoints)
+            //{
+            //    BioIK.BioJoint joint = bioIK.FindSegment(item.transform).AddJoint();
+            //    joint.SetDefaultFrame(item.transform.localPosition, item.transform.localRotation);
+            //}
             for (int i = 0; i < lerpCount; i++)
             {
                 iKTarget.position = Vector3.Lerp(startPosition, targetPos, i + 1 / (float)lerpCount);
@@ -812,6 +810,33 @@ namespace RFUniverse.Attributes
             moveDone = true;
             rotateDone = true;
         }
+
+        protected override void DoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
+        {
+            return;
+        }
+
+        protected override void DoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
+        {
+            return;
+        }
+        protected override void DoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
+        {
+            return;
+        }
+        protected override void DoRotateQuaternion(Quaternion target, float duration, bool isSpeedBased = true, bool isRelative = false)
+        {
+            return;
+        }
+        protected override void DoComplete()
+        {
+            return;
+        }
+        protected override void DoKill()
+        {
+            return;
+        }
+
         public void SetIKTargetOffset(List<float> position, List<float> rotation, List<float> quaternion)
         {
             if (iKFollow == null) return;

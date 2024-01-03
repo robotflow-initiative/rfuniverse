@@ -1,7 +1,8 @@
 using UnityEngine;
 //物体拖拽脚本
-namespace RFUniverse.Attributes.Digit
+namespace RFUniverse
 {
+    [DisallowMultipleComponent]
     public class MouseDrag : MonoBehaviour
     {
         public float force = 10;

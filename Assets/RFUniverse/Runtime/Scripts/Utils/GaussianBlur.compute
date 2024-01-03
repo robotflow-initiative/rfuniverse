@@ -1,73 +1,53 @@
-﻿#pragma kernel SetKernel
-#pragma kernel CalculateKernel
-#pragma kernel NormalizedKernel
+﻿#pragma kernel CalculateKernel
 #pragma kernel Blur
-#define MaxKernel 255
-#define Center MaxKernel/2
+#pragma kernel GetResult
+#define MaxKernel 256
+#define uintAndFloatRange 1000000
 
-shared RWTexture2D<float4> Result;
 Texture2D<float4> Source;
-uint Radius;
+RWTexture2D<int> ResultR;
+RWTexture2D<int> ResultG;
+RWTexture2D<int> ResultB;
+RWTexture2D<int> ResultA;
+RWTexture2D<float4> Result;
+RWTexture2D<float> Kernel;
+int Radius;
 float Sigma;
 
-shared float Kernel[MaxKernel * MaxKernel];
-uint center = MaxKernel / 2;
+RWStructuredBuffer<uint> WeightsSum;
 
-float constant;
-float power;
-shared float sum = 0;
+[numthreads(MaxKernel, 1, 1)]
+void CalculateKernel(uint3 dispatchThreadID : SV_DispatchThreadID, uint3 groupThreadID : SV_GroupThreadID)
+{
+    int disX = dispatchThreadID.z - (MaxKernel / 2 - 1);
+    int disY = groupThreadID.x - (MaxKernel / 2 - 1);
+    if (abs(disX) <= Radius && abs(disY) <= Radius)
+    {
+        Kernel[uint2(dispatchThreadID.z, groupThreadID.x)] = 1 / (2 * 3.1416 * Sigma * Sigma) * exp(-(disX * disX + disY * disY) / (2 * Sigma * Sigma));
+        uint s = Kernel[uint2(dispatchThreadID.z, groupThreadID.x)] * uintAndFloatRange;
+        InterlockedAdd(WeightsSum[0], s);
+    }
+}
+
+[numthreads(MaxKernel, 1, 1)]
+void Blur(uint3 dispatchThreadID : SV_DispatchThreadID, uint3 groupThreadID : SV_GroupThreadID)
+{
+    int disX = dispatchThreadID.z - (MaxKernel / 2 - 1);
+    int disY = groupThreadID.x - (MaxKernel / 2 - 1);
+    if (abs(disX) <= Radius && abs(disY) <= Radius)
+    {
+        uint2 offset = uint2(dispatchThreadID.x + disX, dispatchThreadID.y + disY);
+        float4 color = Source[offset] * Kernel[uint2(dispatchThreadID.z, groupThreadID.x)] / (float(WeightsSum[0]) / uintAndFloatRange);
+        
+        InterlockedAdd(ResultR[dispatchThreadID.xy], int(color.r * uintAndFloatRange));
+        InterlockedAdd(ResultG[dispatchThreadID.xy], int(color.g * uintAndFloatRange));
+        InterlockedAdd(ResultB[dispatchThreadID.xy], int(color.b * uintAndFloatRange));
+        InterlockedAdd(ResultA[dispatchThreadID.xy], int(color.a * uintAndFloatRange));
+    }
+}
 
 [numthreads(1, 1, 1)]
-void SetKernel()
+void GetResult(uint3 dispatchThreadID : SV_DispatchThreadID, uint3 groupThreadID : SV_GroupThreadID)
 {
-    constant = 1 / (2 * 3.1416 * Sigma * Sigma);
-    power = 2 * Sigma * Sigma;
-}
-
-[numthreads(MaxKernel, 1, 1)]
-void CalculateKernel(uint3 dispatchThreadId : SV_GroupThreadID, uint3 groupThreadID : SV_GroupThreadID)
-{
-    int disX = dispatchThreadId.z - center;
-    int disY = groupThreadID.x - center;
-    if (abs(disX) <= Radius && abs(disY) <= Radius)
-    {
-        float rr = disX * disX + disY * disY;
-        Kernel[MaxKernel * dispatchThreadId.z + groupThreadID.x] = constant * exp(-rr / power);
-        //sum += Kernel[dispatchThreadId.z][groupThreadID.x];
-        //locked(sum, Kernel[dispatchThreadId.z][groupThreadID.x]);
-
-    }
-}
-[numthreads(MaxKernel, 1, 1)]
-void NormalizedKernel(uint3 dispatchThreadId : SV_GroupThreadID, uint3 groupThreadID : SV_GroupThreadID)
-{
-    int disX = dispatchThreadId.z - center;
-    int disY = groupThreadID.x - center;
-    if (abs(disX) <= Radius && abs(disY) <= Radius)
-    {
-        for (int i = 0; i < MaxKernel * MaxKernel; i++)
-            sum += Kernel[MaxKernel * dispatchThreadId.z + groupThreadID.x];
-            
-        Kernel[MaxKernel * dispatchThreadId.z + groupThreadID.x] = Kernel[MaxKernel * dispatchThreadId.z + groupThreadID.x] / sum;
-    }
-}
-
-[numthreads(MaxKernel, 1, 1)]
-void Blur(uint3 dispatchThreadId : SV_DispatchThreadID, uint3 groupThreadID : SV_GroupThreadID)
-{
-    int disX = dispatchThreadId.z - center;
-    int disY = groupThreadID.x - center;
-    if (abs(disX) <= Radius && abs(disY) <= Radius)
-    {
-        float4 color = 0;
-        for (int x = -Radius; x <= Radius; x++)
-        {
-            for (int y = -Radius; y <= Radius; y++)
-            {
-                uint2 offset = dispatchThreadId.xy + int2(x, y);
-                color += Source[offset] * Kernel[MaxKernel * (MaxKernel / 2 + x) + MaxKernel / 2 + y];
-            }
-        }
-        Result[dispatchThreadId.xy] = color;
-    }
+    Result[dispatchThreadID.xy] = float4(float(ResultR[dispatchThreadID.xy]) / uintAndFloatRange, float(ResultG[dispatchThreadID.xy]) / uintAndFloatRange, float(ResultB[dispatchThreadID.xy]) / uintAndFloatRange, float(ResultA[dispatchThreadID.xy]) / uintAndFloatRange);
 }

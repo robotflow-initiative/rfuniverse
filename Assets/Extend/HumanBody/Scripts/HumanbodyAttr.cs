@@ -201,8 +201,6 @@ namespace RFUniverse.Attributes
         public override Dictionary<string, object> CollectData()
         {
             Dictionary<string, object> data = base.CollectData();
-            data.Add("move_done", moveDone);
-            data.Add("rotate_done", rotateDone);
             return data;
         }
         public override void AnalysisData(string type, object[] data)
@@ -228,8 +226,6 @@ namespace RFUniverse.Attributes
             base.AnalysisData(type, data);
         }
 
-        bool moveDone = true;
-        bool rotateDone = true;
         private void HumanIKTargetDoMove(int index, List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoMove");
