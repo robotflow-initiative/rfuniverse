@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RFUniverse.DebugTool;
 
 namespace RFUniverse.Attributes
 {
@@ -27,8 +28,8 @@ namespace RFUniverse.Attributes
         {
             base.SetAttrData(attr);
             GameObjectAttr gameObjectAttr = attr as GameObjectAttr;
-            gameObjectAttr.Color = new Color(this.color[0], this.color[1], this.color[2], this.color[3]);
-            gameObjectAttr.Render = this.render;
+            gameObjectAttr.Color = new Color(color[0], color[1], color[2], color[3]);
+            gameObjectAttr.Render = render;
         }
     }
     public class GameObjectAttr : BaseAttr
@@ -79,7 +80,7 @@ namespace RFUniverse.Attributes
             }
         }
 
-        [EditAttr("Render", "RFUniverse.EditMode.RenderAttrUI")]
+        [EditAttr("Render", "RFUniverse.EditMode.BoolAttrUI")]
         public bool Render
         {
             get
@@ -105,10 +106,6 @@ namespace RFUniverse.Attributes
             }
         }
 
-        public override void Init()
-        {
-            base.Init();
-        }
         public override BaseAttrData GetAttrData()
         {
             GameObjectAttrData data = new GameObjectAttrData(base.GetAttrData());
@@ -116,45 +113,18 @@ namespace RFUniverse.Attributes
             data.render = Render;
             return data;
         }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            if (dddbbox != null)
-            {
-                data["3d_bounding_box"] = dddbbox;
-                dddbbox = null;
-            }
-            return data;
-        }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "SetColor":
-                    SetColor(data[0].ConvertType<List<float>>());
-                    return;
-                case "EnabledRender":
-                    EnabledRender((bool)data[0]);
-                    return;
-                case "SetTexture":
-                    SetTexture((string)data[0]);
-                    return;
-                case "Get3DBBox":
-                    Get3DBBox();
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
 
+        [RFUAPI]
         private void SetColor(List<float> color)
         {
             Color = new Color(color[0], color[1], color[2], color[3]);
         }
-
+        [RFUAPI]
         private void EnabledRender(bool enabled)
         {
             Render = enabled;
         }
+        [RFUAPI]
         private void SetTexture(string path)
         {
             if (!System.IO.File.Exists(path)) return;
@@ -164,18 +134,12 @@ namespace RFUniverse.Attributes
             Texture = tex;
         }
 
-        Tuple<Vector3, Vector3, Vector3> dddbbox = null;
+        [RFUAPI]
         public Tuple<Vector3, Vector3, Vector3> Get3DBBox(bool send = true)
         {
             List<Vector3> allVertices = new List<Vector3>();
             foreach (var render in this.GetChildComponentFilter<MeshFilter>())
             {
-                //Matrix4x4 localToWorldMatrix = render.transform.localToWorldMatrix;
-                //Matrix4x4 worldToLocalMatrix = transform.worldToLocalMatrix;
-                //Parallel.ForEach(render.sharedMesh.vertices, s =>
-                //{
-                //    allVertices.Add(worldToLocalMatrix * localToWorldMatrix * s);
-                //});
                 Span<Vector3> spanVertices = new Span<Vector3>(render.sharedMesh.vertices);
                 render.transform.TransformPoints(render.sharedMesh.vertices, spanVertices);
                 transform.InverseTransformPoints(spanVertices, spanVertices);
@@ -194,9 +158,10 @@ namespace RFUniverse.Attributes
             Vector3 position = transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
             Vector3 rotation = transform.eulerAngles;
             Vector3 size = new Vector3((maxX - minX) * transform.lossyScale.x, (maxY - minY) * transform.lossyScale.y, (maxZ - minZ) * transform.lossyScale.z);
+            Tuple<Vector3, Vector3, Vector3> dddBBox = new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
             if (send)
-                dddbbox = new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
-            return new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
+                CollectData.AddDataNextStep("3d_bounding_box", dddBBox);
+            return dddBBox;
         }
 
         public Rect Get2DBBox(Camera cam)

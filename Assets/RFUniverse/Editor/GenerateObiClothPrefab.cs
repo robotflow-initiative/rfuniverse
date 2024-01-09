@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class GenerareObiClothPrefab : MonoBehaviour
+public class GenerateObiClothPrefab : MonoBehaviour
 {
     [MenuItem("RFUniverse/Obi/Generare ObiCloth Prefab")]
     public static void Generate()

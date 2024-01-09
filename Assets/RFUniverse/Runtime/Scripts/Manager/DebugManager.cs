@@ -6,10 +6,11 @@ using System;
 using System.Linq;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Pool;
+using System.Reflection;
 
 namespace RFUniverse.Manager
 {
-    public class DebugManager : IDisposable
+    public class DebugManager : IDisposable, IReceiveData, IHaveAPI
     {
         static DebugManager instance = null;
 
@@ -42,6 +43,8 @@ namespace RFUniverse.Manager
         ObjectPool<JointLink> jointLinkPool;
         private DebugManager()
         {
+            (PlayerMain.Instance as IDistributeData<string>).RegisterReceiver("Debug", ReceiveData);
+
             graspPointSource = Addressables.LoadAssetAsync<GameObject>("Debug/GraspPoint").WaitForCompletion().GetComponent<GraspPoint>();
             poseGizmoSource = Addressables.LoadAssetAsync<GameObject>("Debug/PoseGizmo").WaitForCompletion().GetComponent<PoseGizmo>();
             collisionLineSource = Addressables.LoadAssetAsync<GameObject>("Debug/CollisionLine").WaitForCompletion().GetComponent<CollisionLine>();
@@ -61,6 +64,13 @@ namespace RFUniverse.Manager
             jointLinkPool = new ObjectPool<JointLink>(() => GameObject.Instantiate(jointLinkSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
 
             Application.logMessageReceived += OnLogMessageReceived;
+            (this as IHaveAPI).RegisterAPI();
+        }
+        public void ReceiveData(object[] data)
+        {
+            string hand = (string)data[0];
+            data = data.Skip(1).ToArray();
+            (this as IHaveAPI).CallAPI(hand, data);
         }
         void IDisposable.Dispose()
         {
@@ -69,7 +79,7 @@ namespace RFUniverse.Manager
         void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
             if (!Application.isPlaying) return;
-            SendLogToPython(type.ToString(), condition, stackTrace);
+            SendLogObject(type.ToString(), condition, stackTrace);
             switch (type)
             {
                 case LogType.Error:
@@ -83,18 +93,6 @@ namespace RFUniverse.Manager
                     break;
             }
         }
-
-        private void SendLogToPython(params string[] strings)
-        {
-            object[] data = new[] { "Debug", "Log" };
-            PlayerMain.Communicator?.SendObject(data.Concat(strings).ToArray());
-        }
-
-        private void ReceiveLog(string log)
-        {
-            PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color=blue>pyrfuniverse Message: {log}</color>");
-        }
-
         public void AddLog<T>(T log, LogType type = LogType.Log)
         {
             string richColor = "#FFFFFF";
@@ -112,58 +110,25 @@ namespace RFUniverse.Manager
                 default:
                     break;
             }
-            //logList.Enqueue($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color={richColor}>{log}</color>");
-            //if (logList.Count > 50)
-            //    logList.Dequeue();
-            //PlayerMain.Instance.playerMainUI.RefreshLogList(logList.ToArray());
             PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color={richColor}>{log}</color>");
         }
 
-        public void ReceiveDebugData(object[] data)
+
+        private void SendLogObject(params string[] strings)
         {
-            string type = (string)data[0];
-            data = data.Skip(1).ToArray();
-            switch (type)
-            {
-                case "DebugGraspPoint":
-                    IsDebugGraspPoint = (bool)data[0];
-                    break;
-                case "DebugObjectPose":
-                    IsDebugObjectPose = (bool)data[0];
-                    break;
-                case "DebugCollisionPair":
-                    IsDebugCollisionPair = (bool)data[0];
-                    break;
-                case "DebugColliderBound":
-                    IsDebugColliderBound = (bool)data[0];
-                    break;
-                case "Debug3DBBox":
-                    IsDebug3DBBox = (bool)data[0];
-                    break;
-                case "Debug2DBBox":
-                    IsDebug2DBBox = (bool)data[0];
-                    break;
-                case "DebugObjectID":
-                    IsDebugObjectID = (bool)data[0];
-                    break;
-                case "DebugJointLink":
-                    IsDebugJointLink = (bool)data[0];
-                    break;
-                case "SendLog":
-                    ReceiveLog((string)data[0]);
-                    break;
-                case "SetPythonVersion":
-                    SetPythonVersion((string)data[0]);
-                    break;
-                case "ShowArticulationParameter":
-                    ShowArticulationParameter((int)data[0]);
-                    return;
-                default:
-                    Debug.LogWarning("Dont have mehond:" + type);
-                    break;
-            }
+            object[] data = new[] { "Debug", "Log" };
+            PlayerMain.Communicator?.SendObject(data.Concat(strings).ToArray());
         }
 
+        [RFUAPI]
+        private void SendLog(string log)
+        {
+            PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color=blue>pyrfuniverse Message: {log}</color>");
+        }
+
+
+
+        [RFUAPI]
         public void ShowArticulationParameter(int controllerID)
         {
             Debug.Log($"ShowArticulationParameter ID: {controllerID}");
@@ -175,6 +140,11 @@ namespace RFUniverse.Manager
             {
                 Debug.LogWarning($"ID {controllerID} is Not Exists or Not ControllerAttr");
             }
+        }
+        [RFUAPI]
+        public void DebugGraspPoint(bool enabled)
+        {
+            IsDebugGraspPoint = enabled;
         }
 
         bool isDebugGraspPoint = false;
@@ -190,17 +160,15 @@ namespace RFUniverse.Manager
                 isDebugGraspPoint = value;
                 if (isDebugGraspPoint)
                 {
-                    BaseAttr.OnAttrChange += RefreshGraspPoint;
+                    InstanceManager.Instance.OnAttrChange += RefreshGraspPoint;
                     RefreshGraspPoint();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshGraspPoint;
+                    InstanceManager.Instance.OnAttrChange -= RefreshGraspPoint;
                 }
             }
         }
-
-
         Dictionary<ControllerAttr, GraspPoint> graspPoints = new Dictionary<ControllerAttr, GraspPoint>();
         void RefreshGraspPoint()
         {
@@ -218,7 +186,11 @@ namespace RFUniverse.Manager
                 graspPoints.Remove(item);
             }
         }
-
+        [RFUAPI]
+        public void DebugObjectPose(bool enabled)
+        {
+            IsDebugObjectPose = enabled;
+        }
         bool isDebugObjectPose = false;
         public bool IsDebugObjectPose
         {
@@ -232,12 +204,12 @@ namespace RFUniverse.Manager
                 isDebugObjectPose = value;
                 if (isDebugObjectPose)
                 {
-                    BaseAttr.OnAttrChange += RefreshObjectPose;
+                    InstanceManager.Instance.OnAttrChange += RefreshObjectPose;
                     RefreshObjectPose();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshObjectPose;
+                    InstanceManager.Instance.OnAttrChange -= RefreshObjectPose;
                 }
             }
         }
@@ -259,7 +231,11 @@ namespace RFUniverse.Manager
                 poseGizmos.Remove(item);
             }
         }
-
+        [RFUAPI]
+        public void DebugCollisionPair(bool enabled)
+        {
+            IsDebugCollisionPair = enabled;
+        }
 
         bool isDebugCollisionPair = false;
         public bool IsDebugCollisionPair
@@ -274,12 +250,12 @@ namespace RFUniverse.Manager
                 isDebugCollisionPair = value;
                 if (isDebugCollisionPair)
                 {
-                    BaseAttr.OnCollisionPairsChange += RefreshCollisionPair;
+                    ColliderAttr.OnCollisionPairsChange += RefreshCollisionPair;
                     RefreshCollisionPair();
                 }
                 else
                 {
-                    BaseAttr.OnCollisionPairsChange -= RefreshCollisionPair;
+                    ColliderAttr.OnCollisionPairsChange -= RefreshCollisionPair;
                 }
             }
         }
@@ -293,16 +269,19 @@ namespace RFUniverse.Manager
                 collisionLinePool.Release(item);
             }
             collisionLines.Clear();
-            foreach (var item in BaseAttr.CollisionPairs)
+            foreach (var item in ColliderAttr.CollisionPairs)
             {
                 CollisionLine instance = collisionLinePool.Get();
                 collisionLines.Add(instance);
-                instance.point1 = BaseAttr.Attrs[item.Item1].transform;
-                instance.point2 = BaseAttr.Attrs[item.Item2].transform;
+                instance.point1 = ColliderAttr.Attrs[item.Item1].transform;
+                instance.point2 = ColliderAttr.Attrs[item.Item2].transform;
             }
         }
-
-
+        [RFUAPI]
+        public void DebugColliderBound(bool enabled)
+        {
+            IsDebugColliderBound = enabled;
+        }
 
         bool isDebugColliderBound = false;
         public bool IsDebugColliderBound
@@ -317,12 +296,12 @@ namespace RFUniverse.Manager
                 isDebugColliderBound = value;
                 if (isDebugColliderBound)
                 {
-                    BaseAttr.OnAttrChange += RefreshColliderBound;
+                    InstanceManager.Instance.OnAttrChange += RefreshColliderBound;
                     RefreshColliderBound();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshColliderBound;
+                    InstanceManager.Instance.OnAttrChange -= RefreshColliderBound;
                 }
             }
         }
@@ -352,7 +331,11 @@ namespace RFUniverse.Manager
                 colliderBounds.Remove(item);
             }
         }
-
+        [RFUAPI]
+        public void DebugObjectID(bool enabled)
+        {
+            IsDebugObjectID = enabled;
+        }
 
         bool isDebugObjectID = false;
         public bool IsDebugObjectID
@@ -367,12 +350,12 @@ namespace RFUniverse.Manager
                 isDebugObjectID = value;
                 if (isDebugObjectID)
                 {
-                    BaseAttr.OnAttrChange += RefreshObjectID;
+                    InstanceManager.Instance.OnAttrChange += RefreshObjectID;
                     RefreshObjectID();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshObjectID;
+                    InstanceManager.Instance.OnAttrChange -= RefreshObjectID;
                 }
             }
         }
@@ -395,8 +378,11 @@ namespace RFUniverse.Manager
                 objectIDs.Remove(item);
             }
         }
-
-
+        [RFUAPI]
+        public void DebugJointLink(bool enabled)
+        {
+            IsDebugJointLink = enabled;
+        }
         bool isDebugJointLink = false;
         public bool IsDebugJointLink
         {
@@ -410,12 +396,12 @@ namespace RFUniverse.Manager
                 isDebugJointLink = value;
                 if (isDebugJointLink)
                 {
-                    BaseAttr.OnAttrChange += RefreshJointLink;
+                    InstanceManager.Instance.OnAttrChange += RefreshJointLink;
                     RefreshJointLink();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= RefreshJointLink;
+                    InstanceManager.Instance.OnAttrChange -= RefreshJointLink;
                 }
             }
         }
@@ -437,7 +423,11 @@ namespace RFUniverse.Manager
                 jointLinks.Remove(item);
             }
         }
-
+        [RFUAPI]
+        public void Debug3DBBox(bool enabled)
+        {
+            IsDebug3DBBox = enabled;
+        }
 
         bool isDebug3DBBox = false;
         public bool IsDebug3DBBox
@@ -452,12 +442,12 @@ namespace RFUniverse.Manager
                 isDebug3DBBox = value;
                 if (isDebug3DBBox)
                 {
-                    BaseAttr.OnAttrChange += Refresh3DBBox;
+                    InstanceManager.Instance.OnAttrChange += Refresh3DBBox;
                     Refresh3DBBox();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= Refresh3DBBox;
+                    InstanceManager.Instance.OnAttrChange -= Refresh3DBBox;
                 }
             }
         }
@@ -479,8 +469,11 @@ namespace RFUniverse.Manager
                 dddBBoxs.Remove(item);
             }
         }
-
-
+        [RFUAPI]
+        public void Debug2DBBox(bool enabled)
+        {
+            IsDebug2DBBox = enabled;
+        }
         bool isDebug2DBBox = false;
         public bool IsDebug2DBBox
         {
@@ -494,12 +487,12 @@ namespace RFUniverse.Manager
                 isDebug2DBBox = value;
                 if (isDebug2DBBox)
                 {
-                    BaseAttr.OnAttrChange += Refresh2DBBox;
+                    InstanceManager.Instance.OnAttrChange += Refresh2DBBox;
                     Refresh2DBBox();
                 }
                 else
                 {
-                    BaseAttr.OnAttrChange -= Refresh2DBBox;
+                    InstanceManager.Instance.OnAttrChange -= Refresh2DBBox;
                 }
             }
         }
@@ -521,7 +514,7 @@ namespace RFUniverse.Manager
                 ddBBoxs.Remove(item);
             }
         }
-
+        [RFUAPI]
         public void SetPythonVersion(string version)
         {
             PlayerMain.Instance.playerMainUI.SetPythonVersion(new Version(version));

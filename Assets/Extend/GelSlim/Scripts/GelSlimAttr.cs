@@ -6,6 +6,7 @@ using UnityEditor;
 using RFUniverse.Attributes;
 using System.Threading.Tasks;
 using RFUniverse.Manager;
+using RFUniverse;
 
 public class GelSlimAttr : BaseAttr
 {
@@ -47,42 +48,11 @@ public class GelSlimAttr : BaseAttr
         cameraDepth.cullingMask = 1 << layer;
     }
 
-    public override Dictionary<string, object> CollectData()
-    {
-        Dictionary<string, object> data = base.CollectData();
-        if (lightBase64String != null && depthBase64String != null)
-        {
-            data["light"] = lightBase64String;
-            data["depth"] = depthBase64String;
-            lightBase64String = null;
-            depthBase64String = null;
-        }
-        return data;
-    }
-    public override void AnalysisData(string type, object[] data)
-    {
-        switch (type)
-        {
-            case "GetData":
-                GetData();
-                return;
-            case "BlurGel":
-                BlurGel((int)data[0], (float)data[1]);
-                return;
-            case "RestoreGel":
-                RestoreGel();
-                return;
-        }
-        base.AnalysisData(type, data);
-    }
-
-    string lightBase64String = null;
-    string depthBase64String = null;
-
+    [RFUAPI]
     public void GetData()
     {
-        lightBase64String = Convert.ToBase64String(GetLight().EncodeToPNG());
-        depthBase64String = Convert.ToBase64String(GetDepth().EncodeToPNG());
+        CollectData.AddDataNextStep("light", Convert.ToBase64String(GetLight().EncodeToPNG()));
+        CollectData.AddDataNextStep("depth", Convert.ToBase64String(GetDepth().EncodeToPNG()));
     }
 
     public Texture2D GetLight()
@@ -112,7 +82,7 @@ public class GelSlimAttr : BaseAttr
         return tex;
     }
 
-
+    [RFUAPI]
     public void BlurGel(int radius = 5, float sigma = 2)
     {
         cameraDepth.orthographic = true;
@@ -125,7 +95,7 @@ public class GelSlimAttr : BaseAttr
         gel.GetComponent<MeshFilter>().sharedMesh = MoveGelPlane(sourceMesh, tex, 0.003f);
         renderParent.gameObject.SetActive(false);
     }
-
+    [RFUAPI]
     public void RestoreGel()
     {
         renderParent.gameObject.SetActive(true);

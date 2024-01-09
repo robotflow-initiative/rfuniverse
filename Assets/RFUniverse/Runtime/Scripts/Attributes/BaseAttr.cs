@@ -2,9 +2,9 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using BioIK;
 using DG.Tweening;
-using static UnityEngine.GraphicsBuffer;
+using System.Reflection;
+using RFUniverse.Manager;
 
 namespace RFUniverse.Attributes
 {
@@ -60,30 +60,12 @@ namespace RFUniverse.Attributes
     }
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
-    public class BaseAttr : MonoBehaviour
+    public class BaseAttr : MonoBehaviour, IReceiveData, IHaveAPI, ICollectData
     {
-        private static Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
-        public static Dictionary<int, BaseAttr> Attrs => new Dictionary<int, BaseAttr>(attrs);
-        public static Dictionary<int, BaseAttr> ActiveAttrs => attrs.Where((s) => s.Value.gameObject.activeInHierarchy).ToDictionary((s) => s.Key, (s) => s.Value);
+        public static Dictionary<int, BaseAttr> Attrs => InstanceManager.Instance.Attrs;
+        public static Dictionary<int, BaseAttr> ActiveAttrs => InstanceManager.Instance.ActiveAttrs;
 
-        public static Action OnAttrChange;
-
-        private static void AddAttr(BaseAttr attr)
-        {
-            if (!attrs.ContainsKey(attr.ID))
-            {
-                attrs.Add(attr.ID, attr);
-                OnAttrChange?.Invoke();
-            }
-        }
-        private static void RemoveAttr(BaseAttr attr)
-        {
-            if (attrs.ContainsKey(attr.ID))
-            {
-                attrs.Remove(attr.ID);
-                OnAttrChange?.Invoke();
-            }
-        }
+        public ICollectData CollectData => this;
 
         [SerializeField]
         private int id = -1;
@@ -141,14 +123,17 @@ namespace RFUniverse.Attributes
 
         protected virtual void Rigister()
         {
+            (this as IHaveAPI).RegisterAPI();
+
             if (Attrs.ContainsKey(ID))
                 Debug.LogError($"ID:{ID} Name:{Name} exist");
             else
             {
                 Debug.Log($"Rigister ID:{ID} Name:{Name}");
-                AddAttr(this);
+                InstanceManager.Instance.AddAttr(this, (this as IReceiveData).ReceiveData);
             }
         }
+
         public virtual BaseAttrData GetAttrData()
         {
             BaseAttrData data = new BaseAttrData();
@@ -183,13 +168,13 @@ namespace RFUniverse.Attributes
             return data;
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
-            RemoveAttr(this);
+            InstanceManager.Instance.RemoveAttr(this);
         }
-        public virtual Dictionary<string, object> CollectData()
+
+        public virtual void AddPermanentData(Dictionary<string, object> data)
         {
-            Dictionary<string, object> data = new Dictionary<string, object>();
             data["name"] = Name;
             data["position"] = transform.position;
             data["rotation"] = transform.eulerAngles;
@@ -198,102 +183,21 @@ namespace RFUniverse.Attributes
             data["local_rotation"] = transform.localEulerAngles;
             data["local_quaternion"] = transform.localRotation;
             data["local_to_world_matrix"] = transform.localToWorldMatrix;
-
-            if (resultLocalPoint != null)
-            {
-                data["result_local_point"] = resultLocalPoint.Value;
-                resultLocalPoint = null;
-            }
-            if (resultWorldPoint != null)
-            {
-                data["result_world_point"] = resultWorldPoint.Value;
-                resultWorldPoint = null;
-            }
             data["move_done"] = moveDone;
             data["rotate_done"] = rotateDone;
-            return data;
         }
+        Dictionary<string, object> ICollectData.TemporaryData { get; set; }
 
-        public void ReceiveData(object[] data)
+        void IReceiveData.ReceiveData(object[] data)
         {
-            string type = (string)data[0];
+            string hand = (string)data[0];
             data = data.Skip(1).ToArray();
-            AnalysisData(type, data);
+            (this as IHaveAPI).CallAPI(hand, data);
         }
 
-        public virtual void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "SetTransform":
-                    SetTransform(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>(), data[2].ConvertType<List<float>>(), (bool)data[3]);
-                    return;
-                case "SetPosition":
-                    SetPosition(data[0].ConvertType<List<float>>(), (bool)data[1]);
-                    return;
-                case "SetRotation":
-                    SetRotation(data[0].ConvertType<List<float>>(), (bool)data[1]);
-                    return;
-                case "SetRotationQuaternion":
-                    SetRotationQuaternion(data[0].ConvertType<List<float>>(), (bool)data[1]);
-                    return;
-                case "SetScale":
-                    SetScale(data[0].ConvertType<List<float>>());
-                    return;
-                case "Translate":
-                    Translate(data[0].ConvertType<List<float>>(), (bool)data[1]);
-                    return;
-                case "Rotate":
-                    Rotate(data[0].ConvertType<List<float>>(), (bool)data[1]);
-                    return;
-                case "LookAt":
-                    LookAt(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
-                    return;
-                case "SetParent":
-                    SetParent((int)data[0], (string)data[1]);
-                    return;
-                case "SetActive":
-                    SetActive((bool)data[0]);
-                    return;
-                case "SetLayer":
-                    SetLayer((int)data[0]);
-                    return;
-                case "Copy":
-                    Copy((int)data[0]);
-                    return;
-                case "Destroy":
-                    Destroy();
-                    return;
-                case "GetLocalPointFromWorld":
-                    GetLocalPointFromWorld(data[0].ConvertType<List<float>>());
-                    return;
-                case "GetWorldPointFromLocal":
-                    GetWorldPointFromLocal(data[0].ConvertType<List<float>>());
-                    return;
-                case "DoMove":
-                    DoMove(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "DoRotate":
-                    DoRotate(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "DoRotateQuaternion":
-                    DoRotateQuaternion(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "DoComplete":
-                    DoComplete();
-                    return;
-                case "DoKill":
-                    DoKill();
-                    return;
-                default:
-                    Debug.LogWarning($"ID: {ID} Type: {GetType().Name}Dont have mehond: {type}");
-                    return;
-            }
-        }
-
+        [RFUAPI]
         public void SetTransform(List<float> position, List<float> rotation, List<float> scale, bool worldSpace = true)
         {
-            Debug.Log("SetTransform");
             if (position != null)
             {
                 SetPosition(position, worldSpace);
@@ -322,9 +226,10 @@ namespace RFUniverse.Attributes
                 SetScale(scale);
             }
         }
+
+        [RFUAPI]
         protected virtual void SetPosition(List<float> position, bool worldSpace = true)
         {
-            Debug.Log("SetPosition");
             SetPosition(new Vector3(position[0], position[1], position[2]), worldSpace);
         }
         public virtual void SetPosition(Vector3 position, bool worldSpace = true)
@@ -334,9 +239,9 @@ namespace RFUniverse.Attributes
             else
                 transform.localPosition = position;
         }
+        [RFUAPI]
         protected virtual void SetRotation(List<float> rotation, bool worldSpace = true)
         {
-            Debug.Log("SetRotation");
             SetRotation(new Vector3(rotation[0], rotation[1], rotation[2]), worldSpace);
         }
         public virtual void SetRotation(Vector3 rotation, bool worldSpace = true)
@@ -346,27 +251,27 @@ namespace RFUniverse.Attributes
             else
                 transform.localEulerAngles = rotation;
         }
+        [RFUAPI]
         public virtual void SetRotationQuaternion(List<float> quaternion, bool worldSpace = true)
         {
-            Debug.Log("SetRotationQuaternion");
             SetRotation(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).eulerAngles, worldSpace);
         }
+        [RFUAPI]
         protected virtual void SetScale(List<float> scale)
         {
-            Debug.Log("SetScale");
             SetScale(new Vector3(scale[0], scale[1], scale[2]));
         }
         public virtual void SetScale(Vector3 scale)
         {
             transform.localScale = scale;
         }
-
+        [RFUAPI]
         public virtual void Translate(List<float> translate, bool worldSpace)
         {
             Space space = worldSpace ? Space.World : Space.Self;
             transform.Translate(new Vector3(translate[0], translate[1], translate[2]), space);
         }
-
+        [RFUAPI]
         public virtual void Rotate(List<float> translate, bool worldSpace)
         {
             Space space = worldSpace ? Space.World : Space.Self;
@@ -374,15 +279,14 @@ namespace RFUniverse.Attributes
             transform.Rotate(new Vector3(1, 0, 0), translate[0], space);
             transform.Rotate(new Vector3(0, 1, 0), translate[1], space);
         }
-
+        [RFUAPI]
         public virtual void LookAt(List<float> target, List<float> worldUp)
         {
             transform.LookAt(RFUniverseUtility.ListFloatToVector3(target), RFUniverseUtility.ListFloatToVector3(worldUp));
         }
-
+        [RFUAPI]
         public virtual void SetParent(int parentID, string parentName)
         {
-            Debug.Log("SetParent");
             Transform parent = null;
             if (Attrs.TryGetValue(parentID, out BaseAttr attr))
             {
@@ -392,58 +296,52 @@ namespace RFUniverse.Attributes
             }
             transform.SetParent(parent);
         }
-
+        [RFUAPI]
         protected virtual void SetActive(bool active)
         {
-            Debug.Log("SetActive");
-            OnAttrChange?.Invoke();
+            InstanceManager.Instance.OnAttrChange?.Invoke();
             gameObject.SetActive(active);
         }
+        [RFUAPI]
         public void SetLayer(int layer)
         {
-            Debug.Log("SetLayer");
             foreach (var item in this.GetChildComponentFilter<Transform>())
             {
                 item.gameObject.layer = layer;
             }
         }
-        protected void Copy(int newID)
+        [RFUAPI]
+        public void Copy(int newID)
         {
-            Debug.Log("Copy");
             GameObject copy = GameObject.Instantiate(gameObject);
             BaseAttr attr = copy.GetComponent<BaseAttr>();
             attr.ID = newID;
             attr.Instance();
         }
-
+        [RFUAPI]
         public virtual void Destroy()
         {
-            //if (Application.isEditor)
             DestroyImmediate(gameObject);
-            //else
-            //    Destroy(gameObject);
         }
 
-        Vector3? resultLocalPoint = null;
+        [RFUAPI]
         void GetLocalPointFromWorld(List<float> world)
         {
-            Debug.Log("GetLocalPointFromWorld");
-            resultLocalPoint = transform.InverseTransformPoint(new Vector3(world[0], world[1], world[2]));
+            CollectData.AddDataNextStep("result_local_point", transform.InverseTransformPoint(new Vector3(world[0], world[1], world[2])));
         }
 
-        Vector3? resultWorldPoint = null;
+        [RFUAPI]
         void GetWorldPointFromLocal(List<float> local)
         {
-            Debug.Log("GetWorldPointFromLocal");
-            resultWorldPoint = transform.TransformPoint(new Vector3(local[0], local[1], local[2]));
+            CollectData.AddDataNextStep("result_world_point", transform.TransformPoint(new Vector3(local[0], local[1], local[2])));
         }
 
         protected bool moveDone = true;
         protected bool rotateDone = true;
 
+        [RFUAPI]
         protected virtual void DoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("DoMove");
             moveDone = false;
             Vector3 pos = new Vector3(position[0], position[1], position[2]);
             transform.DOMove(pos, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
@@ -451,16 +349,15 @@ namespace RFUniverse.Attributes
                 moveDone = true;
             };
         }
-
+        [RFUAPI]
         protected virtual void DoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("DoRotate");
             Quaternion target = Quaternion.Euler(eulerAngle[0], eulerAngle[1], eulerAngle[2]);
             DoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
+        [RFUAPI]
         protected virtual void DoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("DoRotateQuaternion");
             Quaternion target = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
             DoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
@@ -472,12 +369,14 @@ namespace RFUniverse.Attributes
                 rotateDone = true;
             };
         }
+        [RFUAPI]
         protected virtual void DoComplete()
         {
             transform.DOComplete();
             moveDone = true;
             rotateDone = true;
         }
+        [RFUAPI]
         protected virtual void DoKill()
         {
             transform.DOKill();
@@ -485,27 +384,6 @@ namespace RFUniverse.Attributes
             rotateDone = true;
         }
 
-
-        private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
-        public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);
-
-        public static Action OnCollisionPairsChange;
-        private void OnCollisionEnter(Collision other)
-        {
-            BaseAttr otherAttr = other.gameObject.GetComponentInParent<BaseAttr>();
-            if (otherAttr == null) return;
-            if (collisionPairs.Exists(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID))) return;
-            collisionPairs.Add(new Tuple<int, int>(this.ID, otherAttr.ID));
-            OnCollisionPairsChange?.Invoke();
-        }
-        private void OnCollisionExit(Collision other)
-        {
-            BaseAttr otherAttr = other.gameObject.GetComponentInParent<BaseAttr>();
-            if (otherAttr == null) return;
-            Tuple<int, int> pair = collisionPairs.Find(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID));
-            collisionPairs.Remove(pair);
-            OnCollisionPairsChange?.Invoke();
-        }
     }
 
 

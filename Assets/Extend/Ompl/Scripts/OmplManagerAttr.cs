@@ -13,29 +13,14 @@ namespace RFUniverse.Attributes
         {
             base.Init();
         }
-        public override Dictionary<string, object> CollectData()
+
+        public override void AddPermanentData(Dictionary<string, object> data)
         {
-            Dictionary<string, object> data = base.CollectData();
-            data.Add("is_collide", isCollide);
-            return data;
+            base.AddPermanentData(data);
+            data["is_collide"] = isCollide;
         }
 
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "ModifyRobot":
-                    ModifyRobot((int)data[0]);
-                    return;
-                case "SetJointState":
-                    SetJointState(RFUniverseUtility.ConvertType<List<float>>(data[0]));
-                    return;
-                case "RestoreRobot":
-                    RestoreRobot();
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
+        [RFUAPI]
         void ModifyRobot(int id)
         {
             if (!Attrs.ContainsKey(id)) return;
@@ -51,13 +36,14 @@ namespace RFUniverse.Attributes
                 trigger.body = body;
             }
         }
-
+        [RFUAPI]
         void SetJointState(List<float> jointPositions)
         {
             if (robot == null) return;
             robot.SetJointPosition(jointPositions, ControlMode.Direct);
             isCollide = false;
         }
+        [RFUAPI]
         void RestoreRobot()
         {
             if (robot == null) return;

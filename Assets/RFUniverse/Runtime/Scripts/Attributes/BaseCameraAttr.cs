@@ -26,15 +26,6 @@ namespace RFUniverse.Attributes
 
         protected Texture2D tex = null;
 
-        protected string rgbBase64String = null;
-        protected string normalBase64String = null;
-        protected string idBase64String = null;
-        protected string depthBase64String = null;
-        protected string depthEXRBase64String = null;
-        protected string amodalMaskBase64String = null;
-        protected string motionVectorBase64String = null;
-        protected string heatMapBase64String = null;
-
         public override void Init()
         {
             base.Init();
@@ -49,137 +40,32 @@ namespace RFUniverse.Attributes
             Camera.cullingMask &= ~(1 << PlayerMain.Instance.tempLayer);
         }
 
-        GameObject cameraView;
         private void Awake()
         {
             if (transform.Find("CameraView(Clone)") == null)
             {
-                cameraView = Instantiate(Addressables.LoadAssetAsync<GameObject>("CameraView").WaitForCompletion());
+                GameObject cameraView = Instantiate(Addressables.LoadAssetAsync<GameObject>("CameraView").WaitForCompletion());
                 cameraView.transform.parent = transform;
                 cameraView.transform.localPosition = Vector3.zero;
                 cameraView.transform.localRotation = Quaternion.identity;
                 cameraView.hideFlags = HideFlags.HideAndDontSave;
             }
         }
-        private void OnDestroy()
-        {
-            if (cameraView != null)
-            {
-                DestroyImmediate(cameraView.gameObject);
-            }
-        }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            if (rgbBase64String != null)
-            {
-                data["rgb"] = rgbBase64String;
-                rgbBase64String = null;
-            }
-            if (normalBase64String != null)
-            {
-                data["normal"] = normalBase64String;
-                normalBase64String = null;
-            }
-            if (idBase64String != null)
-            {
-                data["id_map"] = idBase64String;
-                idBase64String = null;
-            }
-            if (depthBase64String != null)
-            {
-                data["depth"] = depthBase64String;
-                depthBase64String = null;
-            }
-            if (depthEXRBase64String != null)
-            {
-                data["depth_exr"] = depthEXRBase64String;
-                depthEXRBase64String = null;
-            }
-            if (amodalMaskBase64String != null)
-            {
-                data["amodal_mask"] = amodalMaskBase64String;
-                amodalMaskBase64String = null;
-            }
-            if (heatMapBase64String != null)
-            {
-                data["heat_map"] = heatMapBase64String;
-                heatMapBase64String = null;
-            }
-            if (ddBBOX != null)
-            {
-                data["2d_bounding_box"] = ddBBOX;
-                ddBBOX = null;
-            }
-            if (dddBBOX != null)
-            {
-                data["3d_bounding_box"] = dddBBOX;
-                dddBBOX = null;
-            }
-            return data;
-        }
 
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "AlignView":
-                    AlignView();
-                    return;
-                case "GetRGB":
-                    GetRGB(data[0].ConvertType<float[,]>(), (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "GetNormal":
-                    GetNormal((float[,])data[0], (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "GetID":
-                    GetID((float[,])data[0], (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "GetDepth":
-                    GetDepth((float)data[0], (float)data[1], (float[,])data[2], (int)data[3], (int)data[4], (float)data[5]);
-                    return;
-                case "GetDepth16Bit":
-                    GetDepth16Bit((float[,])data[2], (int)data[3], (int)data[4], (float)data[5]);
-                    return;
-                case "GetDepthEXR":
-                    GetDepthEXR(data[0].ConvertType<float[,]>(), (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "GetAmodalMask":
-                    GetAmodalMask((int)data[0], data[1].ConvertType<float[,]>(), (int)data[2], (int)data[3], (float)data[4]);
-                    return;
-                case "GetMotionVector":
-                    GetMotionVector(data[0].ConvertType<float[,]>(), (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "Get2DBBox":
-                    Get2DBBox(data[0].ConvertType<float[,]>(), (int)data[1], (int)data[2], (float)data[3]);
-                    return;
-                case "Get3DBBox":
-                    Get3DBBox();
-                    return;
-                case "StartHeatMapRecord":
-                    StartHeatMapRecord(data[0].ConvertType<List<int>>());
-                    return;
-                case "EndHeatMapRecord":
-                    EndHeatMapRecord();
-                    return;
-                case "GetHeatMap":
-                    GetHeatMap((int)data[0], (float[,])data[1], (int)data[2], (int)data[3], (float)data[4]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
-        void AlignView()
+        [RFUAPI]
+        public void AlignView()
         {
             transform.position = PlayerMain.Instance.MainCamera.transform.position;
             transform.rotation = PlayerMain.Instance.MainCamera.transform.rotation;
         }
-        void GetRGB(float[,] intrinsicMatrix, int width, int height, float fov)
+        [RFUAPI]
+        public void GetRGB(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetRGB(intrinsicMatrix, width, height);
             else
                 GetRGB(width, height, fov);
-            rgbBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("rgb", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetRGB(float[,] intrinsicMatrix, int width, int height)
         {
@@ -187,13 +73,15 @@ namespace RFUniverse.Attributes
             return GetRGB(size.x, size.y);
         }
         public abstract Texture2D GetRGB(int width, int height, float? fov = null);
-        void GetNormal(float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetNormal(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetNormal(intrinsicMatrix, width, height);
             else
                 GetNormal(width, height, fov);
-            normalBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("normal", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetNormal(float[,] intrinsicMatrix, int width, int height)
         {
@@ -201,13 +89,15 @@ namespace RFUniverse.Attributes
             return GetNormal(size.x, size.y);
         }
         public abstract Texture2D GetNormal(int width, int height, float? unPhysicalFov = null);
-        void GetID(float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetID(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetID(intrinsicMatrix, width, height);
             else
                 GetID(width, height, fov);
-            idBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("id_map", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetID(float[,] intrinsicMatrix, int width, int height)
         {
@@ -215,19 +105,22 @@ namespace RFUniverse.Attributes
             return GetID(size.x, size.y);
         }
         public abstract Texture2D GetID(int width, int height, float? unPhysicalFov = null);
+
         public Texture2D GetIDSingleChannel(float[,] intrinsicMatrix, int width, int height)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetIDSingleChannel(size.x, size.y);
         }
         public abstract Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null);
-        void GetDepth(float near, float far, float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetDepth(float near, float far, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetDepth(intrinsicMatrix, width, height, near, far);
             else
                 GetDepth(width, height, near, far, fov);
-            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetDepth(float[,] intrinsicMatrix, int width, int height, float near, float far)
         {
@@ -236,13 +129,15 @@ namespace RFUniverse.Attributes
         }
         public abstract Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null);
 
-        void GetDepth16Bit(float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetDepth16Bit(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetDepth16Bit(intrinsicMatrix, width, height);
             else
                 GetDepth16Bit(width, height, fov);
-            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
         }
 
         public Texture2D GetDepth16Bit(float[,] intrinsicMatrix, int width, int height)
@@ -251,13 +146,15 @@ namespace RFUniverse.Attributes
             return GetDepth16Bit(size.x, size.y);
         }
         public abstract Texture2D GetDepth16Bit(int width, int height, float? unPhysicalFov = null);
-        void GetDepthEXR(float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetDepthEXR(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetDepthEXR(intrinsicMatrix, width, height);
             else
                 GetDepthEXR(width, height, fov);
-            depthEXRBase64String = Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
+            CollectData.AddDataNextStep("depth_exr", Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE)));
         }
         public Texture2D GetDepthEXR(float[,] intrinsicMatrix, int width, int height)
         {
@@ -265,13 +162,15 @@ namespace RFUniverse.Attributes
             return GetDepthEXR(size.x, size.y);
         }
         public abstract Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null);
-        void GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetAmodalMask(id, intrinsicMatrix, width, height);
             else
                 GetAmodalMask(id, width, height, fov);
-            amodalMaskBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("amodal_mask", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height)
         {
@@ -280,13 +179,15 @@ namespace RFUniverse.Attributes
         }
         public abstract Texture2D GetAmodalMask(int id, int width, int height, float? unPhysicalFov = null);
 
-        void GetMotionVector(float[,] intrinsicMatrix, int width, int height, float fov)
+
+        [RFUAPI]
+        public void GetMotionVector(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetMotionVector(intrinsicMatrix, width, height);
             else
                 GetMotionVector(width, height, fov);
-            motionVectorBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("motion_vector", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public Texture2D GetMotionVector(float[,] intrinsicMatrix, int width, int height)
         {
@@ -342,10 +243,8 @@ namespace RFUniverse.Attributes
             }
         }
 
-
-        Dictionary<int, Rect> ddBBOX = null;
-
-        void Get2DBBox(float[,] intrinsicMatrix, int width, int height, float fov)
+        [RFUAPI]
+        public void Get2DBBox(float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 Get2DBBox(intrinsicMatrix);
@@ -360,14 +259,13 @@ namespace RFUniverse.Attributes
 
         void Get2DBBox(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("Get2DBBox");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
                 Camera.fieldOfView = unPhysicalFov.Value;
             }
             Camera.targetTexture = RenderTexture.GetTemporary(width, height);
-            ddBBOX = new Dictionary<int, Rect>();
+            Dictionary<int, Rect> ddBBOX = new Dictionary<int, Rect>();
             foreach (var item in ActiveAttrs)
             {
                 if (item.Value is not GameObjectAttr) continue;
@@ -375,13 +273,13 @@ namespace RFUniverse.Attributes
                 if (rect.max.x > 0 && rect.max.y > 0 && rect.min.x < Camera.pixelWidth && rect.min.y < Camera.pixelHeight)
                     ddBBOX.Add(item.Key, rect);
             }
+            CollectData.AddDataNextStep("2d_bounding_box", ddBBOX);
         }
 
-
-        Dictionary<int, Tuple<Vector3, Vector3, Vector3>> dddBBOX = null;
-        void Get3DBBox()
+        [RFUAPI]
+        public void Get3DBBox()
         {
-            dddBBOX = new Dictionary<int, Tuple<Vector3, Vector3, Vector3>>();
+            Dictionary<int, Tuple<Vector3, Vector3, Vector3>> dddBBOX = new Dictionary<int, Tuple<Vector3, Vector3, Vector3>>();
             foreach (var item in ActiveAttrs)
             {
                 if (item.Value is not GameObjectAttr) continue;
@@ -390,12 +288,14 @@ namespace RFUniverse.Attributes
                 if (center.x > 0 && center.y > 0 && center.x < Camera.pixelWidth && center.y < Camera.pixelHeight)
                     dddBBOX.Add(item.Key, box);
             }
+            CollectData.AddDataNextStep("3d_bounding_box", dddBBOX);
         }
 
 
 
         List<BaseAttr> heatMapTarget = new List<BaseAttr>();
         List<Vector3> heatMapPositions = new List<Vector3>();
+        [RFUAPI]
         public void StartHeatMapRecord(List<int> ids)
         {
             StartHeatMapRecord(Attrs.Where((s) => ids.Contains(s.Key)).Select((s) => s.Value).ToList());
@@ -412,18 +312,20 @@ namespace RFUniverse.Attributes
                 heatMapPositions.Add(item.transform.position);
             }
         }
+        [RFUAPI]
         public void EndHeatMapRecord()
         {
             heatMapTarget.Clear();
             PlayerMain.Instance.OnStepAction -= RecordFrame;
         }
+        [RFUAPI]
         void GetHeatMap(int radius, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetHeatMap(intrinsicMatrix, radius);
             else
                 GetHeatMap(width, height, radius, fov);
-            heatMapBase64String = Convert.ToBase64String(tex.EncodeToPNG());
+            CollectData.AddDataNextStep("heat_map", Convert.ToBase64String(tex.EncodeToPNG()));
         }
         public void GetHeatMap(float[,] intrinsicMatrix, int radius)
         {
@@ -432,7 +334,6 @@ namespace RFUniverse.Attributes
         }
         public Texture2D GetHeatMap(int width, int height, int radius = 50, float? unPhysicalFov = null)
         {
-            Debug.Log("GetHeatMap");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;

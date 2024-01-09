@@ -2,12 +2,13 @@
 using UnityEngine;
 using UnityEditor;
 using RFUniverse.Attributes;
+using System.Collections.Generic;
 
 namespace RFUniverse
 {
-    public class ModelToRigidbodyPrefab : Editor
+    public class GenerateRigidbodyPrefab : Editor
     {
-        [MenuItem("RFUniverse/Model To Rigidbody Prefab")]
+        [MenuItem("RFUniverse/Generate Rigidbody Prefab")]
         public static void Generate()
         {
             GameObject[] objs = Selection.GetFiltered<GameObject>(SelectionMode.Assets);
@@ -22,11 +23,25 @@ namespace RFUniverse
 
                 GameObject prefab = GameObject.Instantiate(item);
                 RigidbodyAttr attr = prefab.AddComponent<RigidbodyAttr>();
-                RigidbodyAttr.SaveMeshs($"{path}/{name}_VHACD.asset", attr.GenerateVHACDCollider());
+                SaveMeshs($"{path}/{name}_VHACD.asset", attr.GenerateVHACDCollider());
                 PrefabUtility.SaveAsPrefabAsset(prefab, $"{path}/{name}_RigidbodyAttr.prefab");
                 DestroyImmediate(prefab);
             }
             AssetDatabase.Refresh();
         }
+
+        public static void SaveMeshs(string path, List<Mesh> meshs)
+        {
+            if (!path.EndsWith(".asset"))
+                path += ".asset";
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.CreateAsset(new Mesh(), path);
+            foreach (var i in meshs)
+            {
+                AssetDatabase.AddObjectToAsset(i, path);
+            }
+        }
     }
+
+
 }

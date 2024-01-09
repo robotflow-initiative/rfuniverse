@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class GenerareObiSoftbodyPrefab : MonoBehaviour
+public class GenerateObiSoftbodyPrefab : MonoBehaviour
 {
     [MenuItem("RFUniverse/Obi/Generare Softbody Prefab")]
     public static void Generate()

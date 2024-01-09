@@ -25,7 +25,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetRGB(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetRGB");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -43,7 +42,6 @@ namespace RFUniverse.Attributes
 
         public override Texture2D GetNormal(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetNormal");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -60,7 +58,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetID(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetID");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -77,7 +74,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetIDSingleChannel(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetID");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -94,7 +90,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null)
         {
-            Debug.Log("GetDepth");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -114,7 +109,6 @@ namespace RFUniverse.Attributes
 
         public override Texture2D GetDepth16Bit(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetDepth");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -133,7 +127,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetDepthEXR(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetDepthEXR");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -152,7 +145,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetAmodalMask(int id, int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetAmodalMask");
             if (!ActiveAttrs.ContainsKey(id)) return null;
             if (unPhysicalFov != null)
             {
@@ -175,7 +167,6 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetMotionVector(int width, int height, float? unPhysicalFov = null)
         {
-            Debug.Log("GetMotionVector");
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -22,19 +21,8 @@ namespace RFUniverse.Attributes
             if (pointCloudShader == null)
                 pointCloudShader = Addressables.LoadAssetAsync<Shader>("Shader/PointCloud").WaitForCompletion();
         }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "ShowPointCloud":
-                    ShowPointCloud((string)data[0], (float[,])data[1], (float[,])data[2], (float)data[3]);
-                    return;
-                case "SetRadius":
-                    SetRadius((float)data[0]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
+
+        [RFUAPI]
         private void ShowPointCloud(string path, float[,] positionArray, float[,] colorsArray, float radius)
         {
             PlayerMain.Instance.GroundActive = false;
@@ -61,7 +49,7 @@ namespace RFUniverse.Attributes
             filter.mesh = mesh;
             SetRadius(radius);
         }
-
+        [RFUAPI]
         private void SetRadius(float radius)
         {
             render.material.SetFloat("_Radius", radius);

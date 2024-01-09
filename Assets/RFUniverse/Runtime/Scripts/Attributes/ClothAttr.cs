@@ -15,46 +15,20 @@ namespace RFUniverse.Attributes
             base.Init();
             obiCloth = GetComponentInChildren<ObiCloth>();
         }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            if (particles != null)
-            {
-                data["particles"] = particles;
-                particles = null;
-            }
-            return data;
-        }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "GetParticles":
-                    GetParticles();
-                    return;
-                case "AddAttach":
-                    AddAttach((int)data[0], (float)data[1]);
-                    return;
-                case "RemoveAttach":
-                    RemoveAttach((int)data[0]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
 
+        [RFUAPI]
         public void AddAttach(int id, float maxDis = 0.03f)
         {
-            Debug.Log("AddAttach");
             if (Attrs.TryGetValue(id, out BaseAttr value))
                 AddAttach(value.transform, maxDis);
         }
-
+        [RFUAPI]
         public void RemoveAttach(int id)
         {
-            Debug.Log("RemoveAttach");
             if (Attrs.TryGetValue(id, out BaseAttr value))
                 RemoveAttach(value.transform);
         }
+
         ObiConstraints<ObiPinConstraintsBatch> pinConstraints = null;
         Dictionary<Transform, ObiPinConstraintsBatch> currentPinConstraints = new Dictionary<Transform, ObiPinConstraintsBatch>();
         public void AddAttach(Transform point, float maxDis = 0.03f)
@@ -106,15 +80,17 @@ namespace RFUniverse.Attributes
             }
         }
 
-        List<Vector3> particles;
+
+        [RFUAPI]
         void GetParticles()
         {
-            particles = new List<Vector3>();
+            List<Vector3> particles = new List<Vector3>();
             for (int i = 0; i < obiCloth.particleCount; i++)
             {
                 i = obiCloth.GetParticleRuntimeIndex(i);
                 particles.Add(obiCloth.GetParticlePosition(i));
             }
+            CollectData.AddDataNextStep("particles", particles);
         }
     }
 }

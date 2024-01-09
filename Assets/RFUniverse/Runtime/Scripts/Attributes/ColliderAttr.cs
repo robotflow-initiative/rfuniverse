@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using MeshProcess;
+using Obi;
 
 namespace RFUniverse.Attributes
 {
@@ -101,7 +102,6 @@ namespace RFUniverse.Attributes
         }
 
         private List<ColliderData> colliderDatas;
-        [EditableAttr("Colliders")]
         public List<ColliderData> ColliderDatas
         {
             get
@@ -232,26 +232,19 @@ namespace RFUniverse.Attributes
                 collider.localScale = new Vector3(data.scale[0], data.scale[1], data.scale[2]);
             }
         }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "EnabledAllCollider":
-                    EnabledAllCollider((bool)data[0]);
-                    return;
-                case "SetPhysicMaterial":
-                    SetPhysicMaterial((float)data[0], (float)data[1], (float)data[2], (int)data[3], (int)data[4]);
-                    return;
-                case "SetRFMoveColliderActive":
-                    SetRFMoveColliderActive((bool)data[0]);
-                    return;
-                case "GenerateVHACDColider":
-                    GenerateVHACDCollider();
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
 
+        [RFUAPI]
+        private void AddObiCollider()
+        {
+#if OBI
+            foreach (var item in GetComponentsInChildren<Collider>())
+            {
+                if (item.enabled && item.gameObject.activeInHierarchy && !item.isTrigger)
+                    item.gameObject.AddComponent<ObiCollider>().sourceCollider = item;
+            }
+#endif
+        }
+        [RFUAPI]
         public List<Mesh> GenerateVHACDCollider()
         {
             List<Mesh> meshAssets = new List<Mesh>();
@@ -283,7 +276,7 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
-
+        [RFUAPI]
         public void EnabledAllCollider(bool enabled)
         {
             foreach (var item in this.GetChildComponentFilter<Collider>())
@@ -292,6 +285,7 @@ namespace RFUniverse.Attributes
                     item.enabled = enabled;
             }
         }
+        [RFUAPI]
         public void SetPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
             PhysicMaterial material = new PhysicMaterial
@@ -308,25 +302,33 @@ namespace RFUniverse.Attributes
                     item.material = material;
             }
         }
-
+        [RFUAPI]
         protected void SetRFMoveColliderActive(bool active)
         {
             IsRFMoveCollider = active;
         }
 
-#if UNITY_EDITOR
-        public static void SaveMeshs(string path, List<Mesh> meshs)
+
+        private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
+        public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);
+
+        public static Action OnCollisionPairsChange;
+        private void OnCollisionEnter(Collision other)
         {
-            if (!path.EndsWith(".asset"))
-                path += ".asset";
-            AssetDatabase.DeleteAsset(path);
-            AssetDatabase.CreateAsset(new Mesh(), path);
-            foreach (var i in meshs)
-            {
-                AssetDatabase.AddObjectToAsset(i, path);
-            }
+            BaseAttr otherAttr = other.gameObject.GetComponentInParent<BaseAttr>();
+            if (otherAttr == null) return;
+            if (collisionPairs.Exists(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID))) return;
+            collisionPairs.Add(new Tuple<int, int>(this.ID, otherAttr.ID));
+            OnCollisionPairsChange?.Invoke();
         }
-#endif
+        private void OnCollisionExit(Collision other)
+        {
+            BaseAttr otherAttr = other.gameObject.GetComponentInParent<BaseAttr>();
+            if (otherAttr == null) return;
+            Tuple<int, int> pair = collisionPairs.Find(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID));
+            collisionPairs.Remove(pair);
+            OnCollisionPairsChange?.Invoke();
+        }
     }
 
 #if UNITY_EDITOR

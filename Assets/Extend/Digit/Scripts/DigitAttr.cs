@@ -313,31 +313,9 @@ namespace RFUniverse.Attributes.Digit
             m.triangles = t.ToArray();
             return m;
         }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            if (lightBase64String != null && depthBase64String != null)
-            {
-                data["light"] = lightBase64String;
-                data["depth"] = depthBase64String;
-                lightBase64String = null;
-                depthBase64String = null;
-            }
-            return data;
-        }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "GetData":
-                    GetData();
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
-        string lightBase64String = null;
-        string depthBase64String = null;
 
+
+        [RFUAPI]
         public void GetData()
         {
             tex = GetDepth();
@@ -372,8 +350,7 @@ namespace RFUniverse.Attributes.Digit
             tex.Reinitialize(cameraLightProxy.targetTexture.width, cameraLightProxy.targetTexture.height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
             tex.Apply();
-            lightBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-            //File.WriteAllBytes("/home/yanbing/rgb.png", tex.EncodeToPNG());
+            CollectData.AddDataNextStep("light", Convert.ToBase64String(tex.EncodeToPNG()));
 
             for (int i = 0; i < depth.Count; i++)
             {
@@ -382,8 +359,7 @@ namespace RFUniverse.Attributes.Digit
             tex.Reinitialize(cameraDepth.targetTexture.width, cameraDepth.targetTexture.height, TextureFormat.R8, false);
             tex.SetPixels(blurDepth.ToArray());
             tex.Apply();
-            depthBase64String = Convert.ToBase64String(tex.EncodeToPNG());
-            //File.WriteAllBytes("/home/yanbing/depth.png", tex.EncodeToPNG());
+            CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
         }
 
         public Texture2D GetLight()

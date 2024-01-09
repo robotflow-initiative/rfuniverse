@@ -1,57 +1,14 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using Robotflow.RFUniverse.SideChannels;
 using System.Linq;
-using RFUniverse.Manager;
 
 namespace RFUniverse.Attributes
 {
     public class GraspSimAttr : BaseAttr
     {
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "StartGraspSim":
-                    StartGraspSim(data);
-                    return;
-                case "StartGraspTest":
-                    StartGraspTest(data);
-                    return;
-                case "ShowGraspPose":
-                    ShowGraspPose(data);
-                    return;
-                case "GenerateGraspPose":
-                    GenerateGraspPose(data);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
         int mode = 0;
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            data.Add("done", isDone);
-            if (isDone)
-            {
-                if (mode == 0)
-                {
-                    List<Vector3> successPoints = allPoints.Where((s, i) => success[i]).ToList();
-                    List<Quaternion> successQuaternions = allQuaternions.Where((s, i) => success[i]).ToList();
-                    List<float> successGripperWidth = gripperWidth.Where((s, i) => success[i]).ToList();
-                    data.Add("points", successPoints);
-                    data.Add("quaternions", successQuaternions);
-                    data.Add("width", successGripperWidth);
-                }
-                if (mode == 1)
-                {
-                    data.Add("success", success);
-                }
-                isDone = false;
-            }
-            return data;
-        }
+
         bool isDone = false;
         List<Vector3> allPoints = new List<Vector3>();
         List<Quaternion> allQuaternions = new List<Quaternion>();
@@ -66,6 +23,30 @@ namespace RFUniverse.Attributes
         List<ControllerAttr> grippers = new List<ControllerAttr>();
         List<RigidbodyAttr> targets = new List<RigidbodyAttr>();
 
+        public override void AddPermanentData(Dictionary<string, object> data)
+        {
+            base.AddPermanentData(data);
+            data["done"] = isDone;
+            if (isDone)
+            {
+                if (mode == 0)
+                {
+                    List<Vector3> successPoints = allPoints.Where((s, i) => success[i]).ToList();
+                    List<Quaternion> successQuaternions = allQuaternions.Where((s, i) => success[i]).ToList();
+                    List<float> successGripperWidth = gripperWidth.Where((s, i) => success[i]).ToList();
+                    data["points"] = successPoints;
+                    data["quaternions"] = successQuaternions;
+                    data["width"] = successGripperWidth;
+                }
+                if (mode == 1)
+                {
+                    data["success"] = success;
+                }
+                isDone = false;
+            }
+        }
+
+        [RFUAPI]
         void StartGraspSim(object[] data)
         {
             mode = 0;
@@ -116,6 +97,7 @@ namespace RFUniverse.Attributes
 
             StartCoroutine(GraspSim());
         }
+        [RFUAPI]
         void StartGraspTest(object[] data)
         {
             mode = 1;
@@ -335,6 +317,7 @@ namespace RFUniverse.Attributes
             PlayerMain.Instance.GroundActive = sourceGround;
             System.GC.Collect();
         }
+        [RFUAPI]
         void ShowGraspPose(object[] data)
         {
             string meshPath = (string)data[0];
@@ -368,6 +351,7 @@ namespace RFUniverse.Attributes
                 obj.transform.localRotation = rotation;
             }
         }
+        [RFUAPI]
         void GenerateGraspPose(object[] data)
         {
             Debug.Log("GenerateGraspPose");

@@ -53,13 +53,6 @@ namespace RFUniverse.Attributes
             }
         }
 
-        private void OnDestroy()
-        {
-            if (lightView != null)
-            {
-                DestroyImmediate(lightView.gameObject);
-            }
-        }
 
         new protected Light light = null;
         public Light Light
@@ -100,7 +93,7 @@ namespace RFUniverse.Attributes
 
         private LightData lightData = new LightData();
 
-        [EditAttr("Rigidbody", "RFUniverse.EditMode.LightAttrUI")]
+        [EditAttr("Light", "RFUniverse.EditMode.LightAttrUI")]
         public LightData LightData
         {
             get
@@ -147,58 +140,33 @@ namespace RFUniverse.Attributes
             data.lightData = GetLightData();
             return data;
         }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "SetColor":
-                    SetColor(RFUniverseUtility.ConvertType<List<float>>(data[0]));
-                    return;
-                case "SetIntensity":
-                    SetIntensity((float)data[0]);
-                    return;
-                case "SetRange":
-                    SetRange((float)data[0]);
-                    return;
-                case "SetType":
-                    SetType((int)data[0]);
-                    return;
-                case "SetShadow":
-                    SetShadow((int)data[0]);
-                    return;
-                case "SetSpotAngle":
-                    SetSpotAngle((float)data[0]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
-
-        private void SetSpotAngle(float spotAngle)
+        [RFUAPI]
+        public void SetSpotAngle(float spotAngle)
         {
             Light.spotAngle = spotAngle;
         }
-
-        private void SetShadow(int shadows)
+        [RFUAPI]
+        public void SetShadow(int shadows)
         {
             Light.shadows = (LightShadows)shadows;
         }
-
-        private void SetType(int type)
+        [RFUAPI]
+        public void SetType(int type)
         {
             Type = (LightType)type;
         }
-
-        private void SetRange(float range)
+        [RFUAPI]
+        public void SetRange(float range)
         {
             Light.range = range;
         }
-
-        private void SetIntensity(float intensity)
+        [RFUAPI]
+        public void SetIntensity(float intensity)
         {
             Light.intensity = intensity;
         }
-
-        private void SetColor(List<float> color)
+        [RFUAPI]
+        public void SetColor(List<float> color)
         {
             Light.color = new Color(color[0], color[1], color[2]);
         }

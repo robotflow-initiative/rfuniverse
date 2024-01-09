@@ -83,7 +83,7 @@ namespace RFUniverse.Attributes
             base.Init();
         }
 
-        static string humanBodyBioIKLimitPath = $"{UnityEngine.Application.streamingAssetsPath}/HumanBodyBioIKLimit.json";
+        static string humanBodyBioIKLimitPath = $"{Application.streamingAssetsPath}/HumanBodyBioIKLimit.json";
 #if BIOIK
         public BioIK.BioIK bioIK;
         public class BioIKMotion
@@ -198,34 +198,9 @@ namespace RFUniverse.Attributes
             }
 #endif
         }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            return data;
-        }
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "HumanIKTargetDoMove":
-                    HumanIKTargetDoMove((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
-                    return;
-                case "HumanIKTargetDoRotate":
-                    HumanIKTargetDoRotate((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
-                    return;
-                case "HumanIKTargetDoRotateQuaternion":
-                    HumanIKTargetDoRotateQuaternion((int)data[0], RFUniverseUtility.ConvertType<List<float>>(data[1]), (float)data[2], (bool)data[3], (bool)data[4]);
-                    return;
-                case "HumanIKTargetDoComplete":
-                    HumanIKTargetDoComplete((int)data[0]);
-                    return;
-                case "HumanIKTargetDoKill":
-                    HumanIKTargetDoKill((int)data[0]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
 
+
+        [RFUAPI]
         private void HumanIKTargetDoMove(int index, List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoMove");
@@ -238,7 +213,7 @@ namespace RFUniverse.Attributes
                 moveDone = true;
             };
         }
-
+        [RFUAPI]
         private void HumanIKTargetDoRotate(int index, List<float> rotation, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoRotate");
@@ -250,6 +225,7 @@ namespace RFUniverse.Attributes
                 rotateDone = true;
             };
         }
+        [RFUAPI]
         private void HumanIKTargetDoRotateQuaternion(int index, List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
             Debug.Log("HumanIKTargetDoRotateQuaternion");
@@ -261,6 +237,7 @@ namespace RFUniverse.Attributes
                 rotateDone = true;
             };
         }
+        [RFUAPI]
         private void HumanIKTargetDoComplete(int index)
         {
             if (ikTargets.Count <= index) return;
@@ -269,6 +246,7 @@ namespace RFUniverse.Attributes
             moveDone = true;
             rotateDone = true;
         }
+        [RFUAPI]
         private void HumanIKTargetDoKill(int index)
         {
             if (ikTargets.Count <= index) return;

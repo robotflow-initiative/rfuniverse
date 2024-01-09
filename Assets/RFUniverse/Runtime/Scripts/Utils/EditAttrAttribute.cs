@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace RFUniverse.Attributes
+namespace RFUniverse
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class EditAttrAttribute : Attribute

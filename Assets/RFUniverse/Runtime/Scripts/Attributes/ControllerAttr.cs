@@ -159,8 +159,8 @@ namespace RFUniverse.Attributes
         }
 
         private List<ArticulationData> articulationDatas;
-        //[EditableAttr("Articulations")]
-        //[EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
+
+        [EditAttr("Articulations", "RFUniverse.EditMode.ArticulationAttrUI")]
         public List<ArticulationData> ArticulationDatas
         {
             get
@@ -241,8 +241,6 @@ namespace RFUniverse.Attributes
                 {
                     body = item,
                     moveable = item.jointType != ArticulationJointType.FixedJoint && item.GetUnit().mimicParent == null && !item.isRoot,
-                    //initPosition = 0,
-                    //isGraspPoint = false
                 });
             }
         }
@@ -418,13 +416,11 @@ namespace RFUniverse.Attributes
                 segment.Objectives = new BioIK.BioObjective[] { };
                 BioIK.BioObjective positionObjective = segment.AddObjective(BioIK.ObjectiveType.Position);
                 ((BioIK.Position)positionObjective).SetTargetTransform(iKTarget);
-                //((BioIK.Position)positionObjective).SetMaximumError(0.03d);
                 if (iKTargetOrientation)
                 {
                     BioIK.BioObjective orientationObjective = segment.AddObjective(BioIK.ObjectiveType.Orientation);
                     ((BioIK.Orientation)orientationObjective).SetTargetTransform(iKTarget);
                 }
-                //((BioIK.Orientation)orientationObjective).SetMaximumError(1d);
             }
             bioIK.Refresh();
 #endif
@@ -434,11 +430,8 @@ namespace RFUniverse.Attributes
         {
             if (iKFollow != null && iKTarget != null)
             {
-                //Transform last = jointParameters.Last().body.transform;
                 iKTarget.position = iKFollow.position;
                 iKTarget.rotation = iKFollow.rotation;
-                //iKTarget.position = last.TransformPoint(iKFollow.localPosition);
-                //iKTarget.rotation = last.rotation * iKFollow.localRotation;
             }
         }
 
@@ -467,9 +460,9 @@ namespace RFUniverse.Attributes
 #endif
         }
 
-        public override Dictionary<string, object> CollectData()
+        public override void AddPermanentData(Dictionary<string, object> data)
         {
-            Dictionary<string, object> data = base.CollectData();
+            base.AddPermanentData(data);
             // Number of Articulation Joints
             data["number_of_joints"] = Joints.Count;
             // Position
@@ -507,26 +500,6 @@ namespace RFUniverse.Attributes
             data["joint_stiffness"] = MoveableJoints.Select(s => s.xDrive.stiffness).ToList();
             // Each part's joint upper limit
             data["joint_damping"] = MoveableJoints.Select(s => s.xDrive.damping).ToList();
-
-            // Whether all parts are stable
-            data["all_stable"] = AllStable();
-#if UNITY_2022_1_OR_NEWER
-            if (sendJointInverseDynamicsForce)
-            {
-                List<float> gravityForces = new List<float>();
-                Root.GetJointGravityForces(gravityForces);
-                data.Add("gravity_forces", gravityForces);
-                List<float> coriolisCentrifugalForces = new List<float>();
-                Root.GetJointCoriolisCentrifugalForces(coriolisCentrifugalForces);
-                data.Add("coriolis_centrifugal_forces", coriolisCentrifugalForces);
-                List<float> driveForces = new List<float>();
-                Root.GetDriveForces(driveForces);
-                data.Add("drive_forces", driveForces);
-
-                sendJointInverseDynamicsForce = false;
-            }
-#endif
-            return data;
         }
 
         public List<float> GetJointPositions()
@@ -539,116 +512,9 @@ namespace RFUniverse.Attributes
             return jointPositions;
         }
 
-        internal bool AllStable()
-        {
-            //foreach (ArticulationBody joint in joints)
-            //{
-            //    if (joint.TryGetComponent(out ArticulationUnit unit))
-            //        if (unit.GetMovingDirection() != MovingDirection.None)
-            //            return false;
-            //}
-            return true;
-        }
-
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "SetJointPosition":
-                    SetJointPosition(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
-                    return;
-                case "SetJointPositionDirectly":
-                    SetJointPositionDirectly(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetIndexJointPosition":
-                    SetIndexJointPosition((int)data[0], (float)data[1]);
-                    return;
-                case "SetIndexJointPositionDirectly":
-                    SetIndexJointPositionDirectly((int)data[0], (float)data[1]);
-                    return;
-                case "SetJointPositionContinue":
-                    StartCoroutine(SetJointPositionContinue((int)data[0], data[1].ConvertType<List<List<float>>>()));
-                    return;
-                case "SetJointDriveForce":
-                    SetJointDriveForce(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetJointLimit":
-                    SetJointLimit(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
-                    return;
-                case "SetJointStiffness":
-                    SetJointStiffness(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetJointDamping":
-                    SetJointDamping(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetJointVelocity":
-                    SetJointVelocity(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetIndexJointVelocity":
-                    SetIndexJointVelocity((int)data[0], (float)data[1]);
-                    return;
-                case "SetJointUseGravity":
-                    SetJointUseGravity((bool)data[0]);
-                    return;
-                case "AddJointForce":
-                    AddJointForce(data[0].ConvertType<List<List<float>>>());
-                    return;
-                case "AddJointForceAtPosition":
-                    AddJointForceAtPosition(data[0].ConvertType<List<List<float>>>(), data[1].ConvertType<List<List<float>>>());
-                    return;
-                case "AddJointTorque":
-                    AddJointTorque(data[0].ConvertType<List<List<float>>>());
-                    return;
-                case "SetImmovable":
-                    SetImmovable((bool)data[0]);
-                    return;
-                case "GetJointInverseDynamicsForce":
-                    GetJointInverseDynamicsForce();
-                    return;
-                case "MoveForward":
-                    MoveForward((float)data[0], (float)data[1]);
-                    return;
-                case "MoveBack":
-                    MoveBack((float)data[0], (float)data[1]);
-                    return;
-                case "TurnLeft":
-                    TurnLeft((float)data[0], (float)data[1]);
-                    return;
-                case "TurnRight":
-                    TurnRight((float)data[0], (float)data[1]);
-                    return;
-                case "GripperOpen":
-                    GripperOpen();
-                    return;
-                case "GripperClose":
-                    GripperClose();
-                    return;
-                case "EnabledNativeIK":
-                    EnabledNativeIK((bool)data[0]);
-                    return;
-                case "IKTargetDoMove":
-                    IKTargetDoMove(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "IKTargetDoRotate":
-                    IKTargetDoRotate(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "IKTargetDoRotateQuaternion":
-                    IKTargetDoRotateQuaternion(data[0].ConvertType<List<float>>(), (float)data[1], (bool)data[2], (bool)data[3]);
-                    return;
-                case "IKTargetDoComplete":
-                    IKTargetDoComplete();
-                    return;
-                case "IKTargetDoKill":
-                    IKTargetDoKill();
-                    return;
-                case "SetIKTargetOffset":
-                    SetIKTargetOffset(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>(), data[2].ConvertType<List<float>>());
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
 
 
+        [RFUAPI]
         private void SetImmovable(bool immovable)
         {
             ArticulationBody first = GetComponentInChildren<ArticulationBody>();
@@ -657,6 +523,7 @@ namespace RFUniverse.Attributes
             else
                 Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Is not root ArticulationBody");
         }
+        [RFUAPI]
         public void EnabledNativeIK(bool enabled)
         {
 #if BIOIK
@@ -684,9 +551,9 @@ namespace RFUniverse.Attributes
         Vector3? tempIKTargetPosition;
         Quaternion? tempIKTargetRotation;
 
+        [RFUAPI]
         private void IKTargetDoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("IKTargetDoMove");
 #if BIOIK
             if (bioIK == null)
             {
@@ -716,16 +583,16 @@ namespace RFUniverse.Attributes
                 };
         }
 
+        [RFUAPI]
         private void IKTargetDoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("IKTargetDoRotate");
             if (iKTarget == null) return;
             Quaternion target = Quaternion.Euler(eulerAngle[0], eulerAngle[1], eulerAngle[2]);
             IKTargetDoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
+        [RFUAPI]
         private void IKTargetDoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
-            Debug.Log("IKTargetDoRotateQuaternion");
             if (iKTarget == null) return;
             Quaternion target = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
             IKTargetDoRotateQuaternion(target, duration, isSpeedBased, isRelative);
@@ -795,7 +662,7 @@ namespace RFUniverse.Attributes
             rotateDone = true;
 #endif
         }
-
+        [RFUAPI]
         private void IKTargetDoComplete()
         {
             if (iKTarget == null) return;
@@ -803,6 +670,7 @@ namespace RFUniverse.Attributes
             moveDone = true;
             rotateDone = true;
         }
+        [RFUAPI]
         private void IKTargetDoKill()
         {
             if (iKTarget == null) return;
@@ -836,7 +704,7 @@ namespace RFUniverse.Attributes
         {
             return;
         }
-
+        [RFUAPI]
         public void SetIKTargetOffset(List<float> position, List<float> rotation, List<float> quaternion)
         {
             if (iKFollow == null) return;
@@ -847,39 +715,52 @@ namespace RFUniverse.Attributes
                 iKFollow.localEulerAngles = new Vector3(rotation[0], rotation[1], rotation[2]);
             ResetIKTarget();
         }
-        bool sendJointInverseDynamicsForce = false;
+        [RFUAPI]
         private void GetJointInverseDynamicsForce()
         {
-            sendJointInverseDynamicsForce = true;
-#if !UNITY_2022_1_OR_NEWER
-            Debug.LogWarning($"Controller ID:{ID},Name:{Name}, Current Unity Version dont support GetJointInverseDynamicsForce API");
+#if UNITY_2022_1_OR_NEWER
+            List<float> gravityForces = new List<float>();
+            Root.GetJointGravityForces(gravityForces);
+            CollectData.AddDataNextStep("gravity_forces", gravityForces);
+            List<float> coriolisCentrifugalForces = new List<float>();
+            Root.GetJointCoriolisCentrifugalForces(coriolisCentrifugalForces);
+            CollectData.AddDataNextStep("coriolis_centrifugal_forces", coriolisCentrifugalForces);
+            List<float> driveForces = new List<float>();
+            Root.GetDriveForces(driveForces);
+            CollectData.AddDataNextStep("drive_forces", driveForces);
+
+#else
+        Debug.LogWarning($"Controller ID:{ID},Name:{Name}, Current Unity Version dont support GetJointInverseDynamicsForce API");
 #endif
         }
-
+        [RFUAPI]
         private void MoveForward(float distance, float speed)
         {
             GetComponent<ICustomMove>()?.Forward(distance, speed);
         }
+        [RFUAPI]
         private void MoveBack(float distance, float speed)
         {
             GetComponent<ICustomMove>()?.Back(distance, speed);
         }
+        [RFUAPI]
         private void TurnLeft(float angle, float speed)
         {
             GetComponent<ICustomMove>()?.Left(angle, speed);
         }
+        [RFUAPI]
         private void TurnRight(float angle, float speed)
         {
             GetComponent<ICustomMove>()?.Right(angle, speed);
         }
+        [RFUAPI]
         public void GripperOpen()
         {
-            Debug.Log("GripperOpen");
             GetComponent<ICustomGripper>()?.Open();
         }
+        [RFUAPI]
         public void GripperClose()
         {
-            Debug.Log("GripperClose");
             GetComponent<ICustomGripper>()?.Close();
         }
         public override void SetPosition(Vector3 position, bool worldSpace = true)
@@ -903,6 +784,7 @@ namespace RFUniverse.Attributes
         {
             SetRotation(new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]).eulerAngles, worldSpace);
         }
+
         public override void SetScale(Vector3 scale)
         {
             return;
@@ -924,6 +806,7 @@ namespace RFUniverse.Attributes
         {
             return;
         }
+
         public override void SetParent(int parentID, string parentName)
         {
             if (Attrs.TryGetValue(parentID, out BaseAttr attr))
@@ -935,6 +818,7 @@ namespace RFUniverse.Attributes
             }
 
         }
+        [RFUAPI]
         private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
         {
 #if BIOIK
@@ -951,9 +835,9 @@ namespace RFUniverse.Attributes
             }
             SetJointPosition(jointPositions, ControlMode.Target, speedScales);
         }
+        [RFUAPI]
         private void SetJointPositionDirectly(List<float> jointPositions)
         {
-            Debug.Log("SetJointPositionDirectly");
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
             {
@@ -968,6 +852,7 @@ namespace RFUniverse.Attributes
             }
             SetJointPosition(jointPositions, ControlMode.Direct);
         }
+        [RFUAPI]
         public void SetIndexJointPosition(int index, float jointPosition)
         {
 #if BIOIK
@@ -984,6 +869,7 @@ namespace RFUniverse.Attributes
             }
             SetIndexJointPosition(index, jointPosition, ControlMode.Target);
         }
+        [RFUAPI]
         public void SetIndexJointPositionDirectly(int index, float jointPosition)
         {
 #if BIOIK
@@ -1000,8 +886,12 @@ namespace RFUniverse.Attributes
             }
             SetIndexJointPosition(index, jointPosition, ControlMode.Direct);
         }
-
-        public IEnumerator SetJointPositionContinue(int interval, List<List<float>> jointPositions)
+        [RFUAPI]
+        public void SetJointPositionContinue(int interval, List<List<float>> jointPositions)
+        {
+            StartCoroutine(StartJointPositionContinue(interval, jointPositions));
+        }
+        public IEnumerator StartJointPositionContinue(int interval, List<List<float>> jointPositions)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
@@ -1010,7 +900,6 @@ namespace RFUniverse.Attributes
                 yield break;
             }
 #endif
-            Debug.Log("SetJointPositionContinue");
             if (jointPositions.Count == 0)
             {
                 Debug.LogError("JointPositions Length is 0");
@@ -1038,44 +927,48 @@ namespace RFUniverse.Attributes
             }
         }
 
-        public void SetJointDriveForce(List<float> list)
+
+        [RFUAPI]
+        public void SetJointDriveForce(List<float> jointDriveForce)
         {
-            if (MoveableJoints.Count != list.Count)
+            if (MoveableJoints.Count != jointDriveForce.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", list.Count, MoveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointDriveForce.Count, MoveableJoints.Count));
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().SetJointForce(list[i]);
+                MoveableJoints[i].GetUnit().SetJointForce(jointDriveForce[i]);
             }
         }
-        private void SetJointDamping(List<float> list)
+        [RFUAPI]
+        private void SetJointDamping(List<float> jointDamping)
         {
-            if (MoveableJoints.Count != list.Count)
+            if (MoveableJoints.Count != jointDamping.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", list.Count, MoveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointDamping.Count, MoveableJoints.Count));
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().SetJointDamping(list[i]);
+                MoveableJoints[i].GetUnit().SetJointDamping(jointDamping[i]);
             }
         }
 
-        private void SetJointStiffness(List<float> list)
+        [RFUAPI]
+        private void SetJointStiffness(List<float> jointStiffness)
         {
-            if (MoveableJoints.Count != list.Count)
+            if (MoveableJoints.Count != jointStiffness.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", list.Count, MoveableJoints.Count));
+                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointStiffness.Count, MoveableJoints.Count));
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                MoveableJoints[i].GetUnit().SetJointStiffness(list[i]);
+                MoveableJoints[i].GetUnit().SetJointStiffness(jointStiffness[i]);
             }
         }
-
+        [RFUAPI]
         private void SetJointLimit(List<float> upper, List<float> lower)
         {
             if (MoveableJoints.Count != upper.Count || MoveableJoints.Count != lower.Count)
@@ -1088,10 +981,9 @@ namespace RFUniverse.Attributes
                 MoveableJoints[i].GetUnit().SetJointLimit(upper[i], lower[i]);
             }
         }
-
+        [RFUAPI]
         private void SetJointVelocity(List<float> jointTargetVelocitys)
         {
-            Debug.Log("SetJointVelocity");
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
             {
@@ -1104,10 +996,9 @@ namespace RFUniverse.Attributes
                 MoveableJoints[i].GetUnit().SetJointTargetVelocity(jointTargetVelocitys[i]);
             }
         }
-
+        [RFUAPI]
         private void SetIndexJointVelocity(int index, float jointTargetVelocity)
         {
-            Debug.Log("SetIndexJointVelocity");
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
             {
@@ -1128,7 +1019,7 @@ namespace RFUniverse.Attributes
         {
             MoveableJoints[index].GetUnit().SetJointTarget(jointPosition, mode);
         }
-
+        [RFUAPI]
         public void SetJointUseGravity(bool useGravity)
         {
             foreach (var item in Joints)
@@ -1136,6 +1027,7 @@ namespace RFUniverse.Attributes
                 item.useGravity = useGravity;
             }
         }
+        [RFUAPI]
         private void AddJointForce(List<List<float>> jointForces)
         {
             if (MoveableJoints.Count != jointForces.Count)
@@ -1148,6 +1040,7 @@ namespace RFUniverse.Attributes
                 MoveableJoints[i].AddForce(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]));
             }
         }
+        [RFUAPI]
         private void AddJointForceAtPosition(List<List<float>> jointForces, List<List<float>> forcesPosition)
         {
             if (MoveableJoints.Count != jointForces.Count)
@@ -1160,6 +1053,7 @@ namespace RFUniverse.Attributes
                 MoveableJoints[i].AddForceAtPosition(new Vector3(jointForces[i][0], jointForces[i][1], jointForces[i][2]), new Vector3(forcesPosition[i][0], forcesPosition[i][1], forcesPosition[i][2]));
             }
         }
+        [RFUAPI]
         private void AddJointTorque(List<List<float>> jointTorques)
         {
             if (MoveableJoints.Count != jointTorques.Count)

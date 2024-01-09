@@ -9,8 +9,10 @@ using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using System.Reflection;
+#if OBI
 using Obi;
-
+#endif
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
@@ -19,7 +21,7 @@ using UnityEditor.AddressableAssets;
 
 namespace RFUniverse
 {
-    public class PlayerMain : RFUniverseMain
+    public class PlayerMain : RFUniverseMain, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
         public int port = 5004;
         public static PlayerMain Instance = null;
@@ -63,10 +65,22 @@ namespace RFUniverse
         {
             Instance = this;
         }
+
         DebugManager debugManager;
+        InstanceManager instanceManager;
+        LayerManager layerManager;
+        MessageManager messageManager;
+
+        ICollectData CollectData => this;
         protected override void Awake()
         {
             base.Awake();
+
+            debugManager = DebugManager.Instance;
+            instanceManager = InstanceManager.Instance;
+            layerManager = LayerManager.Instance;
+            messageManager = MessageManager.Instance;
+
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
             Instance = this;
             FixedDeltaTime = fixedDeltaTime;
@@ -75,11 +89,10 @@ namespace RFUniverse
             playerMainUI.Init(() =>
             {
                 Debug.Log("PendDone");
-                Communicator.SendObject("Env", "PendDone");
+                CollectData.AddDataNextStep("pend_done", null);
             });
 
-            debugManager = DebugManager.Instance;
-
+            (this as IHaveAPI).RegisterAPI();
 
             if (Communicator == null)
             {
@@ -96,10 +109,11 @@ namespace RFUniverse
                 Communicator = new RFUniverseCommunicator("localhost", port, false, clientTime, () =>
                 {
                     Debug.Log("Connected successfully");
+                    (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
                     OnStepAction += Step;
                     Communicator.OnReceivedData += (data) =>
                     {
-                        ReceiveData(data);
+                        (this as IReceiveData).ReceiveData(data);
                     };
                     Communicator.OnDisconnect += () =>
                     {
@@ -161,8 +175,7 @@ namespace RFUniverse
                     File.WriteAllText(configPath, configString);
                 }
             }
-
-            Communicator?.SendObject("Env", "Close");
+            CollectData.AddDataNextStep("close", null);
             Communicator?.Dispose();
         }
 
@@ -176,148 +189,42 @@ namespace RFUniverse
         {
             if (Communicator.Connected)
             {
-                foreach (var attr in BaseAttr.ActiveAttrs.Values)
-                {
-                    Dictionary<string, object> data = attr.CollectData();
-                    Communicator.SendObject("Instance", attr.ID, attr.GetType().Name, data);
-                }
-                Communicator.SyncStepEnd();
+                InstanceManager.Instance.CollectAllAttrData();
+                Communicator?.SendObject("Env", CollectData.CollectData());
+                Communicator?.SyncStepEnd();
             }
         }
 
-        private void ReceiveData(object[] data)
+        Dictionary<string, Action<object[]>> IDistributeData<string>.Receiver { get; set; }
+
+        void IReceiveData.ReceiveData(object[] data)
         {
-            string channel = (string)data[0];
+            string hand = (string)data[0];
             data = data.Skip(1).ToArray();
-            switch (channel)
-            {
-                case "Env":
-                    ReceiveEnvData(data);
-                    break;
-                case "Instance":
-                    ReceiveInstanceData(data);
-                    break;
-                case "Message":
-                    ReceiveMessageData(data);
-                    break;
-                case "Object":
-                    ReceiveObjectData(data);
-                    break;
-                case "Debug":
-                    debugManager.ReceiveDebugData(data);
-                    break;
-                default:
-                    break;
-            }
+            (this as IDistributeData<string>).DistributeData(hand, data);
         }
-        void ReceiveInstanceData(object[] data)
-        {
-            int id = (int)data[0];
-            data = data.Skip(1).ToArray();
-            if (BaseAttr.Attrs.ContainsKey(id))
-                BaseAttr.Attrs[id].ReceiveData(data);
-            else
-                Debug.LogError($"ID:{id} Not Exist");
-        }
+
         void ReceiveEnvData(object[] data)
         {
-            string type = (string)data[0];
+            string hand = (string)data[0];
             data = data.Skip(1).ToArray();
-            switch (type)
-            {
-                case "PreLoadAssetsAsync":
-                    PreLoadAssetsAsync(data[0].ConvertType<List<string>>());
-                    return;
-                case "LoadSceneAsync":
-                    LoadSceneAsync((string)data[0]);
-                    return;
-                case "SwitchSceneAsync":
-                    SwitchSceneAsync((string)data[0]);
-                    return;
-                case "Pend":
-                    Pend();
-                    return;
-                case "AlignCamera":
-                    AlignCamera((int)data[0]);
-                    return;
-                case "SaveScene":
-                    SaveScene((string)data[0]);
-                    return;
-                case "ClearScene":
-                    ClearScene();
-                    return;
-                case "InstanceObject":
-                    InstanceObject<BaseAttr>((string)data[0], (int)data[1]);
-                    return;
-                case "LoadURDF":
-                    LoadURDF((int)data[0], (string)data[1], (bool)data[2], (string)data[3]);
-                    return;
-                case "LoadMesh":
-                    LoadMesh((int)data[0], (string)data[1]);
-                    return;
-                case "IgnoreLayerCollision":
-                    IgnoreLayerCollision((int)data[0], (int)data[1], (bool)data[2]);
-                    return;
-                case "GetCurrentCollisionPairs":
-                    GetCurrentCollisionPairs();
-                    return;
-                case "GetRFMoveColliders":
-                    GetRFMoveColliders();
-                    return;
-                case "SetGravity":
-                    SetGravity(data[0].ConvertType<List<float>>());
-                    return;
-                case "SetGroundActive":
-                    SetGroundActive((bool)data[0]);
-                    return;
-                case "SetGroundPhysicMaterial":
-                    SetGroundPhysicMaterial((float)data[0], (float)data[1], (float)data[2], (int)data[3], (int)data[4]);
-                    return;
-                case "SetTimeStep":
-                    SetTimeStep((float)data[0]);
-                    return;
-                case "SetTimeScale":
-                    SetTimeScale((float)data[0]);
-                    return;
-                case "SetResolution":
-                    SetResolution((int)data[0], (int)data[1]);
-                    return;
-                case "ExportOBJ":
-                    ExportOBJ(data[0].ConvertType<List<int>>(), (string)data[1]);
-                    return;
-                case "SetShadowDistance":
-                    SetShadowDistance((float)data[0]);
-                    return;
-                case "SetViewTransform":
-                    SetViewTransform(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
-                    return;
-                case "ViewLookAt":
-                    ViewLookAt(data[0].ConvertType<List<float>>(), data[1].ConvertType<List<float>>());
-                    return;
-                case "SetViewBackGround":
-                    SetViewBackGround(data[0].ConvertType<List<float>>());
-                    return;
-#if OBI
-                case "LoadCloth":
-                    LoadCloth((string)data[0], (int)data[1]);
-                    return;
-                case "EnabledGroundObiCollider":
-                    EnabledGroundObiCollider((bool)data[0]);
-                    return;
-#endif
-                default:
-                    Debug.LogWarning("Dont have mehond:" + type);
-                    break;
-            }
+            (this as IHaveAPI).CallAPI(hand, data);
+        }
+        void ICollectData.AddPermanentData(Dictionary<string, object> data)
+        {
+            data["fixed_delta_time"] = Time.fixedDeltaTime;
         }
 
+        Dictionary<string, object> ICollectData.TemporaryData { get; set; }
 
 
-        private void SetShadowDistance(float dis)
+        [RFUAPI]
+        public void SetShadowDistance(float dis)
         {
             QualitySettings.shadowDistance = dis;
         }
-        private void SetViewTransform(List<float> posiiton, List<float> rotation)
+        [RFUAPI]
+        public void SetViewTransform(List<float> posiiton, List<float> rotation)
         {
             Debug.Log("SetViewTransform");
             if (posiiton != null)
@@ -329,13 +236,13 @@ namespace RFUniverse
                 MainCamera.transform.eulerAngles = RFUniverseUtility.ListFloatToVector3(rotation);
             }
         }
-
+        [RFUAPI]
         public virtual void ViewLookAt(List<float> target, List<float> worldUp)
         {
             MainCamera.transform.LookAt(RFUniverseUtility.ListFloatToVector3(target), RFUniverseUtility.ListFloatToVector3(worldUp));
         }
-
-        private void SetViewBackGround(List<float> color)
+        [RFUAPI]
+        public void SetViewBackGround(List<float> color)
         {
             Debug.Log("SetViewBackGround");
             if (color == null)
@@ -348,6 +255,7 @@ namespace RFUniverse
         }
 
 #if OBI
+        [RFUAPI]
         public ClothAttr LoadCloth(string path, int id)
         {
             Debug.Log($"LoadCloth: {path}");
@@ -362,18 +270,19 @@ namespace RFUniverse
             clothAttr.Instance();
             return clothAttr;
         }
-
+        [RFUAPI]
         public void EnabledGroundObiCollider(bool enabled)
         {
             ObiCollider collider = Ground.GetComponent<ObiCollider>() ?? Ground.AddComponent<ObiCollider>();
             collider.enabled = enabled;
         }
 #endif
-
+        [RFUAPI]
         public void Pend()
         {
             playerMainUI.ShowPend();
         }
+        [RFUAPI]
         public void PreLoadAssetsAsync(List<string> names, Action onCompleted = null, bool sendDoneMsg = true)
         {
             names = names.Distinct().ToList();
@@ -419,7 +328,6 @@ namespace RFUniverse
                 {
                     Debug.LogWarning($"Not Find Editor Asset: {name}");
                 }
-
 #else
                 Addressables.LoadAssetAsync<GameObject>(name).Completed += (handle) =>
                 {
@@ -430,17 +338,15 @@ namespace RFUniverse
 #endif
             }
         }
-
-        void LoadSceneAsync(string file)
+        [RFUAPI]
+        public void LoadSceneAsync(string file)
         {
-            Debug.Log($"LoadSceneAsync: {file}");
             LoadScene(file);
             SendLoadDoneMsg();
         }
-
-        void AlignCamera(int cameraID)
+        [RFUAPI]
+        public void AlignCamera(int cameraID)
         {
-            Debug.Log("AlignCamera");
             if (!BaseAttr.Attrs.ContainsKey(cameraID))
             {
                 Debug.LogWarning($"not find align target camera {cameraID}");
@@ -450,22 +356,22 @@ namespace RFUniverse
             MainCamera.transform.position = camera.transform.position;
             MainCamera.transform.rotation = camera.transform.rotation;
         }
-        void SaveScene(string path)
+        [RFUAPI]
+        public void SaveScene(string path)
         {
-            Debug.Log("SaveScene");
             SaveScene(path, BaseAttr.Attrs.Values.ToList());
         }
-        void ClearScene()
+        [RFUAPI]
+        public void ClearScene()
         {
-            Debug.Log("ClearScene");
             foreach (var item in BaseAttr.Attrs.Values)
             {
                 item.Destroy();
             }
         }
-        void SwitchSceneAsync(string name)
+        [RFUAPI]
+        public void SwitchSceneAsync(string name)
         {
-            Debug.Log("SwitchSceneAsync");
             Addressables.LoadSceneAsync(name).Completed += (_) =>
             {
                 SendLoadDoneMsg();
@@ -481,110 +387,17 @@ namespace RFUniverse
         }
         void SendLoadDoneMsg()
         {
-            Communicator.SendObject("Env", "LoadDone");
+            CollectData.AddDataNextStep("load_done", null);
         }
 
-        Dictionary<string, Action<IncomingMessage>> registeredMessages = new Dictionary<string, Action<IncomingMessage>>();
-        private void ReceiveMessageData(object[] data)
+        [RFUAPI]
+        public void InstanceObject(string name, int id)
         {
-            string message = (string)data[0];
-            data = data.Skip(1).ToArray();
-            if (registeredMessages.TryGetValue(message, out Action<IncomingMessage> action))
-            {
-
-                action?.Invoke(new IncomingMessage((byte[])data[0]));
-            }
+            InstanceObject<BaseAttr>(name, id, true);
         }
-
-        [Obsolete("AddListener is the older interface, and AddListenerObject is the recommended interface for dynamic messaging")]
-        public void AddListener(string message, Action<IncomingMessage> action)
-        {
-            if (registeredMessages.ContainsKey(message))
-            {
-                registeredMessages[message] = action;
-            }
-            else
-            {
-                registeredMessages.Add(message, action);
-            }
-        }
-
-        [Obsolete("RemoveListener is the older interface, and RemoveListenerObject is the recommended interface for dynamic messaging")]
-        public void RemoveListener(string message)
-        {
-            if (registeredMessages.ContainsKey(message))
-            {
-                registeredMessages.Remove(message);
-            }
-        }
-        [Obsolete("SendMessage is the older interface, and SendObject is the recommended interface for dynamic messaging")]
-        public void SendMessage(string message, params object[] objects)
-        {
-            OutgoingMessage msg = new OutgoingMessage();
-            foreach (var item in objects)
-            {
-                if (item is int)
-                    msg.WriteInt32((int)item);
-                if (item is float)
-                    msg.WriteFloat32((float)item);
-                if (item is string)
-                    msg.WriteString((string)item);
-                if (item is bool)
-                    msg.WriteBoolean((bool)item);
-                if (item is List<float>)
-                    msg.WriteFloatList((List<float>)item);
-                if (item is List<bool>)
-                {
-                    List<bool> data = (List<bool>)item;
-                    msg.WriteInt32(data.Count);
-                    foreach (var i in data)
-                    {
-                        msg.WriteBoolean(i);
-                    }
-                }
-            }
-            Communicator.SendObject("Message", message, msg.buffer);
-        }
-
-        Dictionary<string, Action<object[]>> registeredObjects = new Dictionary<string, Action<object[]>>();
-        private void ReceiveObjectData(object[] data)
-        {
-            string head = (string)data[0];
-            data = data.Skip(1).ToArray();
-            if (registeredObjects.TryGetValue(head, out Action<object[]> action))
-            {
-                action?.Invoke(data);
-            }
-        }
-        public void AddListenerObject(string head, Action<object[]> action)
-        {
-            if (registeredObjects.ContainsKey(head))
-            {
-                registeredObjects[head] = action;
-            }
-            else
-            {
-                registeredObjects.Add(head, action);
-            }
-        }
-        public void RemoveListenerObject(string head)
-        {
-            if (registeredObjects.ContainsKey(head))
-            {
-                registeredObjects.Remove(head);
-            }
-        }
-        public void SendObject(string head, params object[] objects)
-        {
-            object[] data = new[] { "Object", head };
-            Communicator.SendObject(data.Concat(objects).ToArray());
-        }
-
-
-
         public T InstanceObject<T>(string name, int id, bool callInstance = true) where T : BaseAttr
         {
-            Debug.Log("InstanceObject:" + name);
+            Debug.Log(name);
             GameObject gameObject = GetGameObject(name);
             if (gameObject == null)
             {
@@ -606,10 +419,10 @@ namespace RFUniverse
                 attr.Instance();
             return attr;
         }
-
-        void LoadURDF(int id, string path, bool nativeIK, string axis)
+        [RFUAPI]
+        public void LoadURDF(int id, string path, bool nativeIK, string axis)
         {
-            Debug.Log($@"LoadURDF: {path}");
+            Debug.Log(path);
             ImportSettings setting = new ImportSettings();
             setting.chosenAxis = axis == "z" ? ImportSettings.axisType.zAxis : ImportSettings.axisType.yAxis;
             setting.convexMethod = ImportSettings.convexDecomposer.unity;
@@ -622,9 +435,10 @@ namespace RFUniverse
             attr.Instance();
         }
 
+        [RFUAPI]
         public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true)
         {
-            Debug.Log("LoadMesh:" + path);
+            Debug.Log(path);
             GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
             RigidbodyAttr attr = obj.AddComponent<RigidbodyAttr>();
             foreach (var item in obj.GetComponentsInChildren<Renderer>())
@@ -642,17 +456,18 @@ namespace RFUniverse
                 attr.Instance();
             return attr;
         }
-
-        void IgnoreLayerCollision(int layer1, int layer2, bool ignore)
+        [RFUAPI]
+        public void IgnoreLayerCollision(int layer1, int layer2, bool ignore)
         {
             Physics.IgnoreLayerCollision(layer1, layer2, ignore);
         }
-
-        void GetCurrentCollisionPairs()
+        [RFUAPI]
+        public void GetCurrentCollisionPairs()
         {
-            Communicator.SendObject("Env", "CurrentCollisionPairs", BaseAttr.CollisionPairs);
+            CollectData.AddDataNextStep("current_collisio_pairs", ColliderAttr.CollisionPairs);
         }
-        void GetRFMoveColliders()
+        [RFUAPI]
+        public void GetRFMoveColliders()
         {
             Dictionary<int, List<Dictionary<string, object>>> rfmoveColliders = new();
             List<ColliderAttr> colliderAttrs = BaseAttr.ActiveAttrs.Values.Select(s => s as ColliderAttr).Where(s => s.IsRFMoveCollider).ToList();
@@ -713,21 +528,21 @@ namespace RFUniverse
                     }
                 }
             }
-            Communicator.SendObject("Env", "RFMoveColliders", rfmoveColliders);
+            CollectData.AddDataNextStep("rfmove_colliders", rfmoveColliders);
         }
-        void SetGravity(List<float> gravity)
+        [RFUAPI]
+        public void SetGravity(List<float> gravity)
         {
             if (gravity.Count != 3) return;
-            Debug.Log("SetGravity");
             Physics.gravity = new Vector3(gravity[0], gravity[1], gravity[2]);
         }
-
-        void SetGroundActive(bool actice)
+        [RFUAPI]
+        public void SetGroundActive(bool actice)
         {
             GroundActive = actice;
         }
-
-        void SetGroundPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
+        [RFUAPI]
+        public void SetGroundPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
             Ground.GetComponent<Collider>().material = new PhysicMaterial
             {
@@ -738,23 +553,23 @@ namespace RFUniverse
                 bounceCombine = (PhysicMaterialCombine)bounceCombine
             };
         }
-
-        void SetTimeStep(float timeStep)
+        [RFUAPI]
+        public void SetTimeStep(float timeStep)
         {
             FixedDeltaTime = timeStep;
         }
-
-        void SetTimeScale(float timeScale)
+        [RFUAPI]
+        public void SetTimeScale(float timeScale)
         {
             TimeScale = timeScale;
         }
-
-        void SetResolution(int width, int height)
+        [RFUAPI]
+        public void SetResolution(int width, int height)
         {
             Screen.SetResolution(width, height, FullScreenMode.Windowed);
         }
-
-        void ExportOBJ(List<int> ids, string path)
+        [RFUAPI]
+        public void ExportOBJ(List<int> ids, string path)
         {
             ExportOBJ(BaseAttr.Attrs.Where((s) => ids.Contains(s.Key)).Select((s) => s.Value.gameObject).ToArray(), path);
         }
@@ -762,6 +577,37 @@ namespace RFUniverse
         public void ExportOBJ(GameObject[] meshs, string path)
         {
             new OBJExporter().Export(meshs, path);
+        }
+
+
+        [Obsolete("AddListener is the older interface, and AddListenerObject is the recommended interface for dynamic messaging")]
+        public void AddListener(string message, Action<IncomingMessage> action)
+        {
+            MessageManager.Instance.AddListener(message, action);
+        }
+
+        [Obsolete("RemoveListener is the older interface, and RemoveListenerObject is the recommended interface for dynamic messaging")]
+        public void RemoveListener(string message)
+        {
+            MessageManager.Instance.RemoveListener(message);
+        }
+        [Obsolete("SendMessage is the older interface, and SendObject is the recommended interface for dynamic messaging")]
+        public void SendMessage(string message, params object[] objects)
+        {
+            MessageManager.Instance.SendMessage(message, objects);
+        }
+
+        public void AddListenerObject(string head, Action<object[]> action)
+        {
+            MessageManager.Instance.AddListenerObject(head, action);
+        }
+        public void RemoveListenerObject(string head)
+        {
+            MessageManager.Instance.RemoveListenerObject(head);
+        }
+        public void SendObject(string head, params object[] objects)
+        {
+            MessageManager.Instance.SendObject(head, objects);
         }
     }
 }

@@ -19,8 +19,6 @@ namespace RFUniverse.Attributes.Digit
             collider.digit.CollisionStay(transform, copyRender, force);//将碰撞事件发送到Digit
         }
 
-
-
         //Render列表，key：Digit，value：复制出的渲染物体
         private Dictionary<DigitAttr, GameObject> targets = new Dictionary<DigitAttr, GameObject>();
         //获取或者生成渲染物体

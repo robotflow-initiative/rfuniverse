@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RFUniverse.Attributes
@@ -10,8 +9,6 @@ namespace RFUniverse.Attributes
         public Camera leftCamera;
         public Camera rightCamera;
 
-        protected string leftLRBase64String = null;
-        protected string rightLRBase64String = null;
         public override string Name
         {
             get { return "ActiveLightSensor"; }
@@ -25,34 +22,12 @@ namespace RFUniverse.Attributes
             //leftCamera.cullingMask = PlayerMain.Instance.simulationLayer;
             //rightCamera.cullingMask = PlayerMain.Instance.simulationLayer;
         }
-        public override Dictionary<string, object> CollectData()
-        {
-            Dictionary<string, object> data = base.CollectData();
-            if (leftLRBase64String != null && rightLRBase64String != null)
-            {
-                data["ir_left"] = leftLRBase64String;
-                data["ir_right"] = rightLRBase64String;
-                leftLRBase64String = null;
-                rightLRBase64String = null;
-            }
-            return data;
-        }
 
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "GetActiveDepth":
-                    GetActiveDepth((float[,])data[0]);
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
+        [RFUAPI]
         void GetActiveDepth(float[,] intrinsicMatrix)
         {
-            Debug.Log("GetActiveDepth");
-            leftLRBase64String = Convert.ToBase64String(GetCameraIR(intrinsicMatrix, true).EncodeToPNG());
-            rightLRBase64String = Convert.ToBase64String(GetCameraIR(intrinsicMatrix, false).EncodeToPNG());
+            CollectData.AddDataNextStep("ir_left", Convert.ToBase64String(GetCameraIR(intrinsicMatrix, true).EncodeToPNG()));
+            CollectData.AddDataNextStep("ir_right", Convert.ToBase64String(GetCameraIR(intrinsicMatrix, false).EncodeToPNG()));
         }
         public Texture2D GetCameraIR(float[,] intrinsicMatrix, bool leftOrRight)
         {

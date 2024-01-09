@@ -20,9 +20,9 @@ namespace RFUniverse.Attributes
             lastStepClothPosition = new Vector3(-99, -99, -99);
         }
 
-        public override Dictionary<string, object> CollectData()
+        public override void AddPermanentData(Dictionary<string, object> data)
         {
-            Dictionary<string, object> data = base.CollectData();
+            base.AddPermanentData(data);
 
             int numParticles = cloth.solverIndices.Length;
             Vector3 avgPosition = Vector3.zero;
@@ -44,34 +44,19 @@ namespace RFUniverse.Attributes
             lastStepClothPosition = avgPosition;
 
             // Number of particles
-            data.Add("num_particles", numParticles);
+            data["num_particles"] = numParticles;
             // Average position
-            data.Add("avg_position", avgPosition);
+            data["avg_position"] = avgPosition;
             // Average velocity
-            data.Add("avg_velocity", avgVelocity);
+            data["avg_velocity"] = avgVelocity;
             // Force zone parameters
-            data.Add("force_zone_orientation", forceZone.transform.eulerAngles.y);
-            data.Add("force_zone_intensity", forceZone.intensity);
-            data.Add("force_zone_turbulence", forceZone.turbulence);
-            data.Add("force_zone_turbulence_frequency", forceZone.turbulenceFrequency);
-            return data;
+            data["force_zone_orientation"] = forceZone.transform.eulerAngles.y;
+            data["force_zone_intensity"] = forceZone.intensity;
+            data["force_zone_turbulence"] = forceZone.turbulence;
+            data["force_zone_turbulence_frequency"] = forceZone.turbulenceFrequency;
         }
 
-        public override void AnalysisData(string type, object[] data)
-        {
-            switch (type)
-            {
-                case "SetForceZoneParameters":
-                    SetForceZoneParameters((float)data[0], (float)data[1], (float)data[2], (float)data[3]);
-                    return;
-                case "SetSolverParameters":
-                    SetSolverParameters(RFUniverseUtility.ConvertType<List<float>>(data[0]));
-                    return;
-            }
-            base.AnalysisData(type, data);
-        }
-
-
+        [RFUAPI]
         void SetForceZoneParameters(float orientation, float intensity, float turbulence, float turbulence_frequency)
         {
             // Force zone orientation
@@ -83,7 +68,7 @@ namespace RFUniverse.Attributes
             // Force zone turbulence frequency
             forceZone.turbulenceFrequency = turbulence_frequency;
         }
-
+        [RFUAPI]
         void SetSolverParameters(List<float> gravity)
         {
             // Solver gravity

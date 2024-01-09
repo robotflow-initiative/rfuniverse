@@ -538,6 +538,73 @@ namespace RFUniverse
             return fs;
         }
 
+        public static object ConvertObjectType(this object obj, Type type)
+        {
+            if (obj == null)
+                return obj;
+
+            if (obj.GetType() == type)
+                return obj;
+
+            if (type.IsArray && obj is Array)
+                return obj;
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var listType = type.GetGenericArguments()[0];
+                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
+
+                if (obj is IList objList)
+                {
+                    foreach (var item in objList)
+                    {
+                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(listType);
+                        object convertedItem = convertToMethod.Invoke(null, new object[] { item });
+                        list.Add(convertedItem);
+                    }
+                }
+                return list;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                var keyType = type.GetGenericArguments()[0];
+                var valueType = type.GetGenericArguments()[1];
+                var dictionary = (IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(keyType, valueType));
+                if (obj is IDictionary objDict)
+                {
+                    foreach (DictionaryEntry item in objDict)
+                    {
+                        MethodInfo convertKeyMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(keyType);
+                        MethodInfo convertValueMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(valueType);
+                        object convertedKey = convertKeyMethod.Invoke(null, new object[] { item.Key });
+                        object convertedValue = convertValueMethod.Invoke(null, new object[] { item.Value });
+                        dictionary.Add(convertedKey, convertedValue);
+                    }
+                }
+                return dictionary;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition().Name.StartsWith("Tuple") && type.GetGenericArguments().Length > 0)
+            {
+                var tupleTypes = type.GetGenericArguments();
+                var tuple = Activator.CreateInstance(type.GetGenericTypeDefinition().MakeGenericType(tupleTypes), new object[tupleTypes.Length]);
+                if (obj is ITuple objTuple && objTuple.Length == tupleTypes.Length)
+                {
+                    for (int i = 0; i < tupleTypes.Length; i++)
+                    {
+                        MethodInfo convertToMethod = typeof(RFUniverseUtility).GetMethod("ConvertType").MakeGenericMethod(tupleTypes[i]);
+                        object convertedItem = convertToMethod.Invoke(null, new object[] { objTuple[i] });
+                        tuple.GetType().GetField($"m_Item{i + 1}", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(tuple, convertedItem);
+                    }
+                }
+                return tuple;
+            }
+
+            Debug.LogError($"Cannot convert {obj.GetType()} to {type}");
+            return default;
+        }
+
         public static T ConvertType<T>(this object obj)
         {
             if (obj == null)
