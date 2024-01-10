@@ -61,7 +61,8 @@ namespace RFUniverse
             //JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
             //Application.targetFrameRate = 60;
             axisCamera.cullingMask = 1 << axisLayer;
-            layerManager = new LayerManager(managedLayer);
+            layerManager = LayerManager.Instance;
+            layerManager.SetLayerPool(managedLayer);
         }
 
         protected Dictionary<string, GameObject> assets = new Dictionary<string, GameObject>();

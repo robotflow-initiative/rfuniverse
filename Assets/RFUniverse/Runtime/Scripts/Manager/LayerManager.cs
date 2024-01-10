@@ -6,15 +6,22 @@ namespace RFUniverse.Manager
 {
     public class LayerManager
     {
-        public static LayerManager Instance;
+        public static LayerManager instance;
+        public static LayerManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new LayerManager();
+                return instance;
+            }
+        }
 
+        private LayerManager() { }
         public int tempLayer;
         public Dictionary<int, bool> layerPool = new();
-
-        public LayerManager(LayerMask layerPool)
+        public void SetLayerPool(LayerMask layerPool)
         {
-            Instance = this;
-
             int layerMaskValue = layerPool.value;
             for (int i = 0; i < 32; i++)
             {

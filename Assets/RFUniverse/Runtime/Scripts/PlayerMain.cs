@@ -9,7 +9,6 @@ using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System.Reflection;
 #if OBI
 using Obi;
 #endif
@@ -68,21 +67,18 @@ namespace RFUniverse
 
         DebugManager debugManager;
         InstanceManager instanceManager;
-        LayerManager layerManager;
         MessageManager messageManager;
 
         ICollectData CollectData => this;
         protected override void Awake()
         {
+            Instance = this;
             base.Awake();
-
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
-            layerManager = LayerManager.Instance;
             messageManager = MessageManager.Instance;
 
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
-            Instance = this;
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
