@@ -22,6 +22,7 @@ namespace RFUniverse.Manager
         public Dictionary<int, bool> layerPool = new();
         public void SetLayerPool(LayerMask layerPool)
         {
+            this.layerPool.Clear();
             int layerMaskValue = layerPool.value;
             for (int i = 0; i < 32; i++)
             {

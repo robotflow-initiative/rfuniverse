@@ -47,19 +47,14 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        void StartGraspSim(object[] data)
+        void StartGraspSim(string meshPath, string gripperName, List<float> points, List<float> normals, float depthRangeMin, float depthRangeMax, int depthLerpCount, int angleLerpCount, int parallelCount)
         {
             mode = 0;
-            Debug.Log("StartGraspSim");
-            string meshPath = (string)data[0];
-            string gripperName = (string)data[1];
-            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
-            List<float> normals = RFUniverseUtility.ConvertType<List<float>>(data[3]);
-            depthRangeMin = (float)data[4];
-            depthRangeMax = (float)data[5];
-            depthLerpCount = (int)data[6];
-            angleLerpCount = (int)data[7];
-            parallelCount = (int)data[8];
+            this.depthRangeMin = depthRangeMin;
+            this.depthRangeMax = depthRangeMax;
+            this.depthLerpCount = depthLerpCount;
+            this.angleLerpCount = angleLerpCount;
+            this.parallelCount = parallelCount;
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Vector3> normalsV3 = RFUniverseUtility.ListFloatToListVector3(normals);
             GenerateGraspPose(pointsV3, normalsV3);
@@ -98,15 +93,10 @@ namespace RFUniverse.Attributes
             StartCoroutine(GraspSim());
         }
         [RFUAPI]
-        void StartGraspTest(object[] data)
+        void StartGraspTest(string meshPath, string gripperName, List<float> points, List<float> quaternions, int parallelCount)
         {
             mode = 1;
-            Debug.Log("StartGraspTest");
-            string meshPath = (string)data[0];
-            string gripperName = (string)data[1];
-            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
-            List<float> quaternions = RFUniverseUtility.ConvertType<List<float>>(data[3]);
-            parallelCount = (int)data[4];
+            this.parallelCount = parallelCount;
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Quaternion> quaternionsQ4 = RFUniverseUtility.ListFloatToListQuaternion(quaternions);
 
@@ -301,7 +291,7 @@ namespace RFUniverse.Attributes
                     if (envSuccess[j])
                     {
                         List<float> width = grippers[j].GetJointPositions();
-                        gripperWidth.Add(width[0] + width[1]);
+                        gripperWidth.Add(Mathf.Abs(width[0]) * 2);
                     }
                     else
                         gripperWidth.Add(0);
@@ -318,12 +308,8 @@ namespace RFUniverse.Attributes
             System.GC.Collect();
         }
         [RFUAPI]
-        void ShowGraspPose(object[] data)
+        void ShowGraspPose(string meshPath, string gripperName, List<float> positions, List<float> rotations)
         {
-            string meshPath = (string)data[0];
-            string gripperName = (string)data[1];
-            List<float> positions = RFUniverseUtility.ConvertType<List<float>>(data[2]);
-            List<float> rotations = RFUniverseUtility.ConvertType<List<float>>(data[3]);
             List<Vector3> positionsV3 = RFUniverseUtility.ListFloatToListVector3(positions);
             List<Quaternion> rotationsQ4 = RFUniverseUtility.ListFloatToListQuaternion(rotations);
             //ProcessGraspPose(positionsV3, rotationsQ4);
@@ -352,18 +338,13 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        void GenerateGraspPose(object[] data)
+        void GenerateGraspPose(string meshPath, string gripperName, List<float> points, List<float> normals, float depthRangeMin, float depthRangeMax, int depthLerpCount, int angleLerpCount, int parallelCount)
         {
-            Debug.Log("GenerateGraspPose");
-            string meshPath = (string)data[0];
-            string gripperName = (string)data[1];
-            List<float> points = RFUniverseUtility.ConvertType<List<float>>(data[2]);
-            List<float> normals = RFUniverseUtility.ConvertType<List<float>>(data[3]);
-            depthRangeMin = (float)data[4];
-            depthRangeMax = (float)data[5];
-            depthLerpCount = (int)data[6];
-            angleLerpCount = (int)data[7];
-            parallelCount = (int)data[8];
+            this.depthRangeMin = depthRangeMin;
+            this.depthRangeMax = depthRangeMax;
+            this.depthLerpCount = depthLerpCount;
+            this.angleLerpCount = angleLerpCount;
+            this.parallelCount = parallelCount;
             List<Vector3> pointsV3 = RFUniverseUtility.ListFloatToListVector3(points);
             List<Vector3> normalsV3 = RFUniverseUtility.ListFloatToListVector3(normals);
             GenerateGraspPose(pointsV3, normalsV3);

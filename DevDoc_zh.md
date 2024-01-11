@@ -4,6 +4,8 @@
 
 该文档面向对Unity C#开发和python开发有一定了解的开发者。
 
+---
+
 ##### RFUniverse SDK 导入
 
 1. 下载[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
@@ -44,7 +46,37 @@ git checkout v0.10.7
 
 ---
 
-##### 核心Attr类
+##### RFUniverse代码运行结构
+
+```mermaid
+graph TD;
+    subgraph pyrfuniverse
+        Env-->Communicator-python
+    end
+    Communicator-python-->Communicator-C#
+    subgraph RFUniverse
+        Communicator-C#-->PlayerMain
+        PlayerMain-->InstanceManager
+        PlayerMain-->DebugManager
+        PlayerMain-->LayerManager
+        PlayerMain-->MessageManager
+        InstanceManager-->*Attr...
+    end
+```
+
+###### PlayerMain
+
+仿真环境运行的主脚本，包含与环境相关的接口
+
+###### Manager
+
+InstanceManager：集中管理场景中所有的Attr物体，分发结构，收集数据
+
+DebugManager：管理Debug相关功能和接口，不影响仿真执行
+
+LayerManager：管理Unity渲染和物理层
+
+MessageManager：动态消息相关功能和接口
 
 ###### Attributes
 
@@ -53,7 +85,6 @@ Attr是RFUniverse中物体的基本单元，所有的物体都是基于BaseAttr�
 ```mermaid
 graph TD
 Base-->BaseCamera
-
 Base-->GameObject
 Base-->Light
 Base-->PointCloud
@@ -217,26 +248,26 @@ python发送的对象，C#侧接收后为object类型，需要自行转换为实
    {
        base.Init();
        #Your Init
-       #Do Something
    }
    ```
 
-3. 新增或修改发送至python的常驻数据，请重写AddPermanentData方法：
+3. 如需新增或修改发送至python的常驻数据，请重写AddPermanentData方法：
    
    ```
    public override void AddPermanentData(Dictionary<string, object> data)
    {
        //(Optional) If you need, Add base class data.
        base.AddPermanentData(data);
-       data["your datassage"] = 123456;
+       //Write data
+       data["your data"] = 123456;
    }
    ```
 
-4. 添加一次性数据（只在下一帧生效），可根据需要在任意位置调用：
+4. 如需添加一次性数据（只在下一帧生效），可根据需要在任意位置调用：
    
    `CollectData.AddDataNextStep("your datassage", 123456);`
 
-5. 添加新接口，在实现方法上添加属性标签`[RFUAPI]`
+5. 添加新接口，添加新方法，并为其添加特性标签`[RFUAPI]`
    
    接口可用的输入参数类型与上面的动态消息接口相同：
    
@@ -245,8 +276,15 @@ python发送的对象，C#侧接收后为object类型，需要自行转换为实
    //new implementation function
    voi Function(string s)
    {
+       #Do Something
        Debug.Log(s);
    }
    ```
 
-6. 在编写好的Attr脚本上右键：`Generate Python Class`，将在同目录下自动生成该类的python接口脚本，将该脚本放在pyrfuniverse源代码`pyrfuniverse/attributes`下，并添加至`__init__.py`的`import`列表
+6. 在编写好的Attr脚本上右键：`Generate Python Class`，将在同目录下自动生成该类的python接口脚本，将该脚本Copy到`pyrfuniverse`的`extend`目录，在初始化Env时传入该Class，即可实现对内置Attr的扩展。
+   
+   ```
+   from extend.custom_attr import CustomAttr
+   
+   env = RFUniverseBaseEnv(ext_attr=[CustomAttr])
+   ```

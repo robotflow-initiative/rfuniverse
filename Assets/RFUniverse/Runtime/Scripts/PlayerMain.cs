@@ -74,52 +74,57 @@ namespace RFUniverse
         {
             Instance = this;
             base.Awake();
+
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
             messageManager = MessageManager.Instance;
+
+            (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
+            (this as IDistributeData<string>).RegisterReceiver("Debug", debugManager.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("Instance", instanceManager.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("Message", messageManager.ReceiveMessageData);
+            (this as IDistributeData<string>).RegisterReceiver("Object", messageManager.ReceiveData);
 
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
-            playerMainUI.Init(() =>
+            playerMainUI.Init();
+            playerMainUI.OnPendDone = () =>
             {
                 Debug.Log("PendDone");
                 CollectData.AddDataNextStep("pend_done", null);
-            });
+            };
 
             (this as IHaveAPI).RegisterAPI();
 
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
+            for (int i = 0; i < commandLineArgs.Length; i++)
+            {
+                if (commandLineArgs[i].StartsWith("-port:"))
+                {
+                    startWithPort = true;
+                    if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
+                        port = value;
+                }
+            }
+
             if (Communicator == null)
             {
-                string[] commandLineArgs = Environment.GetCommandLineArgs();
-                for (int i = 0; i < commandLineArgs.Length; i++)
-                {
-                    if (commandLineArgs[i].StartsWith("-port:"))
-                    {
-                        startWithPort = true;
-                        if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
-                            port = value;
-                    }
-                }
                 Communicator = new RFUniverseCommunicator("localhost", port, false, clientTime, () =>
                 {
                     Debug.Log("Connected successfully");
-                    (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
-                    OnStepAction += Step;
-                    Communicator.OnReceivedData += (data) =>
-                    {
-                        (this as IReceiveData).ReceiveData(data);
-                    };
-                    Communicator.OnDisconnect += () =>
-                    {
-#if UNITY_EDITOR
-                        EditorApplication.ExitPlaymode();
-#else
-                        Application.Quit();
-#endif
-                    };
+                    InitCommunicator();
                 });
+            }
+            else if (Communicator.Connected)
+            {
+                InitCommunicator();
+            }
+            else
+            {
+                Debug.LogWarning("Communicator is Disconnect");
+                QuitApp();
             }
 
             BaseAttr[] sceneAttrs = FindObjectsOfType<BaseAttr>(true);
@@ -143,6 +148,29 @@ namespace RFUniverse
             {
                 render.SetPropertyBlock(mpb);
             }
+        }
+
+        void InitCommunicator()
+        {
+            OnStepAction += Step;
+            Communicator.OnReceivedData = (data) =>
+            {
+                (this as IReceiveData).ReceiveData(data);
+            };
+            Communicator.OnDisconnect = () =>
+            {
+                QuitApp();
+            };
+            CollectData.AddDataNextStep("scene_init", null);
+        }
+
+        void QuitApp()
+        {
+#if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+#else
+                Application.Quit();
+#endif
         }
         public class ConfigData
         {
@@ -368,10 +396,7 @@ namespace RFUniverse
         [RFUAPI]
         public void SwitchSceneAsync(string name)
         {
-            Addressables.LoadSceneAsync(name).Completed += (_) =>
-            {
-                SendLoadDoneMsg();
-            };
+            Addressables.LoadSceneAsync(name).WaitForCompletion();
         }
         public void ClearScene(List<BaseAttr> attrs)
         {

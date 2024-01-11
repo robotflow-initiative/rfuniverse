@@ -26,8 +26,8 @@ public class PythonClassGenerater
         Type type = obj.GetClass();
         Debug.Log("Type: " + type.Name);
         string pythonClass = GeneratePythonClass(type);
-        string pythonName = AssetDatabase.GetAssetPath(obj).Replace(".cs", ".py");
-        File.WriteAllText(pythonName, pythonClass);
+        string fileName = AssetDatabase.GetAssetPath(obj);
+        File.WriteAllText($"{Path.GetDirectoryName(fileName)}/{ConvertCamelCaseToUnderscore(Path.GetFileNameWithoutExtension(fileName))}.py", pythonClass);
     }
 
     static string GeneratePythonClass(Type type)

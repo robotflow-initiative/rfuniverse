@@ -42,8 +42,6 @@ namespace RFUniverse.Manager
         ObjectPool<JointLink> jointLinkPool;
         private DebugManager()
         {
-            (PlayerMain.Instance as IDistributeData<string>).RegisterReceiver("Debug", ReceiveData);
-
             graspPointSource = Addressables.LoadAssetAsync<GameObject>("Debug/GraspPoint").WaitForCompletion().GetComponent<GraspPoint>();
             poseGizmoSource = Addressables.LoadAssetAsync<GameObject>("Debug/PoseGizmo").WaitForCompletion().GetComponent<PoseGizmo>();
             collisionLineSource = Addressables.LoadAssetAsync<GameObject>("Debug/CollisionLine").WaitForCompletion().GetComponent<CollisionLine>();

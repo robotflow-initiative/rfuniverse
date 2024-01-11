@@ -19,12 +19,10 @@ public class MessageManager : IReceiveData
     }
     private MessageManager()
     {
-        (PlayerMain.Instance as IDistributeData<string>).RegisterReceiver("Message", ReceiveMessageData);
-        (PlayerMain.Instance as IDistributeData<string>).RegisterReceiver("Object", (this as IReceiveData).ReceiveData);
     }
 
     Dictionary<string, Action<IncomingMessage>> registeredMessages = new Dictionary<string, Action<IncomingMessage>>();
-    private void ReceiveMessageData(object[] data)
+    public void ReceiveMessageData(object[] data)
     {
         string message = (string)data[0];
         data = data.Skip(1).ToArray();
@@ -86,7 +84,7 @@ public class MessageManager : IReceiveData
     }
 
     Dictionary<string, Action<object[]>> registeredObjects = new Dictionary<string, Action<object[]>>();
-    void IReceiveData.ReceiveData(object[] data)
+    public void ReceiveData(object[] data)
     {
         string head = (string)data[0];
         data = data.Skip(1).ToArray();

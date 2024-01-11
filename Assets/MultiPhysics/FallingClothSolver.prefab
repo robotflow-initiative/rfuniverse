@@ -234,7 +234,7 @@ MonoBehaviour:
     surfaceCollisionIterations: 8
     surfaceCollisionTolerance: 0.005
   gravity: {x: 0, y: -5, z: 0}
-  gravitySpace: 1
+  gravitySpace: 0
   worldLinearInertiaScale: 0
   worldAngularInertiaScale: 0
   distanceConstraintParameters:
@@ -259,7 +259,7 @@ MonoBehaviour:
     enabled: 1
   collisionConstraintParameters:
     evaluationOrder: 1
-    iterations: 3
+    iterations: 5
     SORFactor: 1
     enabled: 1
   frictionConstraintParameters:
@@ -281,12 +281,12 @@ MonoBehaviour:
     evaluationOrder: 1
     iterations: 3
     SORFactor: 1
-    enabled: 1
+    enabled: 0
   tetherConstraintParameters:
     evaluationOrder: 0
     iterations: 1
     SORFactor: 1
-    enabled: 1
+    enabled: 0
   pinConstraintParameters:
     evaluationOrder: 0
     iterations: 3
@@ -296,7 +296,7 @@ MonoBehaviour:
     evaluationOrder: 1
     iterations: 2
     SORFactor: 1
-    enabled: 1
+    enabled: 0
   densityConstraintParameters:
     evaluationOrder: 1
     iterations: 3
@@ -306,12 +306,12 @@ MonoBehaviour:
     evaluationOrder: 0
     iterations: 3
     SORFactor: 1
-    enabled: 1
+    enabled: 0
   bendTwistConstraintParameters:
     evaluationOrder: 0
     iterations: 3
     SORFactor: 1
-    enabled: 1
+    enabled: 0
   chainConstraintParameters:
     evaluationOrder: 0
     iterations: 3
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   solvers:
   - {fileID: 3059420981343602882}
-  substeps: 2
+  substeps: 4
 --- !u!114 &3059420981343602943
 MonoBehaviour:
   m_ObjectHideFlags: 0

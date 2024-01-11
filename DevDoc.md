@@ -4,6 +4,8 @@ Developers can quickly add custom features under the RFUniverse framework accord
 
 This document is intended for developers with some understanding of Unity C# development and Python development.
 
+---
+
 ##### Importing RFUniverse SDK
 
 1. Download [RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
@@ -44,7 +46,37 @@ git checkout v0.10.7
 
 ---
 
-##### Core Attr Classes
+##### RFUniverse Code Execution Structure
+
+```mermaid
+graph TD;
+    subgraph pyrfuniverse
+        Env-->Communicator-python
+    end
+    Communicator-python-->Communicator-C#
+    subgraph RFUniverse
+        Communicator-C#-->PlayerMain
+        PlayerMain-->InstanceManager
+        PlayerMain-->DebugManager
+        PlayerMain-->LayerManager
+        PlayerMain-->MessageManager
+        InstanceManager-->*Attr...
+    end
+```
+
+###### PlayerMain
+
+The main script running the simulation environment, which contains interfaces related to the environment.
+
+###### Manager
+
+InstanceManager: Centrally manages all Attr objects in the scene, distributes structures, and collects data.
+
+DebugManager: Manages Debug related features and interfaces, does not affect simulation execution.
+
+LayerManager: Manages Unity rendering and physics layers.
+
+MessageManager: Features and interfaces related to dynamic messages.
 
 ###### Attributes
 
@@ -217,7 +249,6 @@ Refer to [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/
    {
        base.Init();
        // Your Init
-       // Do Something
    }
    ```
 
@@ -228,6 +259,7 @@ Refer to [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/
    {
          //(Optional) If you need, Add base class data.
          base.AddPermanentData(data);
+         //Write data
          data["your datassage"] = 123456;
    }
    ```
@@ -245,8 +277,15 @@ Refer to [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/
    // New implementation function
    void Function(string s)
    {
+         
          Debug.Log(s);
    }
    ```
 
-6. Right-click on the Attr script you wrote and select `Generate Python Class`. This will generate the corresponding Python interface script in the same directory. Move this script to the `pyrfuniverse/attributes` directory in the pyrfuniverse source code and add it to the `import` list in `__init__.py`.
+6. Right-click on the written Attr script and select `Generate Python Class`. This will automatically generate a Python interface script for that class in the same directory. Copy that script to the `extend` directory of `pyrfuniverse`. When initializing the Env and passing in that Class, you can achieve the extension of the built-in Attr.
+   
+   ```
+   from extend.custom_attr import CustomAttr
+   
+   env = RFUniverseBaseEnv(ext_attr=[CustomAttr])
+   ```

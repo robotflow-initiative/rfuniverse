@@ -21,7 +21,6 @@ namespace RFUniverse.Manager
         }
         private InstanceManager()
         {
-            (PlayerMain.Instance as IDistributeData<string>).RegisterReceiver("Instance", (this as IReceiveData).ReceiveData);
         }
 
         private Dictionary<int, BaseAttr> attrs = new Dictionary<int, BaseAttr>();
@@ -51,7 +50,7 @@ namespace RFUniverse.Manager
 
         Dictionary<int, Action<object[]>> IDistributeData<int>.Receiver { get; set; }
 
-        void IReceiveData.ReceiveData(object[] data)
+        public void ReceiveData(object[] data)
         {
             int hand = (int)data[0];
             data = data.Skip(1).ToArray();

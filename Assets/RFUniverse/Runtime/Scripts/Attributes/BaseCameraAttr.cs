@@ -319,7 +319,7 @@ namespace RFUniverse.Attributes
             PlayerMain.Instance.OnStepAction -= RecordFrame;
         }
         [RFUAPI]
-        void GetHeatMap(int radius, float[,] intrinsicMatrix, int width, int height, float fov)
+        public void GetHeatMap(int radius, float[,] intrinsicMatrix, int width, int height, float fov)
         {
             if (intrinsicMatrix != null)
                 GetHeatMap(intrinsicMatrix, radius);
