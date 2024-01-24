@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class MeshProcess
+public class MeshModify
 {
     [MenuItem("RFUniverse/FlipMesh")]
     static void FlipMesh()

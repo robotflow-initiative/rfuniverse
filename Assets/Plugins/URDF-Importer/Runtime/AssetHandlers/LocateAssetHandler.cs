@@ -25,14 +25,14 @@ namespace Unity.Robotics.UrdfImporter
             string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
 
             // check if it is an asset tha requires post processing (AIRO-908)
-            var originalUrdfPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName, false);
-            if (originalUrdfPath.ToLower().EndsWith(".stl"))
-            {// it is an asset that requires post processing
-                if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(fileAssetPath, true)) && !UrdfGeometryCollision.UsedTemplateFiles.Contains(Path.GetFileNameWithoutExtension(fileAssetPath)))
-                {// post process again to (re)create prefabs
-                    StlAssetPostProcessor.PostprocessStlFile(originalUrdfPath);
-                }                
-            }
+            //var originalUrdfPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName, false);
+            //if (originalUrdfPath.ToLower().EndsWith(".stl"))
+            //{// it is an asset that requires post processing
+            //    if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(fileAssetPath, true)) && !UrdfGeometryCollision.UsedTemplateFiles.Contains(Path.GetFileNameWithoutExtension(fileAssetPath)))
+            //    {// post process again to (re)create prefabs
+            //        StlAssetPostProcessor.PostprocessStlFile(originalUrdfPath);
+            //    }
+            //}
 
             T assetObject = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<T>(fileAssetPath);
 
@@ -60,7 +60,7 @@ namespace Unity.Robotics.UrdfImporter
                     break;
             }
 
-            assetObject = (T) RuntimeUrdf.AssetDatabase_LoadAssetAtPath(fileAssetPath, typeof(T));
+            assetObject = (T)RuntimeUrdf.AssetDatabase_LoadAssetAtPath(fileAssetPath, typeof(T));
             if (assetObject != null)
                 return assetObject;
 
@@ -110,7 +110,7 @@ namespace Unity.Robotics.UrdfImporter
                 throw new InterruptedUrdfImportException("User cancelled URDF import. Model may be incomplete.");
             }
         }
-        
+
         private class InterruptedUrdfImportException : Exception
         {
             public InterruptedUrdfImportException(string message) : base(message)

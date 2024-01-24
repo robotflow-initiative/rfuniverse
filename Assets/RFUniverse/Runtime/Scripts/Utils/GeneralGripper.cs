@@ -37,7 +37,7 @@ namespace RFUniverse
             }
         }
 
-        public void OpenDirect()
+        public void OpenDirectly()
         {
             foreach (var item in fingers)
             {
@@ -45,7 +45,7 @@ namespace RFUniverse
                 item.body.GetUnit().SetJointPositionDirectly(Mathf.Clamp(item.position.x, temp.lowerLimit, temp.upperLimit));
             }
         }
-        public void CloseDirect()
+        public void CloseDirectly()
         {
             foreach (var item in fingers)
             {

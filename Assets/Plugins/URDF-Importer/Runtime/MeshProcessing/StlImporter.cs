@@ -20,14 +20,13 @@ namespace Unity.Robotics.UrdfImporter
 {
     public static class StlImporter
     {
-        public static Mesh[] ImportMesh(string path)
+        public static Mesh ImportMesh(string path)
         {
             IList<StlReader.Facet> facets;
             if (IsBinary(path))
                 facets = StlReader.ReadBinaryFile(path);
             else
                 facets = StlReader.ReadAsciiFile(path);
-
             return CreateMesh(facets);
         }
 
@@ -43,42 +42,38 @@ namespace Unity.Robotics.UrdfImporter
             return false;
         }
 
-        private static Mesh[] CreateMesh(IList<StlReader.Facet> facets)
+        private static Mesh CreateMesh(IList<StlReader.Facet> facets)
         {
-            int maxVerticesPerMesh = 65535;
-            int totalNumberOfFacets = facets.Count;
             int totalFacetIndex = 0;
             int[] order = new int[] { 0, 2, 1 };
 
-            Mesh[] meshes = new Mesh[totalNumberOfFacets / (maxVerticesPerMesh / 3) + 1];
             Vector3[] vertices;
             Vector3[] normals;
             int[] triangles;
 
-            for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
+            int verticeSize = facets.Count * 3;
+
+            vertices = new Vector3[verticeSize];
+            normals = new Vector3[verticeSize];
+            triangles = new int[verticeSize];
+            for (int facetIndex = 0; facetIndex < verticeSize; facetIndex += 3)
             {
-                int meshSize = Mathf.Min(maxVerticesPerMesh, (totalNumberOfFacets - totalFacetIndex) * 3);
-
-                vertices = new Vector3[meshSize];
-                normals = new Vector3[meshSize];
-                triangles = new int[meshSize];
-                for (int facetIndex = 0; facetIndex < meshSize; facetIndex += 3)
+                for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
                 {
-                    for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
-                    {
-                        vertices[facetIndex + vertexIndex] = facets[totalFacetIndex].vertices[order[vertexIndex]];
-                        normals[facetIndex + vertexIndex] = facets[totalFacetIndex].normal;
-                        triangles[facetIndex + vertexIndex] = facetIndex + vertexIndex;
-                    }
-                    totalFacetIndex++;
+                    vertices[facetIndex + vertexIndex] = facets[totalFacetIndex].vertices[order[vertexIndex]];
+                    normals[facetIndex + vertexIndex] = facets[totalFacetIndex].normal;
+                    triangles[facetIndex + vertexIndex] = facetIndex + vertexIndex;
                 }
-
-                meshes[meshIndex] = new Mesh();
-                meshes[meshIndex].vertices = vertices;
-                meshes[meshIndex].normals = normals;
-                meshes[meshIndex].triangles = triangles;
+                totalFacetIndex++;
             }
-            return meshes;
+
+            Mesh mesh = new Mesh();
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            mesh.name = "default";
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.normals = normals;
+            return mesh;
         }
     }
 }

@@ -95,8 +95,6 @@ namespace Unity.Robotics.UrdfImporter
                     {
                         meshObject = MeshImporter.Load(meshFilePath);
                     }
-
-
                 }
                 catch (Exception ex)
                 {

@@ -33,7 +33,7 @@ Follow the steps below to configure and run the sample scene through the publish
    > :warning:Please replace [0.10.7] in the following command with the version number of the RFUniverse Releases you downloaded.
    
    ```bash
-   conda create -n rfuniverse python=3.9 -y
+   conda create -n rfuniverse python=3.10 -y
    conda activate rfuniverse
    pip install pyrfuniverse==0.10.7
    ```

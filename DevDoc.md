@@ -260,7 +260,7 @@ Refer to [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/
          //(Optional) If you need, Add base class data.
          base.AddPermanentData(data);
          //Write data
-         data["your datassage"] = 123456;
+         data["your data"] = 123456;
    }
    ```
 
@@ -277,7 +277,7 @@ Refer to [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/
    // New implementation function
    void Function(string s)
    {
-         
+         #Do Something
          Debug.Log(s);
    }
    ```

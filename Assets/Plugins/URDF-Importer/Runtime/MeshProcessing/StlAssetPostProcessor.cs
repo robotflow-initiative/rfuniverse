@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
 using UnityEngine;
 using System.Linq;
@@ -38,12 +38,12 @@ namespace Unity.Robotics.UrdfImporter
             }
             else if (stlFileLowercase.StartsWith("packages"))
             {
-                Debug.Log($"Found an stl file at {stlFile} - " + 
+                Debug.Log($"Found an stl file at {stlFile} - " +
                           "skipping post-processing because it's a Package asset");
             }
             else
             {
-                Debug.LogWarning($"Found an stl file at {stlFile} - " + 
+                Debug.LogWarning($"Found an stl file at {stlFile} - " +
                                  "skipping post-processing because we don't know how to handle an asset in this location.");
             }
         }
@@ -61,7 +61,7 @@ namespace Unity.Robotics.UrdfImporter
             Object.DestroyImmediate(gameObject);
         }
 
-        private static Material GetDefaultDiffuseMaterial() 
+        private static Material GetDefaultDiffuseMaterial()
         {
 #if UNITY_EDITOR
             // also save the material in the Assets
@@ -70,7 +70,7 @@ namespace Unity.Robotics.UrdfImporter
                 s_DefaultDiffuse = RuntimeUrdf.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
             }
 #endif
-            if (s_DefaultDiffuse) 
+            if (s_DefaultDiffuse)
             {   // Could't use the "Default-Diffuse.mat", either because of HDRP or runtime. so let's create one.
                 s_DefaultDiffuse = MaterialExtensions.CreateBasicMaterial();
             }
@@ -79,23 +79,23 @@ namespace Unity.Robotics.UrdfImporter
 
         private static GameObject CreateStlParent(string stlFile)
         {
-            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
+            Mesh meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
                 return null;
 
             GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
             Material material = GetDefaultDiffuseMaterial();
 
-            for (int i = 0; i < meshes.Length; i++)
-            {
-                string meshAssetPath = GetMeshAssetPath(stlFile, i);
-                RuntimeUrdf.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
-                GameObject gameObject = CreateStlGameObject(meshAssetPath, material);
-                gameObject.transform.SetParent(parent.transform, false);
-            }
+            //for (int i = 0; i < meshes.Length; i++)
+            //{
+            string meshAssetPath = GetMeshAssetPath(stlFile);
+            RuntimeUrdf.AssetDatabase_CreateAsset(meshes, meshAssetPath);
+            GameObject gameObject = CreateStlGameObject(meshAssetPath, material);
+            gameObject.transform.SetParent(parent.transform, false);
+            //}
             return parent;
         }
-        
+
         private static GameObject CreateStlGameObject(string meshAssetPath, Material material)
         {
             GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(meshAssetPath));
@@ -103,36 +103,37 @@ namespace Unity.Robotics.UrdfImporter
             gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
             return gameObject;
         }
-        
-        public static string GetMeshAssetPath(string stlFile, int i)
+
+        public static string GetMeshAssetPath(string stlFile)
         {
-            return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
+            //return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
+            return stlFile.Substring(0, stlFile.Length - 4) + ".asset";
         }
 
         public static string GetPrefabAssetPath(string stlFile)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";
         }
-        
+
         public static GameObject CreateStlGameObjectRuntime(string stlFile)
         {
-            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
+            Mesh meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
             {
                 return null;
             }
-            
+
             GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
 
             Material material = GetDefaultDiffuseMaterial();
-            
-            for (int i = 0; i < meshes.Length; i++)
-            {
-                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(GetMeshAssetPath(stlFile, i)));
-                gameObject.AddComponent<MeshFilter>().sharedMesh = meshes[i];
-                gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
-                gameObject.transform.SetParent(parent.transform, false);
-            }
+
+            //for (int i = 0; i < meshes.Length; i++)
+            //{
+            GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(GetMeshAssetPath(stlFile)));
+            gameObject.AddComponent<MeshFilter>().sharedMesh = meshes;
+            gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
+            gameObject.transform.SetParent(parent.transform, false);
+            //}
             return parent;
         }
 

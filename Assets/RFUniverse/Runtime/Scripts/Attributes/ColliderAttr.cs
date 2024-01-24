@@ -245,7 +245,7 @@ namespace RFUniverse.Attributes
 #endif
         }
         [RFUAPI]
-        public List<Mesh> GenerateVHACDCollider()
+        public List<Mesh> GenerateVHACDCollider(VHACD.Parameters? parameters = null)
         {
             List<Mesh> meshAssets = new List<Mesh>();
             foreach (var item in this.GetChildComponentFilter<MeshRenderer>())
@@ -255,7 +255,9 @@ namespace RFUniverse.Attributes
                     DestroyImmediate(des, true);
                 }
                 Mesh sourceMesh = item.GetComponent<MeshFilter>().sharedMesh;
-                List<Mesh> meshs = VHACD.GenerateConvexMeshes(new VHACD.Parameters(), sourceMesh);
+                if (parameters == null)
+                    parameters = new VHACD.Parameters();
+                List<Mesh> meshs = VHACD.GenerateConvexMeshes(parameters.Value, sourceMesh);
                 meshAssets = meshAssets.Union(meshs).ToList();
                 Transform child = item.transform.Find("Collider");
                 if (child != null)
@@ -276,6 +278,42 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
+
+        [RFUAPI]
+        public List<Mesh> GenerateCoACDCollider(CoACD.Parameters parameters = null)
+        {
+            List<Mesh> meshAssets = new List<Mesh>();
+            foreach (var item in this.GetChildComponentFilter<MeshRenderer>())
+            {
+                foreach (var des in item.GetComponents<Collider>())
+                {
+                    DestroyImmediate(des, true);
+                }
+                Mesh sourceMesh = item.GetComponent<MeshFilter>().sharedMesh;
+                if (parameters == null)
+                    parameters = new CoACD.Parameters();
+                List<Mesh> meshs = CoACD.RunACD(parameters, sourceMesh);
+                meshAssets = meshAssets.Union(meshs).ToList();
+                Transform child = item.transform.Find("Collider");
+                if (child != null)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+                child = new GameObject("Collider").transform;
+                child.parent = item.transform;
+                child.localPosition = Vector3.zero;
+                child.localEulerAngles = Vector3.zero;
+                child.localScale = Vector3.one;
+                foreach (var i in meshs)
+                {
+                    MeshCollider col = child.gameObject.AddComponent<MeshCollider>();
+                    col.sharedMesh = i;
+                    col.convex = true;
+                }
+            }
+            return meshAssets;
+        }
+
         [RFUAPI]
         public void EnabledAllCollider(bool enabled)
         {
@@ -346,10 +384,40 @@ namespace RFUniverse.Attributes
             text = GUILayout.TextField(text);
             if (GUILayout.Button("Generate VHACD Collider"))
             {
-                if (string.IsNullOrWhiteSpace(text)) return;
-                string path = $"BuiltinAssets/Model/VHACD_Mesh/{text}_VHACD.asset";
+                if (string.IsNullOrWhiteSpace(text))
+                    text = script.name;
+                string path = $"BuiltinAssets/Model/Collider_Mesh/{text}_VHACD.asset";
                 AssetDatabase.DeleteAsset($"Assets/{path}");
-                List<Mesh> meshs = script.GenerateVHACDCollider();
+                VHACD.Parameters parameters = new VHACD.Parameters();
+                parameters.Init();
+                parameters.m_resolution = 1000000;
+                parameters.m_maxNumVerticesPerCH = 1024;
+                parameters.m_planeDownsampling = 16;
+                parameters.m_convexhullDownsampling = 16;
+
+                List<Mesh> meshs = script.GenerateVHACDCollider(parameters);
+                foreach (var i in meshs)
+                {
+                    if (!System.IO.File.Exists($"{Application.dataPath}/{path}"))
+                    {
+                        AssetDatabase.CreateAsset(i, $"Assets/{path}");
+                    }
+                    else
+                    {
+                        AssetDatabase.AddObjectToAsset(i, $"Assets/{path}");
+                    }
+                }
+                AssetDatabase.Refresh();
+                EditorUtility.SetDirty(script);
+            }
+            if (GUILayout.Button("Generate CoACD Collider"))
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                    text = script.name;
+                string path = $"BuiltinAssets/Model/Collider_Mesh/{text}_CoACD.asset";
+                AssetDatabase.DeleteAsset($"Assets/{path}");
+
+                List<Mesh> meshs = script.GenerateCoACDCollider();
                 foreach (var i in meshs)
                 {
                     if (!System.IO.File.Exists($"{Application.dataPath}/{path}"))

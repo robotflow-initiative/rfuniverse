@@ -10,7 +10,7 @@ namespace RFUniverse
         void Open();
         void Close();
 
-        void OpenDirect();
-        void CloseDirect();
+        void OpenDirectly();
+        void CloseDirectly();
     }
 }

@@ -33,7 +33,7 @@ Unity端Player：接收python端消息并执行仿真
    > :warning:请将以下命令中的[0.8.3]替换为你所下载的RFUniverse Releases的版本号
    
    ```
-   conda create -n rfuniverse python=3.9 -y
+   conda create -n rfuniverse python=3.10 -y
    conda activate rfuniverse
    pip install pyrfuniverse==0.8.3
    ```

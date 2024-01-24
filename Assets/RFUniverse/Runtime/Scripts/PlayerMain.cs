@@ -1,4 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿#if OBI
+using Obi;
+#endif
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets;
+#endif
+using Newtonsoft.Json;
 using RFUniverse.Attributes;
 using RFUniverse.Manager;
 using Robotflow.RFUniverse.SideChannels;
@@ -9,14 +17,6 @@ using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-#if OBI
-using Obi;
-#endif
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.AddressableAssets.Settings;
-using UnityEditor.AddressableAssets;
-#endif
 
 namespace RFUniverse
 {
@@ -162,6 +162,7 @@ namespace RFUniverse
                 QuitApp();
             };
             CollectData.AddDataNextStep("scene_init", null);
+            CollectData.AddDataNextStep("rfu_version", Application.version.ToString());
         }
 
         void QuitApp()
@@ -250,7 +251,6 @@ namespace RFUniverse
         [RFUAPI]
         public void SetViewTransform(List<float> posiiton, List<float> rotation)
         {
-            Debug.Log("SetViewTransform");
             if (posiiton != null)
             {
                 MainCamera.transform.position = RFUniverseUtility.ListFloatToVector3(posiiton);
@@ -261,6 +261,13 @@ namespace RFUniverse
             }
         }
         [RFUAPI]
+        public void GetViewTransform()
+        {
+            CollectData.AddDataNextStep("view_position", MainCamera.transform.position);
+            CollectData.AddDataNextStep("view_rotation", MainCamera.transform.eulerAngles);
+            CollectData.AddDataNextStep("view_quaternion", MainCamera.transform.rotation);
+        }
+        [RFUAPI]
         public virtual void ViewLookAt(List<float> target, List<float> worldUp)
         {
             MainCamera.transform.LookAt(RFUniverseUtility.ListFloatToVector3(target), RFUniverseUtility.ListFloatToVector3(worldUp));
@@ -268,7 +275,6 @@ namespace RFUniverse
         [RFUAPI]
         public void SetViewBackGround(List<float> color)
         {
-            Debug.Log("SetViewBackGround");
             if (color == null)
                 MainCamera.clearFlags = CameraClearFlags.Skybox;
             else

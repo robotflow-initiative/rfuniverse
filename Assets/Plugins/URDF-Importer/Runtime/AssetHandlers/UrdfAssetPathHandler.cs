@@ -49,7 +49,7 @@ namespace Unity.Robotics.UrdfImporter
         {
             return packageRoot;
         }
-        
+
         public static string GetRelativeAssetPath(string absolutePath)
         {
             string assetPath = absolutePath;
@@ -66,7 +66,7 @@ namespace Unity.Robotics.UrdfImporter
                 }
 #endif
             }
-            else 
+            else
             {
                 assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
             }
@@ -80,23 +80,23 @@ namespace Unity.Robotics.UrdfImporter
             {
                 fullPath += relativePath.Substring("Assets".Length);
             }
-            else 
+            else
             {
                 fullPath = fullPath.Substring(0, fullPath.Length - "Assets".Length) + relativePath;
             }
             return fullPath.SetSeparatorChar();
         }
 
-        public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab=true)
+        public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab = true)
         {
             string path;
             bool useFileUri = false;
             if (!urdfPath.StartsWith(@"file://") && !urdfPath.StartsWith(@"package://"))
             {
-               if (urdfPath.Substring(0, 3) == "../")
+                if (urdfPath.Substring(0, 3) == "../")
                 {
-                   UnityEngine.Debug.LogWarning("Attempting to replace file path's starting instance of `../` with standard package notation `package://` to prevent manual path traversal at root of directory!");
-                   urdfPath = $@"package://{urdfPath.Substring(3)}";
+                    UnityEngine.Debug.LogWarning("Attempting to replace file path's starting instance of `../` with standard package notation `package://` to prevent manual path traversal at root of directory!");
+                    urdfPath = $@"package://{urdfPath.Substring(3)}";
                 }
             }
             // loading assets relative path from ROS/ROS2 package.
@@ -115,13 +115,14 @@ namespace Unity.Robotics.UrdfImporter
                 path = urdfPath.SetSeparatorChar();
             }
 
-            if (convertToPrefab) 
-            {
-                if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
-                    path = path.Substring(0, path.Length - 3) + "prefab";
+            //if (convertToPrefab) 
+            //{
+            //    if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
+            //        path = path.Substring(0, path.Length - 3) + "prefab";
 
-            }
-            if (useFileUri) {
+            //}
+            if (useFileUri)
+            {
                 return path;
             }
             return Path.Combine(packageRoot, path);

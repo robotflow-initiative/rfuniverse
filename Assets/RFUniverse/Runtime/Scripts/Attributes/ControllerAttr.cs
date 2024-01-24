@@ -465,6 +465,10 @@ namespace RFUniverse.Attributes
             base.AddPermanentData(data);
             // Number of Articulation Joints
             data["number_of_joints"] = Joints.Count;
+
+            data["names"] = Joints.Select(s => s.GetUnit().jointName).ToList();
+            // Each part's joint type
+            data["types"] = Joints.Select(s => s.jointType.ToString()).ToList();
             // Position
             data["positions"] = Joints.Select(s => s.transform.position).ToList();
             // Rotation
@@ -479,6 +483,8 @@ namespace RFUniverse.Attributes
             data["local_quaternions"] = Joints.Select(s => s.transform.localRotation).ToList();
             // Velocity
             data["velocities"] = Joints.Select(s => s.velocity).ToList();
+            // AngularVelocity
+            data["angular_velocity"] = Joints.Select(s => s.angularVelocity).ToList();
 
             // Number of Articulation Moveable Joints
             data["number_of_moveable_joints"] = MoveableJoints.Count;
@@ -489,9 +495,7 @@ namespace RFUniverse.Attributes
             // Each part's joint acceleration
             data["joint_accelerations"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointAcceleration()).ToList();
             // Each part's joint force
-            data["joint_force"] = MoveableJoints.Select(s => s.GetUnit().CalculateCurrentJointForce()).ToList();
-            // Each part's joint type
-            data["joint_types"] = MoveableJoints.Select(s => s.jointType.ToString()).ToList();
+            data["joint_force"] = MoveableJoints.Select(s => s.jointForce[0]).ToList();
             // Each part's joint lower limit
             data["joint_lower_limit"] = MoveableJoints.Select(s => s.xDrive.lowerLimit).ToList();
             // Each part's joint upper limit
@@ -763,6 +767,16 @@ namespace RFUniverse.Attributes
         {
             GetComponent<ICustomGripper>()?.Close();
         }
+        [RFUAPI]
+        public void GripperOpenDirectly()
+        {
+            GetComponent<ICustomGripper>()?.OpenDirectly();
+        }
+        [RFUAPI]
+        public void GripperCloseDirectly()
+        {
+            GetComponent<ICustomGripper>()?.CloseDirectly();
+        }
         public override void SetPosition(Vector3 position, bool worldSpace = true)
         {
             if (worldSpace)
@@ -833,7 +847,7 @@ namespace RFUniverse.Attributes
                 Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, MoveableJoints.Count));
                 return;
             }
-            SetJointPosition(jointPositions, ControlMode.Target, speedScales);
+            SetJointPosition(jointPositions, ControlMode.Target);
         }
         [RFUAPI]
         private void SetJointPositionDirectly(List<float> jointPositions)
@@ -1008,7 +1022,7 @@ namespace RFUniverse.Attributes
 #endif
             MoveableJoints[index].GetUnit().SetJointTargetVelocity(jointTargetVelocity);
         }
-        public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target, List<float> speedScales = null)
+        public void SetJointPosition(List<float> jointTargetPositions, ControlMode mode = ControlMode.Target)
         {
             for (int i = 0; i < MoveableJoints.Count; i++)
             {

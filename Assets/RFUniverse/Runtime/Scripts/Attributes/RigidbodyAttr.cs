@@ -86,6 +86,7 @@ namespace RFUniverse.Attributes
         public override void Init()
         {
             base.Init();
+            Rigidbody.sleepThreshold = 0;
         }
 
         public override BaseAttrData GetAttrData()
