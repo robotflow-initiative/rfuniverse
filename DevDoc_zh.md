@@ -134,7 +134,7 @@ PointCloudAttr：点云导入及渲染功能
 
 ---
 
-##### 普通模型导入为刚体Rigidbody的方法：
+##### 普通模型导入为RigidbodyAttr的方法：
 
 1. 将模型文件导入工程
 

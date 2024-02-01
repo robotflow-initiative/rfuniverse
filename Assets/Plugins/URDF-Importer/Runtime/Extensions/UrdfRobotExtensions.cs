@@ -17,6 +17,8 @@ using System;
 using System.IO;
 using System.Linq;
 using Unity.Robotics.UrdfImporter.Control;
+using static Unity.Robotics.UrdfImporter.Link;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -231,34 +233,48 @@ namespace Unity.Robotics.UrdfImporter
                 return;
             }
 
-            if (robotScript.CheckOrientation())
-            {
-                return;
-            }
+            //if (robotScript.CheckOrientation())
+            //{
+            //    return;
+            //}
+
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
+            correctZtoY = Quaternion.identity;
             Quaternion correction = new Quaternion();
 
-            if (robotScript.chosenAxis == ImportSettings.axisType.zAxis)
-            {
-                correction = correctYtoZ;
-            }
-            else
-            {
-                correction = correctZtoY;
-            }
+
 
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
             foreach (UrdfVisual visual in visualMeshList)
             {
-                visual.transform.localRotation = visual.transform.localRotation * correction;
+                if (visual.geometryType == GeometryTypes.Mesh)
+                {
+                    if (visual.axisType == ImportSettings.axisType.zAxis)
+                    {
+                        correction = correctYtoZ;
+                    }
+                    else
+                    {
+                        correction = correctZtoY;
+                    }
+                    visual.transform.localRotation = visual.transform.localRotation * correction;
+                }
             }
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
                 if (collision.geometryType == GeometryTypes.Mesh)
                 {
+                    if (collision.axisType == ImportSettings.axisType.zAxis)
+                    {
+                        correction = correctYtoZ;
+                    }
+                    else
+                    {
+                        correction = correctZtoY;
+                    }
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }
             }

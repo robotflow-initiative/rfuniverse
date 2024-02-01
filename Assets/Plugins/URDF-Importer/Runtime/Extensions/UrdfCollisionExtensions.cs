@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using UnityEngine;
 
@@ -59,11 +59,11 @@ namespace Unity.Robotics.UrdfImporter
             collisionObject.transform.SetParentAndAlign(parent);
             UrdfCollision urdfCollision = collisionObject.AddComponent<UrdfCollision>();
             urdfCollision.geometryType = UrdfGeometry.GetGeometryType(collision.geometry);
-            UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
+            urdfCollision.axisType = UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
             UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
             return urdfCollision;
         }
-    
+
         public static Link.Collision ExportCollisionData(this UrdfCollision urdfCollision)
         {
             UrdfGeometry.CheckForUrdfCompatibility(urdfCollision.transform, urdfCollision.geometryType);

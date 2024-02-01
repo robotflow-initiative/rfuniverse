@@ -10,14 +10,14 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Unity.Robotics.UrdfImporter
-{ 
+{
     public static class UrdfCollisionsExtensions
     {
         public static UrdfCollisions Create(Transform parent, List<Link.Collision> collisions = null)
@@ -26,9 +26,9 @@ namespace Unity.Robotics.UrdfImporter
             collisionsObject.transform.SetParentAndAlign(parent);
             UrdfCollisions urdfCollisions = collisionsObject.AddComponent<UrdfCollisions>();
 
-            collisionsObject.hideFlags = HideFlags.NotEditable;
-            urdfCollisions.hideFlags = HideFlags.None;
-            
+            //collisionsObject.hideFlags = HideFlags.NotEditable;
+            //urdfCollisions.hideFlags = HideFlags.None;
+
             if (collisions != null)
             {
                 foreach (Link.Collision collision in collisions)
@@ -38,7 +38,7 @@ namespace Unity.Robotics.UrdfImporter
             }
             return urdfCollisions;
         }
-        
+
         public static List<Link.Collision> ExportCollisionsData(this UrdfCollisions urdfCollisions)
         {
             UrdfCollision[] urdfCollisionsList = urdfCollisions.GetComponentsInChildren<UrdfCollision>();

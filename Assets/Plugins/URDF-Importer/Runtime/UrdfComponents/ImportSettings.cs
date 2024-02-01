@@ -19,7 +19,7 @@ namespace Unity.Robotics.UrdfImporter
         }
 
         public axisType chosenAxis = axisType.yAxis;
-        public convexDecomposer convexMethod = convexDecomposer.vHACD;
+        public convexDecomposer convexMethod = convexDecomposer.unity;
 
         public bool OverwriteExistingPrefabs { get; set; } = false;
 

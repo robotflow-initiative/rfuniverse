@@ -26,7 +26,7 @@ namespace Unity.Robotics.UrdfImporter
         static List<string> s_UsedTemplateFiles = new List<string>();
         static List<string> s_CreatedAssetNames = new List<string>();
 
-        public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
+        public static ImportSettings.axisType Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
 
@@ -64,6 +64,7 @@ namespace Unity.Robotics.UrdfImporter
                     SetScale(parent, geometry, geometryType);
                 }
             }
+            return GetCorrectionQuaternion(geometry);
         }
 
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
@@ -116,6 +117,20 @@ namespace Unity.Robotics.UrdfImporter
                 ConvertMeshToColliders(meshObject);
             }
             return meshObject;
+        }
+
+        static ImportSettings.axisType GetCorrectionQuaternion(Link.Geometry geometry)
+        {
+            if (geometry == null)
+                return ImportSettings.axisType.yAxis;
+            if (geometry.mesh == null)
+                return ImportSettings.axisType.yAxis;
+
+            string file = geometry.mesh.filename.ToLower();
+            if (file.EndsWith(".obj"))
+                return ImportSettings.axisType.zAxis;
+            else
+                return ImportSettings.axisType.yAxis;
         }
 
         private static GameObject CreateCylinderCollider()

@@ -117,7 +117,7 @@ PointCloudAttr: Point cloud import and rendering function
 
 ---
 
-##### Method to import URDF as ControllerAttr:
+##### How to import URDF as ControllerAttr:
 
 1. Import URDF resource files into the Unity project
 
@@ -135,7 +135,7 @@ PointCloudAttr: Point cloud import and rendering function
 
 ---
 
-##### Method to import models as rigid bodies (Rigidbody):
+##### How to import model as RigidbodyAttr:
 
 1. Import the model file into the project
 

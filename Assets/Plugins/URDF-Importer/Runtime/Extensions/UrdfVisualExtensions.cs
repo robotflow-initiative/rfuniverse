@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using UnityEngine;
 
@@ -38,7 +38,7 @@ namespace Unity.Robotics.UrdfImporter
             UrdfVisual urdfVisual = visualObject.AddComponent<UrdfVisual>();
 
             urdfVisual.geometryType = UrdfGeometry.GetGeometryType(visual.geometry);
-            UrdfGeometryVisual.Create(visualObject.transform, urdfVisual.geometryType, visual.geometry);
+            urdfVisual.axisType = UrdfGeometryVisual.Create(visualObject.transform, urdfVisual.geometryType, visual.geometry);
 
             UrdfMaterial.SetUrdfMaterial(visualObject, visual.material);
             UrdfOrigin.ImportOriginData(visualObject.transform, visual.origin);
@@ -57,7 +57,7 @@ namespace Unity.Robotics.UrdfImporter
             Link.Geometry geometry = UrdfGeometry.ExportGeometryData(urdfVisual.geometryType, urdfVisual.transform);
 
             Link.Visual.Material material = null;
-            if ((geometry.mesh != null )) 
+            if ((geometry.mesh != null))
             {
                 material = UrdfMaterial.ExportMaterialData(urdfVisual.GetComponentInChildren<MeshRenderer>().sharedMaterial);
             }
