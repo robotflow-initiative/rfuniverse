@@ -23,25 +23,11 @@ namespace RFUniverse
 
                 GameObject prefab = GameObject.Instantiate(item);
                 RigidbodyAttr attr = prefab.AddComponent<RigidbodyAttr>();
-                SaveMeshs($"{path}/{name}_VHACD.asset", attr.GenerateVHACDCollider());
+                attr.GenerateConvexCollider();
                 PrefabUtility.SaveAsPrefabAsset(prefab, $"{path}/{name}_RigidbodyAttr.prefab");
                 DestroyImmediate(prefab);
             }
             AssetDatabase.Refresh();
         }
-
-        public static void SaveMeshs(string path, List<Mesh> meshs)
-        {
-            if (!path.EndsWith(".asset"))
-                path += ".asset";
-            AssetDatabase.DeleteAsset(path);
-            AssetDatabase.CreateAsset(new Mesh(), path);
-            foreach (var i in meshs)
-            {
-                AssetDatabase.AddObjectToAsset(i, path);
-            }
-        }
     }
-
-
 }

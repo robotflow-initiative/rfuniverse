@@ -60,6 +60,8 @@ namespace RFUniverse
             }
         }
 
+        string version;
+
         void OnValidate()
         {
             Instance = this;
@@ -75,6 +77,7 @@ namespace RFUniverse
             Instance = this;
             base.Awake();
 
+            version = Application.version;
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
             messageManager = MessageManager.Instance;
@@ -162,7 +165,7 @@ namespace RFUniverse
                 QuitApp();
             };
             CollectData.AddDataNextStep("scene_init", null);
-            CollectData.AddDataNextStep("rfu_version", Application.version.ToString());
+            CollectData.AddDataNextStep("rfu_version", version);
         }
 
         void QuitApp()

@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using MeshProcess;
-using Obi;
 
 namespace RFUniverse.Attributes
 {
@@ -240,7 +239,7 @@ namespace RFUniverse.Attributes
             foreach (var item in GetComponentsInChildren<Collider>())
             {
                 if (item.enabled && item.gameObject.activeInHierarchy && !item.isTrigger)
-                    item.gameObject.AddComponent<ObiCollider>().sourceCollider = item;
+                    item.gameObject.AddComponent<Obi.ObiCollider>().sourceCollider = item;
             }
 #endif
         }
@@ -313,7 +312,31 @@ namespace RFUniverse.Attributes
             }
             return meshAssets;
         }
-
+        [RFUAPI]
+        public void GenerateConvexCollider()
+        {
+            foreach (var item in this.GetChildComponentFilter<MeshRenderer>())
+            {
+                foreach (var des in item.GetComponents<Collider>())
+                {
+                    DestroyImmediate(des, true);
+                }
+                Mesh sourceMesh = item.GetComponent<MeshFilter>().sharedMesh;
+                Transform child = item.transform.Find("Collider");
+                if (child)
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+                child = new GameObject("Collider").transform;
+                child.parent = item.transform;
+                child.localPosition = Vector3.zero;
+                child.localEulerAngles = Vector3.zero;
+                child.localScale = Vector3.one;
+                MeshCollider col = child.gameObject.AddComponent<MeshCollider>();
+                col.sharedMesh = sourceMesh;
+                col.convex = true;
+            }
+        }
         [RFUAPI]
         public void EnabledAllCollider(bool enabled)
         {
@@ -433,6 +456,13 @@ namespace RFUniverse.Attributes
                 EditorUtility.SetDirty(script);
             }
             GUILayout.EndHorizontal();
+            if (GUILayout.Button("Generate Convex Collider"))
+            {
+                script.GenerateConvexCollider();
+                AssetDatabase.Refresh();
+                EditorUtility.SetDirty(script);
+            }
+
         }
     }
 #endif

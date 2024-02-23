@@ -21,6 +21,7 @@ namespace RFUniverse
                 "Assets/Plugins/Editor",
                 "Assets/Plugins/Demigiant",
                 "Assets/Plugins/HeatMap",
+                "Assets/Plugins/CoACD",
                 "Assets/Plugins/URDF-Importer",
                 "Assets/Plugins/BioIK/BioIK.asmref",
                 "Assets/RFUniverse/Version.txt"
