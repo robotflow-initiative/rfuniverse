@@ -22,7 +22,7 @@ public class ArticulationUnit : MonoBehaviour
 
     public event Action OnSetJointPositionDirectly = null;
 
-
+    public int indexOfMoveableJoints = -1;
 
     void Awake()
     {

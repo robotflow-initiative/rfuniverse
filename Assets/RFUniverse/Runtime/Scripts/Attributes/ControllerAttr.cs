@@ -124,6 +124,10 @@ namespace RFUniverse.Attributes
             {
                 if (moveableJoints == null)
                     moveableJoints = jointParameters.Where(s => s.body != null && s.moveable).Select(s => s.body).ToList();
+                for (int i = 0; i < moveableJoints.Count; i++)
+                {
+                    moveableJoints[i].GetUnit().indexOfMoveableJoints = i;
+                }
                 return moveableJoints;
             }
         }
@@ -140,11 +144,6 @@ namespace RFUniverse.Attributes
             base.Init();
             IsRFMoveCollider = false;
             if (graspPoint == null) graspPoint = Joints.LastOrDefault()?.transform;
-            foreach (var item in MoveableJoints)
-            {
-                if (!item.GetComponent<ArticulationUnit>())
-                    item.gameObject.AddComponent<ArticulationUnit>();
-            }
             if (initBioIK)
             {
                 InitBioIK();
@@ -235,8 +234,6 @@ namespace RFUniverse.Attributes
             jointParameters = new List<ArticulationParameter>();
             foreach (var item in this.GetChildComponentFilter<ArticulationBody>())
             {
-                if (item.GetComponent<ArticulationUnit>() == null)
-                    item.gameObject.AddComponent<ArticulationUnit>();
                 jointParameters.Add(new ArticulationParameter
                 {
                     body = item,
@@ -275,7 +272,7 @@ namespace RFUniverse.Attributes
             foreach (var item in MoveableJoints)
             {
                 BioIK.BioJoint joint = bioIK.FindSegment(item.transform).AddJoint();
-                iKCopy.Add(item.transform, item);
+                iKCopy[item.transform] = item;
                 joint.SetAnchor(item.anchorPosition);
                 joint.SetOrientation(item.anchorRotation.eulerAngles);
                 joint.SetDefaultFrame(item.transform.localPosition, item.transform.localRotation);
@@ -511,7 +508,7 @@ namespace RFUniverse.Attributes
             List<float> jointPositions = new List<float>();
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
-                jointPositions.Add(MoveableJoints[i].GetComponent<ArticulationUnit>().CalculateCurrentJointPosition());
+                jointPositions.Add(MoveableJoints[i].GetUnit().CalculateCurrentJointPosition());
             }
             return jointPositions;
         }
@@ -581,10 +578,12 @@ namespace RFUniverse.Attributes
                     tempIKTargetPosition = pos;
             }
             else
+            {
                 iKTarget.DOMove(pos, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
                 {
                     moveDone = true;
                 };
+            }
         }
 
         [RFUAPI]
@@ -611,7 +610,7 @@ namespace RFUniverse.Attributes
             }
             if (!bioIK.enabled)
             {
-                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need to open NativeIK");
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need open NativeIK");
                 return;
             }
 #endif
@@ -630,10 +629,12 @@ namespace RFUniverse.Attributes
                 //DirectlyRotate(tempIKTargetRotation);
             }
             else
+            {
                 iKTarget.DORotateQuaternion(target, duration).SetSpeedBased(isSpeedBased).SetEase(Ease.Linear).SetRelative(isRelative).onComplete += () =>
                 {
                     rotateDone = true;
                 };
+            }
         }
         void DirectlyIK(Vector3 targetPos, Quaternion targetRot)
         {
@@ -683,6 +684,39 @@ namespace RFUniverse.Attributes
             rotateDone = true;
         }
 
+        [RFUAPI]
+        public void GetIKTargetJointPosition(List<float> position = null, List<float> eulerAngle = null, List<float> quaternion = null, int iterate = 100)
+        {
+#if BIOIK
+            if (bioIK == null)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, Dont have IK compenent");
+                return;
+            }
+            if (!bioIK.enabled)
+            {
+                Debug.LogWarning($"Controller ID: {ID},Name: {Name}, You need open NativeIK");
+                return;
+            }
+            if (iKTarget == null) return;
+            Vector3 sourcePosition = iKTarget.transform.position;
+            Quaternion sourceQuaternion = iKTarget.transform.rotation;
+            if (position != null && position.Count == 3)
+                iKTarget.transform.position = RFUniverseUtility.ListFloatToVector3(position);
+            if (eulerAngle != null && eulerAngle.Count == 3)
+                iKTarget.transform.eulerAngles = RFUniverseUtility.ListFloatToVector3(position);
+            if (quaternion != null && quaternion.Count == 4)
+                iKTarget.transform.rotation = RFUniverseUtility.ListFloatToQuaternion(quaternion);
+            for (int i = 0; i < iterate; i++)
+                bioIK.FixedUpdate1();
+            List<float> result = MoveableJoints.Select(s => bioIK.targets[s.transform]).ToList();
+            CollectData.AddDataNextStep("result_joint_position", result);
+
+            iKTarget.transform.position = sourcePosition;
+            iKTarget.transform.rotation = sourceQuaternion;
+#endif
+        }
+
         protected override void DoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
             return;
@@ -709,14 +743,15 @@ namespace RFUniverse.Attributes
             return;
         }
         [RFUAPI]
-        public void SetIKTargetOffset(List<float> position, List<float> rotation, List<float> quaternion)
+        public void SetIKTargetOffset(List<float> position = null, List<float> eulerAngle = null, List<float> quaternion = null)
         {
             if (iKFollow == null) return;
-            iKFollow.localPosition = new Vector3(position[0], position[1], position[2]);
-            if (quaternion != null)
-                iKFollow.localRotation = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
-            else
-                iKFollow.localEulerAngles = new Vector3(rotation[0], rotation[1], rotation[2]);
+            if (position != null && position.Count == 3)
+                iKFollow.localPosition = RFUniverseUtility.ListFloatToVector3(position);
+            if (eulerAngle != null && eulerAngle.Count == 3)
+                iKFollow.localEulerAngles = RFUniverseUtility.ListFloatToVector3(eulerAngle);
+            if (quaternion != null && quaternion.Count == 4)
+                iKFollow.localRotation = RFUniverseUtility.ListFloatToQuaternion(quaternion);
             ResetIKTarget();
         }
         [RFUAPI]
@@ -833,7 +868,7 @@ namespace RFUniverse.Attributes
 
         }
         [RFUAPI]
-        private void SetJointPosition(List<float> jointPositions, List<float> speedScales)
+        private void SetJointPosition(List<float> jointPositions)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
