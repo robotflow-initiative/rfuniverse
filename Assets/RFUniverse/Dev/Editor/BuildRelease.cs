@@ -10,6 +10,8 @@ using UnityEngine;
 
 public class BuildRelease
 {
+    public const string BUILD_PATH = "D:/Build";
+
     [MenuItem("RFUniverse/Build Release/All", false, 0)]
     static void Build()
     {
@@ -22,12 +24,13 @@ public class BuildRelease
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         Client.Resolve();
+        UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
-        string windowsPath = $"{Application.dataPath}/../Build/RFUniverse_For_Windows_v{Application.version}";
+        string windowsPath = $"{BUILD_PATH}/RFUniverse_For_Windows_v{Application.version}";
         if (System.IO.Directory.Exists(windowsPath))
             System.IO.Directory.Delete(windowsPath, true);
         System.IO.Directory.CreateDirectory(windowsPath);
@@ -42,6 +45,7 @@ public class BuildRelease
             if (System.IO.File.Exists($"{windowsPath}.zip"))
                 System.IO.File.Delete($"{windowsPath}.zip");
             ZipFile.CreateFromDirectory($"{windowsPath}", $"{windowsPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
+            EditorUtility.RevealInFinder(windowsPath);
         }
         else
             Debug.Log("Windows发布失败！");
@@ -51,12 +55,13 @@ public class BuildRelease
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
         Client.Resolve();
+        UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
-        string linuxPath = $"{Application.dataPath}/../Build/RFUniverse_For_Linux_v{Application.version}";
+        string linuxPath = $"{BUILD_PATH}/RFUniverse_For_Linux_v{Application.version}";
         if (System.IO.Directory.Exists(linuxPath))
             System.IO.Directory.Delete(linuxPath, true);
         System.IO.Directory.CreateDirectory(linuxPath);
@@ -71,6 +76,7 @@ public class BuildRelease
             if (System.IO.File.Exists($"{linuxPath}.zip"))
                 System.IO.File.Delete($"{linuxPath}.zip");
             ZipFile.CreateFromDirectory($"{linuxPath}", $"{linuxPath}.zip", System.IO.Compression.CompressionLevel.Optimal, true);
+            EditorUtility.RevealInFinder(linuxPath);
         }
         else
             Debug.Log("Linux发布失败！");

@@ -287,29 +287,6 @@ namespace RFUniverse
             }
         }
 
-#if OBI
-        [RFUAPI]
-        public ClothAttr LoadCloth(string path, int id)
-        {
-            Debug.Log($"LoadCloth: {path}");
-            GameObject obj = UnityMeshImporter.MeshImporter.Load("E:\\ClothDynamics\\Assets\\Tshirt.obj");
-            Mesh mesh = obj.GetComponentInChildren<MeshFilter>().sharedMesh;
-            ObiSolver obiSolver = Addressables.LoadAssetAsync<GameObject>("ObiClothStencil").WaitForCompletion().GetComponent<ObiSolver>();
-            obiSolver.GetComponentInChildren<ObiCloth>().clothBlueprint = ObiUtility.GenerateClothBlueprints(mesh);
-            Destroy(obj);
-            ObiSolver instance = Instantiate(obiSolver);
-            ClothAttr clothAttr = instance.GetComponent<ClothAttr>();
-            clothAttr.ID = id;
-            clothAttr.Instance();
-            return clothAttr;
-        }
-        [RFUAPI]
-        public void EnabledGroundObiCollider(bool enabled)
-        {
-            ObiCollider collider = Ground.GetComponent<ObiCollider>() ?? Ground.AddComponent<ObiCollider>();
-            collider.enabled = enabled;
-        }
-#endif
         [RFUAPI]
         public void Pend()
         {
@@ -452,13 +429,17 @@ namespace RFUniverse
         [RFUAPI]
         public void LoadURDF(int id, string path, bool nativeIK, string axis)
         {
-            Debug.Log(path);
+            if (!File.Exists(path))
+                throw new FileNotFoundException("File not found", path);
+            Debug.Log($"LoadURDF: {path}");
             ImportSettings setting = new ImportSettings();
             setting.chosenAxis = axis == "z" ? ImportSettings.axisType.zAxis : ImportSettings.axisType.yAxis;
             setting.convexMethod = ImportSettings.convexDecomposer.unity;
             GameObject robot = UrdfRobotExtensions.CreateRuntime(path, setting);
             robot.transform.SetParent(null);
             ControllerAttr attr = RFUniverseUtility.NormalizeRFUniverseArticulation(robot);
+            CreateReference newReference = new CreateReference(attr);
+            attr.CreateReference = newReference;
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
             attr.initBioIK = nativeIK;
@@ -468,9 +449,13 @@ namespace RFUniverse
         [RFUAPI]
         public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true)
         {
-            Debug.Log(path);
+            if (!File.Exists(path))
+                throw new FileNotFoundException("File not found", path);
+            Debug.Log($"LoadMesh: {path}");
             GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
             RigidbodyAttr attr = obj.AddComponent<RigidbodyAttr>();
+            CreateReference newReference = new CreateReference(attr);
+            attr.CreateReference = newReference;
             foreach (var item in obj.GetComponentsInChildren<Renderer>())
             {
                 foreach (var mat in item.materials)
@@ -486,6 +471,37 @@ namespace RFUniverse
                 attr.Instance();
             return attr;
         }
+
+        [RFUAPI]
+        public ClothAttr LoadCloth(string path, int id)
+        {
+#if OBI
+            if (!File.Exists(path))
+                throw new FileNotFoundException("File not found", path);
+            Debug.Log($"LoadCloth: {path}");
+            GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
+            Mesh mesh = obj.GetComponentInChildren<MeshFilter>().sharedMesh;
+            ObiSolver obiSolver = Addressables.LoadAssetAsync<GameObject>("ObiClothStencil").WaitForCompletion().GetComponent<ObiSolver>();
+            obiSolver.GetComponentInChildren<ObiCloth>().clothBlueprint = ObiUtility.GenerateClothBlueprints(mesh);
+            Destroy(obj);
+            ObiSolver instance = Instantiate(obiSolver);
+            ClothAttr attr = instance.GetComponent<ClothAttr>();
+            CreateReference newReference = new CreateReference(attr);
+            attr.CreateReference = newReference;
+            attr.ID = id;
+            attr.Instance();
+            return attr;
+#endif
+        }
+        [RFUAPI]
+        public void EnabledGroundObiCollider(bool enabled)
+        {
+#if OBI
+            ObiCollider collider = Ground.GetComponent<ObiCollider>() ?? Ground.AddComponent<ObiCollider>();
+            collider.enabled = enabled;
+#endif
+        }
+
         [RFUAPI]
         public void IgnoreLayerCollision(int layer1, int layer2, bool ignore)
         {

@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 using System.Linq;
 using DG.Tweening;
-using System.Reflection;
 using RFUniverse.Manager;
 
 namespace RFUniverse.Attributes
@@ -65,6 +64,21 @@ namespace RFUniverse.Attributes
         public static Dictionary<int, BaseAttr> Attrs => InstanceManager.Instance.Attrs;
         public static Dictionary<int, BaseAttr> ActiveAttrs => InstanceManager.Instance.ActiveAttrs;
 
+        CreateReference createReference;
+        public CreateReference CreateReference
+        {
+            get { return createReference; }
+            set
+            {
+                if (value == createReference)
+                    return;
+                if (value == null)
+                    createReference.Remove(this);
+                createReference = value;
+                if (createReference != null)
+                    createReference.Add(this);
+            }
+        }
         public ICollectData CollectData => this;
 
         [SerializeField]
@@ -315,12 +329,14 @@ namespace RFUniverse.Attributes
         {
             GameObject copy = GameObject.Instantiate(gameObject);
             BaseAttr attr = copy.GetComponent<BaseAttr>();
+            attr.CreateReference = CreateReference;
             attr.ID = newID;
             attr.Instance();
         }
         [RFUAPI]
         public virtual void Destroy()
         {
+            CreateReference = null;
             DestroyImmediate(gameObject);
         }
 

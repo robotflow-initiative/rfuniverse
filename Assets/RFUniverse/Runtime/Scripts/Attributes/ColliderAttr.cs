@@ -369,6 +369,19 @@ namespace RFUniverse.Attributes
             IsRFMoveCollider = active;
         }
 
+        public override void Destroy()
+        {
+            List<Tuple<int, int>> pair = collisionPairs.FindAll(s => s.Item1 == this.ID || s.Item2 == this.ID);
+            int count = collisionPairs.Count;
+            pair.ForEach(s =>
+            {
+                if (collisionPairs.Contains(s))
+                    collisionPairs.Remove(s);
+            });
+            if (collisionPairs.Count != count)
+                OnCollisionPairsChange?.Invoke();
+            base.Destroy();
+        }
 
         private static List<Tuple<int, int>> collisionPairs = new List<Tuple<int, int>>();
         public static List<Tuple<int, int>> CollisionPairs => new List<Tuple<int, int>>(collisionPairs);
@@ -387,6 +400,7 @@ namespace RFUniverse.Attributes
             BaseAttr otherAttr = other.gameObject.GetComponentInParent<BaseAttr>();
             if (otherAttr == null) return;
             Tuple<int, int> pair = collisionPairs.Find(s => (s.Item1 == this.ID && s.Item2 == otherAttr.ID) || (s.Item1 == otherAttr.ID && s.Item2 == this.ID));
+            if (pair == null) return;
             collisionPairs.Remove(pair);
             OnCollisionPairsChange?.Invoke();
         }
