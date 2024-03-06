@@ -31,7 +31,6 @@ robot.WaitDo()
 ### 2.2 循环抓取物体
 
 ```python
-while 1:
     box1 = env.InstanceObject(
         name="Rigidbody_Box", id=111111, attr_type=attr.RigidbodyAttr
     )
@@ -50,7 +49,12 @@ while 1:
 
     position1 = box1.data["position"]
     position2 = box2.data["position"]
+```
 
+- `InstanceObject`：在场景中初始化两个箱体以供抓取，注意其中的 id 参数需要全局唯一
+- `SetTransform`：设置箱体的位置、姿态、大小等
+
+```python
     robot.IKTargetDoMove(
         position=[position1[0], position1[1] + 0.5, position1[2]],
         duration=2,
@@ -63,12 +67,26 @@ while 1:
         speed_based=False,
     )
     robot.WaitDo()
+```
+
+- `IKTargetDoMove` 中参数的含义：
+  - `position`：用于表示旋转的四元数
+  - `duration`：从当前位置到目标位置的持续时间
+  - `relative`：`true` 表示相对当前位置，`false` 表示世界坐标的绝对位置
+- `WaitDo`：因为在场景中机器人的运动需要时间，所以调用此函数以等待机器人运动完毕后再执行后续代码
+
+```python
     gripper.GripperClose()
     env.step(50)
     robot.IKTargetDoMove(
         position=[0, 0.5, 0], duration=2, speed_based=False, relative=True
     )
     robot.WaitDo()
+```
+
+- `GripperClose`：关闭夹爪
+
+```python
     robot.IKTargetDoMove(
         position=[position2[0], position2[1] + 0.5, position2[2]],
         duration=4,
@@ -81,6 +99,9 @@ while 1:
         speed_based=False,
     )
     robot.WaitDo()
+```
+
+```python
     gripper.GripperOpen()
     env.step(50)
     robot.IKTargetDoMove(
@@ -89,19 +110,14 @@ while 1:
     robot.WaitDo()
     robot.IKTargetDoMove(position=[0, 0.5, 0.5], duration=2, speed_based=False)
     robot.WaitDo()
+```
+
+- `GripperOpen`：打开夹爪
+
+```python
     box1.Destroy()
     box2.Destroy()
     env.step()
 ```
 
-- `IKTargetDoMove` 中参数的含义：
-  - `position`：用于表示旋转的四元数
-  - `duration`：从当前位置到目标位置的持续时间
-  - `relative`：`true` 表示相对当前位置，`false` 表示世界坐标的绝对位置
-
-- `IKTargetDoRotateQuaternion` 中参数的含义：
-  - `quaternion`：刚体末端的目标位置
-  - `duration`：从当前位置到目标位置的持续时间
-  - `relative`：`true` 表示相对当前位置，`false` 表示世界坐标的绝对位置
-
-- `WaitDo`：等待机械臂的运动结束，再运行后续代码
+- `Destroy`：销毁物体

@@ -4,7 +4,7 @@
 
 - obj模型文件导入为刚体
 - 效果：导入obj模型文件并复制100个刚体，同时模拟刚体自由落下
-  ![](https://notes.sjtu.edu.cn/uploads/upload_17b2c4935e7cda9db6f3f7eb530bee41.gif)
+<img src="../Image/load_mesh.gif">
 
 ## 2 实现流程
 

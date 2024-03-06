@@ -6,9 +6,9 @@
 - 实现效果
   - 指定相机位置与角度
   - 将图片以 PNG 字节流输出并显示
-    ![](https://notes.sjtu.edu.cn/uploads/upload_cd8cddc27cb49ad0ffcff2480ba486fc.png)
-    ![](https://notes.sjtu.edu.cn/uploads/upload_11ac1387af859c72ed6819f04beb852e.png)
-    ![](https://notes.sjtu.edu.cn/uploads/upload_6fa66b76b1b1505d3488403ade565a52.png)
+  <img src="../Image/camera_image/scene.png">
+  <img src="../Image/camera_image/byte_image_1.png">
+  <img src="../Image/camera_image/byte_image_2.png">
 
 ## 2 实现流程
 

@@ -74,35 +74,60 @@ image_active_depth = active_light_sensor_1.data["active_depth"]
 
 ### 2.3 点云绘制
 
+#### 2.3.1 获取相机的外参矩阵
+
 ```python
 local_to_world_matrix = active_light_sensor_1.data["local_to_world_matrix"]
+```
 
-# point = dp.image_array_to_point_cloud(image_rgb, image_active_depth, 45, local_to_world_matrix)
+- `local_to_world_matrix`：相机局部到世界坐标系的坐标变换矩阵，即相机的外参矩阵
 
-color = utility.EncodeIDAsColor(568451)[0:3]
+#### 2.3.2 使用没有误差的深度图绘制点云
+
+```python
 real_point_cloud1 = dp.image_bytes_to_point_cloud_intrinsic_matrix(
     image_byte, image_depth_exr, nd_main_intrinsic_matrix, local_to_world_matrix
 )
+```
 
+- `image_bytes_to_point_cloud_intrinsic_matrix`：使用原始字节格式的 RBG 图和深度图，加上相机的内外参矩阵，来生成全局坐标系下的点云
+
+#### 2.3.3 使用带有误差的深度图绘制点云
+
+```python
 active_point_cloud1 = dp.image_array_to_point_cloud_intrinsic_matrix(
     image_rgb, image_active_depth, nd_main_intrinsic_matrix, local_to_world_matrix
 )
+```
 
+- `image_array_to_point_cloud_intrinsic_matrix`：使用 numpy.ndarray 格式的 RBG 图和深度图，加上相机的内外参矩阵，来生成全局坐标系下的点云
+
+
+#### 2.3.4 对点云图作物体分割
+
+```python
+color = utility.EncodeIDAsColor(568451)[0:3]
 mask_real_point_cloud1 = dp.mask_point_cloud_with_id_color(
     real_point_cloud1, image_id, color
 )
 mask_active_point_cloud1 = dp.mask_point_cloud_with_id_color(
     active_point_cloud1, image_id, color
 )
+```
+
+- `mask_point_cloud_with_id_color`：使用之前生成的物体语义分割图来从点云中切割出目标物体
+
+#### 2.3.5 滤波改良带有误差的点云图
+
+```python
 filtered_point_cloud1 = dp.filter_active_depth_point_cloud_with_exact_depth_point_cloud(
     mask_active_point_cloud1, mask_real_point_cloud1
 )
 ```
 
-- `real_point_cloud1` 使用没有误差的深度图绘制
-- `active_point_cloud1` 使用带有误差的深度图绘制
-- 使用之前生成的物体语义分割图来从点云中切割出目标物体
-- `filtered_point_cloud1` 使用真实的深度图去滤波改良基于红外线的带有误差的深度图
+- `filter_active_depth_point_cloud_with_exact_depth_point_cloud`：使用真实的深度图去滤波改良由带有误差的深度图生成的点云图
+
+#### 2.3.6 对另一个视角的相机重复上述流程
 
 ```python
 active_light_sensor_2 = env.GetAttr(123123)
