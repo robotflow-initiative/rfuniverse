@@ -5,7 +5,7 @@
 - urdf 文件导入
 - 效果
   - 导入 3 个 urdf 文件
-  - 实现第一个刚体部件的移动与旋转
+  - 实现第一个机械臂的移动与旋转
 
 ## 2 实现流程
 
@@ -23,7 +23,7 @@ kinova.SetTransform(position=[3, 0, 0])
 ```
 
 - 依次导入 3 个 urdf 文件，同时指定三个刚体的初始位置
-- `native_ik` 是一个插件，当设置为 `false` 时就无法使用 [2.2](#2.2) 中 `IKTargetDoMove` 等接口，只能手动设置每个 joint 的 position（使用 `setJointPosition`）。反之亦然，设置为 `true` 时，不能通过 `setJointPosition` 手动设置。
+- `native_ik` 是一个插件，当设置为 `false` 时就无法使用 [2.2](#2.2) 中 `IKTargetDoMove` 等接口，只能手动设置每个 joint 的 position（使用 `setJointPosition`）。反之亦然，设置为 `true` 时，不能通过 `SetJointPosition` 手动设置。
 
 ### 2.2 设置第一个刚体的动作
 

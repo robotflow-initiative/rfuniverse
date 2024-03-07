@@ -39,12 +39,13 @@ for id in ids:
 ```
 
 - `IKTargetDoMove` 中参数的含义：
+  
   - `position`：用于表示旋转的四元数
   - `duration`：从当前位置到目标位置的持续时间
   - `relative`：`true` 表示相对当前位置，`false` 表示世界坐标的绝对位置
 
 - `IKTargetDoRotateQuaternion` 中参数的含义：
+  
   - `quaternion`：刚体末端的目标位置
   - `duration`：从当前位置到目标位置的持续时间
   - `relative`：`true` 表示相对当前位置，`false` 表示世界坐标的绝对位置
-

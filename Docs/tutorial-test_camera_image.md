@@ -2,13 +2,11 @@
 
 ## 1 基本功能
 
-- 相机截图示例
+相机截图示例
+
 - 实现效果
   - 指定相机位置与角度
   - 将图片以 PNG 字节流输出并显示
-  <img src="../Image/camera_image/scene.png">
-  <img src="../Image/camera_image/byte_image_1.png">
-  <img src="../Image/camera_image/byte_image_2.png">
 
 ## 2 实现流程
 
@@ -44,4 +42,7 @@ cv2.imshow("rgb", image_np)
 cv2.waitKey(0)
 ```
 
+![](../Image/camera_image/byte_image_1.png)
+
+- 输出图片字节
 - 利用 rgb 对图片进行解码并展示

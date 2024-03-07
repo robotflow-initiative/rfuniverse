@@ -2,9 +2,12 @@
 
 ## 1 基本功能
 
+![](../Image/load_mesh.gif)
+
 - obj模型文件导入为刚体
 - 效果：导入obj模型文件并复制100个刚体，同时模拟刚体自由落下
-<img src="../Image/load_mesh.gif">
+  
+  
 
 ## 2 实现流程
 

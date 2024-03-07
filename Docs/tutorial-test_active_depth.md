@@ -2,11 +2,7 @@
 
 ## 1 基本功能
 
-<img src="../Image/active_depth/depth.png" width=50%><img src="../Image/active_depth/active_depth.png" width=50%>
-
-<img src="../Image/active_depth/depth_id_select.png" width=50%><img src="../Image/active_depth/active_depth_id_select.png" width=50%><img src="../Image/active_depth/distance_filt.png" width=50%><img src="../Image/active_depth/active_depth_scene.png" width=50%>
-
-
+<img src="../Image/active_depth/active_depth_scene.png" width=50%>
 
 - 在已知相机内外参的情况下，得到物体的红外深度图和真实深度图，分别转化为点云，并进行可视化
 
@@ -84,6 +80,8 @@ local_to_world_matrix = active_light_sensor_1.data["local_to_world_matrix"]
 
 #### 2.3.2 使用没有误差的深度图绘制点云
 
+![](../Image/active_depth/depth.png)
+
 ```python
 real_point_cloud1 = dp.image_bytes_to_point_cloud_intrinsic_matrix(
     image_byte, image_depth_exr, nd_main_intrinsic_matrix, local_to_world_matrix
@@ -94,6 +92,8 @@ real_point_cloud1 = dp.image_bytes_to_point_cloud_intrinsic_matrix(
 
 #### 2.3.3 使用带有误差的深度图绘制点云
 
+![](../Image/active_depth/active_depth.png)
+
 ```python
 active_point_cloud1 = dp.image_array_to_point_cloud_intrinsic_matrix(
     image_rgb, image_active_depth, nd_main_intrinsic_matrix, local_to_world_matrix
@@ -102,8 +102,11 @@ active_point_cloud1 = dp.image_array_to_point_cloud_intrinsic_matrix(
 
 - `image_array_to_point_cloud_intrinsic_matrix`：使用 numpy.ndarray 格式的 RBG 图和深度图，加上相机的内外参矩阵，来生成全局坐标系下的点云
 
-
 #### 2.3.4 对点云图作物体分割
+
+![](../Image/active_depth/depth_id_select.png)
+
+![](../Image/active_depth/active_depth_id_select.png)
 
 ```python
 color = utility.EncodeIDAsColor(568451)[0:3]
@@ -118,6 +121,8 @@ mask_active_point_cloud1 = dp.mask_point_cloud_with_id_color(
 - `mask_point_cloud_with_id_color`：使用之前生成的物体语义分割图来从点云中切割出目标物体
 
 #### 2.3.5 滤波改良带有误差的点云图
+
+![](../Image/active_depth/distance_filt.png)
 
 ```python
 filtered_point_cloud1 = dp.filter_active_depth_point_cloud_with_exact_depth_point_cloud(
@@ -180,6 +185,7 @@ filtered_point_cloud2 = dp.filter_active_depth_point_cloud_with_exact_depth_poin
     mask_active_point_cloud2, mask_real_point_cloud2
 )
 ```
+
 - 对另一个视角的相机重复上述流程
 
 ### 2.4 可视化呈现
