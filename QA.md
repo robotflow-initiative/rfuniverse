@@ -8,7 +8,7 @@ A: 是否忘记了查看 **pyrfuniverse 目录下的 README**，请按照其上�
 
 **Q: 如何更新 rfuniverse？**
 
-A: 下载新版本的 rfuniverse，**并通过 README 中的脚本至少运行一次场景**，将 pyrfuniverse 的仓库克隆到项目文件夹下，；然后在终端中运行
+A: 下载新版本的 rfuniverse，**并手动运行一次场景**，将 pyrfuniverse 的仓库克隆到项目文件夹下，然后在终端中运行
 
 ```
 pip install pyrfuniverse --upgrade
@@ -75,5 +75,19 @@ A：调用接口后需要调用env.step()才会执行仿真，使接口生效
 **Q：如何选择使用正确的版本？**
 
 A：RFU-Release和pyrfu会同步版本号发布，版本号前三位相同时将保证兼容，版本号最后一位表示补丁修复版本，有更新时建议升级。
+
+---
+
+**Q: 安装历史版本时遇到gym安装错误的情况如何处理**
+
+A: 回退setuptools和wheel版本后即可安装
+
+```
+pip install setuptools==65.5.0
+
+pip install --user wheel==0.38.0
+```
+
+
 
 ---

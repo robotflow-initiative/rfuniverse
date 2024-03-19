@@ -1,10 +1,19 @@
-![RFUniverse.png](./Image/RFUniverse.png)
+# ![RFUniverse.png](./Image/RFUniverse.png)
 
-[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
+<div align="center">
+
+[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg?style=for-the-badge)](https://pypi.org/project/pyrfuniverse/)
+[![Release](https://img.shields.io/github/v/release/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/releases)
+[![Stars](https://img.shields.io/github/stars/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/stargazers)
+[![Issues](https://img.shields.io/github/issues/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/issues)
+[![PR](https://img.shields.io/github/issues-pr/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/pulls)
 
 [English](./README.md) | 中文
 
 [用户文档](https://docs.robotflow.ai/pyrfuniverse/) | [开发者指南](./DevDoc_zh.md)
+
+</div>
+
 
 ---
 
@@ -28,7 +37,7 @@ Unity端Player：接收python端消息并执行仿真
    
    Windows：`RFUniverse_For_Windows/RFUniverse.exe`
 
-2. 创建conda环境并激活，安装与**RFUniverse Release 版本号相同**的pyrfuniverse包：
+2. 创建conda环境并激活，安装与**<mark>RFUniverse Release 版本号相同</mark>**的pyrfuniverse包：
    
    > :warning:请将以下命令中的[0.12.3]替换为你所下载的RFUniverse Releases的版本号
    
@@ -38,7 +47,7 @@ Unity端Player：接收python端消息并执行仿真
    pip install pyrfuniverse==0.12.3
    ```
 
-3. Clone pyrfuniverse仓库，切换到与**RFUniverse Release版本号相同的Tag**：
+3. Clone pyrfuniverse仓库，切换到与**<mark>RFUniverse Release版本号相同</mark>**的Tag：
    
    > :warning:请将以下命令中的[0.12.3]替换为你所下载的RFUniverse Releases的版本号
    

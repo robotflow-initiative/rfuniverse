@@ -1,10 +1,19 @@
 # ![RFUniverse.png](./Image/RFUniverse.png)
 
-[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg)](https://pypi.org/project/pyrfuniverse/)
+<div align="center">
+
+[![Pypi](https://img.shields.io/pypi/v/pyrfuniverse.svg?style=for-the-badge)](https://pypi.org/project/pyrfuniverse/)
+[![Release](https://img.shields.io/github/v/release/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/releases)
+[![Stars](https://img.shields.io/github/stars/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/stargazers)
+[![Issues](https://img.shields.io/github/issues/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/issues)
+[![PR](https://img.shields.io/github/issues-pr/robotflow-initiative/rfuniverse.svg?style=for-the-badge)](https://github.com/robotflow-initiative/rfuniverse/pulls)
+
 
 English | [中文](./README_zh.md)
 
 [User Doc](https://docs.robotflow.ai/pyrfuniverse/) | [Dev Guide](./DevDoc.md)
+
+</div>
 
 ---
 
