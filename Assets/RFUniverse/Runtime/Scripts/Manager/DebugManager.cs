@@ -9,20 +9,8 @@ using UnityEngine.Pool;
 
 namespace RFUniverse.Manager
 {
-    public class DebugManager : IDisposable, IReceiveData, IHaveAPI
+    public class DebugManager : SingletonBase<DebugManager>, IDisposable, IReceiveData, IHaveAPI
     {
-        static DebugManager instance = null;
-
-        public static DebugManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new DebugManager();
-                return instance;
-            }
-        }
-
         GraspPoint graspPointSource;
         PoseGizmo poseGizmoSource;
         CollisionLine collisionLineSource;
@@ -117,13 +105,11 @@ namespace RFUniverse.Manager
             PlayerMain.Communicator?.SendObject(data.Concat(strings).ToArray());
         }
 
-        [RFUAPI]
+        [RFUAPI(null, false)]
         private void SendLog(string log)
         {
             PlayerMain.Instance.playerMainUI.AddLog($"{System.DateTime.Now.ToString("<color=#BBBBBB><b>[HH:mm:ss]</b></color>")} <color=blue>pyrfuniverse Message: {log}</color>");
         }
-
-
 
         [RFUAPI]
         public void ShowArticulationParameter(int controllerID)

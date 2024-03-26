@@ -3,20 +3,10 @@ using Robotflow.RFUniverse.SideChannels;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RFUniverse.Manager;
 
-public class MessageManager : IReceiveData
+public class MessageManager : SingletonBase<MessageManager>, IReceiveData
 {
-    static MessageManager instance = null;
-
-    public static MessageManager Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new MessageManager();
-            return instance;
-        }
-    }
     private MessageManager()
     {
     }

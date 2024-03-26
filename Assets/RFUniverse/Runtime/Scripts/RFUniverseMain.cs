@@ -13,7 +13,7 @@ using UnityEditor;
 
 namespace RFUniverse
 {
-    public class RFUniverseMain : MonoBehaviour
+    public abstract class RFUniverseMain<T> : SingletonMono<T> where T : class
     {
         [SerializeField]
         private Camera mainCamera;
@@ -56,8 +56,9 @@ namespace RFUniverse
 
         LayerManager layerManager;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             //JsonConvert.DefaultSettings = () => RFUniverseUtility.JsonSerializerSettings;
             //Application.targetFrameRate = 60;
             axisCamera.cullingMask = 1 << axisLayer;

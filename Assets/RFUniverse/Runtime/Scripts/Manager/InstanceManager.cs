@@ -2,23 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RFUniverse.Manager
 {
-    public class InstanceManager : IReceiveData, IDistributeData<int>
+    public class InstanceManager : SingletonBase<InstanceManager>, IReceiveData, IDistributeData<int>
     {
-        static InstanceManager instance = null;
-
-        public static InstanceManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new InstanceManager();
-                return instance;
-            }
-        }
         private InstanceManager()
         {
         }

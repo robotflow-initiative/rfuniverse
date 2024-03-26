@@ -67,7 +67,7 @@ namespace RFUniverse.Attributes
                 GetRGB(width, height, fov);
             CollectData.AddDataNextStep("rgb", Convert.ToBase64String(tex.EncodeToPNG()));
         }
-        public Texture2D GetRGB(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetRGB(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetRGB(size.x, size.y);
@@ -83,7 +83,7 @@ namespace RFUniverse.Attributes
                 GetNormal(width, height, fov);
             CollectData.AddDataNextStep("normal", Convert.ToBase64String(tex.EncodeToPNG()));
         }
-        public Texture2D GetNormal(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetNormal(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetNormal(size.x, size.y);
@@ -99,14 +99,14 @@ namespace RFUniverse.Attributes
                 GetID(width, height, fov);
             CollectData.AddDataNextStep("id_map", Convert.ToBase64String(tex.EncodeToPNG()));
         }
-        public Texture2D GetID(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetID(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetID(size.x, size.y);
         }
         public abstract Texture2D GetID(int width, int height, float? unPhysicalFov = null);
 
-        public Texture2D GetIDSingleChannel(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetIDSingleChannel(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetIDSingleChannel(size.x, size.y);
@@ -140,7 +140,7 @@ namespace RFUniverse.Attributes
             CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
         }
 
-        public Texture2D GetDepth16Bit(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetDepth16Bit(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetDepth16Bit(size.x, size.y);
@@ -156,7 +156,7 @@ namespace RFUniverse.Attributes
                 GetDepthEXR(width, height, fov);
             CollectData.AddDataNextStep("depth_exr", Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE)));
         }
-        public Texture2D GetDepthEXR(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetDepthEXR(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetDepthEXR(size.x, size.y);
@@ -172,7 +172,7 @@ namespace RFUniverse.Attributes
                 GetAmodalMask(id, width, height, fov);
             CollectData.AddDataNextStep("amodal_mask", Convert.ToBase64String(tex.EncodeToPNG()));
         }
-        public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetAmodalMask(size.x, size.y, id);
@@ -189,7 +189,7 @@ namespace RFUniverse.Attributes
                 GetMotionVector(width, height, fov);
             CollectData.AddDataNextStep("motion_vector", Convert.ToBase64String(tex.EncodeToPNG()));
         }
-        public Texture2D GetMotionVector(float[,] intrinsicMatrix, int width, int height)
+        public Texture2D GetMotionVector(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
             Vector2Int size = SetCameraIntrinsicMatrix(Camera, intrinsicMatrix, width, height);
             return GetMotionVector(size.x, size.y);

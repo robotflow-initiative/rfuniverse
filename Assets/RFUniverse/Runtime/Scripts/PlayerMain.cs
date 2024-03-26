@@ -20,10 +20,9 @@ using UnityEngine.AddressableAssets;
 
 namespace RFUniverse
 {
-    public class PlayerMain : RFUniverseMain, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
+    public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
         public int port = 5004;
-        public static PlayerMain Instance = null;
         [HideInInspector]
         public int patchNumber;
         public PlayerMainUI playerMainUI;
@@ -62,26 +61,27 @@ namespace RFUniverse
 
         string version;
 
-        void OnValidate()
-        {
-            Instance = this;
-        }
-
         DebugManager debugManager;
         InstanceManager instanceManager;
         MessageManager messageManager;
 
         ICollectData CollectData => this;
+
+        private void OnValidate()
+        {
+            if (!Application.isPlaying && Instance != this)
+                base.Awake();
+        }
         protected override void Awake()
         {
-            Instance = this;
             base.Awake();
-
+            Physics.simulationMode = SimulationMode.Script;
             version = Application.version;
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
             messageManager = MessageManager.Instance;
 
+            //(this as IDistributeData<string>).RegisterReceiver("Step", (obj) => OnStepAction?.Invoke());
             (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
             (this as IDistributeData<string>).RegisterReceiver("Debug", debugManager.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Instance", instanceManager.ReceiveData);
@@ -100,35 +100,6 @@ namespace RFUniverse
             };
 
             (this as IHaveAPI).RegisterAPI();
-
-            string[] commandLineArgs = Environment.GetCommandLineArgs();
-            for (int i = 0; i < commandLineArgs.Length; i++)
-            {
-                if (commandLineArgs[i].StartsWith("-port:"))
-                {
-                    startWithPort = true;
-                    if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
-                        port = value;
-                }
-            }
-
-            if (Communicator == null)
-            {
-                Communicator = new RFUniverseCommunicator("localhost", port, false, clientTime, () =>
-                {
-                    Debug.Log("Connected successfully");
-                    InitCommunicator();
-                });
-            }
-            else if (Communicator.Connected)
-            {
-                InitCommunicator();
-            }
-            else
-            {
-                Debug.LogWarning("Communicator is Disconnect");
-                QuitApp();
-            }
 
             BaseAttr[] sceneAttrs = FindObjectsOfType<BaseAttr>(true);
             List<BaseAttr> noParentAttr = new List<BaseAttr>(sceneAttrs);
@@ -151,11 +122,40 @@ namespace RFUniverse
             {
                 render.SetPropertyBlock(mpb);
             }
-        }
 
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
+            for (int i = 0; i < commandLineArgs.Length; i++)
+            {
+                if (commandLineArgs[i].StartsWith("-port:"))
+                {
+                    startWithPort = true;
+                    if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
+                        port = value;
+                }
+            }
+
+            if (Communicator == null)
+            {
+                Communicator = new RFUniverseCommunicator("localhost", port, clientTime, () =>
+                {
+                    Debug.Log("Connected successfully");
+                    InitCommunicator();
+                });
+            }
+            else if (Communicator.Connected)
+            {
+                InitCommunicator();
+            }
+            else
+            {
+                Debug.LogWarning("Communicator is Disconnect");
+                QuitApp();
+            }
+        }
         void InitCommunicator()
         {
             OnStepAction += Step;
+
             Communicator.OnReceivedData = (data) =>
             {
                 (this as IReceiveData).ReceiveData(data);
@@ -166,6 +166,8 @@ namespace RFUniverse
             };
             CollectData.AddDataNextStep("scene_init", null);
             CollectData.AddDataNextStep("rfu_version", version);
+            //Collect();
+            //Communicator.AsyncReceiveThread();
         }
 
         void QuitApp()
@@ -208,19 +210,37 @@ namespace RFUniverse
         }
 
         public Action OnStepAction;
+
         void FixedUpdate()
         {
             OnStepAction?.Invoke();
         }
 
-        void Step()
+        public void Step()
         {
-            if (Communicator.Connected)
+            //InstanceManager.Instance.CollectAllAttrData();
+            //Communicator?.SendObject("Env", CollectData.CollectData());
+            Communicator?.SyncStepEnd();
+        }
+
+        [RFUAPI(null, false)]
+        public void Simulate(float fixedDeltaTime = -1, int count = 1)
+        {
+            if (Physics.simulationMode != SimulationMode.Script) return;
+            if (fixedDeltaTime <= 0)
+                fixedDeltaTime = Time.fixedDeltaTime;
+            count = Mathf.Max(1, count);
+            for (int i = 0; i < count; i++)
             {
-                InstanceManager.Instance.CollectAllAttrData();
-                Communicator?.SendObject("Env", CollectData.CollectData());
-                Communicator?.SyncStepEnd();
+                Physics.Simulate(fixedDeltaTime);
             }
+        }
+
+        [RFUAPI(null, false)]
+        public void Collect()
+        {
+            InstanceManager.Instance.CollectAllAttrData();
+            Communicator?.SendObject("Env", CollectData.CollectData());
         }
 
         Dictionary<string, Action<object[]>> IDistributeData<string>.Receiver { get; set; }
@@ -244,7 +264,6 @@ namespace RFUniverse
         }
 
         Dictionary<string, object> ICollectData.TemporaryData { get; set; }
-
 
         [RFUAPI]
         public void SetShadowDistance(float dis)
@@ -472,10 +491,11 @@ namespace RFUniverse
             return attr;
         }
 
+#if OBI
         [RFUAPI]
         public ClothAttr LoadCloth(string path, int id)
         {
-#if OBI
+
             if (!File.Exists(path))
                 throw new FileNotFoundException("File not found", path);
             Debug.Log($"LoadCloth: {path}");
@@ -491,8 +511,10 @@ namespace RFUniverse
             attr.ID = id;
             attr.Instance();
             return attr;
-#endif
+
         }
+#endif
+
         [RFUAPI]
         public void EnabledGroundObiCollider(bool enabled)
         {

@@ -4,19 +4,8 @@ using System.Collections.Generic;
 
 namespace RFUniverse.Manager
 {
-    public class LayerManager
+    public class LayerManager : SingletonBase<LayerManager>
     {
-        public static LayerManager instance;
-        public static LayerManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new LayerManager();
-                return instance;
-            }
-        }
-
         private LayerManager() { }
         public int tempLayer;
         public Dictionary<int, bool> layerPool = new();

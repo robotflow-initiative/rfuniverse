@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -13,8 +12,8 @@ namespace RFUniverse
 {
     public class RFUniverseCommunicator : IDisposable
     {
-        private TcpClient client;
-        private bool async = false;
+        TcpClient client;
+        NetworkStream stream;
 
         public Action<object[]> OnReceivedData;
         public Action OnDisconnect;
@@ -22,9 +21,8 @@ namespace RFUniverse
         //int bufferSize = 1024 * 10;
         public bool Connected => client != null ? client.Connected : false;
         Thread link;
-        public RFUniverseCommunicator(string host = "localhost", int port = 5004, bool async = false, int clientTime = 30, Action onConnected = null)
+        public RFUniverseCommunicator(string host = "localhost", int port = 5004, int clientTime = 30, Action onConnected = null)
         {
-            this.async = async;
             client = new TcpClient();
             client.SendTimeout = 0;
             client.ReceiveTimeout = 0;
@@ -48,13 +46,10 @@ namespace RFUniverse
                     }
                     Thread.Sleep(1000);
                 }
-                //ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
                 if (Connected)
                 {
                     onConnected?.Invoke();
-                    //client.EndConnect(ar);
-                    if (async)
-                        new Thread(AsyncReceiveThread).Start();
+                    stream = client.GetStream();
                 }
                 else
                 {
@@ -67,31 +62,10 @@ namespace RFUniverse
             link.Start();
         }
 
-        void AsyncReceiveThread()
-        {
-            while (Connected)
-            {
-                byte[] bytes = ReceiveBytes();
-                if (bytes != null)
-                {
-                    object[] data = ReceiveObject(bytes);
-                    OnReceivedData(data);
-                }
-            }
-        }
-
-        //Queue<byte[]> syncSendBytesQueue = new Queue<byte[]>();
-
         public void SyncStepEnd()
         {
-            if (async) return;
             if (!Connected) return;
             SendObject("StepEnd");
-            //while (client.Connected && syncSendBytesQueue.TryDequeue(out byte[] bytes))
-            //{
-            //SendBytes(bytes);
-            //}
-
             Queue<object[]> syncReceiveObjectQueue = new Queue<object[]>();
             while (Connected)
             {
@@ -104,15 +78,9 @@ namespace RFUniverse
                     {
                         break;
                     }
-                    OnReceivedData(data);
-                    //syncReceiveObjectQueue.Enqueue(data);
+                    OnReceivedData?.Invoke(data);
                 }
-
             }
-            //while (client.Connected && syncReceiveObjectQueue.TryDequeue(out object[] data))
-            //{
-            //    OnReceivedData(data);
-            //}
         }
 
         byte[] ReceiveBytes()
@@ -130,7 +98,7 @@ namespace RFUniverse
                 int lengthOffset = 0;
                 while (lengthOffset < buffer.Length && Connected)
                 {
-                    int readLength = client.GetStream().Read(buffer, lengthOffset, buffer.Length - lengthOffset);
+                    int readLength = stream.Read(buffer, lengthOffset, buffer.Length - lengthOffset);
                     if (readLength == 0)
                         throw new Exception("Disconnected from server.");
                     lengthOffset += readLength;
@@ -139,7 +107,7 @@ namespace RFUniverse
             }
             catch (Exception ex)
             {
-                Debug.Log(ex.Message);
+                Debug.LogError(ex.Message);
                 OnDisconnect();
             }
             return buffer;
@@ -149,21 +117,12 @@ namespace RFUniverse
             try
             {
                 byte[] length = BitConverter.GetBytes(bytes.Length);
-                client.GetStream().Write(length, 0, length.Length);
-                client.GetStream().Write(bytes, 0, bytes.Length);
-                //int offset = 0;
-                //while (offset < bytes.Length)
-                //{
-                //    int offsetMax = offset + bufferSize;
-                //    if (offsetMax > bytes.Length)
-                //        offsetMax = bytes.Length;
-                //    stream.Write(bytes, offset, offsetMax - offset);
-                //    offset = offsetMax;
-                //}
+                stream.Write(length, 0, length.Length);
+                stream.Write(bytes, 0, bytes.Length);
             }
             catch (Exception ex)
             {
-                Debug.Log(ex.Message);
+                Debug.LogError(ex.Message);
                 OnDisconnect();
             }
         }
@@ -329,10 +288,7 @@ namespace RFUniverse
             {
                 WriteObject(bytes, data);
             }
-            //if (async)
             SendBytes(bytes.ToArray());
-            //else
-            //syncSendBytesQueue.Enqueue(bytes.ToArray());
         }
         void WriteObject(List<byte> bytes, object data)
         {
