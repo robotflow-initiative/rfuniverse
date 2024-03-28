@@ -75,13 +75,25 @@ namespace RFUniverse
         protected override void Awake()
         {
             base.Awake();
+
+            //加载所有catalog
+#if UNITY_STANDALONE_WIN
+            string path = $"{Addressables.RuntimePath}/StandaloneWindows64";
+#elif UNITY_STANDALONE_LINUX
+            string path = $"{Addressables.RuntimePath}/StandaloneLinux64";
+#endif
+
+            foreach (var item in Directory.GetFiles(path, "catalog_*.json"))
+            {
+                Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
+            }
+
             Physics.simulationMode = SimulationMode.Script;
             version = Application.version;
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
             messageManager = MessageManager.Instance;
 
-            //(this as IDistributeData<string>).RegisterReceiver("Step", (obj) => OnStepAction?.Invoke());
             (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
             (this as IDistributeData<string>).RegisterReceiver("Debug", debugManager.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Instance", instanceManager.ReceiveData);

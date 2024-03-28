@@ -24,7 +24,8 @@ namespace RFUniverse
                 "Assets/Plugins/CoACD",
                 "Assets/Plugins/URDF-Importer",
                 "Assets/Plugins/BioIK/BioIK.asmref",
-                "Assets/RFUniverse/Version.txt"
+                "Assets/RFUniverse/Version.txt",
+                "Assets/TextMesh Pro"
             };
             File.WriteAllText($"{Application.dataPath}/RFUniverse/Version.txt", Application.version);
             AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
