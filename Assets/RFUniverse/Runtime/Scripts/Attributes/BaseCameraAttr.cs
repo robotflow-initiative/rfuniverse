@@ -65,7 +65,7 @@ namespace RFUniverse.Attributes
                 GetRGB(intrinsicMatrix, width, height);
             else
                 GetRGB(width, height, fov);
-            CollectData.AddDataNextStep("rgb", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("rgb", tex.EncodeToPNG());
         }
         public Texture2D GetRGB(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -81,7 +81,7 @@ namespace RFUniverse.Attributes
                 GetNormal(intrinsicMatrix, width, height);
             else
                 GetNormal(width, height, fov);
-            CollectData.AddDataNextStep("normal", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("normal", tex.EncodeToPNG());
         }
         public Texture2D GetNormal(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -97,7 +97,7 @@ namespace RFUniverse.Attributes
                 GetID(intrinsicMatrix, width, height);
             else
                 GetID(width, height, fov);
-            CollectData.AddDataNextStep("id_map", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("id_map", tex.EncodeToPNG());
         }
         public Texture2D GetID(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -120,7 +120,7 @@ namespace RFUniverse.Attributes
                 GetDepth(near, far, intrinsicMatrix, width, height);
             else
                 GetDepth(near, far, width, height, fov);
-            CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("depth", tex.EncodeToPNG());
         }
         public Texture2D GetDepth(float near, float far, float[,] intrinsicMatrix, int width, int height)
         {
@@ -137,7 +137,7 @@ namespace RFUniverse.Attributes
                 GetDepth16Bit(near, far, intrinsicMatrix, width, height);
             else
                 GetDepth16Bit(near, far, width, height, fov);
-            CollectData.AddDataNextStep("depth", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("depth", tex.EncodeToPNG());
         }
 
         public Texture2D GetDepth16Bit(float near, float far, float[,] intrinsicMatrix, int width = -1, int height = -1)
@@ -154,7 +154,7 @@ namespace RFUniverse.Attributes
                 GetDepthEXR(intrinsicMatrix, width, height);
             else
                 GetDepthEXR(width, height, fov);
-            CollectData.AddDataNextStep("depth_exr", Convert.ToBase64String(tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE)));
+            CollectData.AddDataNextStep("depth_exr", tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
         }
         public Texture2D GetDepthEXR(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -170,7 +170,7 @@ namespace RFUniverse.Attributes
                 GetAmodalMask(id, intrinsicMatrix, width, height);
             else
                 GetAmodalMask(id, width, height, fov);
-            CollectData.AddDataNextStep("amodal_mask", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("amodal_mask", tex.EncodeToPNG());
         }
         public Texture2D GetAmodalMask(int id, float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -187,7 +187,7 @@ namespace RFUniverse.Attributes
                 GetMotionVector(intrinsicMatrix, width, height);
             else
                 GetMotionVector(width, height, fov);
-            CollectData.AddDataNextStep("motion_vector", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("motion_vector", tex.EncodeToPNG());
         }
         public Texture2D GetMotionVector(float[,] intrinsicMatrix, int width = -1, int height = -1)
         {
@@ -325,7 +325,7 @@ namespace RFUniverse.Attributes
                 GetHeatMap(intrinsicMatrix, radius);
             else
                 GetHeatMap(width, height, radius, fov);
-            CollectData.AddDataNextStep("heat_map", Convert.ToBase64String(tex.EncodeToPNG()));
+            CollectData.AddDataNextStep("heat_map", tex.EncodeToPNG());
         }
         public void GetHeatMap(float[,] intrinsicMatrix, int radius)
         {
