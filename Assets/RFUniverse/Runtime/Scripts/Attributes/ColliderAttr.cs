@@ -423,8 +423,14 @@ namespace RFUniverse.Attributes
             {
                 if (string.IsNullOrWhiteSpace(text))
                     text = script.name;
-                string path = $"BuiltinAssets/Model/Collider_Mesh/{text}_VHACD.asset";
-                AssetDatabase.DeleteAsset($"Assets/{path}");
+                string path = $"Assets/{text}_VHACD.asset";
+                if (System.IO.File.Exists(path))
+                {
+                    if (EditorUtility.DisplayDialog($"Collider asset: {text} exist!", "Overwrite file?", "Yes", "No"))
+                        AssetDatabase.DeleteAsset(path);
+                    else
+                        return;
+                }
                 VHACD.Parameters parameters = new VHACD.Parameters();
                 parameters.Init();
                 parameters.m_resolution = 1000000;
@@ -435,13 +441,13 @@ namespace RFUniverse.Attributes
                 List<Mesh> meshs = script.GenerateVHACDCollider(parameters);
                 foreach (var i in meshs)
                 {
-                    if (!System.IO.File.Exists($"{Application.dataPath}/{path}"))
+                    if (!System.IO.File.Exists(path))
                     {
-                        AssetDatabase.CreateAsset(i, $"Assets/{path}");
+                        AssetDatabase.CreateAsset(i, path);
                     }
                     else
                     {
-                        AssetDatabase.AddObjectToAsset(i, $"Assets/{path}");
+                        AssetDatabase.AddObjectToAsset(i, path);
                     }
                 }
                 AssetDatabase.Refresh();
@@ -451,19 +457,24 @@ namespace RFUniverse.Attributes
             {
                 if (string.IsNullOrWhiteSpace(text))
                     text = script.name;
-                string path = $"BuiltinAssets/Model/Collider_Mesh/{text}_CoACD.asset";
-                AssetDatabase.DeleteAsset($"Assets/{path}");
-
+                string path = $"Assets/{text}_CoACD.asset";
+                if (System.IO.File.Exists(path))
+                {
+                    if (EditorUtility.DisplayDialog($"Collider asset: {text} exist!", "Overwrite file?", "Yes", "No"))
+                        AssetDatabase.DeleteAsset(path);
+                    else
+                        return;
+                }
                 List<Mesh> meshs = script.GenerateCoACDCollider();
                 foreach (var i in meshs)
                 {
-                    if (!System.IO.File.Exists($"{Application.dataPath}/{path}"))
+                    if (!System.IO.File.Exists(path))
                     {
-                        AssetDatabase.CreateAsset(i, $"Assets/{path}");
+                        AssetDatabase.CreateAsset(i, path);
                     }
                     else
                     {
-                        AssetDatabase.AddObjectToAsset(i, $"Assets/{path}");
+                        AssetDatabase.AddObjectToAsset(i, path);
                     }
                 }
                 AssetDatabase.Refresh();

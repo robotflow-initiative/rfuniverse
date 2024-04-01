@@ -59,6 +59,9 @@ namespace RFUniverse
             }
         }
 
+        public bool autoSimulate = false;
+        public bool autoCollect = false;
+
         string version;
 
         DebugManager debugManager;
@@ -89,6 +92,7 @@ namespace RFUniverse
             }
 
             Physics.simulationMode = SimulationMode.Script;
+
             version = Application.version;
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
@@ -230,14 +234,20 @@ namespace RFUniverse
 
         public void Step()
         {
-            //InstanceManager.Instance.CollectAllAttrData();
-            //Communicator?.SendObject("Env", CollectData.CollectData());
+            if (autoSimulate) Simulate();
+            if (autoCollect) Collect();
             Communicator?.SyncStepEnd();
+        }
+        [RFUAPI]
+        public void SetAutoSimulate(bool auto)
+        {
+            autoSimulate = auto;
         }
 
         [RFUAPI(null, false)]
         public void Simulate(float fixedDeltaTime = -1, int count = 1)
         {
+            if (autoSimulate) return;
             if (Physics.simulationMode != SimulationMode.Script) return;
             if (fixedDeltaTime <= 0)
                 fixedDeltaTime = Time.fixedDeltaTime;
@@ -248,9 +258,16 @@ namespace RFUniverse
             }
         }
 
+        [RFUAPI]
+        public void SetAutoCollect(bool auto)
+        {
+            autoCollect = auto;
+        }
+
         [RFUAPI(null, false)]
         public void Collect()
         {
+            if (autoCollect) return;
             InstanceManager.Instance.CollectAllAttrData();
             Communicator?.SendObject("Env", CollectData.CollectData());
         }

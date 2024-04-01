@@ -88,7 +88,7 @@ namespace RFUniverse.Attributes
             RenderTexture.ReleaseTemporary(Camera.targetTexture);
             return tex;
         }
-        public override Texture2D GetDepth(int width, int height, float near, float far, float? unPhysicalFov = null)
+        public override Texture2D GetDepth(float near, float far, int width, int height, float? unPhysicalFov = null)
         {
             if (unPhysicalFov != null)
             {
@@ -107,7 +107,7 @@ namespace RFUniverse.Attributes
             return tex;
         }
 
-        public override Texture2D GetDepth16Bit(int width, int height, float? unPhysicalFov = null)
+        public override Texture2D GetDepth16Bit(float near, float far, int width, int height, float? unPhysicalFov = null)
         {
             if (unPhysicalFov != null)
             {
@@ -115,8 +115,8 @@ namespace RFUniverse.Attributes
                 Camera.fieldOfView = unPhysicalFov.Value;
             }
             Camera.targetTexture = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.R16, RenderTextureReadWrite.Linear, 1);
-            Shader.SetGlobalFloat("_CameraZeroDis", 0);
-            Shader.SetGlobalFloat("_CameraOneDis", 1);
+            Shader.SetGlobalFloat("_CameraZeroDis", near);
+            Shader.SetGlobalFloat("_CameraOneDis", far);
             Camera.RenderWithShader(cameraDepthShader, "");
             RenderTexture.active = Camera.targetTexture;
             tex.Reinitialize(width, height, TextureFormat.R16, false);
