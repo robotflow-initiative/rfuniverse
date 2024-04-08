@@ -524,7 +524,6 @@ namespace RFUniverse
         [RFUAPI]
         public ClothAttr LoadCloth(string path, int id)
         {
-
             if (!File.Exists(path))
                 throw new FileNotFoundException("File not found", path);
             Debug.Log($"LoadCloth: {path}");
@@ -540,7 +539,6 @@ namespace RFUniverse
             attr.ID = id;
             attr.Instance();
             return attr;
-
         }
 #endif
 

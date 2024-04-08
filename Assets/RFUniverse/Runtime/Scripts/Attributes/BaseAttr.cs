@@ -343,13 +343,13 @@ namespace RFUniverse.Attributes
         [RFUAPI]
         void GetLocalPointFromWorld(List<float> world)
         {
-            CollectData.AddDataNextStep("result_local_point", transform.InverseTransformPoint(new Vector3(world[0], world[1], world[2])));
+            CollectData.AddDataNextStep("result_local_point", transform.InverseTransformPoint(RFUniverseUtility.ListFloatToVector3(world)));
         }
 
         [RFUAPI]
         void GetWorldPointFromLocal(List<float> local)
         {
-            CollectData.AddDataNextStep("result_world_point", transform.TransformPoint(new Vector3(local[0], local[1], local[2])));
+            CollectData.AddDataNextStep("result_world_point", transform.TransformPoint(RFUniverseUtility.ListFloatToVector3(local)));
         }
 
         protected bool moveDone = true;

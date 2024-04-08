@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RFUniverse.Attributes
 {
@@ -102,7 +103,7 @@ namespace RFUniverse.Attributes
         {
             base.AddPermanentData(data);
             data["velocity"] = Rigidbody.velocity;
-            data["angular_vel"] = Rigidbody.angularVelocity;
+            data["angular_velocity"] = Rigidbody.angularVelocity;
         }
 
         [RFUAPI]
@@ -164,6 +165,38 @@ namespace RFUniverse.Attributes
         private void SetKinematic(bool kinematic)
         {
             Rigidbody.isKinematic = kinematic;
+        }
+        [RFUAPI]
+        private void Link(int id, int jointIndex = 0)
+        {
+            FixedJoint joint = rigidbody.GetComponent<FixedJoint>();
+            if (joint == null)
+                joint = rigidbody.gameObject.AddComponent<FixedJoint>();
+
+            if (!Attrs.ContainsKey(id))
+            {
+                Debug.Log($"ID: {id} not exist, break link");
+                joint.connectedArticulationBody = null;
+                joint.connectedBody = null;
+                return;
+            }
+
+            if (Attrs[id] is RigidbodyAttr)
+            {
+                joint.connectedArticulationBody = null;
+                joint.connectedBody = (Attrs[id] as RigidbodyAttr).rigidbody;
+            }
+            else if (Attrs[id] is ControllerAttr)
+            {
+                ControllerAttr controllerAttr = Attrs[id] as ControllerAttr;
+                if (jointIndex >= controllerAttr.Joints.Count)
+                {
+                    Debug.LogError($"The index of target joint is {jointIndex}, but the valid number of joints in robot arm is {controllerAttr.Joints.Count}");
+                    return;
+                }
+                joint.connectedBody = null;
+                joint.connectedArticulationBody = controllerAttr.Joints[jointIndex];
+            }
         }
     }
 }

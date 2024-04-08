@@ -1,0 +1,410 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: YCB
+  m_EditorClassIdentifier: 
+  m_GroupName: YCB
+  m_Data:
+    m_SerializedData: []
+  m_GUID: cf0203e7a83f6bb4ca14ab751624f86b
+  m_SerializeEntries:
+  - m_GUID: 939429ebe9d3cac57aa7e2eacbb2fdbc
+    m_Address: 002_master_chef_can
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b88d03fb09e40d71c8a6ce6c6a67b240
+    m_Address: 003_cracker_box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9158f0e71186b2119b748212fc391cd3
+    m_Address: 004_sugar_box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 615f8c44c36858c9097606b4b8e58af0
+    m_Address: 005_tomato_soup_can
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 10e1aa10859eb15a5a64fa6be4b60bd4
+    m_Address: 006_mustard_bottle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0fd8f0da99e39abec96e01c2580ba383
+    m_Address: 007_tuna_fish_can
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7016aacad55f45147831886f239915db
+    m_Address: 008_pudding_box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e2d64664e5c4136dad3e20c39ee14ce
+    m_Address: 009_gelatin_box
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f81e74446c6b6615196ddd1bdc2c642b
+    m_Address: 010_potted_meat_can
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 02d295a8c4880276c9992db689ac5247
+    m_Address: 011_banana
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0717ad1a9887e4007933892e85bc98e1
+    m_Address: 012_strawberry
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48206bf1305673cbebd69da4d933dd66
+    m_Address: 013_apple
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7bf143447ce28a8fa746ae695157fc8
+    m_Address: 014_lemon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6ea6dbed01d4f3c0bf356edca283d7d
+    m_Address: 015_peach
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a6643accaaeb5db6b8aaf0a92abc3974
+    m_Address: 016_pear
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8633bbe18ed9a2ec099c02ccbe81db1d
+    m_Address: 017_orange
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e13400426347ce3dbaa173029fc19d3
+    m_Address: 018_plum
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8ccc417e468b937384a9132b8b63a31
+    m_Address: 019_pitcher_base
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a432aa7be72c8eb16a9ab0e0a6115c7d
+    m_Address: 021_bleach_cleanser
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aedb91986537007a1a97d08e679ca89f
+    m_Address: 022_windex_bottle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8b4fc8f38c78d54d8c74b5954550286
+    m_Address: 024_bowl
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbbe6772cf8830d1785ea514b7628a11
+    m_Address: 025_mug
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b94718cd1a94db62e800c31c020bf16a
+    m_Address: 026_sponge
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2f3e73f9d4af5d49eb819be8f17f6e9e
+    m_Address: 028_skillet_lid
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0aa6f12431be6c65e94108eda7cb6c63
+    m_Address: 029_plate
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13216b924b5bd7d31b7aff1a9eed7f14
+    m_Address: 030_fork
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a125efe0798db98a951c8afb7418690
+    m_Address: 031_spoon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2ba90dd2cdf33c9ba931075847f48862
+    m_Address: 032_knife
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0a11661dd2e9eb52b8dcf4f3287d864
+    m_Address: 033_spatula
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b9edfe80027bd64f1a0073e2d3c452f8
+    m_Address: 035_power_drill
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f6cbd0f1e81e29f08216331c5427cc0
+    m_Address: 036_wood_block
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f41765a225000fd9584dd41917888423
+    m_Address: 037_scissors
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3de9fcb47aa0779928a9289ceb5792cf
+    m_Address: 038_padlock
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a01d1fd7821126c8fa4c4363c4b5829e
+    m_Address: 040_large_marker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ba44539112b622e6bf48609e150f59b
+    m_Address: 042_adjustable_wrench
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a9ea8a5017be232694e615fbefbb3a9
+    m_Address: 043_phillips_screwdriver
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f041152998d133bd985815c0c46bc6c
+    m_Address: 044_flat_screwdriver
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a9dcb3bb4b43a90c8472a8a9ddf5ec3
+    m_Address: 048_hammer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 45043909d9bf02c9098d6cfff19ecfb7
+    m_Address: 050_medium_clamp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2fc88fae5e42828ec843dcaec9c15375
+    m_Address: 051_large_clamp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 197dafb921eb8540383da2afae5ca70c
+    m_Address: 052_extra_large_clamp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8688e2159e969e6eb383651707704c3
+    m_Address: 053_mini_soccer_ball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 85e6d94241700f7e6b5f338f6f444e49
+    m_Address: 054_softball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e81dea7efc6a45ddcb0548a8e13da95d
+    m_Address: 055_baseball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 28de4e481e5df76f2b3a8ff8719e7f89
+    m_Address: 056_tennis_ball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d00b07e357d89260851cfacd246d9d0
+    m_Address: 057_racquetball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: daa732fa514228c1b964bfa03214e0a6
+    m_Address: 058_golf_ball
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 186a29d6af5765898bbc737356a8a5d9
+    m_Address: 059_chain
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5dd10ac99fffedd74a1262f3b6624e28
+    m_Address: 061_foam_brick
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 98ec8c405d6c6022db5768b4f4c23f6f
+    m_Address: 062_dice
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9e2d74527e7f380089f22db5a9c129e
+    m_Address: 063-a_marbles
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0a304a822bebc7e78901c22e5c87caf1
+    m_Address: 063-b_marbles
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d5d6530cc37ba362aabd93d6ace3b66
+    m_Address: 065-a_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2924cf42cc333860e9a75845bdb4525e
+    m_Address: 065-b_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c648af358ab0094e38a62f02592b3cb0
+    m_Address: 065-c_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c658b4c425c2e815a4630c97ed6aca1
+    m_Address: 065-d_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4383be61932a482fda958b56b743a3d5
+    m_Address: 065-e_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0db4a98d2b0bb2ef8cc1962320bb2b9
+    m_Address: 065-f_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f21ee1301bef84f0eac7d7216b956e80
+    m_Address: 065-g_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 00e17f57d51a485de82544b525b2de1e
+    m_Address: 065-i_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d96fc6112c4f051bbb8379f4ad35f215
+    m_Address: 065-j_cups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5c1345980d34e3ea90b7b9a464193de
+    m_Address: 070-a_colored_wood_blocks
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9246ca909717225ccbf8d12bf4fc6b50
+    m_Address: 070-b_colored_wood_blocks
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d198b22a04de18a1967904bbc9c1c4b
+    m_Address: 071_nine_hole_peg_test
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0c2a4f4226ba42a786cadb180aa3a3d
+    m_Address: 072-a_toy_airplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 27df0bb923c9043d896012b9758c881b
+    m_Address: 072-b_toy_airplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c38a3d5710d33f2f8ae105d2dff4e1d
+    m_Address: 072-c_toy_airplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 738949034ed48b4dc9e0682411be5742
+    m_Address: 072-d_toy_airplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e38d81cba7e762e35bb035a87f04941b
+    m_Address: 072-e_toy_airplane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33f87d791b1d068a99f08ba3de2122c6
+    m_Address: 073-a_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dee5617566e3741fa82c9a3fb3f7868
+    m_Address: 073-b_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae39e82d64c73d871a23f2f472bff2e7
+    m_Address: 073-c_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e3bd3b4376dada85da876692e0df34ef
+    m_Address: 073-d_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17ddc348766b259069ec4e627f1dd240
+    m_Address: 073-e_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1e9f6a6525a341b69515cc05e5827fe
+    m_Address: 073-f_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e569c25d633888b58965f924bb46777
+    m_Address: 073-g_lego_duplo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d70acdc48067fcfe6b67bf10af010ad7
+    m_Address: 077_rubiks_cube
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cb3ed8b08b021d1db93858f782af221a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6826feed7176c1f479e32d6eda3def0f, type: 2}
+    - {fileID: 11400000, guid: 3b76dccd40f377d478001350aff78fec, type: 2}

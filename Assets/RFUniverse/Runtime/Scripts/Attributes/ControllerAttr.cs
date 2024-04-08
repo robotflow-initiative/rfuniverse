@@ -481,7 +481,7 @@ namespace RFUniverse.Attributes
             // Velocity
             data["velocities"] = Joints.Select(s => s.velocity).ToList();
             // AngularVelocity
-            data["angular_velocity"] = Joints.Select(s => s.angularVelocity).ToList();
+            data["angular_velocities"] = Joints.Select(s => s.angularVelocity).ToList();
 
             // Number of Articulation Moveable Joints
             data["number_of_moveable_joints"] = MoveableJoints.Count;
@@ -879,7 +879,7 @@ namespace RFUniverse.Attributes
 #endif
             if (MoveableJoints.Count != jointPositions.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointPositions.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             SetJointPosition(jointPositions, ControlMode.Target);
@@ -896,7 +896,7 @@ namespace RFUniverse.Attributes
 #endif
             if (MoveableJoints.Count != jointPositions.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointPositions.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             SetJointPosition(jointPositions, ControlMode.Direct);
@@ -956,7 +956,7 @@ namespace RFUniverse.Attributes
             }
             if (MoveableJoints.Count != jointPositions[0].Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointPositions.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointPositions.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 yield break;
             }
             float startTime = Time.time * 1000;
@@ -982,7 +982,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointDriveForce.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointDriveForce.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointDriveForce.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -995,7 +995,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointDamping.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointDamping.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointDamping.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1009,7 +1009,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointStiffness.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointStiffness.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointStiffness.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1022,7 +1022,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != upper.Count || MoveableJoints.Count != lower.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", upper.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {upper.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1081,7 +1081,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointForces.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointForces.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1094,7 +1094,7 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointForces.Count)
             {
-                Debug.LogError(string.Format("The number of target joint is {0}, but the valid number of joints in robot arm is {1}", jointForces.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointForces.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1107,13 +1107,34 @@ namespace RFUniverse.Attributes
         {
             if (MoveableJoints.Count != jointTorques.Count)
             {
-                Debug.LogError(string.Format("The number of target joint positions is {0}, but the valid number of joints in robot arm is {1}", jointTorques.Count, MoveableJoints.Count));
+                Debug.LogError($"The number of target joint is {jointTorques.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
             {
                 MoveableJoints[i].AddTorque(new Vector3(jointTorques[i][0], jointTorques[i][1], jointTorques[i][2]));
             }
+        }
+        [RFUAPI]
+        void GetJointLocalPointFromWorld(int jointIndex, List<float> world)
+        {
+            if (jointIndex >= joints.Count)
+            {
+                Debug.LogError($"The index of target joint is {jointIndex}, but the valid number of joints in robot arm is {joints.Count}");
+                return;
+            }
+            CollectData.AddDataNextStep("result_joint_local_point", joints[jointIndex].transform.InverseTransformPoint(RFUniverseUtility.ListFloatToVector3(world)));
+        }
+
+        [RFUAPI]
+        void GetJointWorldPointFromLocal(int jointIndex, List<float> local)
+        {
+            if (jointIndex >= joints.Count)
+            {
+                Debug.LogError($"The index of target joint is {jointIndex}, but the valid number of joints in robot arm is {joints.Count}");
+                return;
+            }
+            CollectData.AddDataNextStep("result_joint_world_point", joints[jointIndex].transform.TransformPoint(RFUniverseUtility.ListFloatToVector3(local)));
         }
     }
 

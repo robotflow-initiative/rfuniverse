@@ -32,5 +32,6 @@ namespace RFUniverse.DebugTool
                 image.gameObject.SetActive(false);
             }
         }
+
     }
 }

@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Robot
+  m_EditorClassIdentifier: 
+  m_GroupName: Robot
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 7319238c1232e484887a77cf0c69e222
+  m_SerializeEntries:
+  - m_GUID: e9ee17e5814e7c10c81ad6223343be9b
+    m_Address: kinova_gen3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6419c52f1fb70dd599f07d666aa0cab
+    m_Address: kinova_gen3_robotiq85
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 035c17fcd642a09f08f5ba36643c22b8
+    m_Address: robotiq_arg2f_85_model
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62164ade8cc3137ce8102bafaf1aa692
+    m_Address: ur5_robotiq85
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0787e6365e056338f9a8edb260ba8d2a
+    m_Address: ur5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87c768d901d407c4bab7dcfc0cb43915
+    m_Address: franka_panda
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1fe50ab63a256103285a682a99b3c8f5
+    m_Address: tobor_r300
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64b6a53e7a11c2fa2992331ed96da343
+    m_Address: dh_robotics_ag95_gripper
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b003998e0dc9c21278d3fcc84a86b97d
+    m_Address: tobor_r300_robotiq85_robotiq85
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df0378f5fa35cb2e88a93945893e9819
+    m_Address: tobor_r300_ag95_ag95
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 468e4f1b182542a41b5522b9f895d18a
+    m_Address: allegro_hand_left
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a479404a7533a09208568173059f0c8e
+    m_Address: flexivArm
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54bddc7546d48b47b9e20f5f51c87472
+    m_Address: flexivArm_ag95
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ab013a6c7cf2624c81d944ec638498b
+    m_Address: bhand
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba3a8a54f73e99040b159129d33da512
+    m_Address: allegro_hand_right
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2de4f78579b1e6b4b99d27c6d9d69e9f
+    m_Address: svh
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4013620b5cb7e584cac6f2c2839122ec
+    m_Address: shadowhand
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33e56cd06348816d586395ad55e3942c
+    m_Address: franka_hand
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cb3ed8b08b021d1db93858f782af221a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 731933e779db53f48952ec5061ec3ad8, type: 2}
+    - {fileID: 11400000, guid: 1d38a9d825e0ebf449330597bda260b9, type: 2}
