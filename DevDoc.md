@@ -6,30 +6,26 @@ This document is intended for developers with some understanding of Unity C# dev
 
 ---
 
-##### Importing RFUniverse SDK
+#### Importing RFUniverse SDK
 
 1. Download [RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-2. Create and open a new Unity project
+2. Drag and drop the **RFUniverse_Core_SDK_vx.x.x.unitypackage** into your Unity project and import the package
 
-3. Drag and drop **RFUniverse_Core_SDK_vx.x.x.unitypackage** into Unity to import the asset package
+3. Restart your Unity project, click on the menu `RFUniverse/Check Plugins (Fix Error)`, and wait for the console output `Check Plugins (Fix Error) Done`
 
-4. Close the Unity project and restart it
-
-5. Click on the menu `RFUniverse/Check Plugins (Fix Error)` and wait for the console to output `Check Plugins (Fix Error) Done`
-
-6. Click on the menu `RFUniverse/Fix Addressable`
+4. Restart your Unity project again, click on the menu `RFUniverse/Fix Addressable`
 
 ---
 
-##### Clone pyrfuniverse
+#### Installing pyrfuniverse
 
-> :warning: Please replace [0.10.7] in the following commands with the version number of the RFUniverse Core SDK you imported
+> :warning: Replace [x.x.x] in the commands below with the first three digits of the version number of the RFUniverse Core SDK you imported
 
 ```bash
-git clone https://github.com/mvig-robotflow/pyrfuniverse.git
-cd pyrfuniverse
-git checkout v0.10.7
+conda create -n rfuniverse python=3.10 -y
+conda activate rfuniverse
+pip install pyrfuniverse==x.x.x
 ```
 
 ---
@@ -207,9 +203,9 @@ Advanced developers can freely modify RFU and submit Pull Requests for RFU.
 
 For code writing examples of the dynamic message interface, see:
 
-C#: [RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/Assets/RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs)
+C#: [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/Assets/RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs)
 
-Python: [pyrfuniverse/Test/test_custom_message.py](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py)
+Python: [test_custom_message.py](https://github.com/robotflow-initiative/pyrfuniverse/tree/main/test/pyrfuniverse_test/test/test_custom_message.py)
 
 **Supported Data Types**
 

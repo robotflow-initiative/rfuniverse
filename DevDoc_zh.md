@@ -10,26 +10,22 @@
 
 1. 下载[RFUniverse Core SDK](https://github.com/mvig-robotflow/rfuniverse/releases)
 
-2. 新建Unity工程并打开
+2. 将 <u>**RFUniverse_Core_SDK_vx.x.x.unitypackage**</u>  拖拽到你的Unity工程中，导入该资源包
 
-3. 将 <u>**RFUniverse_Core_SDK_vx.x.x.unitypackage**</u>  拖拽到Unity中，导入该资源包
+3. 重新启动Unity工程， 点击菜单`RFUniverse/Check Plugins (Fix Error)`，等待控制台输出`Check Plugins (Fix Error) Done`
 
-4. 关闭Unity工程并重新启动
-
-5. 点击菜单`RFUniverse/Check Plugins (Fix Error)`，等待控制台输出`Check Plugins (Fix Error) Done`
-
-6. 点击菜单`RFUniverse/Fix Addressable`
+4. 再次重新启动Unity工程， 点击菜单`RFUniverse/Fix Addressable`
 
 ---
 
-##### Clone pyrfuniverse
+##### 安装 pyrfuniverse
 
-> :warning:请将以下命令中的[0.10.7]替换为你所导入的RFUniverse Core SDK版本号
+> :warning:请将以下命令中的[x.x.x]替换为你所导入RFUniverse Core SDK的前三位版本号
 
-```bash
-git clone https://github.com/mvig-robotflow/pyrfuniverse.git
-cd pyrfuniverse
-git checkout v0.10.7
+```
+   conda create -n rfuniverse python=3.10 -y
+   conda activate rfuniverse
+   pip install pyrfuniverse==x.x.x
 ```
 
 ---
@@ -206,9 +202,9 @@ Unity中可以自行编写继承MonoBehaviour的C#脚本使用该动态接口，
 
 动态消息接口的代码编写示例请看：
 
-C#: [RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/Assets/RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs)
+C#: [CustomAttr.cs](https://github.com/mvig-robotflow/rfuniverse/blob/main/Assets/RFUniverse/Runtime/Scripts/Attributes/CustomAttr.cs)
 
-python: [pyrfuniverse/Test/test_custom_message.py](https://github.com/mvig-robotflow/pyrfuniverse/blob/main/Test/test_custom_message.py)
+python: [test_custom_message.py](https://github.com/robotflow-initiative/pyrfuniverse/tree/main/test/pyrfuniverse_test/test/test_custom_message.py)
 
 **支持的数据类型**
 
