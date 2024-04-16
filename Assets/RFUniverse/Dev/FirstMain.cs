@@ -6,7 +6,6 @@ namespace RFUniverse
 {
     public class FirstMain : MonoBehaviour
     {
-        public static string Version => Application.version.Replace('.', '_');
         public static string BucketID =>
 #if UNITY_STANDALONE_WIN
             "[BucketID_Win]";

@@ -22,6 +22,8 @@ namespace RFUniverse
 {
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
+        public const string VERSION = "0.20.1";
+
         public int port = 5004;
         [HideInInspector]
         public int patchNumber;
@@ -59,11 +61,6 @@ namespace RFUniverse
             }
         }
 
-        public bool autoSimulate = false;
-        public bool autoCollect = false;
-
-        string version;
-
         DebugManager debugManager;
         InstanceManager instanceManager;
         MessageManager messageManager;
@@ -91,9 +88,6 @@ namespace RFUniverse
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
             }
 
-            Physics.simulationMode = SimulationMode.Script;
-
-            version = Application.version;
             debugManager = DebugManager.Instance;
             instanceManager = InstanceManager.Instance;
             messageManager = MessageManager.Instance;
@@ -138,7 +132,6 @@ namespace RFUniverse
             {
                 render.SetPropertyBlock(mpb);
             }
-
             string[] commandLineArgs = Environment.GetCommandLineArgs();
             for (int i = 0; i < commandLineArgs.Length; i++)
             {
@@ -170,6 +163,7 @@ namespace RFUniverse
         }
         void InitCommunicator()
         {
+            Physics.simulationMode = SimulationMode.Script;
             OnStepAction += Step;
 
             Communicator.OnReceivedData = (data) =>
@@ -181,7 +175,7 @@ namespace RFUniverse
                 QuitApp();
             };
             CollectData.AddDataNextStep("scene_init", null);
-            CollectData.AddDataNextStep("rfu_version", version);
+            CollectData.AddDataNextStep("rfu_version", VERSION);
             //Collect();
             //Communicator.AsyncReceiveThread();
         }
@@ -234,20 +228,19 @@ namespace RFUniverse
 
         public void Step()
         {
-            if (autoSimulate) Simulate();
-            if (autoCollect) Collect();
+            //if (autoSimulate)
+            //Physics.Simulate(fixedDeltaTime);
             Communicator?.SyncStepEnd();
         }
-        [RFUAPI]
-        public void SetAutoSimulate(bool auto)
-        {
-            autoSimulate = auto;
-        }
+        //[RFUAPI]
+        //public void SetAutoSimulate(bool auto)
+        //{
+        //    autoSimulate = auto;
+        //}
 
         [RFUAPI(null, false)]
         public void Simulate(float fixedDeltaTime = -1, int count = 1)
         {
-            if (autoSimulate) return;
             if (Physics.simulationMode != SimulationMode.Script) return;
             if (fixedDeltaTime <= 0)
                 fixedDeltaTime = Time.fixedDeltaTime;
@@ -258,16 +251,15 @@ namespace RFUniverse
             }
         }
 
-        [RFUAPI]
-        public void SetAutoCollect(bool auto)
-        {
-            autoCollect = auto;
-        }
+        //[RFUAPI]
+        //public void SetAutoCollect(bool auto)
+        //{
+        //    autoCollect = auto;
+        //}
 
         [RFUAPI(null, false)]
         public void Collect()
         {
-            if (autoCollect) return;
             InstanceManager.Instance.CollectAllAttrData();
             Communicator?.SendObject("Env", CollectData.CollectData());
         }

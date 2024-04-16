@@ -123,6 +123,24 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &301084129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4711449998002923147, guid: 484696e9928c00105b994a533d08f7b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 8403022067582333421}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &301084132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301084129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d25533c712a12754f83386d5cd22bd5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8403022067582333421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131,6 +149,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4078245722837548277, guid: 484696e9928c00105b994a533d08f7b6,
+        type: 3}
+      propertyPath: autoCollect
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078245722837548277, guid: 484696e9928c00105b994a533d08f7b6,
+        type: 3}
+      propertyPath: autoSimulate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4711449998002923147, guid: 484696e9928c00105b994a533d08f7b6,
         type: 3}
       propertyPath: m_Name
@@ -189,7 +217,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4711449998002923147, guid: 484696e9928c00105b994a533d08f7b6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 301084132}
   m_SourcePrefab: {fileID: 100100000, guid: 484696e9928c00105b994a533d08f7b6, type: 3}
 --- !u!108 &8403022067582333422 stripped
 Light:

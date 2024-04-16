@@ -18,7 +18,7 @@ namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfVisualExtensions
     {
-        public static void Create(Transform parent, GeometryTypes type)
+        public static UrdfVisual Create(Transform parent, GeometryTypes type)
         {
             GameObject visualObject = new GameObject("unnamed");
             visualObject.transform.SetParentAndAlign(parent);
@@ -29,6 +29,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_EDITOR
             UnityEditor.EditorGUIUtility.PingObject(visualObject);
 #endif
+            return urdfVisual;
         }
 
         public static void Create(Transform parent, Link.Visual visual)

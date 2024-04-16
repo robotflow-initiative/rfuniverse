@@ -30,7 +30,7 @@ public class BuildRelease
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
-        string windowsPath = $"{BUILD_PATH}/RFUniverse_For_Windows_v{Application.version}";
+        string windowsPath = $"{BUILD_PATH}/RFUniverse_For_Windows_v{PlayerMain.VERSION}";
         if (System.IO.Directory.Exists(windowsPath))
             System.IO.Directory.Delete(windowsPath, true);
         System.IO.Directory.CreateDirectory(windowsPath);
@@ -61,7 +61,7 @@ public class BuildRelease
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
-        string linuxPath = $"{BUILD_PATH}/RFUniverse_For_Linux_v{Application.version}";
+        string linuxPath = $"{BUILD_PATH}/RFUniverse_For_Linux_v{PlayerMain.VERSION}";
         if (System.IO.Directory.Exists(linuxPath))
             System.IO.Directory.Delete(linuxPath, true);
         System.IO.Directory.CreateDirectory(linuxPath);

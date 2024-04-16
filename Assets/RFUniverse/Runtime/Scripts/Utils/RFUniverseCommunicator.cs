@@ -48,8 +48,12 @@ namespace RFUniverse
                 }
                 if (Connected)
                 {
-                    onConnected?.Invoke();
                     stream = client.GetStream();
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        onConnected?.Invoke();
+                        Debug.Log("This runs on the main thread");
+                    });
                 }
                 else
                 {

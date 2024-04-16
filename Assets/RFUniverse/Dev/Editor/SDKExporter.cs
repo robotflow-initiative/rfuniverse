@@ -27,8 +27,7 @@ namespace RFUniverse
                 "Assets/RFUniverse/Version.txt",
                 "Assets/TextMesh Pro"
             };
-            File.WriteAllText($"{Application.dataPath}/RFUniverse/Version.txt", Application.version);
-            AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{Application.version}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
+            AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{PlayerMain.VERSION}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
             //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines);
         }
     }

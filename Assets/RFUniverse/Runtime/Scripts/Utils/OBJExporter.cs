@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Text;
 using System.Collections.Generic;
+using RFUniverse;
 
 public class OBJExporter
 {
@@ -43,7 +44,7 @@ public class OBJExporter
         //work on export
         StringBuilder sb = new StringBuilder();
         StringBuilder sbMaterials = new StringBuilder();
-        sb.AppendLine("# Export from RFUniverse " + Application.version);
+        sb.AppendLine("# Export from RFUniverse " + PlayerMain.VERSION);
         if (generateMaterials)
         {
             sb.AppendLine("mtllib " + baseFileName + ".mtl");

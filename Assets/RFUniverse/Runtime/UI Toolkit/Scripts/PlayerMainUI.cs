@@ -25,7 +25,7 @@ namespace RFUniverse
             debugWindow = root.Q<DebugWindow>("debug-window");
             articulationWindow = root.Q<ArticulationWindow>("articulation-window");
             articulationWindow.style.display = DisplayStyle.None;
-            unityVersionUI.text = $"RFUniverse Version: {Application.version} Patch: {PlayerMain.Instance.patchNumber}";
+            unityVersionUI.text = $"RFUniverse Version: {PlayerMain.VERSION} Patch: {PlayerMain.Instance.patchNumber}";
         }
         public void SetPythonVersion(Version pythonVersion)
         {
