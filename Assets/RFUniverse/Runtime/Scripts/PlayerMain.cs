@@ -46,6 +46,8 @@ namespace RFUniverse
                 Time.fixedDeltaTime = fixedDeltaTime;
             }
         }
+
+
         [SerializeField]
         float timeScale = 1;
         public float TimeScale
@@ -61,9 +63,9 @@ namespace RFUniverse
             }
         }
 
-        DebugManager debugManager;
-        InstanceManager instanceManager;
-        MessageManager messageManager;
+        //DebugManager debugManager;
+        //InstanceManager instanceManager;
+        //MessageManager messageManager;
 
         ICollectData CollectData => this;
 
@@ -88,15 +90,16 @@ namespace RFUniverse
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
             }
 
-            debugManager = DebugManager.Instance;
-            instanceManager = InstanceManager.Instance;
-            messageManager = MessageManager.Instance;
+            //debugManager = DebugManager.Instance;
+            //instanceManager = InstanceManager.Instance;
+            //messageManager = MessageManager.Instance;
 
             (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
-            (this as IDistributeData<string>).RegisterReceiver("Debug", debugManager.ReceiveData);
-            (this as IDistributeData<string>).RegisterReceiver("Instance", instanceManager.ReceiveData);
-            (this as IDistributeData<string>).RegisterReceiver("Message", messageManager.ReceiveMessageData);
-            (this as IDistributeData<string>).RegisterReceiver("Object", messageManager.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("PhysicsScene", PhysicsSceneManager.Instance.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("Debug", DebugManager.Instance.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("Instance", InstanceManager.Instance.ReceiveData);
+            (this as IDistributeData<string>).RegisterReceiver("Message", MessageManager.Instance.ReceiveMessageData);
+            (this as IDistributeData<string>).RegisterReceiver("Object", MessageManager.Instance.ReceiveData);
 
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
             FixedDeltaTime = fixedDeltaTime;
@@ -281,7 +284,8 @@ namespace RFUniverse
         }
         void ICollectData.AddPermanentData(Dictionary<string, object> data)
         {
-            data["fixed_delta_time"] = Time.fixedDeltaTime;
+            data["time_scale"] = TimeScale;
+            data["fixed_delta_time"] = FixedDeltaTime;
         }
 
         Dictionary<string, object> ICollectData.TemporaryData { get; set; }

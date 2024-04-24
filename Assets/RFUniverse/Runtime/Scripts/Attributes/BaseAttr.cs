@@ -325,13 +325,14 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        public void Copy(int newID)
+        public BaseAttr Copy(int newID)
         {
             GameObject copy = GameObject.Instantiate(gameObject);
             BaseAttr attr = copy.GetComponent<BaseAttr>();
             attr.CreateReference = CreateReference;
             attr.ID = newID;
             attr.Instance();
+            return attr;
         }
         [RFUAPI]
         public virtual void Destroy()

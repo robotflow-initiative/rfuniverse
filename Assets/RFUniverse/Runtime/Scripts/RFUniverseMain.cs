@@ -67,7 +67,7 @@ namespace RFUniverse
         }
 
         protected Dictionary<string, GameObject> assets = new Dictionary<string, GameObject>();
-        public T InstanceObject<T>(BaseAttrData baseAttrData, bool callInstance = true) where T : BaseAttr
+        public K InstanceObject<K>(BaseAttrData baseAttrData, bool callInstance = true) where K : BaseAttr
         {
             Debug.Log("InstanceObject:" + baseAttrData.name);
             GameObject gameObject = GetGameObject(baseAttrData.name);
@@ -77,7 +77,7 @@ namespace RFUniverse
             gameObject = Instantiate(gameObject);
             //#endif
             gameObject.name = gameObject.name.Replace("(Clone)", "");
-            T attr = gameObject.GetComponent<T>();
+            K attr = gameObject.GetComponent<K>();
             if (attr != null)
             {
                 baseAttrData.SetAttrData(attr);

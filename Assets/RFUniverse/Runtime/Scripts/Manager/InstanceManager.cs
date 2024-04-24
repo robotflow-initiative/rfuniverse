@@ -47,7 +47,7 @@ namespace RFUniverse.Manager
 
         public void CollectAllAttrData()
         {
-            foreach (var attr in ActiveAttrs.Values)
+            foreach (var attr in Attrs.Values)
             {
                 Dictionary<string, object> data = attr.CollectData.CollectData();
                 PlayerMain.Communicator?.SendObject("Instance", attr.ID, attr.GetType().Name, data);
