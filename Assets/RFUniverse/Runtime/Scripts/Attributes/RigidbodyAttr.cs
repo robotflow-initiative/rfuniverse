@@ -167,7 +167,7 @@ namespace RFUniverse.Attributes
             Rigidbody.isKinematic = kinematic;
         }
         [RFUAPI]
-        private void Link(int id, int jointIndex = 0)
+        private void Link(int id, int jointIndex = 0, float massScale = 1, float connectedMassScale = 1)
         {
             FixedJoint joint = rigidbody.GetComponent<FixedJoint>();
             if (joint == null)
@@ -197,6 +197,8 @@ namespace RFUniverse.Attributes
                 joint.connectedBody = null;
                 joint.connectedArticulationBody = controllerAttr.Joints[jointIndex];
             }
+            joint.massScale = massScale;
+            joint.connectedMassScale = connectedMassScale;
         }
     }
 }

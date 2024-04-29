@@ -112,7 +112,7 @@ namespace RFUniverse
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
-                OnDisconnect();
+                OnDisconnect?.Invoke();
             }
             return buffer;
         }
@@ -127,7 +127,7 @@ namespace RFUniverse
             catch (Exception ex)
             {
                 Debug.LogError(ex.Message);
-                OnDisconnect();
+                OnDisconnect?.Invoke();
             }
         }
 
