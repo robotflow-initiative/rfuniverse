@@ -22,7 +22,7 @@ namespace RFUniverse
 {
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.20.1";
+        public const string VERSION = "0.20.2";
 
         public int port = 5004;
         [HideInInspector]
