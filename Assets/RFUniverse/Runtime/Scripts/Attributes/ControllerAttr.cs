@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using System.Linq;
 using DG.Tweening;
+using UnityEngine.AddressableAssets;
 
 namespace RFUniverse.Attributes
 {
@@ -1004,6 +1005,7 @@ namespace RFUniverse.Attributes
             }
         }
 
+
         [RFUAPI]
         private void SetJointStiffness(List<float> jointStiffness)
         {
@@ -1135,6 +1137,15 @@ namespace RFUniverse.Attributes
                 return;
             }
             CollectData.AddDataNextStep("result_joint_world_point", joints[jointIndex].transform.TransformPoint(RFUniverseUtility.ListFloatToVector3(local)));
+        }
+
+        [RFUAPI]
+        private void AddRoot6DOF()
+        {
+            ControllerAttr root = Addressables.LoadAssetAsync<GameObject>("Root6DOF").WaitForCompletion().GetComponent<ControllerAttr>();
+            root.ID = int.Parse($"1{ID}");
+            root.Instance();
+            transform.SetParent(root.joints.Last().transform);
         }
     }
 
