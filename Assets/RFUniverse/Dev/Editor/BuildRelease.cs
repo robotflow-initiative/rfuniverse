@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR && HYBRID_CLR
-using HybridCLR.Editor.Commands;
+﻿using HybridCLR.Editor.Commands;
 using RFUniverse;
 using System.IO.Compression;
 using UnityEditor;
@@ -7,6 +6,7 @@ using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build.Reporting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+
 
 public class BuildRelease
 {
@@ -25,8 +25,10 @@ public class BuildRelease
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         Client.Resolve();
         UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
+#if HYBRID_CLR
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
+#endif
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
@@ -56,8 +58,10 @@ public class BuildRelease
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
         Client.Resolve();
         UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
+#if HYBRID_CLR
         PrebuildCommand.GenerateAll();
         CopyHotUpdateDllToAssets.Copy();
+#endif
         AddressableAssetSettings.CleanPlayerContent();
         AddressableAssetSettings.BuildPlayerContent();
 
@@ -82,4 +86,3 @@ public class BuildRelease
             Debug.Log("Linux发布失败！");
     }
 }
-#endif

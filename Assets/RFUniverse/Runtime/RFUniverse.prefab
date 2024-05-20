@@ -166,6 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5473201252474348792}
   - component: {fileID: 4078245722837548277}
+  - component: {fileID: 3280329779082431372}
   m_Layer: 0
   m_Name: RFUniverse
   m_TagString: Untagged
@@ -222,6 +223,18 @@ MonoBehaviour:
   clientTime: 30
   fixedDeltaTime: 0.02
   timeScale: 1
+--- !u!114 &3280329779082431372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4711449998002923147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d25533c712a12754f83386d5cd22bd5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8403022067523355461
 GameObject:
   m_ObjectHideFlags: 0

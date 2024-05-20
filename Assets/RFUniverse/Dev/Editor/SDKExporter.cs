@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-using Unity.EditorCoroutines.Editor;
-using System.Collections;
-using System.IO;
+﻿using UnityEditor;
 
 namespace RFUniverse
 {

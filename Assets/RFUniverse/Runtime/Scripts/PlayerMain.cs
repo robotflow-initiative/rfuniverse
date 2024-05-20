@@ -79,6 +79,7 @@ namespace RFUniverse
             base.Awake();
 
             //加载所有catalog
+#if !UNITY_EDITOR
 #if UNITY_STANDALONE_WIN
             string path = $"{Addressables.RuntimePath}/StandaloneWindows64";
 #elif UNITY_STANDALONE_LINUX
@@ -89,7 +90,7 @@ namespace RFUniverse
             {
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
             }
-
+#endif
             //debugManager = DebugManager.Instance;
             //instanceManager = InstanceManager.Instance;
             //messageManager = MessageManager.Instance;
