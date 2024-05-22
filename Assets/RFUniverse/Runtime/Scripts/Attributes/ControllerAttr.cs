@@ -1140,10 +1140,13 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        private void AddRoot6DOF()
+        private void AddRoot6DOF(int newID)
         {
             ControllerAttr root = Addressables.LoadAssetAsync<GameObject>("Root6DOF").WaitForCompletion().GetComponent<ControllerAttr>();
-            root.ID = int.Parse($"1{ID}");
+            root = Instantiate(root);
+            root.SetPosition(transform.position);
+            root.SetRotation(transform.eulerAngles);
+            root.ID = newID;
             root.Instance();
             transform.SetParent(root.joints.Last().transform);
         }

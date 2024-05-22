@@ -17,12 +17,16 @@ using System.Linq;
 using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+#if TRILIB
+using TriLibCore.Utils;
+using TriLibCore;
+#endif
 
 namespace RFUniverse
 {
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.20.2";
+        public const string VERSION = "0.20.3";
 
         public int port = 5004;
         [HideInInspector]
@@ -492,12 +496,19 @@ namespace RFUniverse
         }
 
         [RFUAPI]
-        public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true)
+        public RigidbodyAttr LoadMesh(int id, string path, bool autoInstance = true, string colliderMode = "")
         {
             if (!File.Exists(path))
                 throw new FileNotFoundException("File not found", path);
             Debug.Log($"LoadMesh: {path}");
-            GameObject obj = UnityMeshImporter.MeshImporter.Load(path);
+            GameObject obj;
+#if TRILIB
+            AssetLoaderOptions assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+            obj = AssetLoader.LoadModelFromFileNoThread(path, null, null, assetLoaderOptions).RootGameObject;
+#else
+            obj = UnityMeshImporter.MeshImporter.Load(path);
+#endif
+            if (!obj) return null;
             RigidbodyAttr attr = obj.AddComponent<RigidbodyAttr>();
             CreateReference newReference = new CreateReference(attr);
             attr.CreateReference = newReference;
@@ -511,7 +522,19 @@ namespace RFUniverse
             }
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
-            attr.GenerateVHACDCollider();
+            switch (colliderMode)
+            {
+                case "VHACD":
+                    attr.GenerateVHACDCollider();
+                    break;
+                case "CoACD":
+                    attr.GenerateCoACDCollider();
+                    break;
+                case "Convex":
+                    attr.GenerateConvexCollider();
+                    break;
+            }
+
             if (autoInstance)
                 attr.Instance();
             return attr;

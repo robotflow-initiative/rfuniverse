@@ -27,6 +27,16 @@ namespace RFUniverse
                     references.Add(m);
                 });
             });
+            baseAttr.GetComponentsInChildren<Renderer>().ToList().ForEach(s =>
+            {
+                s.sharedMaterials.ToList().ForEach(m =>
+                {
+                    m.GetTexturePropertyNames().ToList().ForEach(t =>
+                    {
+                        references.Add(m.GetTexture(t));
+                    });
+                });
+            });
         }
 
         public void Add(BaseAttr baseAttr)

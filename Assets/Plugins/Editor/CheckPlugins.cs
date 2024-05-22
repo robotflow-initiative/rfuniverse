@@ -88,6 +88,18 @@ public class CheckPlugins
             Debug.Log("OBI plugin undetected,Remove OBI DefineSymbols");
         }
 
+        exist = Directory.Exists($"{Application.dataPath}/Plugins/TriLib");
+        if (exist && !defines.Contains("TRILIB"))
+        {
+            defines.Add("TRILIB");
+            Debug.Log("TRILIB plugin detected,Add TRILIB DefineSymbols");
+        }
+        else if (!exist && defines.Contains("TRILIB"))
+        {
+            defines.Remove("TRILIB");
+            Debug.Log("TRILIB plugin undetected,Remove TRILIB DefineSymbols");
+        }
+
         if (defines.Contains("HYBRID_CLR"))
         {
             defines.Remove("HYBRID_CLR");
@@ -105,6 +117,16 @@ public class CheckPlugins
         Selection.activeObject = folder;
         EditorApplication.ExecuteMenuItem("Assets/Reimport");
         Debug.Log("Check Plugins (Fix Error) Done");
+    }
+
+    private static void AddDefineSymbols(string define)
+    {
+        List<string> defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';').ToList();
+        if (!defines.Contains(define))
+        {
+            defines.Add(define);
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
+        }
     }
 }
 #endif

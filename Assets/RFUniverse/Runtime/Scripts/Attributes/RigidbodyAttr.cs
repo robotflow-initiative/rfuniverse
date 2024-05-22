@@ -137,14 +137,20 @@ namespace RFUniverse.Attributes
         protected override void SetPosition(List<float> position, bool worldSpace = true)
         {
             base.SetPosition(position, worldSpace);
-            Rigidbody.velocity = Vector3.zero;
-            Rigidbody.angularVelocity = Vector3.zero;
+            if (!Rigidbody.isKinematic)
+            {
+                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.angularVelocity = Vector3.zero;
+            }
         }
         protected override void SetRotation(List<float> rotation, bool worldSpace = true)
         {
             base.SetRotation(rotation, worldSpace);
-            Rigidbody.velocity = Vector3.zero;
-            Rigidbody.angularVelocity = Vector3.zero;
+            if (!Rigidbody.isKinematic)
+            {
+                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.angularVelocity = Vector3.zero;
+            }
         }
         [RFUAPI]
         private void AddForce(List<float> forceArray)
