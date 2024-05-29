@@ -14,6 +14,7 @@ public class CheckPlugins
     [MenuItem("RFUniverse/Check Plugins (Fix Error)")]
     private static async void FixError()
     {
+        int progressID = Progress.Start("Check Plugins (Fix Error)", "Please wait a moment");
         Debug.Log("Begin Check Plugins (Fix Error), Please wait a moment ");
         string[] packageNames =
         {
@@ -31,13 +32,14 @@ public class CheckPlugins
             "com.unity.nuget.newtonsoft-json",
             "com.unity.barracuda",
             };
-
+        Progress.Report(progressID, 1, 3, "Get packages");
         ListRequest listRequest = Client.List();
         while (!listRequest.IsCompleted)
         {
             await Task.Delay(100);
         }
         string[] packageList = listRequest.Result.Select((s) => s.name).ToArray();
+        Progress.Report(progressID, 2, 3, "Add packages");
         for (int i = 0; i < packageNames.Length; i++)
         {
             if (!packageList.Contains(packageNames[i]))
@@ -50,7 +52,7 @@ public class CheckPlugins
                 }
             }
         }
-
+        Progress.Report(progressID, 3, 3, "Check DefineSymbols");
         List<string> defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';').ToList();
 
         bool exist = Directory.Exists($"{Application.dataPath}/Plugins/BioIK/Setup");
@@ -100,11 +102,18 @@ public class CheckPlugins
             Debug.Log("TRILIB plugin undetected,Remove TRILIB DefineSymbols");
         }
 
-        if (defines.Contains("HYBRID_CLR"))
+        exist = packageList.Contains("com.code-philosophy.hybridclr");
+        if (exist && !defines.Contains("HYBRID_CLR"))
+        {
+            defines.Add("HYBRID_CLR");
+            Debug.Log("HYBRID_CLR plugin detected,Add TRILIB DefineSymbols");
+        }
+        else if (!exist && defines.Contains("HYBRID_CLR"))
         {
             defines.Remove("HYBRID_CLR");
-            Debug.Log("Remove HYBRID_CLR DefineSymbols");
+            Debug.Log("HYBRID_CLR plugin undetected,Remove HYBRID_CLR DefineSymbols");
         }
+
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
 
         PlayerSettings.allowUnsafeCode = true;
@@ -116,17 +125,9 @@ public class CheckPlugins
         var folder = AssetDatabase.LoadAssetAtPath("Assets/RFUniverse", typeof(DefaultAsset));
         Selection.activeObject = folder;
         EditorApplication.ExecuteMenuItem("Assets/Reimport");
-        Debug.Log("Check Plugins (Fix Error) Done");
-    }
 
-    private static void AddDefineSymbols(string define)
-    {
-        List<string> defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';').ToList();
-        if (!defines.Contains(define))
-        {
-            defines.Add(define);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToArray());
-        }
+        Progress.Remove(progressID);
+        Debug.Log("Check Plugins (Fix Error) Done");
     }
 }
 #endif

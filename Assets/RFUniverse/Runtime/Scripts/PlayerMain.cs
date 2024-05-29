@@ -18,7 +18,6 @@ using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 #if TRILIB
-using TriLibCore.Utils;
 using TriLibCore;
 #endif
 
