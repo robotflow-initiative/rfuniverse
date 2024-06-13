@@ -43,8 +43,9 @@ namespace RFUniverse
                     catch
                     {
                         Debug.Log($"Try Connection failed {connectCount}.");
+                        Thread.Sleep(1000);
                     }
-                    Thread.Sleep(1000);
+
                 }
                 if (Connected)
                 {

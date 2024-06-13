@@ -70,7 +70,7 @@ namespace RFUniverse
         //InstanceManager instanceManager;
         //MessageManager messageManager;
 
-        ICollectData CollectData => this;
+        public ICollectData CollectData => this;
 
         private void OnValidate()
         {
