@@ -28,6 +28,8 @@ namespace RFUniverse
         public const string VERSION = "0.20.3";
 
         public int port = 5004;
+
+        public RFUniverseCommunicator.Backend communicationBackend = RFUniverseCommunicator.Backend.TCP;
         [HideInInspector]
         public int patchNumber;
         public PlayerMainUI playerMainUI;
@@ -148,6 +150,14 @@ namespace RFUniverse
                     if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
                         port = value;
                 }
+                if (commandLineArgs[i].StartsWith("-grpc"))
+                {
+                    communicationBackend = RFUniverseCommunicator.Backend.gRPC;
+                }
+                else if (commandLineArgs[i].StartsWith("-tcp"))
+                {
+                    communicationBackend = RFUniverseCommunicator.Backend.TCP;
+                }
             }
 
             if (Communicator == null)
@@ -156,7 +166,7 @@ namespace RFUniverse
                 {
                     Debug.Log("Connected successfully");
                     InitCommunicator();
-                });
+                }, communicationBackend);
             }
             else if (Communicator.Connected)
             {
@@ -192,7 +202,7 @@ namespace RFUniverse
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
         public class ConfigData

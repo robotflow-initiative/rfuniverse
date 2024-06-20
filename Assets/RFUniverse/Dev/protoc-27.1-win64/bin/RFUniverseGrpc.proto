@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package RFUniverseGrpc;
+
+service RFUniverseGrpcService{
+    rpc Link (Empty) returns (Empty);
+    rpc CSharpToPythonStream (stream BinaryMessage) returns (Empty);
+    rpc PythonToCSharpStream (Empty) returns (stream BinaryMessage);
+}
+message Empty {}
+
+message BinaryMessage {
+    bytes data = 1;
+}
