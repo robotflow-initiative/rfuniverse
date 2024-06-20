@@ -23,17 +23,22 @@ using TriLibCore;
 
 namespace RFUniverse
 {
+    public enum CommunicationBackend
+    {
+        TCP,
+        gRPC,
+    }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.20.3";
+        public const string VERSION = "0.30.0";
 
         public int port = 5004;
 
-        public RFUniverseCommunicator.Backend communicationBackend = RFUniverseCommunicator.Backend.TCP;
+        public CommunicationBackend communicationBackend = CommunicationBackend.TCP;
         [HideInInspector]
         public int patchNumber;
         public PlayerMainUI playerMainUI;
-        public static RFUniverseCommunicator Communicator;
+        public static RFUniverseCommunicatorBase Communicator;
         public int clientTime = 30;
 
         [SerializeField]
@@ -52,7 +57,6 @@ namespace RFUniverse
             }
         }
 
-
         [SerializeField]
         float timeScale = 1;
         public float TimeScale
@@ -67,10 +71,6 @@ namespace RFUniverse
                 Time.timeScale = timeScale;
             }
         }
-
-        //DebugManager debugManager;
-        //InstanceManager instanceManager;
-        //MessageManager messageManager;
 
         public ICollectData CollectData => this;
 
@@ -96,9 +96,6 @@ namespace RFUniverse
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
             }
 #endif
-            //debugManager = DebugManager.Instance;
-            //instanceManager = InstanceManager.Instance;
-            //messageManager = MessageManager.Instance;
 
             (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
             (this as IDistributeData<string>).RegisterReceiver("PhysicsScene", PhysicsSceneManager.Instance.ReceiveData);
@@ -152,21 +149,26 @@ namespace RFUniverse
                 }
                 if (commandLineArgs[i].StartsWith("-grpc"))
                 {
-                    communicationBackend = RFUniverseCommunicator.Backend.gRPC;
+                    communicationBackend = CommunicationBackend.gRPC;
                 }
                 else if (commandLineArgs[i].StartsWith("-tcp"))
                 {
-                    communicationBackend = RFUniverseCommunicator.Backend.TCP;
+                    communicationBackend = CommunicationBackend.TCP;
                 }
             }
 
             if (Communicator == null)
             {
-                Communicator = new RFUniverseCommunicator("localhost", port, clientTime, () =>
+                switch (communicationBackend)
                 {
-                    Debug.Log("Connected successfully");
-                    InitCommunicator();
-                }, communicationBackend);
+                    default:
+                    case CommunicationBackend.TCP:
+                        Communicator = new RFUniverseCommunicatorTCP("localhost", port, clientTime, InitCommunicator);
+                        break;
+                    case CommunicationBackend.gRPC:
+                        Communicator = new RFUniverseCommunicatorGRPC("localhost", port, clientTime, InitCommunicator);
+                        break;
+                }
             }
             else if (Communicator.Connected)
             {
@@ -178,9 +180,12 @@ namespace RFUniverse
                 QuitApp();
             }
         }
+
         void InitCommunicator()
         {
+            Debug.Log("Connected successfully");
             Physics.simulationMode = SimulationMode.Script;
+
             OnStepAction += Step;
 
             Communicator.OnReceivedData = (data) =>
@@ -193,8 +198,6 @@ namespace RFUniverse
             };
             CollectData.AddDataNextStep("scene_init", null);
             CollectData.AddDataNextStep("rfu_version", VERSION);
-            //Collect();
-            //Communicator.AsyncReceiveThread();
         }
 
         void QuitApp()
@@ -205,6 +208,7 @@ namespace RFUniverse
             Application.Quit();
 #endif
         }
+
         public class ConfigData
         {
             public string assets_path;

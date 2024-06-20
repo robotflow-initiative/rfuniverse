@@ -1,144 +1,27 @@
-﻿using Grpc.Core;
-using RFUniverseGrpc;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using static RFUniverseGrpc.RFUniverseGrpcService;
 
 namespace RFUniverse
 {
-
-    public class RFUniverseCommunicator : IDisposable
+    public abstract class RFUniverseCommunicatorBase : IDisposable
     {
-        public enum Backend
-        {
-            TCP,
-            gRPC
-        }
-        Backend backend = Backend.TCP;
-
-        Thread link;
-
-        TcpClient client;
-        NetworkStream stream;
-
-
-        RFUniverseGrpcServiceClient grpcClient;
-        AsyncClientStreamingCall<BinaryMessage, Empty> grpcSendCall;
-        AsyncServerStreamingCall<BinaryMessage> grpcReceiveCall;
+        protected Thread link;
 
         public Action<object[]> OnReceivedData;
         public Action OnDisconnect;
 
-        //int bufferSize = 1024 * 10;
-        public bool Connected
+        public abstract bool Connected { get; }
+        protected abstract byte[] ReceiveBytes();
+        protected abstract void SendBytes(byte[] bytes);
+        public virtual void Dispose()
         {
-            get
-            {
-                switch (backend)
-                {
-                    case Backend.TCP:
-                        return tcpConnected;
-                    default:
-                        return grpcConnected;
-                }
-            }
-        }
-        bool tcpConnected => client != null ? client.Connected : false;
-        bool grpcConnected = false;
-
-        public RFUniverseCommunicator(string host = "localhost", int port = 5004, int clientTime = 30, Action onConnected = null, Backend backend = Backend.TCP)
-        {
-            this.backend = backend;
-            Debug.Log($"Connecting to server on port: {port}");
-
-            if (backend == Backend.gRPC)
-            {
-                Channel channel = new Channel(host, port, ChannelCredentials.Insecure);
-                grpcClient = new RFUniverseGrpcServiceClient(channel);
-                link = new Thread(() =>
-                {
-                    int connectCount = 0;
-                    while (!Connected && connectCount < clientTime)
-                    {
-                        connectCount++;
-                        try
-                        {
-                            var response = grpcClient.Link(new Empty());
-                            grpcConnected = true;
-                        }
-                        catch
-                        {
-                            Debug.Log($"Try Connection failed {connectCount}.");
-                            Thread.Sleep(1000);
-                        }
-                    }
-                    if (Connected)
-                    {
-                        grpcReceiveCall = grpcClient.PythonToCSharpStream(new Empty());
-                        grpcSendCall = grpcClient.CSharpToPythonStream();
-                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                        {
-                            onConnected?.Invoke();
-                        });
-                    }
-                    else
-                    {
-                        Debug.Log("Connection timeout.");
-                        channel.ShutdownAsync();
-                    }
-                });
-                link.Start();
-            }
-            else
-            {
-                client = new TcpClient();
-                client.SendTimeout = 0;
-                client.ReceiveTimeout = 0;
-                //client.SendBufferSize = bufferSize;
-                //client.ReceiveBufferSize = bufferSize;
-                client.NoDelay = true;
-
-                link = new Thread(() =>
-                {
-                    int connectCount = 0;
-                    while (!Connected && connectCount < clientTime)
-                    {
-                        connectCount++;
-                        try
-                        {
-                            client.Connect(host, port);
-                        }
-                        catch
-                        {
-                            Debug.Log($"Try Connection failed {connectCount}.");
-                            Thread.Sleep(1000);
-                        }
-                    }
-                    if (Connected)
-                    {
-                        stream = client.GetStream();
-                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                        {
-                            onConnected?.Invoke();
-                        });
-                    }
-                    else
-                    {
-                        Debug.Log("Connection timeout.");
-                        client.Close();
-                        client.Dispose();
-                        client = null;
-                    }
-                });
-                link.Start();
-            }
+            link?.Abort();
         }
 
         public void SyncStepEnd()
@@ -152,7 +35,7 @@ namespace RFUniverse
                 if (bytes == null) break;
                 if (bytes.Length > 0)
                 {
-                    object[] data = ReceiveObject(bytes);
+                    object[] data = ReceiveObjects(bytes);
                     if (data.Length > 0 && data[0] is string && data[0] as string == "StepStart")
                     {
                         break;
@@ -162,86 +45,8 @@ namespace RFUniverse
             }
         }
 
-        byte[] ReceiveBytes()
-        {
-            if (backend == Backend.gRPC)
-            {
-                try
-                {
-                    grpcReceiveCall.ResponseStream.MoveNext().GetAwaiter().GetResult();
-                    BinaryMessage response = grpcReceiveCall.ResponseStream.Current;
-                    return response.Data.ToByteArray();
-                }
-                catch (Exception e)
-                {
-                    grpcConnected = false;
-                    OnDisconnect?.Invoke();
-                    return null;
-                }
-            }
-            else
-            {
-                byte[] lengthBuffer = ReceiveBytes(4);
-                uint length = BitConverter.ToUInt32(lengthBuffer);
-                return ReceiveBytes((int)length);
-            }
-        }
-
-        byte[] ReceiveBytes(int length)
-        {
-            byte[] buffer = new byte[length];
-            try
-            {
-                int lengthOffset = 0;
-                while (lengthOffset < buffer.Length && Connected)
-                {
-                    int readLength = stream.Read(buffer, lengthOffset, buffer.Length - lengthOffset);
-                    if (readLength == 0)
-                        throw new Exception("Disconnected from server.");
-                    lengthOffset += readLength;
-                }
-                return buffer;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.Message);
-                OnDisconnect?.Invoke();
-            }
-            return buffer;
-        }
-        void SendBytes(byte[] bytes)
-        {
-            if (backend == Backend.gRPC)
-            {
-                try
-                {
-                    grpcSendCall.RequestStream.WriteAsync(new BinaryMessage { Data = Google.Protobuf.ByteString.CopyFrom(bytes) }).GetAwaiter().GetResult();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(ex.Message);
-                    grpcConnected = false;
-                    OnDisconnect?.Invoke();
-                }
-            }
-            else
-            {
-                try
-                {
-                    byte[] length = BitConverter.GetBytes(bytes.Length);
-                    stream.Write(length, 0, length.Length);
-                    stream.Write(bytes, 0, bytes.Length);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(ex.Message);
-                    OnDisconnect?.Invoke();
-                }
-            }
-        }
-
         int readOffset = 0;
-        object[] ReceiveObject(byte[] bytes)
+        object[] ReceiveObjects(byte[] bytes)
         {
             readOffset = 0;
             List<object> data = new List<object>();
@@ -440,7 +245,7 @@ namespace RFUniverse
                     break;
                 case Matrix4x4 mat:
                     WriteString(bytes, "matrix");
-                    WriteObject(bytes, MatrixToFloatArray(mat));
+                    WriteObject(bytes, new float[4, 4] { { mat[0, 0], mat[0, 1], mat[0, 2], mat[0, 3] }, { mat[1, 0], mat[1, 1], mat[1, 2], mat[1, 3] }, { mat[2, 0], mat[2, 1], mat[2, 2], mat[2, 3] }, { mat[3, 0], mat[3, 1], mat[3, 2], mat[3, 3] } });
                     break;
                 case Rect rect:
                     WriteString(bytes, "rect");
@@ -520,26 +325,6 @@ namespace RFUniverse
         {
             WriteInt(bytes, data.Length);
             bytes.AddRange(data);
-        }
-        public float[,] MatrixToFloatArray(Matrix4x4 matrix)
-        {
-            float[,] floats = new float[4, 4];
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    floats[i, j] = matrix[i, j];
-                }
-            }
-            return floats;
-        }
-        public void Dispose()
-        {
-            grpcSendCall?.RequestStream.CompleteAsync().GetAwaiter().GetResult();
-            client?.Close();
-            client?.Dispose();
-            client = null;
-            link?.Abort();
         }
     }
 }

@@ -610,6 +610,15 @@ namespace RFUniverse
             if (obj == null)
                 return default;
 
+            if (obj is Unboxed<int>)
+                return (T)obj;
+
+            if (obj is Unboxed<float>)
+                return (T)obj;
+
+            if (obj is Unboxed<bool>)
+                return (T)obj;
+
             if (obj is T)
                 return (T)obj;
 
