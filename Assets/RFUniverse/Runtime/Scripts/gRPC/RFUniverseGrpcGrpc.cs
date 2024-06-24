@@ -7,10 +7,10 @@
 
 using grpc = global::Grpc.Core;
 
-namespace RFUniverseGrpc {
-  public static partial class RFUniverseGrpcService
+namespace RFUniverse {
+  public static partial class GrpcService
   {
-    static readonly string __ServiceName = "RFUniverseGrpc.RFUniverseGrpcService";
+    static readonly string __ServiceName = "RFUniverse.GrpcService";
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
@@ -46,143 +46,143 @@ namespace RFUniverseGrpc {
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::RFUniverseGrpc.Empty> __Marshaller_RFUniverseGrpc_Empty = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::RFUniverseGrpc.Empty.Parser));
+    static readonly grpc::Marshaller<global::RFUniverse.Empty> __Marshaller_RFUniverse_Empty = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::RFUniverse.Empty.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::RFUniverseGrpc.BinaryMessage> __Marshaller_RFUniverseGrpc_BinaryMessage = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::RFUniverseGrpc.BinaryMessage.Parser));
+    static readonly grpc::Marshaller<global::RFUniverse.BinaryMessage> __Marshaller_RFUniverse_BinaryMessage = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::RFUniverse.BinaryMessage.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.Empty> __Method_Link = new grpc::Method<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.Empty>(
+    static readonly grpc::Method<global::RFUniverse.Empty, global::RFUniverse.Empty> __Method_Link = new grpc::Method<global::RFUniverse.Empty, global::RFUniverse.Empty>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Link",
-        __Marshaller_RFUniverseGrpc_Empty,
-        __Marshaller_RFUniverseGrpc_Empty);
+        __Marshaller_RFUniverse_Empty,
+        __Marshaller_RFUniverse_Empty);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::RFUniverseGrpc.BinaryMessage, global::RFUniverseGrpc.Empty> __Method_CSharpToPythonStream = new grpc::Method<global::RFUniverseGrpc.BinaryMessage, global::RFUniverseGrpc.Empty>(
+    static readonly grpc::Method<global::RFUniverse.BinaryMessage, global::RFUniverse.Empty> __Method_CSharpToPythonStream = new grpc::Method<global::RFUniverse.BinaryMessage, global::RFUniverse.Empty>(
         grpc::MethodType.ClientStreaming,
         __ServiceName,
         "CSharpToPythonStream",
-        __Marshaller_RFUniverseGrpc_BinaryMessage,
-        __Marshaller_RFUniverseGrpc_Empty);
+        __Marshaller_RFUniverse_BinaryMessage,
+        __Marshaller_RFUniverse_Empty);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.BinaryMessage> __Method_PythonToCSharpStream = new grpc::Method<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.BinaryMessage>(
+    static readonly grpc::Method<global::RFUniverse.Empty, global::RFUniverse.BinaryMessage> __Method_PythonToCSharpStream = new grpc::Method<global::RFUniverse.Empty, global::RFUniverse.BinaryMessage>(
         grpc::MethodType.ServerStreaming,
         __ServiceName,
         "PythonToCSharpStream",
-        __Marshaller_RFUniverseGrpc_Empty,
-        __Marshaller_RFUniverseGrpc_BinaryMessage);
+        __Marshaller_RFUniverse_Empty,
+        __Marshaller_RFUniverse_BinaryMessage);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::RFUniverseGrpc.RFUniverseGrpcReflection.Descriptor.Services[0]; }
+      get { return global::RFUniverse.RFUniverseGrpcReflection.Descriptor.Services[0]; }
     }
 
-    /// <summary>Base class for server-side implementations of RFUniverseGrpcService</summary>
-    [grpc::BindServiceMethod(typeof(RFUniverseGrpcService), "BindService")]
-    public abstract partial class RFUniverseGrpcServiceBase
+    /// <summary>Base class for server-side implementations of GrpcService</summary>
+    [grpc::BindServiceMethod(typeof(GrpcService), "BindService")]
+    public abstract partial class GrpcServiceBase
     {
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::RFUniverseGrpc.Empty> Link(global::RFUniverseGrpc.Empty request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::RFUniverse.Empty> Link(global::RFUniverse.Empty request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::RFUniverseGrpc.Empty> CSharpToPythonStream(grpc::IAsyncStreamReader<global::RFUniverseGrpc.BinaryMessage> requestStream, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::RFUniverse.Empty> CSharpToPythonStream(grpc::IAsyncStreamReader<global::RFUniverse.BinaryMessage> requestStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task PythonToCSharpStream(global::RFUniverseGrpc.Empty request, grpc::IServerStreamWriter<global::RFUniverseGrpc.BinaryMessage> responseStream, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task PythonToCSharpStream(global::RFUniverse.Empty request, grpc::IServerStreamWriter<global::RFUniverse.BinaryMessage> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
     }
 
-    /// <summary>Client for RFUniverseGrpcService</summary>
-    public partial class RFUniverseGrpcServiceClient : grpc::ClientBase<RFUniverseGrpcServiceClient>
+    /// <summary>Client for GrpcService</summary>
+    public partial class GrpcServiceClient : grpc::ClientBase<GrpcServiceClient>
     {
-      /// <summary>Creates a new client for RFUniverseGrpcService</summary>
+      /// <summary>Creates a new client for GrpcService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public RFUniverseGrpcServiceClient(grpc::ChannelBase channel) : base(channel)
+      public GrpcServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for RFUniverseGrpcService that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for GrpcService that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public RFUniverseGrpcServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public GrpcServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected RFUniverseGrpcServiceClient() : base()
+      protected GrpcServiceClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected RFUniverseGrpcServiceClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected GrpcServiceClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::RFUniverseGrpc.Empty Link(global::RFUniverseGrpc.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::RFUniverse.Empty Link(global::RFUniverse.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Link(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::RFUniverseGrpc.Empty Link(global::RFUniverseGrpc.Empty request, grpc::CallOptions options)
+      public virtual global::RFUniverse.Empty Link(global::RFUniverse.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Link, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::RFUniverseGrpc.Empty> LinkAsync(global::RFUniverseGrpc.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::RFUniverse.Empty> LinkAsync(global::RFUniverse.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return LinkAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::RFUniverseGrpc.Empty> LinkAsync(global::RFUniverseGrpc.Empty request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::RFUniverse.Empty> LinkAsync(global::RFUniverse.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Link, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncClientStreamingCall<global::RFUniverseGrpc.BinaryMessage, global::RFUniverseGrpc.Empty> CSharpToPythonStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncClientStreamingCall<global::RFUniverse.BinaryMessage, global::RFUniverse.Empty> CSharpToPythonStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CSharpToPythonStream(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncClientStreamingCall<global::RFUniverseGrpc.BinaryMessage, global::RFUniverseGrpc.Empty> CSharpToPythonStream(grpc::CallOptions options)
+      public virtual grpc::AsyncClientStreamingCall<global::RFUniverse.BinaryMessage, global::RFUniverse.Empty> CSharpToPythonStream(grpc::CallOptions options)
       {
         return CallInvoker.AsyncClientStreamingCall(__Method_CSharpToPythonStream, null, options);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncServerStreamingCall<global::RFUniverseGrpc.BinaryMessage> PythonToCSharpStream(global::RFUniverseGrpc.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncServerStreamingCall<global::RFUniverse.BinaryMessage> PythonToCSharpStream(global::RFUniverse.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PythonToCSharpStream(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncServerStreamingCall<global::RFUniverseGrpc.BinaryMessage> PythonToCSharpStream(global::RFUniverseGrpc.Empty request, grpc::CallOptions options)
+      public virtual grpc::AsyncServerStreamingCall<global::RFUniverse.BinaryMessage> PythonToCSharpStream(global::RFUniverse.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_PythonToCSharpStream, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected override RFUniverseGrpcServiceClient NewInstance(ClientBaseConfiguration configuration)
+      protected override GrpcServiceClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new RFUniverseGrpcServiceClient(configuration);
+        return new GrpcServiceClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static grpc::ServerServiceDefinition BindService(RFUniverseGrpcServiceBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(GrpcServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_Link, serviceImpl.Link)
@@ -195,11 +195,11 @@ namespace RFUniverseGrpc {
     /// <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static void BindService(grpc::ServiceBinderBase serviceBinder, RFUniverseGrpcServiceBase serviceImpl)
+    public static void BindService(grpc::ServiceBinderBase serviceBinder, GrpcServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_Link, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.Empty>(serviceImpl.Link));
-      serviceBinder.AddMethod(__Method_CSharpToPythonStream, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::RFUniverseGrpc.BinaryMessage, global::RFUniverseGrpc.Empty>(serviceImpl.CSharpToPythonStream));
-      serviceBinder.AddMethod(__Method_PythonToCSharpStream, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::RFUniverseGrpc.Empty, global::RFUniverseGrpc.BinaryMessage>(serviceImpl.PythonToCSharpStream));
+      serviceBinder.AddMethod(__Method_Link, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::RFUniverse.Empty, global::RFUniverse.Empty>(serviceImpl.Link));
+      serviceBinder.AddMethod(__Method_CSharpToPythonStream, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::RFUniverse.BinaryMessage, global::RFUniverse.Empty>(serviceImpl.CSharpToPythonStream));
+      serviceBinder.AddMethod(__Method_PythonToCSharpStream, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::RFUniverse.Empty, global::RFUniverse.BinaryMessage>(serviceImpl.PythonToCSharpStream));
     }
 
   }

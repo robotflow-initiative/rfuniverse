@@ -17,6 +17,11 @@ namespace RFUniverse
         {
             Debug.Log($"Connecting to server on port: {port}");
 
+            client = new TcpClient();
+            client.SendTimeout = 0;
+            client.ReceiveTimeout = 0;
+            client.NoDelay = true;
+
             link = new Thread((Link) =>
             {
                 int connectCount = 0;

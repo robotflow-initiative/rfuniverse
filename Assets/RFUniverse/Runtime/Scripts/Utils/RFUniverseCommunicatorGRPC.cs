@@ -1,11 +1,7 @@
 ﻿using Grpc.Core;
-using RFUniverseGrpc;
 using System;
-using System.IO;
 using System.Threading;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using static RFUniverseGrpc.RFUniverseGrpcService;
 
 namespace RFUniverse
 {
@@ -25,7 +21,11 @@ namespace RFUniverse
             link = new Thread((Link) =>
             {
                 Channel channel = new Channel(host, port, ChannelCredentials.Insecure);
-                RFUniverseGrpcServiceClient grpcClient = new RFUniverseGrpcServiceClient(channel);
+                //var channel = GrpcChannel.ForAddress($"https://{host}:{port}", new GrpcChannelOptions
+                //{
+                //    HttpHandler = new YetAnotherHttpHandler()
+                //});
+                GrpcService.GrpcServiceClient grpcClient = new GrpcService.GrpcServiceClient(channel);
 
                 int connectCount = 0;
                 while (!Connected && connectCount < clientTime)

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace RFUniverseGrpc {
+namespace RFUniverse {
 
   /// <summary>Holder for reflection information generated from RFUniverseGrpc.proto</summary>
   public static partial class RFUniverseGrpcReflection {
@@ -24,19 +24,18 @@ namespace RFUniverseGrpc {
     static RFUniverseGrpcReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChRSRlVuaXZlcnNlR3JwYy5wcm90bxIOUkZVbml2ZXJzZUdycGMiBwoFRW1w",
-            "dHkiHQoNQmluYXJ5TWVzc2FnZRIMCgRkYXRhGAEgASgMMu0BChVSRlVuaXZl",
-            "cnNlR3JwY1NlcnZpY2USNAoETGluaxIVLlJGVW5pdmVyc2VHcnBjLkVtcHR5",
-            "GhUuUkZVbml2ZXJzZUdycGMuRW1wdHkSTgoUQ1NoYXJwVG9QeXRob25TdHJl",
-            "YW0SHS5SRlVuaXZlcnNlR3JwYy5CaW5hcnlNZXNzYWdlGhUuUkZVbml2ZXJz",
-            "ZUdycGMuRW1wdHkoARJOChRQeXRob25Ub0NTaGFycFN0cmVhbRIVLlJGVW5p",
-            "dmVyc2VHcnBjLkVtcHR5Gh0uUkZVbml2ZXJzZUdycGMuQmluYXJ5TWVzc2Fn",
-            "ZTABYgZwcm90bzM="));
+            "ChRSRlVuaXZlcnNlR3JwYy5wcm90bxIKUkZVbml2ZXJzZSIHCgVFbXB0eSId",
+            "Cg1CaW5hcnlNZXNzYWdlEgwKBGRhdGEYASABKAwyywEKC0dycGNTZXJ2aWNl",
+            "EiwKBExpbmsSES5SRlVuaXZlcnNlLkVtcHR5GhEuUkZVbml2ZXJzZS5FbXB0",
+            "eRJGChRDU2hhcnBUb1B5dGhvblN0cmVhbRIZLlJGVW5pdmVyc2UuQmluYXJ5",
+            "TWVzc2FnZRoRLlJGVW5pdmVyc2UuRW1wdHkoARJGChRQeXRob25Ub0NTaGFy",
+            "cFN0cmVhbRIRLlJGVW5pdmVyc2UuRW1wdHkaGS5SRlVuaXZlcnNlLkJpbmFy",
+            "eU1lc3NhZ2UwAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::RFUniverseGrpc.Empty), global::RFUniverseGrpc.Empty.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::RFUniverseGrpc.BinaryMessage), global::RFUniverseGrpc.BinaryMessage.Parser, new[]{ "Data" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::RFUniverse.Empty), global::RFUniverse.Empty.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::RFUniverse.BinaryMessage), global::RFUniverse.BinaryMessage.Parser, new[]{ "Data" }, null, null, null, null)
           }));
     }
     #endregion
@@ -58,7 +57,7 @@ namespace RFUniverseGrpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::RFUniverseGrpc.RFUniverseGrpcReflection.Descriptor.MessageTypes[0]; }
+      get { return global::RFUniverse.RFUniverseGrpcReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -219,7 +218,7 @@ namespace RFUniverseGrpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::RFUniverseGrpc.RFUniverseGrpcReflection.Descriptor.MessageTypes[1]; }
+      get { return global::RFUniverse.RFUniverseGrpcReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

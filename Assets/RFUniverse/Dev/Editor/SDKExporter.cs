@@ -18,9 +18,9 @@ namespace RFUniverse
                 "Assets/Plugins/Demigiant",
                 "Assets/Plugins/HeatMap",
                 "Assets/Plugins/CoACD",
+                "Assets/Plugins/gRPC",
                 "Assets/Plugins/URDF-Importer",
                 "Assets/Plugins/BioIK/BioIK.asmref",
-                "Assets/RFUniverse/Version.txt",
                 "Assets/TextMesh Pro"
             };
             AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{PlayerMain.VERSION}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);

@@ -19,6 +19,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 #if TRILIB
 using TriLibCore;
+using System.Reflection;
 #endif
 
 namespace RFUniverse
@@ -79,6 +80,8 @@ namespace RFUniverse
             if (!Application.isPlaying && Instance != this)
                 base.Awake();
         }
+
+
         protected override void Awake()
         {
             base.Awake();
