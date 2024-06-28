@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace RFUniverse.Attributes
 {
@@ -144,45 +144,73 @@ namespace RFUniverse.Attributes
                 transform.InverseTransformPoints(spanVertices, spanVertices);
                 allVertices.AddRange(spanVertices.ToArray());
             }
-            var x = allVertices.Select(s => s.x);
-            var y = allVertices.Select(s => s.y);
-            var z = allVertices.Select(s => s.z);
-            float maxX = x.Max();
-            float minX = x.Min();
-            float maxY = y.Max();
-            float minY = y.Min();
-            float maxZ = z.Max();
-            float minZ = z.Min();
+            Vector3 min = allVertices[0];
+            Vector3 max = allVertices[0];
+            Parallel.For(1, allVertices.Count, i =>
+            {
+                min.x = Mathf.Min(min.x, allVertices[i].x);
+                min.y = Mathf.Min(min.y, allVertices[i].y);
+                min.z = Mathf.Min(min.z, allVertices[i].z);
 
-            Vector3 position = transform.TransformPoint(new Vector3((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2));
+                max.x = Mathf.Max(max.x, allVertices[i].x);
+                max.y = Mathf.Max(max.y, allVertices[i].y);
+                max.z = Mathf.Max(max.z, allVertices[i].z);
+            });
+
+            Vector3 position = transform.TransformPoint((min + max) / 2);
             Vector3 rotation = transform.eulerAngles;
-            Vector3 size = new Vector3((maxX - minX) * transform.lossyScale.x, (maxY - minY) * transform.lossyScale.y, (maxZ - minZ) * transform.lossyScale.z);
+            Vector3 size = Vector3.Scale(max - min, transform.lossyScale);
             Tuple<Vector3, Vector3, Vector3> dddBBox = new Tuple<Vector3, Vector3, Vector3>(position, rotation, size);
             if (send)
                 CollectData.AddDataNextStep("3d_bounding_box", dddBBox);
             return dddBBox;
         }
 
-        public Rect Get2DBBox(Camera cam)
+        public Rect Get2DBBox(Camera camera)
         {
+            Matrix4x4 worldToCameraMatrix = camera.worldToCameraMatrix;
+            Matrix4x4 projectionMatrix = camera.projectionMatrix;
+            int width = camera.pixelWidth;
+            int height = camera.pixelHeight;
+
             List<Vector3> allVertices = new List<Vector3>();
             foreach (var render in this.GetChildComponentFilter<MeshFilter>())
             {
                 Span<Vector3> spanVertices = new Span<Vector3>(render.sharedMesh.vertices);
                 render.transform.TransformPoints(render.sharedMesh.vertices, spanVertices);
-                for (int i = 0; i < spanVertices.Length; i++)
+                var array = spanVertices.ToArray();
+                Parallel.For(0, array.Length, i =>
                 {
-                    spanVertices[i] = cam.WorldToScreenPoint(spanVertices[i]);
-                }
-                allVertices.AddRange(spanVertices.ToArray());
+                    array[i] = WorldToScreenPoint(array[i], worldToCameraMatrix, projectionMatrix, width, height);
+                });
+                allVertices.AddRange(array);
             }
-            var x = allVertices.Select(s => s.x);
-            var y = allVertices.Select(s => s.y);
-            float maxX = x.Max();
-            float minX = x.Min();
-            float maxY = y.Max();
-            float minY = y.Min();
-            return new Rect(minX, minY, maxX - minX, maxY - minY);
+            Vector3 min = allVertices[0];
+            Vector3 max = allVertices[0];
+
+            Parallel.For(1, allVertices.Count, i =>
+            {
+                min.x = Mathf.Min(min.x, allVertices[i].x);
+                min.y = Mathf.Min(min.y, allVertices[i].y);
+
+                max.x = Mathf.Max(max.x, allVertices[i].x);
+                max.y = Mathf.Max(max.y, allVertices[i].y);
+            });
+            return new Rect(min, max - min);
+        }
+        Vector3 WorldToScreenPoint(Vector3 worldPos, Matrix4x4 worldToCameraMatrix, Matrix4x4 projectionMatrix, int width, int height)
+        {
+            Vector4 clipSpacePos = projectionMatrix * worldToCameraMatrix * new Vector4(worldPos.x, worldPos.y, worldPos.z, 1);
+
+            Vector3 ndcPos = new Vector3(clipSpacePos.x / clipSpacePos.w, clipSpacePos.y / clipSpacePos.w, clipSpacePos.z / clipSpacePos.w);
+
+            Vector3 screenPos = new Vector3(
+                (ndcPos.x + 1) * 0.5f * width,
+                (ndcPos.y + 1) * 0.5f * height,
+                ndcPos.z
+            );
+
+            return screenPos;
         }
 
         public Bounds GetAppendBounds()

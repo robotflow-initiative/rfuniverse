@@ -37,9 +37,7 @@ namespace RFUniverse
                 {
                     object[] data = ReceiveObjects(bytes);
                     if (data.Length > 0 && data[0] is string && data[0] as string == "StepStart")
-                    {
                         break;
-                    }
                     OnReceivedData?.Invoke(data);
                 }
             }

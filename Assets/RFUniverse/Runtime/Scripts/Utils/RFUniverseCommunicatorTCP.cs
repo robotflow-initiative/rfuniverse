@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace RFUniverse
 {
-
     public class RFUniverseCommunicatorTCP : RFUniverseCommunicatorBase
     {
         TcpClient client;
@@ -90,7 +89,7 @@ namespace RFUniverse
         {
             try
             {
-                byte[] length = BitConverter.GetBytes(bytes.Length);
+                byte[] length = BitConverter.GetBytes((uint)bytes.Length);
                 stream.Write(length, 0, length.Length);
                 stream.Write(bytes, 0, bytes.Length);
             }

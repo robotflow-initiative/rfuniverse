@@ -119,6 +119,9 @@ public class CheckPlugins
         PlayerSettings.allowUnsafeCode = true;
         Debug.Log("PlayerSettings.allowUnsafeCode has been set to true");
 
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+        Debug.Log("PlayerSettings.SetScriptingBackend has been set to Mono2x");
+
         PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_Unity_4_8);
         Debug.Log("PlayerSettings.ApiCompatibilityLevel has been set to NET_Unity_4_8");
 

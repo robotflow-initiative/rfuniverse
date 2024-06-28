@@ -29,23 +29,29 @@ namespace RFUniverse
         }
         public void SetPythonVersion(Version pythonVersion)
         {
-            pythonVersionUI.text = "pyrfuniverse Version:" + pythonVersion;
+            if (pythonVersionUI != null)
+                pythonVersionUI.text = "pyrfuniverse Version:" + pythonVersion;
         }
 
         public void ShowArticulationParameter(List<ArticulationBody> bodys)
         {
-            articulationWindow.style.display = DisplayStyle.Flex;
-            articulationWindow.Refresh(bodys);
+            if (articulationWindow != null)
+            {
+                articulationWindow.style.display = DisplayStyle.Flex;
+                articulationWindow.Refresh(bodys);
+            }
         }
 
         public void ShowPend()
         {
-            pend.style.display = DisplayStyle.Flex;
+            if (pend != null)
+                pend.style.display = DisplayStyle.Flex;
         }
 
         public void AddLog(string log)
         {
-            debugWindow.AddLog(log);
+            if (debugWindow != null)
+                debugWindow.AddLog(log);
         }
 
     }

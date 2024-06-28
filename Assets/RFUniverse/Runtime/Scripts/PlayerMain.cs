@@ -104,19 +104,21 @@ namespace RFUniverse
             (this as IDistributeData<string>).RegisterReceiver("PhysicsScene", PhysicsSceneManager.Instance.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Debug", DebugManager.Instance.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Instance", InstanceManager.Instance.ReceiveData);
-            (this as IDistributeData<string>).RegisterReceiver("Message", MessageManager.Instance.ReceiveMessageData);
             (this as IDistributeData<string>).RegisterReceiver("Object", MessageManager.Instance.ReceiveData);
 
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
-            playerMainUI.Init();
-            playerMainUI.OnPendDone = () =>
+            if (playerMainUI.isActiveAndEnabled)
             {
-                Debug.Log("PendDone");
-                CollectData.AddDataNextStep("pend_done", null);
-            };
+                playerMainUI.Init();
+                playerMainUI.OnPendDone = () =>
+                {
+                    Debug.Log("PendDone");
+                    CollectData.AddDataNextStep("pend_done", null);
+                };
+            }
 
             (this as IHaveAPI).RegisterAPI();
 
@@ -708,24 +710,6 @@ namespace RFUniverse
         public void ExportOBJ(GameObject[] meshs, string path)
         {
             new OBJExporter().Export(meshs, path);
-        }
-
-
-        [Obsolete("AddListener is the older interface, and AddListenerObject is the recommended interface for dynamic messaging")]
-        public void AddListener(string message, Action<IncomingMessage> action)
-        {
-            MessageManager.Instance.AddListener(message, action);
-        }
-
-        [Obsolete("RemoveListener is the older interface, and RemoveListenerObject is the recommended interface for dynamic messaging")]
-        public void RemoveListener(string message)
-        {
-            MessageManager.Instance.RemoveListener(message);
-        }
-        [Obsolete("SendMessage is the older interface, and SendObject is the recommended interface for dynamic messaging")]
-        public void SendMessage(string message, params object[] objects)
-        {
-            MessageManager.Instance.SendMessage(message, objects);
         }
 
         public void AddListenerObject(string head, Action<object[]> action)
