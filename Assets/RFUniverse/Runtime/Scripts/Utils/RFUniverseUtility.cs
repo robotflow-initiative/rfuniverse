@@ -276,7 +276,7 @@ namespace RFUniverse
         public static List<Vector3> FloatArrayToListVector3(float[,] floats)
         {
             List<Vector3> v3s = new List<Vector3>();
-            for (int i = 0; i < floats.Length; i++)
+            for (int i = 0; i < floats.GetLength(0); i++)
             {
                 v3s.Add(new Vector3(floats[i, 0], floats[i, 1], floats[i, 2]));
             }
@@ -285,7 +285,7 @@ namespace RFUniverse
         public static List<Color> FloatArrayToListColor(float[,] colors)
         {
             List<Color> v3s = new List<Color>();
-            for (int i = 0; i < colors.Length; i++)
+            for (int i = 0; i < colors.GetLength(0); i++)
             {
                 v3s.Add(new Color(colors[i, 0], colors[i, 1], colors[i, 2]));
             }

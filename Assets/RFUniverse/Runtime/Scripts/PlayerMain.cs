@@ -9,7 +9,6 @@ using UnityEditor.AddressableAssets;
 using Newtonsoft.Json;
 using RFUniverse.Attributes;
 using RFUniverse.Manager;
-using Robotflow.RFUniverse.SideChannels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -110,15 +109,12 @@ namespace RFUniverse
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
-            if (playerMainUI.isActiveAndEnabled)
+            playerMainUI.Init();
+            playerMainUI.OnPendDone = () =>
             {
-                playerMainUI.Init();
-                playerMainUI.OnPendDone = () =>
-                {
-                    Debug.Log("PendDone");
-                    CollectData.AddDataNextStep("pend_done", null);
-                };
-            }
+                Debug.Log("PendDone");
+                CollectData.AddDataNextStep("pend_done", null);
+            };
 
             (this as IHaveAPI).RegisterAPI();
 

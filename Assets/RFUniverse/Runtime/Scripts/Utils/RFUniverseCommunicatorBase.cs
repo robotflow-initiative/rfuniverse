@@ -112,7 +112,7 @@ namespace RFUniverse
                             float[,] array2d = new float[shape[0], shape[1]];
                             for (int i = 0; i < shape[0]; i++)
                             {
-                                for (int j = 0; j < shape[0]; j++)
+                                for (int j = 0; j < shape[1]; j++)
                                 {
                                     array2d[i, j] = ReadFloat(bytes);
                                 }
@@ -122,9 +122,9 @@ namespace RFUniverse
                             float[,,] array3d = new float[shape[0], shape[1], shape[2]];
                             for (int i = 0; i < shape[0]; i++)
                             {
-                                for (int j = 0; j < shape[0]; j++)
+                                for (int j = 0; j < shape[1]; j++)
                                 {
-                                    for (int k = 0; k < shape[0]; k++)
+                                    for (int k = 0; k < shape[2]; k++)
                                     {
                                         array3d[i, j, k] = ReadFloat(bytes);
                                     }
