@@ -17,7 +17,7 @@ public class BuildRelease
     {
         BuildWindows();
         BuildLinux();
-        SDKExporter.Export();
+        ExportSDK();
     }
     [MenuItem("RFUniverse/Build Release/Windows", false, 1)]
     static void BuildWindows()
@@ -84,5 +84,28 @@ public class BuildRelease
         }
         else
             Debug.Log("Linux发布失败！");
+    }
+
+    [MenuItem("RFUniverse/Build Release/Unity Package SDK", false, 3)]
+    static void ExportSDK()
+    {
+        //string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';');
+        //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, new string[0]);
+        string[] filePaths = new[]
+        {
+                "Assets/AddressableAssetsData",
+                "Assets/RFUniverse/Editor",
+                "Assets/RFUniverse/Runtime",
+                "Assets/Plugins/Editor",
+                "Assets/Plugins/Demigiant",
+                "Assets/Plugins/HeatMap",
+                "Assets/Plugins/CoACD",
+                "Assets/Plugins/gRPC",
+                "Assets/Plugins/URDF-Importer",
+                "Assets/Plugins/BioIK/BioIK.asmref",
+                "Assets/TextMesh Pro"
+            };
+        AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{PlayerMain.VERSION}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
+        //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines);
     }
 }

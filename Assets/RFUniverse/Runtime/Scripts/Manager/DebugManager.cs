@@ -11,14 +11,14 @@ namespace RFUniverse.Manager
 {
     public class DebugManager : SingletonBase<DebugManager>, IDisposable, IReceiveData, IHaveAPI
     {
-        GraspPoint graspPointSource;
-        PoseGizmo poseGizmoSource;
-        CollisionLine collisionLineSource;
-        ObjectID objectIDSource;
-        ColliderBound colliderBoundSource;
-        DDDBBox dddBBoxSource;
-        DDBBox ddBBoxSource;
-        JointLink jointLinkSource;
+        Lazy<GraspPoint> graspPointSource;
+        Lazy<PoseGizmo> poseGizmoSource;
+        Lazy<CollisionLine> collisionLineSource;
+        Lazy<ObjectID> objectIDSource;
+        Lazy<ColliderBound> colliderBoundSource;
+        Lazy<DDDBBox> dddBBoxSource;
+        Lazy<DDBBox> ddBBoxSource;
+        Lazy<JointLink> jointLinkSource;
 
         ObjectPool<GraspPoint> graspPointPool;
         ObjectPool<PoseGizmo> poseGizmoPool;
@@ -30,26 +30,31 @@ namespace RFUniverse.Manager
         ObjectPool<JointLink> jointLinkPool;
         private DebugManager()
         {
-            graspPointSource = Addressables.LoadAssetAsync<GameObject>("Debug/GraspPoint").WaitForCompletion().GetComponent<GraspPoint>();
-            poseGizmoSource = Addressables.LoadAssetAsync<GameObject>("Debug/PoseGizmo").WaitForCompletion().GetComponent<PoseGizmo>();
-            collisionLineSource = Addressables.LoadAssetAsync<GameObject>("Debug/CollisionLine").WaitForCompletion().GetComponent<CollisionLine>();
-            objectIDSource = Addressables.LoadAssetAsync<GameObject>("Debug/ObjectID").WaitForCompletion().GetComponent<ObjectID>();
-            colliderBoundSource = Addressables.LoadAssetAsync<GameObject>("Debug/ColliderBound").WaitForCompletion().GetComponent<ColliderBound>();
-            dddBBoxSource = Addressables.LoadAssetAsync<GameObject>("Debug/3DBBox").WaitForCompletion().GetComponent<DDDBBox>();
-            ddBBoxSource = Addressables.LoadAssetAsync<GameObject>("Debug/2DBBox").WaitForCompletion().GetComponent<DDBBox>();
-            jointLinkSource = Addressables.LoadAssetAsync<GameObject>("Debug/JointLink").WaitForCompletion().GetComponent<JointLink>();
+            graspPointSource = new(LoadSource<GraspPoint>("Debug/GraspPoint"));
+            poseGizmoSource = new(LoadSource<PoseGizmo>("Debug/PoseGizmo"));
+            collisionLineSource = new(LoadSource<CollisionLine>("Debug/CollisionLine"));
+            objectIDSource = new(LoadSource<ObjectID>("Debug/ObjectID"));
+            colliderBoundSource = new(LoadSource<ColliderBound>("Debug/ColliderBound"));
+            dddBBoxSource = new(LoadSource<DDDBBox>("Debug/3DBBox"));
+            ddBBoxSource = new(LoadSource<DDBBox>("Debug/2DBBox"));
+            jointLinkSource = new(LoadSource<JointLink>("Debug/JointLink"));
 
-            graspPointPool = new ObjectPool<GraspPoint>(() => GameObject.Instantiate(graspPointSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            poseGizmoPool = new ObjectPool<PoseGizmo>(() => GameObject.Instantiate(poseGizmoSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            collisionLinePool = new ObjectPool<CollisionLine>(() => GameObject.Instantiate(collisionLineSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            objectIDPool = new ObjectPool<ObjectID>(() => GameObject.Instantiate(objectIDSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            colliderBoundPool = new ObjectPool<ColliderBound>(() => GameObject.Instantiate(colliderBoundSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            dddBBoxPool = new ObjectPool<DDDBBox>(() => GameObject.Instantiate(dddBBoxSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            ddBBoxPool = new ObjectPool<DDBBox>(() => GameObject.Instantiate(ddBBoxSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
-            jointLinkPool = new ObjectPool<JointLink>(() => GameObject.Instantiate(jointLinkSource), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            graspPointPool = new ObjectPool<GraspPoint>(() => GameObject.Instantiate(graspPointSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            poseGizmoPool = new ObjectPool<PoseGizmo>(() => GameObject.Instantiate(poseGizmoSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            collisionLinePool = new ObjectPool<CollisionLine>(() => GameObject.Instantiate(collisionLineSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            objectIDPool = new ObjectPool<ObjectID>(() => GameObject.Instantiate(objectIDSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            colliderBoundPool = new ObjectPool<ColliderBound>(() => GameObject.Instantiate(colliderBoundSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            dddBBoxPool = new ObjectPool<DDDBBox>(() => GameObject.Instantiate(dddBBoxSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            ddBBoxPool = new ObjectPool<DDBBox>(() => GameObject.Instantiate(ddBBoxSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
+            jointLinkPool = new ObjectPool<JointLink>(() => GameObject.Instantiate(jointLinkSource.Value), s => s.gameObject.SetActive(true), s => s.gameObject.SetActive(false), s => GameObject.Destroy(s.gameObject));
 
             Application.logMessageReceived += OnLogMessageReceived;
             (this as IHaveAPI).RegisterAPI();
+        }
+
+        T LoadSource<T>(string name)
+        {
+            return Addressables.LoadAssetAsync<GameObject>(name).WaitForCompletion().GetComponent<T>();
         }
         public void ReceiveData(object[] data)
         {

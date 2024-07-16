@@ -2,7 +2,6 @@
 using RFUniverse.Attributes;
 using System;
 using RFUniverse.Manager;
-using System.Threading.Tasks;
 
 namespace RFUniverse.DebugTool
 {
@@ -10,17 +9,9 @@ namespace RFUniverse.DebugTool
     {
         public Renderer render;
         public GameObjectAttr target;
-        int frame = 0;
-        public static int total = 50;
-        int index;
-        private void Awake()
-        {
-            index = UnityEngine.Random.Range(0, total);
-        }
         void FixedUpdate()
         {
-            if ((frame++ % total) != index) return;
-            if (DebugManager.Instance.IsDebug3DBBox &&  target && target.gameObject.activeInHierarchy)
+            if (DebugManager.Instance.IsDebug3DBBox && target && target.gameObject.activeInHierarchy)
             {
                 render.gameObject.SetActive(true);
                 render.material.SetColor("_Color", RFUniverseUtility.EncodeIDAsColor(target.ID));

@@ -9,16 +9,8 @@ namespace RFUniverse.DebugTool
     {
         public Image image;
         public GameObjectAttr target;
-        int frame = 0;
-        public static int total = 50;
-        int index;
-        private void Awake()
-        {
-            index = UnityEngine.Random.Range(0, total);
-        }
         void FixedUpdate()
         {
-            if ((frame++ % total) != index) return;
             if (DebugManager.Instance.IsDebug2DBBox && target && target.gameObject.activeInHierarchy)
             {
                 image.gameObject.SetActive(true);

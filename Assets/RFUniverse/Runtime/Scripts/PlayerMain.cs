@@ -9,7 +9,6 @@ using UnityEditor.AddressableAssets;
 using Newtonsoft.Json;
 using RFUniverse.Attributes;
 using RFUniverse.Manager;
-using Robotflow.RFUniverse.SideChannels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,19 +18,27 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 #if TRILIB
 using TriLibCore;
+using System.Reflection;
 #endif
 
 namespace RFUniverse
 {
+    public enum CommunicationBackend
+    {
+        TCP,
+        gRPC,
+    }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.20.3";
+        public const string VERSION = "0.30.0";
 
         public int port = 5004;
+
+        public CommunicationBackend communicationBackend = CommunicationBackend.TCP;
         [HideInInspector]
         public int patchNumber;
         public PlayerMainUI playerMainUI;
-        public static RFUniverseCommunicator Communicator;
+        public static RFUniverseCommunicatorBase Communicator;
         public int clientTime = 30;
 
         [SerializeField]
@@ -50,7 +57,6 @@ namespace RFUniverse
             }
         }
 
-
         [SerializeField]
         float timeScale = 1;
         public float TimeScale
@@ -66,10 +72,6 @@ namespace RFUniverse
             }
         }
 
-        //DebugManager debugManager;
-        //InstanceManager instanceManager;
-        //MessageManager messageManager;
-
         public ICollectData CollectData => this;
 
         private void OnValidate()
@@ -77,6 +79,8 @@ namespace RFUniverse
             if (!Application.isPlaying && Instance != this)
                 base.Awake();
         }
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -94,15 +98,11 @@ namespace RFUniverse
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
             }
 #endif
-            //debugManager = DebugManager.Instance;
-            //instanceManager = InstanceManager.Instance;
-            //messageManager = MessageManager.Instance;
 
             (this as IDistributeData<string>).RegisterReceiver("Env", ReceiveEnvData);
             (this as IDistributeData<string>).RegisterReceiver("PhysicsScene", PhysicsSceneManager.Instance.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Debug", DebugManager.Instance.ReceiveData);
             (this as IDistributeData<string>).RegisterReceiver("Instance", InstanceManager.Instance.ReceiveData);
-            (this as IDistributeData<string>).RegisterReceiver("Message", MessageManager.Instance.ReceiveMessageData);
             (this as IDistributeData<string>).RegisterReceiver("Object", MessageManager.Instance.ReceiveData);
 
             patchNumber = PlayerPrefs.GetInt("Patch", 0);
@@ -148,15 +148,28 @@ namespace RFUniverse
                     if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
                         port = value;
                 }
+                if (commandLineArgs[i].StartsWith("-grpc"))
+                {
+                    communicationBackend = CommunicationBackend.gRPC;
+                }
+                else if (commandLineArgs[i].StartsWith("-tcp"))
+                {
+                    communicationBackend = CommunicationBackend.TCP;
+                }
             }
 
             if (Communicator == null)
             {
-                Communicator = new RFUniverseCommunicator("localhost", port, clientTime, () =>
+                switch (communicationBackend)
                 {
-                    Debug.Log("Connected successfully");
-                    InitCommunicator();
-                });
+                    default:
+                    case CommunicationBackend.TCP:
+                        Communicator = new RFUniverseCommunicatorTCP("localhost", port, clientTime, InitCommunicator);
+                        break;
+                    case CommunicationBackend.gRPC:
+                        Communicator = new RFUniverseCommunicatorGRPC("localhost", port, clientTime, InitCommunicator);
+                        break;
+                }
             }
             else if (Communicator.Connected)
             {
@@ -168,9 +181,12 @@ namespace RFUniverse
                 QuitApp();
             }
         }
+
         void InitCommunicator()
         {
+            Debug.Log("Connected successfully");
             Physics.simulationMode = SimulationMode.Script;
+
             OnStepAction += Step;
 
             Communicator.OnReceivedData = (data) =>
@@ -183,8 +199,6 @@ namespace RFUniverse
             };
             CollectData.AddDataNextStep("scene_init", null);
             CollectData.AddDataNextStep("rfu_version", VERSION);
-            //Collect();
-            //Communicator.AsyncReceiveThread();
         }
 
         void QuitApp()
@@ -192,9 +206,10 @@ namespace RFUniverse
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
+
         public class ConfigData
         {
             public string assets_path;
@@ -691,24 +706,6 @@ namespace RFUniverse
         public void ExportOBJ(GameObject[] meshs, string path)
         {
             new OBJExporter().Export(meshs, path);
-        }
-
-
-        [Obsolete("AddListener is the older interface, and AddListenerObject is the recommended interface for dynamic messaging")]
-        public void AddListener(string message, Action<IncomingMessage> action)
-        {
-            MessageManager.Instance.AddListener(message, action);
-        }
-
-        [Obsolete("RemoveListener is the older interface, and RemoveListenerObject is the recommended interface for dynamic messaging")]
-        public void RemoveListener(string message)
-        {
-            MessageManager.Instance.RemoveListener(message);
-        }
-        [Obsolete("SendMessage is the older interface, and SendObject is the recommended interface for dynamic messaging")]
-        public void SendMessage(string message, params object[] objects)
-        {
-            MessageManager.Instance.SendMessage(message, objects);
         }
 
         public void AddListenerObject(string head, Action<object[]> action)
