@@ -48,3 +48,11 @@ pip install --user wheel==0.38.0
 
 ---
 
+**Q: 运行`test_cloth_attach`文件时，产生如下报错**
+Condition:NullReferenceException: Object reference not set to an instance of an object
+StackTrace:RFUniverse.IDistributeData`1[T].DistributeData (T hand, System.Object[] data) (at Assets/RFUniverse/Runtime/Scripts/Interface/IDistributeData.cs:24)
+RFUniverse.Manager.InstanceManager.ReceiveData (System.Object[] data) (at Assets/RFUniverse/Runtime/Scripts/Manager/InstanceManager.cs:45)
+...
+
+A: 确保Obi安装正确，而且Obi放在plugin folder底下。然后点击Check Plugins (Fix Error)在Editor的最上方的Tab里。如果看到Obi plugin detected, add obi define symbols在console里就说明Obi安装没有问题。点击Reload在询问是否reload场景的弹窗里。
+
