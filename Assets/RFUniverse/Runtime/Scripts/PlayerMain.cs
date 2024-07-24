@@ -30,7 +30,7 @@ namespace RFUniverse
     }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.30.0.3";
+        public const string VERSION = "0.30.0.4";
 
         public int port = 5004;
 
