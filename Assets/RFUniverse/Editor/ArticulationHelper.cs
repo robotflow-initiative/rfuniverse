@@ -5,7 +5,7 @@ namespace RFUniverse
 {
     public class ArticulationHelper : Editor
     {
-        [MenuItem("RFUniverse/Articulation Helper/Normalize RFUniverse Articulation")]
+        [MenuItem("RFUniverse/Normalize RFUniverse Articulation")]
         static void NormalizeRFUniverseArticulation()
         {
             if (Selection.activeGameObject == null)

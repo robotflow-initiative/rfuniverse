@@ -32,6 +32,7 @@ namespace RFUniverse
     {
         public const string VERSION = "0.30.0.4";
 
+        public string ip = "localhost";
         public int port = 5004;
 
         public CommunicationBackend communicationBackend = CommunicationBackend.TCP;
@@ -142,9 +143,14 @@ namespace RFUniverse
             string[] commandLineArgs = Environment.GetCommandLineArgs();
             for (int i = 0; i < commandLineArgs.Length; i++)
             {
+                if (commandLineArgs[i].StartsWith("-ip:"))
+                {
+                    startWithNoParam = true;
+                    ip = commandLineArgs[i].Remove(0, 4);
+                }
                 if (commandLineArgs[i].StartsWith("-port:"))
                 {
-                    startWithPort = true;
+                    startWithNoParam = true;
                     if (int.TryParse(commandLineArgs[i].Remove(0, 6), out int value))
                         port = value;
                 }
@@ -164,10 +170,10 @@ namespace RFUniverse
                 {
                     default:
                     case CommunicationBackend.TCP:
-                        Communicator = new RFUniverseCommunicatorTCP("localhost", port, clientTime, InitCommunicator);
+                        Communicator = new RFUniverseCommunicatorTCP(ip, port, clientTime, InitCommunicator);
                         break;
                     case CommunicationBackend.gRPC:
-                        Communicator = new RFUniverseCommunicatorGRPC("localhost", port, clientTime, InitCommunicator);
+                        Communicator = new RFUniverseCommunicatorGRPC(ip, port, clientTime, InitCommunicator);
                         break;
                 }
             }
@@ -216,10 +222,10 @@ namespace RFUniverse
             public string executable_file;
         }
 
-        bool startWithPort = false;
+        bool startWithNoParam = false;
         void OnApplicationQuit()
         {
-            if (!startWithPort)
+            if (!startWithNoParam)
             {
                 string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 string configPath = $"{userPath}/.rfuniverse/config.json";
