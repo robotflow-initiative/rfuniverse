@@ -44,7 +44,7 @@ public class CheckPlugins
         {
             if (!packageList.Contains(packageNames[i]))
             {
-                Debug.Log("Geting " + packageNames[i]);
+                Debug.Log("Getting " + packageNames[i]);
                 AddRequest addRequest = Client.Add(packageAddNames[i]);
                 while (!addRequest.IsCompleted)
                 {
@@ -75,6 +75,13 @@ public class CheckPlugins
             {
                 File.Copy(tmpPath, bioikPath, true);
                 Debug.Log("BioIK.cs modified");
+            }
+            tmpPath = $"{Application.dataPath}/Plugins/Editor/BioIK.asmref.backup";
+            bioikPath = $"{Application.dataPath}/Plugins/BioIK/BioIK.asmref";
+            if (File.Exists(tmpPath))
+            {
+                File.Copy(tmpPath, bioikPath, true);
+                Debug.Log("BioIK.asmref modified");
             }
         }
 
