@@ -1,15 +1,20 @@
 [submodule "Assets/EditMode"]
 	path = Assets/EditMode
-	url = git@github.com:robotflow-initiative/rfuniverse_editmode
-[submodule "Assets/Plugins/Obi"]
-	path = Assets/Plugins/Obi
-	url = git@github.com:robotflow-initiative/rfuniverse-plugins-obi
-[submodule "Assets/Plugins/BioIK"]
-	path = Assets/Plugins/BioIK
-	url = git@github.com:robotflow-initiative/rfuniverse-plugins-bioik
-[submodule "Assets/Plugins/TriLib"]
-	path = Assets/Plugins/TriLib
-	url = git@github.com:robotflow-initiative/rfuniverse-plugins-trilib
+	url = https://github.com/robotflow-initiative/rfuniverse_editmode.git
+	branch = main
 [submodule "Assets/Plugins/Zibra"]
 	path = Assets/Plugins/Zibra
-	url = git@github.com:robotflow-initiative/rfuniverse-plugins-zibra
+	url = git@github.com:robotflow-initiative/rfuniverse-plugins-zibra.git
+	branch = main
+[submodule "Assets/Plugins/TriLib"]
+	path = Assets/Plugins/TriLib
+	url = git@github.com:robotflow-initiative/rfuniverse-plugins-trilib.git
+	branch = main
+[submodule "Assets/Plugins/BioIK"]
+	path = Assets/Plugins/BioIK
+	url = git@github.com:robotflow-initiative/rfuniverse-plugins-bioik.git
+	branch = main
+[submodule "Assets/Plugins/Obi"]
+	path = Assets/Plugins/Obi
+	url = git@github.com:robotflow-initiative/rfuniverse-plugins-obi.git
+	branch = main
