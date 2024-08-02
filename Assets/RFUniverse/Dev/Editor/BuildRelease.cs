@@ -1,4 +1,6 @@
-﻿using HybridCLR.Editor.Commands;
+﻿#if HYBRID_CLR
+using HybridCLR.Editor.Commands;
+#endif
 using RFUniverse;
 using System.IO.Compression;
 using UnityEditor;

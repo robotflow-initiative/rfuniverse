@@ -1,0 +1,65 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key:
+            Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      - name: Build Windows
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneWindows64
+          buildName: RFUniverse_For_Windows_${{ github.ref_name }}
+          versioning: Semantic
+
+      - name: Build Linux
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneLinux64
+          buildName: RFUniverse_For_Linux_${{ github.ref_name }}
+          versioning: Semantic
+
+      - name: Zip
+        run: |
+          zip -r build/RFUniverse_For_Windows_${{ github.ref_name }}.zip build/RFUniverse_For_Windows_${{ github.ref_name }}
+          zip -r build/RFUniverse_For_Linux_${{ github.ref_name }}.zip build/RFUniverse_For_Linux_${{ github.ref_name }}
+
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: RFUniverse_${{ github.ref_name }}
+          files: |
+            build/RFUniverse_For_Windows_${{ github.ref_name }}.zip
+            build/RFUniverse_For_Linux_${{ github.ref_name }}.zip
