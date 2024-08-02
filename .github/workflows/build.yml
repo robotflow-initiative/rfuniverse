@@ -1,0 +1,162 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - Windows
+          - Linux
+
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+        
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+
+      - name: Set SUFFIX
+        run: |
+          if [ "${{ matrix.targetPlatform }}" == "Windows" ]; then
+            echo "EXE_SUFFIX=" >> $GITHUB_ENV
+          elif [ "${{ matrix.targetPlatform }}" == "Linux" ]; then
+            echo "EXE_SUFFIX=.x86_64" >> $GITHUB_ENV
+          fi
+
+      - name: Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Standalone${{ matrix.targetPlatform }}64
+          buildName: RFUniverse${{ env.EXE_SUFFIX }}
+          versioning: Semantic
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.targetPlatform }}
+          path: build/Standalone${{ matrix.targetPlatform }}64
+
+  sdk:
+    name: Relaase SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+        
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-SDK
+          restore-keys: Library-
+
+      - name: Read SDK File List
+        run: |
+          joined_lines=$(tr '\n' ' ' < SDK_File_List.txt)
+          joined_lines=$(echo "$joined_lines" | sed 's/[[:space:]]*$//')
+          echo "FILE_LIST=$joined_lines" >> $GITHUB_ENV
+
+      - name: Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          buildMethod : BuildRelease.HelloWorld
+          customParameters: -exportPackage ${{ env.FILE_LIST }} "build/sdk.unitypackage"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SDK
+          path: build/sdk.unitypackage
+
+  release:
+    needs: [build, sdk]
+    if: always()
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows
+        continue-on-error: true
+        uses: actions/download-artifact@v3
+        with:
+          name: Windows
+          path: RFUniverse_For_Windows_${{ github.ref_name }}
+
+      - name: Download Linux
+        continue-on-error: true
+        uses: actions/download-artifact@v3
+        with:
+          name: Linux
+          path: RFUniverse_For_Linux_${{ github.ref_name }}
+
+      - name: Download SDK
+        continue-on-error: true
+        uses: actions/download-artifact@v3
+        with:
+          name: SDK
+
+      - name: Zip
+        continue-on-error: true
+        run: |
+          ls
+          mv sdk.unitypackage RFUniverse_Core_SDK_${{ github.ref_name }}.unitypackage
+          zip -r RFUniverse_For_Windows_${{ github.ref_name }}.zip RFUniverse_For_Windows_${{ github.ref_name }}
+          zip -r RFUniverse_For_Linux_${{ github.ref_name }}.zip RFUniverse_For_Linux_${{ github.ref_name }}
+      
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: RFUniverse_${{ github.ref_name }}
+          files: |
+            RFUniverse_For_Windows_${{ github.ref_name }}.zip
+            RFUniverse_For_Linux_${{ github.ref_name }}.zip
+            RFUniverse_Core_SDK_${{ github.ref_name }}.unitypackage

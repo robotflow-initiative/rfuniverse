@@ -1,4 +1,6 @@
-﻿using HybridCLR.Editor.Commands;
+#if HYBRID_CLR
+using HybridCLR.Editor.Commands;
+#endif
 using RFUniverse;
 using System.IO.Compression;
 using UnityEditor;
@@ -13,14 +15,14 @@ public class BuildRelease
     public const string BUILD_PATH = "D:/Build";
 
     [MenuItem("RFUniverse/Build Release/All", false, 0)]
-    static void Build()
+    public static void Build()
     {
         BuildWindows();
         BuildLinux();
         ExportSDK();
     }
     [MenuItem("RFUniverse/Build Release/Windows", false, 1)]
-    static void BuildWindows()
+    public static void BuildWindows()
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         Client.Resolve();
@@ -53,7 +55,7 @@ public class BuildRelease
             Debug.Log("Windows发布失败！");
     }
     [MenuItem("RFUniverse/Build Release/Linux", false, 2)]
-    static void BuildLinux()
+    public static void BuildLinux()
     {
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64);
         Client.Resolve();
@@ -87,8 +89,10 @@ public class BuildRelease
     }
 
     [MenuItem("RFUniverse/Build Release/Unity Package SDK", false, 3)]
-    static void ExportSDK()
+    public static void ExportSDK()
     {
+        string path = BUILD_PATH + "/RFUniverse_Core_SDK_v" + PlayerMain.VERSION + ".unitypackage";
+        Debug.Log($"Start Release SDK: {path}");
         //string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone).Split(';');
         //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, new string[0]);
         string[] filePaths = new[]
@@ -102,10 +106,15 @@ public class BuildRelease
                 "Assets/Plugins/CoACD",
                 "Assets/Plugins/gRPC",
                 "Assets/Plugins/URDF-Importer",
-                "Assets/Plugins/BioIK/BioIK.asmref",
-                "Assets/TextMesh Pro"
+                "Assets/TextMeshPro"
             };
-        AssetDatabase.ExportPackage(filePaths, $"{BuildRelease.BUILD_PATH}/RFUniverse_Core_SDK_v{PlayerMain.VERSION}.unitypackage", ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
+        AssetDatabase.ExportPackage(filePaths, path, ExportPackageOptions.Interactive | ExportPackageOptions.Recurse);
         //PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines);
+        Debug.Log($"End Release SDK");
+    }
+
+    public static void HelloWorld()
+    {
+        Debug.Log($"HelloWorld!");
     }
 }
