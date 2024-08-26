@@ -1,25 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [DisallowMultipleComponent]
 public class CollisionState : MonoBehaviour
 {
     public bool collision = false;
-    void OnTriggerEnter(Collider _)
+    void OnTriggerStay(Collider _)
     {
         collision = true;
     }
-    void OnTriggerExit(Collider _)
+    void OnCollisionStay(Collision c)
     {
-        collision = false;
-    }
-    void OnCollisionEnter(Collision _)
-    {
-        collision = true;
-    }
-    void OnCollisionExit(Collision _)
-    {
-        collision = false;
+        if (c.contactCount > 0)
+            collision = true;
     }
 }

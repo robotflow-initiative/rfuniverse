@@ -79,6 +79,7 @@ namespace RFUniverse.Attributes
         Mesh,
         Original
     }
+
     public class ColliderAttr : GameObjectAttr
     {
         private bool isRFMoveCollider = true;
@@ -233,7 +234,44 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        private void AddObiCollider()
+        public void ResetCollisionState()
+        {
+            if (this is ControllerAttr)
+            {
+                foreach (var item in (this as ControllerAttr).Joints)
+                {
+                    CollisionState state = item.GetComponent<CollisionState>() ?? item.gameObject.AddComponent<CollisionState>();
+                    state.collision = false;
+                }
+            }
+            else
+            {
+                CollisionState state = GetComponent<CollisionState>() ?? gameObject.AddComponent<CollisionState>();
+                state.collision = false;
+            }
+        }
+        [RFUAPI]
+        public void GetCollisionState()
+        {
+            bool collision = false;
+            if (this is ControllerAttr)
+            {
+                foreach (var item in (this as ControllerAttr).Joints)
+                {
+                    CollisionState state = item.GetComponent<CollisionState>() ?? item.gameObject.AddComponent<CollisionState>();
+                    collision = state.collision;
+                    if (collision) break;
+                }
+            }
+            else
+            {
+                CollisionState state = GetComponent<CollisionState>() ?? gameObject.AddComponent<CollisionState>();
+                collision = state.collision;
+            }
+            CollectData.AddDataNextStep("collision_state", collision);
+        }
+        [RFUAPI]
+        public void AddObiCollider()
         {
 #if OBI
             foreach (var item in GetComponentsInChildren<Collider>())
@@ -275,6 +313,8 @@ namespace RFUniverse.Attributes
                     col.convex = true;
                 }
             }
+            if (Application.isPlaying)
+                GetComponent<IgnoreSelfCollision>()?.Ignore();
             return meshAssets;
         }
 
@@ -310,6 +350,8 @@ namespace RFUniverse.Attributes
                     col.convex = true;
                 }
             }
+            if (Application.isPlaying)
+                GetComponent<IgnoreSelfCollision>()?.Ignore();
             return meshAssets;
         }
         [RFUAPI]
@@ -336,6 +378,8 @@ namespace RFUniverse.Attributes
                 col.sharedMesh = sourceMesh;
                 col.convex = true;
             }
+            if (Application.isPlaying)
+                GetComponent<IgnoreSelfCollision>()?.Ignore();
         }
         [RFUAPI]
         public void EnabledAllCollider(bool enabled)
@@ -364,11 +408,19 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        protected void SetRFMoveColliderActive(bool active)
+        public void SetRFMoveColliderActive(bool active)
         {
             IsRFMoveCollider = active;
         }
 
+        [RFUAPI]
+        public void SetTrigger(bool trigger)
+        {
+            foreach (var item in this.GetChildComponentFilter<Collider>())
+            {
+                item.isTrigger = trigger;
+            }
+        }
         public override void Destroy()
         {
             List<Tuple<int, int>> pair = collisionPairs.FindAll(s => s.Item1 == this.ID || s.Item2 == this.ID);

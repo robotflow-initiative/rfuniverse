@@ -1,11 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [DisallowMultipleComponent]
 public class IgnoreSelfCollision : MonoBehaviour
 {
     void OnEnable()
+    {
+        Ignore();
+    }
+
+    public void Ignore()
     {
         Collider[] colliders = GetComponentsInChildren<Collider>();
         foreach (Collider collider1 in colliders)
