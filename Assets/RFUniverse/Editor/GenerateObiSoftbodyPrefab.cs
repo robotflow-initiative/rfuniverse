@@ -39,7 +39,7 @@ public class GenerateObiSoftbodyPrefab : MonoBehaviour
             {
                 Debug.LogWarning($"No Mesh: {name}");
                 softbody.softbodyBlueprint = ObiUtility.GenerateSoftbodyBlueprints(filter.sharedMesh);
-                while (softbody.GetComponentInChildren<ObiSoftbodySkinner>().BindSkin().MoveNext()) { }
+                //while (softbody.GetComponentInChildren<ObiSoftbodySkinner>().BindSkin().MoveNext()) { }
                 AssetDatabase.CreateAsset(softbody.softbodyBlueprint, blueprintPath);
                 PrefabUtility.SaveAsPrefabAsset(stencil, prefabPath);
             }

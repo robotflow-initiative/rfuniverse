@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Obi;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -25,6 +26,7 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetRGB(int width, int height, float? unPhysicalFov = null)
         {
+            FindObjectOfType<ObiSolver>()?.Render(0);
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;
@@ -90,6 +92,7 @@ namespace RFUniverse.Attributes
         }
         public override Texture2D GetDepth(float near, float far, int width, int height, float? unPhysicalFov = null)
         {
+            FindObjectOfType<ObiSolver>()?.Render(0);
             if (unPhysicalFov != null)
             {
                 Camera.usePhysicalProperties = false;

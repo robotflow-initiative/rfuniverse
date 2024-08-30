@@ -98,7 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 206ce0b7d5b3944cdbc83ba88739df98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solverIndices: 
+  solverIndices:
+    serializedContents: 
+    m_AlignBytes: 16
+  groupID: 0
   m_CollisionMaterial: {fileID: 11400000, guid: d368f2c47473d4bfb8dd9f08073cb403,
     type: 2}
   m_SurfaceCollisions: 0
@@ -136,8 +139,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c11d42a3c977407fa40f26f519abb13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tangentSpaceUpdate: 2
-  transferParticleColors: 0
+  <sourceMesh>k__BackingField: {fileID: 0}
+  radius: 0.25
+  falloff: 1
+  maxInfluences: 4
+  cloth: {fileID: 3059420980862398168}
+  customSkinMap: {fileID: 0}
 --- !u!1 &3059420981343602883
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +155,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3059420981343602881}
   - component: {fileID: 3059420981343602882}
-  - component: {fileID: 3059420981343602880}
   - component: {fileID: -2672211441331365409}
   m_Layer: 0
   m_Name: ObiClothStencil
@@ -187,26 +193,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   simulateWhenInvisible: 1
   m_Backend: 1
+  substeps: 4
+  maxStepsPerFrame: 1
+  synchronization: 0
   parameters:
     mode: 0
     interpolation: 1
     gravity: {x: 0, y: -9.81, z: 0}
+    ambientWind: {x: 0, y: 0, z: 0}
+    foamGravityScale: 1
     damping: 0
     maxAnisotropy: 3
     sleepThreshold: 0.0001
+    maxVelocity: 50
+    maxAngularVelocity: 10
     collisionMargin: 0.02
     maxDepenetration: 10
-    continuousCollisionDetection: 1
+    colliderCCD: 1
+    particleCCD: 0
     shockPropagation: 0
     surfaceCollisionIterations: 8
     surfaceCollisionTolerance: 0.005
+  m_MaxSurfaceChunks: 32768
+  maxQueryResults: 8192
+  maxFoamParticles: 8192
+  maxParticleNeighbors: 128
+  maxParticleContacts: 6
   gravity: {x: 0, y: -9.81, z: 0}
   gravitySpace: 0
+  ambientWind: {x: 0, y: 0, z: 0}
+  windSpace: 1
+  foamSubsteps: 1
+  maxFoamVelocityStretch: 0.3
+  foamFade: {x: 0.05, y: 0.8}
+  foamAccelAgingRange: {x: 0.5, y: 0.8}
+  foamAccelAging: 4
   worldLinearInertiaScale: 0
   worldAngularInertiaScale: 0
+  synchronousSpatialQueries: 0
   distanceConstraintParameters:
     evaluationOrder: 0
-    iterations: 1
+    iterations: 3
     SORFactor: 1
     enabled: 1
   bendingConstraintParameters:
@@ -216,7 +243,7 @@ MonoBehaviour:
     enabled: 1
   particleCollisionConstraintParameters:
     evaluationOrder: 0
-    iterations: 1
+    iterations: 2
     SORFactor: 1
     enabled: 1
   particleFrictionConstraintParameters:
@@ -284,21 +311,6 @@ MonoBehaviour:
     iterations: 1
     SORFactor: 1
     enabled: 0
---- !u!114 &3059420981343602880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3059420981343602883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d9704d540ac448439a425526f6b2986, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  solvers:
-  - {fileID: 3059420981343602882}
-  substeps: 4
 --- !u!114 &-2672211441331365409
 MonoBehaviour:
   m_ObjectHideFlags: 0

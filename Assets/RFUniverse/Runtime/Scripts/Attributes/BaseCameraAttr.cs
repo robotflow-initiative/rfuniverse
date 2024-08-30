@@ -397,7 +397,7 @@ namespace RFUniverse.Attributes
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            CameraAttr script = target as CameraAttr;
+            BaseCameraAttr script = target as BaseCameraAttr;
             GUILayout.Space(10);
             GUILayout.Label("Editor Tool:");
             size = EditorGUILayout.Vector2IntField("Size:", size);

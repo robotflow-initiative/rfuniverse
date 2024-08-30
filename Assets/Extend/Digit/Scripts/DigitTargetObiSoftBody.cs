@@ -27,12 +27,12 @@ namespace RFUniverse.Attributes.Digit
 
         }
         //Obi的碰撞事件，参数中会包含每个Particle的碰撞信息
-        void ParticleCollision(ObiSolver solver, ObiSolver.ObiCollisionEventArgs contacts)
+        void ParticleCollision(ObiSolver solver, ObiNativeContactList contacts)
         {
             //保存每个Collider碰撞impulse的字典，key为ObiSolver中Collider的ID，value为impulse
             Dictionary<int, float> impulse = new Dictionary<int, float>();
             //遍历碰撞信息
-            foreach (var item in contacts.contacts)
+            foreach (var item in contacts)
             {
                 //当该Particle的normalImpulse>0，即为有碰撞，以碰撞到Collider的ID为key，normalImpulse为value写入字典
                 if (item.normalImpulse > 0)

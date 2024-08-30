@@ -30,7 +30,7 @@ namespace RFUniverse
     }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.30.0.5";
+        public const string VERSION = "0.30.1";
 
         public string ip = "localhost";
         public int port = 5004;
@@ -85,7 +85,6 @@ namespace RFUniverse
         protected override void Awake()
         {
             base.Awake();
-
             //加载所有catalog
 #if !UNITY_EDITOR
 #if UNITY_STANDALONE_WIN
@@ -93,7 +92,6 @@ namespace RFUniverse
 #elif UNITY_STANDALONE_LINUX
             string path = $"{Addressables.RuntimePath}/StandaloneLinux64";
 #endif
-
             foreach (var item in Directory.GetFiles(path, "catalog_*.json"))
             {
                 Addressables.LoadContentCatalogAsync(item).WaitForCompletion();
