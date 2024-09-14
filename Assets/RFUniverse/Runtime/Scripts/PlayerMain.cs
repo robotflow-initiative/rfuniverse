@@ -30,7 +30,7 @@ namespace RFUniverse
     }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.30.1";
+        public const string VERSION = "0.30.2";
 
         public string ip = "localhost";
         public int port = 5004;
@@ -509,6 +509,7 @@ namespace RFUniverse
             attr.CreateReference = newReference;
             attr.ID = id;
             attr.Name = Path.GetFileNameWithoutExtension(path);
+
             attr.initBioIK = nativeIK;
             attr.Instance();
         }
@@ -597,7 +598,7 @@ namespace RFUniverse
         [RFUAPI]
         public void GetCurrentCollisionPairs()
         {
-            CollectData.AddDataNextStep("current_collisio_pairs", ColliderAttr.CollisionPairs);
+            CollectData.AddDataNextStep("collision_pairs", ColliderAttr.CollisionPairs);
         }
         [RFUAPI]
         public void GetRFMoveColliders()

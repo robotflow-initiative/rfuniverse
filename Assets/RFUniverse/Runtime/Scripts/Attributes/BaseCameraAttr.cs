@@ -410,6 +410,7 @@ namespace RFUniverse.Attributes
                     Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
                 File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_RGB.png", tex.EncodeToPNG());
                 SaveEditorPrefs();
+                Debug.Log($"Save at {Application.streamingAssetsPath}/ImageEditor/{script.ID}_RGB.png");
             }
             if (GUILayout.Button("GetNormal"))
             {
@@ -418,6 +419,7 @@ namespace RFUniverse.Attributes
                     Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
                 File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_Normal.png", tex.EncodeToPNG());
                 SaveEditorPrefs();
+                Debug.Log($"Save at {Application.streamingAssetsPath}/ImageEditor/{script.ID}_Normal.png");
             }
             if (GUILayout.Button("GetDepthEXR"))
             {
@@ -426,6 +428,7 @@ namespace RFUniverse.Attributes
                     Directory.CreateDirectory($"{Application.streamingAssetsPath}/ImageEditor");
                 File.WriteAllBytes($"{Application.streamingAssetsPath}/ImageEditor/{script.ID}_DepthEXR.exr", tex.EncodeToEXR(Texture2D.EXRFlags.CompressRLE));
                 SaveEditorPrefs();
+                Debug.Log($"Save at {Application.streamingAssetsPath}/ImageEditor/{script.ID}_DepthEXR.exr");
             }
             GUILayout.EndHorizontal();
         }
