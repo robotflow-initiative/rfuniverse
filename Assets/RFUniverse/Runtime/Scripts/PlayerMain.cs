@@ -18,7 +18,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 #if TRILIB
 using TriLibCore;
-using System.Reflection;
 #endif
 
 namespace RFUniverse
@@ -30,7 +29,7 @@ namespace RFUniverse
     }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.30.2";
+        public const string VERSION = "0.30.2.1";
 
         public string ip = "localhost";
         public int port = 5004;
