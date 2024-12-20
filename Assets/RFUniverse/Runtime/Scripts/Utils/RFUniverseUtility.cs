@@ -397,7 +397,7 @@ namespace RFUniverse
             }
             return f;
         }
-        public static List<Matrix4x4> ListMatrixTRS(List<Vector3> positioins, List<Quaternion> rotatiobs, List<Vector3> scales = null)
+        public static List<Matrix4x4> ListMatrixTRS(List<Vector3> positioins, List<Quaternion> rotations, List<Vector3> scales = null)
         {
             if (scales == null)
             {
@@ -410,7 +410,7 @@ namespace RFUniverse
             List<Matrix4x4> ms = new();
             for (int i = 0; i < positioins.Count; i++)
             {
-                ms.Add(Matrix4x4.TRS(positioins[i], rotatiobs[i], scales[i]));
+                ms.Add(Matrix4x4.TRS(positioins[i], rotations[i], scales[i]));
             }
             return ms;
         }
