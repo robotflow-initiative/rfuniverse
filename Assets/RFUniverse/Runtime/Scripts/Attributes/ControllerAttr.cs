@@ -517,7 +517,7 @@ namespace RFUniverse.Attributes
 
 
         [RFUAPI]
-        private void SetImmovable(bool immovable)
+        public void SetImmovable(bool immovable)
         {
             ArticulationBody first = GetComponentInChildren<ArticulationBody>();
             if (first.isRoot)
@@ -554,7 +554,7 @@ namespace RFUniverse.Attributes
         Quaternion? tempIKTargetRotation;
 
         [RFUAPI]
-        private void IKTargetDoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
+        public void IKTargetDoMove(List<float> position, float duration, bool isSpeedBased, bool isRelative)
         {
 #if BIOIK
             if (bioIK == null)
@@ -588,14 +588,14 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        private void IKTargetDoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
+        public void IKTargetDoRotate(List<float> eulerAngle, float duration, bool isSpeedBased, bool isRelative)
         {
             if (iKTarget == null) return;
             Quaternion target = Quaternion.Euler(eulerAngle[0], eulerAngle[1], eulerAngle[2]);
             IKTargetDoRotateQuaternion(target, duration, isSpeedBased, isRelative);
         }
         [RFUAPI]
-        private void IKTargetDoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
+        public void IKTargetDoRotateQuaternion(List<float> quaternion, float duration, bool isSpeedBased, bool isRelative)
         {
             if (iKTarget == null) return;
             Quaternion target = new Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
@@ -869,7 +869,7 @@ namespace RFUniverse.Attributes
 
         }
         [RFUAPI]
-        private void SetJointPosition(List<float> jointPositions)
+        public void SetJointPosition(List<float> jointPositions)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
@@ -886,7 +886,7 @@ namespace RFUniverse.Attributes
             SetJointPosition(jointPositions, ControlMode.Target);
         }
         [RFUAPI]
-        private void SetJointPositionDirectly(List<float> jointPositions)
+        public void SetJointPositionDirectly(List<float> jointPositions)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
@@ -991,8 +991,9 @@ namespace RFUniverse.Attributes
                 MoveableJoints[i].GetUnit().SetJointForce(jointDriveForce[i]);
             }
         }
+
         [RFUAPI]
-        private void SetJointDamping(List<float> jointDamping)
+        public void SetJointDamping(List<float> jointDamping)
         {
             if (MoveableJoints.Count != jointDamping.Count)
             {
@@ -1007,7 +1008,7 @@ namespace RFUniverse.Attributes
 
 
         [RFUAPI]
-        private void SetJointStiffness(List<float> jointStiffness)
+        public void SetJointStiffness(List<float> jointStiffness)
         {
             if (MoveableJoints.Count != jointStiffness.Count)
             {
@@ -1020,11 +1021,16 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void SetJointLimit(List<float> upper, List<float> lower)
+        public void SetJointLimit(List<float> upper, List<float> lower)
         {
-            if (MoveableJoints.Count != upper.Count || MoveableJoints.Count != lower.Count)
+            if (MoveableJoints.Count != upper.Count)
             {
                 Debug.LogError($"The number of target joint is {upper.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
+                return;
+            }
+            if (MoveableJoints.Count != lower.Count)
+            {
+                Debug.LogError($"The number of target joint is {lower.Count}, but the valid number of joints in robot arm is {MoveableJoints.Count}");
                 return;
             }
             for (int i = 0; i < MoveableJoints.Count; i++)
@@ -1033,7 +1039,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void SetJointVelocity(List<float> jointTargetVelocitys)
+        public void SetJointVelocity(List<float> jointTargetVelocitys)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
@@ -1048,7 +1054,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void SetIndexJointVelocity(int index, float jointTargetVelocity)
+        public void SetIndexJointVelocity(int index, float jointTargetVelocity)
         {
 #if BIOIK
             if (bioIK != null && bioIK.enabled)
@@ -1079,7 +1085,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void AddJointForce(List<List<float>> jointForces)
+        public void AddJointForce(List<List<float>> jointForces)
         {
             if (MoveableJoints.Count != jointForces.Count)
             {
@@ -1092,7 +1098,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void AddJointForceAtPosition(List<List<float>> jointForces, List<List<float>> forcesPosition)
+        public void AddJointForceAtPosition(List<List<float>> jointForces, List<List<float>> forcesPosition)
         {
             if (MoveableJoints.Count != jointForces.Count)
             {
@@ -1105,7 +1111,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        private void AddJointTorque(List<List<float>> jointTorques)
+        public void AddJointTorque(List<List<float>> jointTorques)
         {
             if (MoveableJoints.Count != jointTorques.Count)
             {
@@ -1118,7 +1124,7 @@ namespace RFUniverse.Attributes
             }
         }
         [RFUAPI]
-        void GetJointLocalPointFromWorld(int jointIndex, List<float> world)
+        public void GetJointLocalPointFromWorld(int jointIndex, List<float> world)
         {
             if (jointIndex >= joints.Count)
             {
@@ -1129,7 +1135,7 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        void GetJointWorldPointFromLocal(int jointIndex, List<float> local)
+        public void GetJointWorldPointFromLocal(int jointIndex, List<float> local)
         {
             if (jointIndex >= joints.Count)
             {
@@ -1140,7 +1146,7 @@ namespace RFUniverse.Attributes
         }
 
         [RFUAPI]
-        private void AddRoot6DOF(int newID)
+        public void AddRoot6DOF(int newID)
         {
             ControllerAttr root = Addressables.LoadAssetAsync<GameObject>("Root6DOF").WaitForCompletion().GetComponent<ControllerAttr>();
             root = Instantiate(root);

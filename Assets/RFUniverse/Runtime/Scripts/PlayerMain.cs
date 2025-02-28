@@ -29,7 +29,7 @@ namespace RFUniverse
     }
     public class PlayerMain : RFUniverseMain<PlayerMain>, IReceiveData, IDistributeData<string>, IHaveAPI, ICollectData
     {
-        public const string VERSION = "0.30.2.1";
+        public const string VERSION = "0.30.3";
 
         public string ip = "localhost";
         public int port = 5004;
@@ -107,7 +107,8 @@ namespace RFUniverse
             FixedDeltaTime = fixedDeltaTime;
             TimeScale = timeScale;
 
-            playerMainUI.Init();
+            if (playerMainUI.gameObject.activeSelf && playerMainUI.enabled)
+                playerMainUI.Init();
             playerMainUI.OnPendDone = () =>
             {
                 Debug.Log("PendDone");
@@ -462,7 +463,12 @@ namespace RFUniverse
         {
             CollectData.AddDataNextStep("load_done", null);
         }
-
+        [RFUAPI]
+        public void GetBuiltinAssetsList()
+        {
+            var locations = Addressables.LoadResourceLocationsAsync(name).WaitForCompletion();
+            CollectData.AddDataNextStep("builtin_assets_list", locations.Select(s => s.PrimaryKey).ToList());
+        }
         [RFUAPI]
         public void InstanceObject(string name, int id)
         {
