@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 namespace RFUniverse
 {
-    public class DebugWindow : VisualElement
+    [UxmlElement]
+    public partial class DebugWindow : VisualElement
     {
         ScrollView debugView;
-        public new class UxmlFactory : UxmlFactory<DebugWindow> { }
 
         public int DebugViewMaxItemCount
         {

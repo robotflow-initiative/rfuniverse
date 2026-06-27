@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UIElements;
 
 namespace RFUniverse
 {
-    public class ArticulationWindow : VisualElement
+    [UxmlElement]
+    public partial class ArticulationWindow : VisualElement
     {
         ScrollView articulationView;
         VisualTreeAsset articulationItem;
-        public new class UxmlFactory : UxmlFactory<ArticulationWindow> { }
 
         public ArticulationWindow()
         {

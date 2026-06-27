@@ -1,6 +1,7 @@
 ﻿using RFUniverse;
 using System;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum ControlMode
 {
@@ -122,6 +123,11 @@ public class ArticulationUnit : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public float GetJointTarget()
+    {
+        return articulationBody.xDrive.target;
     }
     public void SetJointPosition(float target)
     {

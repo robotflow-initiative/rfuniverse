@@ -683,13 +683,13 @@ namespace RFUniverse
         [RFUAPI]
         public void SetGroundPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
-            Ground.GetComponent<Collider>().material = new PhysicMaterial
+            Ground.GetComponent<Collider>().material = new PhysicsMaterial
             {
                 bounciness = bounciness,
                 dynamicFriction = dynamicFriction,
                 staticFriction = staticFriction,
-                frictionCombine = (PhysicMaterialCombine)frictionCombine,
-                bounceCombine = (PhysicMaterialCombine)bounceCombine
+                frictionCombine = (PhysicsMaterialCombine)frictionCombine,
+                bounceCombine = (PhysicsMaterialCombine)bounceCombine
             };
         }
         [RFUAPI]

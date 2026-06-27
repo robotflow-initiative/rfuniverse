@@ -136,9 +136,9 @@ namespace RFUniverse.Attributes
         public Transform graspPoint;
         public bool initBioIK = false;
         public bool iKTargetOrientation = true;
-        [NonSerialized]
+        //[NonSerialized]
         public Transform iKFollow;
-        [NonSerialized]
+        //[NonSerialized]
         public Transform iKTarget;
         public override void Init()
         {
@@ -245,22 +245,28 @@ namespace RFUniverse.Attributes
 
 
 #if BIOIK
-        private BioIK.BioIK bioIK = null;
+        public BioIK.BioIK bioIK = null;
 #endif
 
-        private Dictionary<Transform, ArticulationBody> iKCopy = new();
+        public Dictionary<Transform, ArticulationBody> iKCopy = new();
         public void InitBioIK()
         {
 #if BIOIK
             if (jointParameters.Count == 0) return;
 
             Transform first = GetComponentInChildren<ArticulationBody>().transform;
-            iKFollow = new GameObject("iKFollowPoint").transform;
+            if (iKFollow == null)
+            {
+                iKFollow = new GameObject("iKFollowPoint").transform;
+            }
             iKFollow.SetParent(graspPoint);
             iKFollow.localPosition = Vector3.zero;
             iKFollow.localRotation = Quaternion.identity;
 
-            iKTarget = new GameObject("iKTargetPoint").transform;
+            if (iKTarget == null)
+            {
+                iKTarget = new GameObject("iKTargetPoint").transform;
+            }
             iKTarget.parent = transform;
             ResetIKTarget();
 
@@ -480,7 +486,7 @@ namespace RFUniverse.Attributes
             // LocalQuaternion
             data["local_quaternions"] = Joints.Select(s => s.transform.localRotation).ToList();
             // Velocity
-            data["velocities"] = Joints.Select(s => s.velocity).ToList();
+            data["velocities"] = Joints.Select(s => s.linearVelocity).ToList();
             // AngularVelocity
             data["angular_velocities"] = Joints.Select(s => s.angularVelocity).ToList();
 
@@ -1183,10 +1189,10 @@ namespace RFUniverse.Attributes
                 script.SetJointUseGravity(!script.Root.useGravity);
             }
 
-            // if (GUILayout.Button("Add BioIK"))
-            // {
-            //     script.InitBioIK();
-            // }
+            if (GUILayout.Button("Add BioIK"))
+            {
+                script.InitBioIK();
+            }
         }
     }
 #endif

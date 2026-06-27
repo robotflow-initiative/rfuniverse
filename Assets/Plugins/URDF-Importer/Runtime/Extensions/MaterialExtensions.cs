@@ -53,13 +53,13 @@ namespace Unity.Robotics
         /// Used for creating the proper default material.
         public static RenderPipelineType GetRenderPipelineType()
         {
-            if (GraphicsSettings.renderPipelineAsset != null)
+            if (GraphicsSettings.defaultRenderPipeline != null)
             {
-                if (GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition"))
+                if (GraphicsSettings.defaultRenderPipeline.GetType().ToString().Contains("HighDefinition"))
                 {
                     return RenderPipelineType.HDRP;
                 }
-                else if (GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("Universal"))
+                else if (GraphicsSettings.defaultRenderPipeline.GetType().ToString().Contains("Universal"))
                 {
                     return RenderPipelineType.URP;
                 }

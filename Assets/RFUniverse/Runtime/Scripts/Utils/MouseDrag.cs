@@ -28,7 +28,7 @@ namespace RFUniverse
         {
             if (rigidbody == null) return;
             //rigidbody.position = sourcePos;
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.linearVelocity = Vector3.zero;
             draging = false;
         }
         void FixedUpdate()

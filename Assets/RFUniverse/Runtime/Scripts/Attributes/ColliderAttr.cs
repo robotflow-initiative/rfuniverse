@@ -47,9 +47,9 @@ namespace RFUniverse.Attributes
         public float bounciness = 0;
         public float dynamicFriction = 0.6f;
         public float staticFriction = 0.6f;
-        public PhysicMaterialCombine frictionCombine = PhysicMaterialCombine.Average;
-        public PhysicMaterialCombine bounceCombine = PhysicMaterialCombine.Average;
-        public PhysicMaterialData(PhysicMaterial physicMaterial)
+        public PhysicsMaterialCombine frictionCombine = PhysicsMaterialCombine.Average;
+        public PhysicsMaterialCombine bounceCombine = PhysicsMaterialCombine.Average;
+        public PhysicMaterialData(PhysicsMaterial physicMaterial)
         {
             if (physicMaterial == null) return;
             bounciness = physicMaterial.bounciness;
@@ -58,9 +58,9 @@ namespace RFUniverse.Attributes
             frictionCombine = physicMaterial.frictionCombine;
             bounceCombine = physicMaterial.bounceCombine;
         }
-        public PhysicMaterial ToPhysicMaterial()
+        public PhysicsMaterial ToPhysicMaterial()
         {
-            return new PhysicMaterial
+            return new PhysicsMaterial
             {
                 bounciness = bounciness,
                 dynamicFriction = dynamicFriction,
@@ -393,13 +393,13 @@ namespace RFUniverse.Attributes
         [RFUAPI]
         public void SetPhysicMaterial(float bounciness, float dynamicFriction, float staticFriction, int frictionCombine, int bounceCombine)
         {
-            PhysicMaterial material = new PhysicMaterial
+            PhysicsMaterial material = new PhysicsMaterial
             {
                 bounciness = bounciness,
                 dynamicFriction = dynamicFriction,
                 staticFriction = staticFriction,
-                frictionCombine = (PhysicMaterialCombine)frictionCombine,
-                bounceCombine = (PhysicMaterialCombine)bounceCombine
+                frictionCombine = (PhysicsMaterialCombine)frictionCombine,
+                bounceCombine = (PhysicsMaterialCombine)bounceCombine
             };
             foreach (var item in this.GetChildComponentFilter<Collider>())
             {

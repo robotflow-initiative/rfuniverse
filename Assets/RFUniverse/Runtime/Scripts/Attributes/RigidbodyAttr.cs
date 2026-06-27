@@ -101,7 +101,7 @@ namespace RFUniverse.Attributes
         public override void AddPermanentData(Dictionary<string, object> data)
         {
             base.AddPermanentData(data);
-            data["velocity"] = Rigidbody.velocity;
+            data["velocity"] = Rigidbody.linearVelocity;
             data["angular_velocity"] = Rigidbody.angularVelocity;
         }
 
@@ -113,12 +113,12 @@ namespace RFUniverse.Attributes
         [RFUAPI]
         private void SetDrag(float drag)
         {
-            Rigidbody.drag = drag;
+            Rigidbody.linearDamping = drag;
         }
         [RFUAPI]
         private void SetAngularDrag(float angularDrag)
         {
-            Rigidbody.angularDrag = angularDrag;
+            Rigidbody.angularDamping = angularDrag;
         }
         [RFUAPI]
         private void SetUseGravity(bool useGravity)
@@ -138,7 +138,7 @@ namespace RFUniverse.Attributes
             base.SetPosition(position, worldSpace);
             if (!Rigidbody.isKinematic)
             {
-                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.linearVelocity = Vector3.zero;
                 Rigidbody.angularVelocity = Vector3.zero;
             }
         }
@@ -147,7 +147,7 @@ namespace RFUniverse.Attributes
             base.SetRotation(rotation, worldSpace);
             if (!Rigidbody.isKinematic)
             {
-                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.linearVelocity = Vector3.zero;
                 Rigidbody.angularVelocity = Vector3.zero;
             }
         }
@@ -159,7 +159,7 @@ namespace RFUniverse.Attributes
         [RFUAPI]
         private void SetVelocity(List<float> velocity)
         {
-            Rigidbody.velocity = new Vector3(velocity[0], velocity[1], velocity[2]);
+            Rigidbody.linearVelocity = new Vector3(velocity[0], velocity[1], velocity[2]);
         }
         [RFUAPI]
         private void SetAngularVelocity(List<float> angularVelocity)
