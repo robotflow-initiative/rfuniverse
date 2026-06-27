@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="dax_arm_head_system" params="use_sim:=^|false use_fake_hardware:=^|false">
+    <ros2_control name="arm_head_hw_interface" type="system">
+      <xacro:unless value="$(arg use_sim)"> <!-- use_sim == false-->
+        <hardware>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+            <!-- <plugin>myactuator_hw_interface/MyActuatorHWInterface</plugin>
+            <param name="can_interface_name">can0</param> -->
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <plugin>myactuator_hw_interface/MyActuatorHWInterface</plugin>
+            <param name="can_interface_name">can0</param>
+          </xacro:unless>
+        </hardware>
+        
+        <!-- 头部关节 -->
+        <joint name="head_joint0">
+          <param name="can_id">6</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="head_joint1">
+          <param name="can_id">5</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+
+        <!-- 躯干关节 -->
+        <!-- <joint name="waist_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="waist_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="waist_joint2">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="waist_joint3">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint> -->
+        
+        <!-- 左臂关节 -->
+        <joint name="left_arm_joint0">  <!--ok-->
+          <param name="can_id">11</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint1">  <!--ok-->
+          <param name="can_id">12</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint2">  <!--ok-->
+          <param name="can_id">13</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint3">  <!--ok-->
+          <param name="can_id">14</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint4">  <!--ok-->
+          <param name="can_id">15</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint5">  <!--ok-->
+          <param name="can_id">16</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint6">   <!--ok-->
+          <param name="can_id">17</param>
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        
+        <!-- 右臂关节 -->
+        <!-- <joint name="right_arm_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint2">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint3">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint4">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint5">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint6">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint> -->
+      </xacro:unless>
+    </ros2_control>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,670 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="gripper" params="parent">
+        <joint name="ee_fixed_joint" type="fixed">
+            <origin rpy="0 3.1415926 1.57" xyz="0 0 -0.045"/>
+            <parent link="${parent}"/>
+            <child link="ee_link"/>
+        </joint>
+
+        <!-- <joint name="ee_fixed_joint" type="fixed">
+            <parent link="right_arm_link6"/>
+            <child link="ee_link"/>
+            <origin rpy="0 3.1415926 1.57" xyz="0 0 -0.045"/>
+        </joint> -->
+        <link name="ee_link">
+            <collision>
+            <geometry>
+                <box size="0.01 0.01 0.01"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="-0.01 0 0"/>
+            </collision>
+        </link>
+
+        <joint name="changing_base_joint" type="fixed">
+            <parent link="ee_link"/>
+            <child link="changing_base_link"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </joint>
+
+        <link
+            name="changing_base_link">
+            <inertial>
+            <origin
+                xyz="4.70472456312954E-05 0.0530718722977775 2.79114966746296E-05"
+                rpy="0 0 0" />
+            <mass
+                value="0.341125691217397" />
+            <inertia
+                ixx="0.000408936535578843"
+                ixy="-8.17805603348942E-09"
+                ixz="4.47952285190687E-10"
+                iyy="0.000189574747561623"
+                iyz="6.75047200853191E-08"
+                izz="0.000450553489757044" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/changing_base_link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/changing_base_link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <link
+            name="Left_1_Link">
+            <inertial>
+            <origin
+                xyz="-0.00216023278797164 0.0229756262778629 -1.09762301004467E-17"
+                rpy="0 0 0" />
+            <mass
+                value="0.00525185087473742" />
+            <inertia
+                ixx="1.29915366945759E-06"
+                ixy="1.08158456860528E-07"
+                ixz="-4.31171731173373E-25"
+                iyy="1.58980207971059E-07"
+                iyz="3.90492034933371E-24"
+                izz="1.24592330423507E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_1_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_1_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Left_1_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.0301399999999905 0 0.0921500000000052"
+            rpy="1.5707963267949 0 3.14159265358979" />
+            <parent
+            link="changing_base_link" />
+            <child
+            link="Left_1_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="-1"
+            upper="0"
+            effort="2"
+            velocity="1000" />
+        </joint>
+        <link
+            name="Left_in_Link">
+            <inertial>
+            <origin
+                xyz="-0.00517225975736366 -0.0141688392037855 2.28175648787779E-11"
+                rpy="0 0 0" />
+            <mass
+                value="0.00383708766079197" />
+            <inertia
+                ixx="4.84459849187622E-07"
+                ixy="-1.52555157158069E-07"
+                ixz="1.78346399549437E-15"
+                iyy="1.29068562817071E-07"
+                iyz="3.96861368131531E-15"
+                izz="5.23972721354722E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_in_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_in_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Left_in_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.00224663866182076 0.0238946147638527 0"
+            rpy="0 0 0" />
+            <parent
+            link="Left_1_Link" />
+            <child
+            link="Left_in_Link" />
+            <axis
+            xyz="0 0 -1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Left_1_Joint"
+            multiplier="-0.2"
+            offset="0" />
+        </joint>
+        <link
+            name="Left_up_Link">
+            <inertial>
+            <origin
+                xyz="-0.00917616465842171 0.0156880031659625 -3.65636678779896E-10"
+                rpy="0 0 0" />
+            <mass
+                value="0.00430244272808627" />
+            <inertia
+                ixx="7.56986881810795E-07"
+                ixy="2.63063421663285E-07"
+                ixz="-1.93590480455415E-14"
+                iyy="2.06452748106453E-07"
+                iyz="6.99695551698427E-15"
+                izz="8.68010190953914E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_up_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_up_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Left_up_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.00514854693398816 0.0547584921672448 0"
+            rpy="0 0 0" />
+            <parent
+            link="Left_1_Link" />
+            <child
+            link="Left_up_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Left_1_Joint"
+            multiplier="-1"
+            offset="0" />
+        </joint>
+        <link
+            name="Left_Pad_Link">
+            <inertial>
+            <origin
+                xyz="0.00262072022484967 0.00281674085390529 5.27359799591725E-18"
+                rpy="0 0 0" />
+            <mass
+                value="0.00691090963852968" />
+            <inertia
+                ixx="1.18827725493549E-06"
+                ixy="-5.56693887213329E-09"
+                ixz="1.50559936447724E-23"
+                iyy="3.33956076985263E-07"
+                iyz="4.55102796714927E-23"
+                izz="8.83299917486064E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_Pad_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_Pad_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Left_Pad_Joint"
+            type="fixed">
+            <origin
+            xyz="-0.0240101905072233 0.0412440692922833 0"
+            rpy="0 0 0" />
+            <parent
+            link="Left_up_Link" />
+            <child
+            link="Left_Pad_Link" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+        <link
+            name="Left_2_Link">
+            <inertial>
+            <origin
+                xyz="-0.00246967319433728 0.0262385171904811 5.8970500137674E-18"
+                rpy="0 0 0" />
+            <mass
+                value="0.0063217055921517" />
+            <inertia
+                ixx="1.33702073460728E-06"
+                ixy="1.08817352659831E-07"
+                ixz="-8.33055887051683E-25"
+                iyy="1.91156253299555E-07"
+                iyz="-1.54727299050089E-23"
+                izz="1.25943274834109E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_2_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Left_2_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Left_2_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.0159999999999588 0 0.109000000000001"
+            rpy="1.5707963267949 0 3.14159265358979" />
+            <parent
+            link="changing_base_link" />
+            <child
+            link="Left_2_Link" />
+            <axis
+            xyz="0 0 -1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Left_1_Joint"
+            multiplier="-1"
+            offset="0" />
+        </joint>
+        <link
+            name="Right_2_Link">
+            <inertial>
+            <origin
+                xyz="-0.0024696731943614 0.0262385171904327 2.02881633696341E-17"
+                rpy="0 0 0" />
+            <mass
+                value="0.0063217055921517" />
+            <inertia
+                ixx="1.33702073460727E-06"
+                ixy="1.0881735265983E-07"
+                ixz="-2.51033403323158E-23"
+                iyy="1.91156253299555E-07"
+                iyz="-6.99424735929351E-24"
+                izz="1.25943274834109E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_2_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_2_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Right_2_Joint"
+            type="revolute">
+            <origin
+            xyz="0.015999999999983 0 0.109000000000049"
+            rpy="1.5707963267949 0 0" />
+            <parent
+            link="changing_base_link" />
+            <child
+            link="Right_2_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Left_2_Joint"
+            multiplier="-1"
+            offset="0" />
+        </joint>
+        <link
+            name="Right_1_Link">
+            <inertial>
+            <origin
+                xyz="-0.00216023278800141 0.0229756262778828 2.4551403571316E-18"
+                rpy="0 0 0" />
+            <mass
+                value="0.00525185087473742" />
+            <inertia
+                ixx="1.29915366945759E-06"
+                ixy="1.08158456860528E-07"
+                ixz="-1.72627385715235E-23"
+                iyy="1.5898020797106E-07"
+                iyz="-2.00765453344463E-23"
+                izz="1.24592330423507E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_1_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_1_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Right_1_Joint"
+            type="revolute">
+            <origin
+            xyz="0.03014 0 0.09215"
+            rpy="1.5708 0 0" />
+            <parent
+            link="changing_base_link" />
+            <child
+            link="Right_1_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="0"
+            upper="1"
+            effort="2"
+            velocity="1000" />
+            <mimic
+            joint="Left_1_Joint"
+            multiplier="1"
+            offset="0" />
+        </joint>
+        <link
+            name="Right_in_Link">
+            <inertial>
+            <origin
+                xyz="-0.00517225975715395 -0.0141688392040697 2.28175753011522E-11"
+                rpy="0 0 0" />
+            <mass
+                value="0.00383708766079197" />
+            <inertia
+                ixx="4.84459849187621E-07"
+                ixy="-1.52555157158068E-07"
+                ixz="1.78346401564569E-15"
+                iyy="1.29068562817071E-07"
+                iyz="3.96861372763835E-15"
+                izz="5.23972721354722E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_in_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_in_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Right_in_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.00224663866206024 0.0238946147641568 0"
+            rpy="0 0 0" />
+            <parent
+            link="Right_1_Link" />
+            <child
+            link="Right_in_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Right_1_Joint"
+            multiplier="0.2"
+            offset="0" />
+        </joint>
+        <link
+            name="Right_up_Link">
+            <inertial>
+            <origin
+                xyz="-0.00917616465858192 0.0156880031655183 -3.65636665872006E-10"
+                rpy="0 0 0" />
+            <mass
+                value="0.00430244272808627" />
+            <inertia
+                ixx="7.56986881810797E-07"
+                ixy="2.63063421663284E-07"
+                ixz="-1.93590479997781E-14"
+                iyy="2.06452748106451E-07"
+                iyz="6.99695540210408E-15"
+                izz="8.68010190953914E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_up_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_up_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Right_up_Joint"
+            type="revolute">
+            <origin
+            xyz="-0.00514854693385725 0.054758492167709 0"
+            rpy="0 0 0" />
+            <parent
+            link="Right_1_Link" />
+            <child
+            link="Right_up_Link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="0"
+            upper="0"
+            effort="0"
+            velocity="0" />
+            <mimic
+            joint="Right_1_Joint"
+            multiplier="-1"
+            offset="0" />
+        </joint>
+        <link
+            name="Right_Pad_Link">
+            <inertial>
+            <origin
+                xyz="0.00262072022483957 0.00281674085389466 2.27701335670909E-17"
+                rpy="0 0 0" />
+            <mass
+                value="0.00691090963852968" />
+            <inertia
+                ixx="1.18827725493549E-06"
+                ixy="-5.56693887213615E-09"
+                ixz="-6.20813102020294E-23"
+                iyy="3.33956076985263E-07"
+                iyz="-5.88149004677526E-23"
+                izz="8.83299917486064E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_Pad_Link.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="1 1 1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://daxbot_description/meshes/x7_pro/gripper/Right_Pad_Link.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="Right_Pad_Joint"
+            type="fixed">
+            <origin
+            xyz="-0.0240101905073733 0.0412440692918496 0"
+            rpy="0 0 0" />
+            <parent
+            link="Right_up_Link" />
+            <child
+            link="Right_Pad_Link" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+    </xacro:macro>
+</robot>

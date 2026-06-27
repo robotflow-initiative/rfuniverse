@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <ros2_control name="dax_robot_hw_interface" type="system">
+        <hardware>
+          <!-- <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin> -->
+          <plugin>mock_components/GenericSystem</plugin>
+        </hardware>
+        
+        <!-- 躯干关节 -->
+        <joint name="waist_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="waist_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="waist_joint2">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="head_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        
+        <!-- 左臂关节 -->
+        <joint name="left_arm_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="left_arm_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="left_arm_joint2">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="left_arm_joint3">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="left_arm_joint4">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="left_arm_joint5">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        
+        <!-- 右臂关节 -->
+        <joint name="right_arm_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint2">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint3">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint4">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+        <joint name="right_arm_joint5">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint>
+    </ros2_control>
+
+</robot>

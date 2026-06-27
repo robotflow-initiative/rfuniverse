@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="vacuum" params="parent">
+        <link name="left_tool0">
+            <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <sphere radius="0.005"/>
+            </geometry>
+            <material name="tool_end_material">
+                <color rgba="0 0 1 1"/>
+            </material>
+            </visual>
+        </link>
+
+        <joint name="left_arm_link6_to_tool0" type="fixed">
+            <parent link="${parent}"/>
+            <child link="left_tool0"/>
+            <origin xyz="0 0 -0.19" rpy="0 0 0"/>
+        </joint>
+    </xacro:macro>
+</robot>

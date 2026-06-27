@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="dax_robot">
+
+  <link name="odom"/>
+
+  <!-- 中间链接，用于X方向移动 -->
+  <link name="base_footprint_x">
+  </link>
+
+  <!-- X方向平移关节 -->
+  <joint name="planar_joint_x" type="prismatic">
+    <parent link="odom"/>
+    <child link="base_footprint_x"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-10" upper="10" effort="100" velocity="1.0"/>
+  </joint>
+
+  <!-- 中间链接，用于Y方向移动 -->
+  <link name="base_footprint_y">
+  </link>
+
+  <!-- Y方向平移关节 -->
+  <joint name="planar_joint_y" type="prismatic">
+    <parent link="base_footprint_x"/>
+    <child link="base_footprint_y"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-10" upper="10" effort="100" velocity="1.0"/>
+  </joint>
+
+  <link name="base_footprint">
+  </link>
+
+  <!-- 旋转关节 -->
+  <joint name="planar_joint_theta" type="continuous">
+    <parent link="base_footprint_y"/>
+    <child link="base_footprint"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="1.0"/>
+  </joint>
+  
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+  </joint>
+
+<!--
+start of body
+-->
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0199758465581862 -0.000476680975537062 0.0741798287515326"
+        rpy="0 0 0" />
+      <mass
+        value="5.26030663710953" />
+      <inertia
+        ixx="0.117173612995551"
+        ixy="-3.90818763831187E-05"
+        ixz="-0.00258232862499205"
+        iyy="0.0683472943336863"
+        iyz="0.000228112341163031"
+        izz="0.159300382787253" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="waist_Link0">
+    <inertial>
+      <origin
+        xyz="0.00921829433569832 -0.0190121991943229 0.19029216018309"
+        rpy="0 0 0" />
+      <mass
+        value="1.25091719578811" />
+      <inertia
+        ixx="0.0347409500117881"
+        ixy="-3.68884396208037E-08"
+        ixz="1.53440761157751E-05"
+        iyy="0.0351401069077143"
+        iyz="3.38274858982882E-07"
+        izz="0.00266884371885142" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint0"
+    type="revolute">
+    <origin
+      xyz="0.10509 0 0.145"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="waist_Link0" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.326"
+      upper="0.035"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="waist_Link1">
+    <inertial>
+      <origin
+        xyz="-0.00012310874991843 0.0288577700350788 0.19119389248674"
+        rpy="0 0 0" />
+      <mass
+        value="0.759114816596056" />
+      <inertia
+        ixx="0.0210828497229147"
+        ixy="5.88769214204605E-07"
+        ixz="-1.18680669061345E-05"
+        iyy="0.0221740390653157"
+        iyz="9.02132029677209E-06"
+        izz="0.00113985247586206" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.38"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link0" />
+    <child
+      link="waist_Link1" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.017"
+      upper="2.758"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="waist_Link2">
+    <inertial>
+      <origin
+        xyz="-4.57765791492259E-06 0.00870661306040077 0.0376093715586312"
+        rpy="0 0 0" />
+      <mass
+        value="0.974771282711181" />
+      <inertia
+        ixx="0.00655961029116068"
+        ixy="-3.50002035854139E-09"
+        ixz="4.92529036586283E-07"
+        iyy="0.00613888584515633"
+        iyz="0.000380322916319471"
+        izz="0.00512900017261133" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.41"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link1" />
+    <child
+      link="waist_Link2" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.570"
+      upper="0.174"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="waist_Link3">
+    <inertial>
+      <origin
+        xyz="0.00332654327000487 2.40839879697528E-06 0.123951959586001"
+        rpy="0 0 0" />
+      <mass
+        value="1.9172730183254" />
+      <inertia
+        ixx="0.0324424282271105"
+        ixy="1.37556861942238E-07"
+        ixz="1.26189621288836E-05"
+        iyy="0.0206134121517562"
+        iyz="1.02786820410411E-06"
+        izz="0.0157778214733756" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7_lite/waist_Link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint3"
+    type="revolute">
+    <origin
+      xyz="0 0 0.1917"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link2" />
+    <child
+      link="waist_Link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.571"
+      upper="1.571"
+      effort="0"
+      velocity="0" />
+  </joint>
+ <!--
+End of body
+-->
+</robot>

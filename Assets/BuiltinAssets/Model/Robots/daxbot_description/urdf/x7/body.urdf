@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="daxbot">
+  <!-- <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.01106 -6.5223E-05 0.18029"
+        rpy="0 0 0" />
+      <mass
+        value="5.8356" />
+      <inertia
+        ixx="0.21232"
+        ixy="-0.00014712"
+        ixz="-0.0017537"
+        iyy="0.11784"
+        iyz="9.4315E-05"
+        izz="0.26779" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link> -->
+  <link
+    name="calf_Link">
+    <inertial>
+      <origin
+        xyz="0.00011358 -0.00016559 0.19842"
+        rpy="0 0 0" />
+      <mass
+        value="0.82864" />
+      <inertia
+        ixx="0.014118"
+        ixy="-2.8469E-09"
+        ixz="-2.0629E-05"
+        iyy="0.014416"
+        iyz="2.8396E-10"
+        izz="0.0013716" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/calf_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/calf_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint0"
+    type="revolute">
+    <origin
+      xyz="0.16 0 0.15"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="calf_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.01745"
+      upper="1.16937"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="thigh_Link">
+    <inertial>
+      <origin
+        xyz="7.0604E-05 -0.01357 0.22946"
+        rpy="0 0 0" />
+      <mass
+        value="2.5793" />
+      <inertia
+        ixx="0.066603"
+        ixy="-1.1162E-06"
+        ixz="-1.9664E-05"
+        iyy="0.069288"
+        iyz="8.5475E-07"
+        izz="0.0029954" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/thigh_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/thigh_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.35"
+      rpy="0 0 0" />
+    <parent
+      link="calf_Link" />
+    <child
+      link="thigh_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.0349"
+      upper="2.25147"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="waist_Link">
+    <inertial>
+      <origin
+        xyz="0.0065126 -0.00063671 0.39441"
+        rpy="0 0 0" />
+      <mass
+        value="2.8115" />
+      <inertia
+        ixx="0.087771"
+        ixy="1.1738E-07"
+        ixz="0.0002321"
+        iyy="0.076053"
+        iyz="3.5114E-06"
+        izz="0.01815" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/waist_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/waist_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="waist_joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.45"
+      rpy="0 0 0" />
+    <parent
+      link="thigh_Link" />
+    <child
+      link="waist_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-2.07694"
+      upper="1.55334"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+
+  <!-- ================================== -->
+  <!-- 头部结构 (From second URDF)       -->
+  <!-- ================================== -->
+  <link
+    name="head_Link">
+    <inertial>
+      <origin
+        xyz="-0.00095505 0.00040112 0.14936"
+        rpy="0 0 0" />
+      <mass
+        value="0.60028" />
+      <inertia
+        ixx="0.0050163"
+        ixy="-7.1648E-08"
+        ixz="0.00014104"
+        iyy="0.0032549"
+        iyz="-3.1847E-07"
+        izz="0.0025025" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/head_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/head_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="head_joint0"
+    type="revolute">
+    <origin
+      xyz="0 0 0.6847"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link" />
+    <child
+      link="head_Link" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-1.047"
+      upper="0.175"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  
+  <!-- ================================== -->
+  <!-- 左臂结构 (From second URDF)       -->
+  <!-- ================================== -->
+  <link
+    name="left_arm_link0">
+    <inertial>
+      <origin
+        xyz="-0.00090723 0.032321 0.0011032"
+        rpy="0 0 0" />
+      <mass
+        value="0.045566" />
+      <inertia
+        ixx="3.5603E-05"
+        ixy="4.9454E-10"
+        ixz="-4.1542E-10"
+        iyy="2.7656E-05"
+        iyz="1.518E-07"
+        izz="5.5859E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint0"
+    type="revolute">
+    <origin
+      xyz="0 0.164 0.597"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link" />
+    <child
+      link="left_arm_link0" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.356"
+      upper="0.785"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="left_arm_link1">
+    <inertial>
+      <origin
+        xyz="-0.0013249 0.00020451 -0.055669"
+        rpy="0 0 0" />
+      <mass
+        value="0.20458" />
+      <inertia
+        ixx="0.00017379"
+        ixy="2.0821E-08"
+        ixz="4.5526E-07"
+        iyy="0.00015037"
+        iyz="-1.118E-06"
+        izz="8.4485E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint1"
+    type="revolute">
+    <origin
+      xyz="5E-05 0.0495 0"
+      rpy="0 0 0" />
+    <parent
+      link="left_arm_link0" />
+    <child
+      link="left_arm_link1" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.2094"
+      upper="2.61799"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="left_arm_link2">
+    <inertial>
+      <origin
+        xyz="4.577E-05 0.00039193 -0.080575"
+        rpy="0 0 0" />
+      <mass
+        value="0.11011" />
+      <inertia
+        ixx="0.00034066"
+        ixy="-1.1668E-09"
+        ixz="-2.4085E-07"
+        iyy="0.0002912"
+        iyz="-3.6168E-08"
+        izz="7.1265E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint2"
+    type="revolute">
+    <origin
+      xyz="0.00072 0 -0.0975"
+      rpy="0 0 0" />
+    <parent
+      link="left_arm_link1" />
+    <child
+      link="left_arm_link2" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.094395"
+      upper="2.094395"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="left_arm_link3">
+    <inertial>
+      <origin
+        xyz="-0.00069588 -1.7427E-06 -0.044786"
+        rpy="0 0 0" />
+      <mass
+        value="0.061153" />
+      <inertia
+        ixx="8.4386E-05"
+        ixy="1.8583E-08"
+        ixz="2.1039E-06"
+        iyy="0.00010116"
+        iyz="-3.4802E-07"
+        izz="3.4887E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint3"
+    type="revolute">
+    <origin
+      xyz="0.0001909 -2.0643E-05 -0.1533"
+      rpy="0 0 0" />
+    <parent
+      link="left_arm_link2" />
+    <child
+      link="left_arm_link3" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-2.094395"
+      upper="0.2094"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="left_arm_link4">
+    <inertial>
+      <origin
+        xyz="1.8276E-06 0.00015461 -0.064353"
+        rpy="0 0 0" />
+      <mass
+        value="0.090698" />
+      <inertia
+        ixx="0.00016062"
+        ixy="4.1188E-10"
+        ixz="-5.5493E-10"
+        iyy="0.00020269"
+        iyz="3.2275E-07"
+        izz="6.1791E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint4"
+    type="revolute">
+    <origin
+      xyz="5E-05 1.5E-05 -0.0976"
+      rpy="0 0 0" />
+    <parent
+      link="left_arm_link3" />
+    <child
+      link="left_arm_link4" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.094395"
+      upper="2.094395"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="left_arm_link5">
+    <inertial>
+      <origin
+        xyz="0.001079 -0.00041721 -0.023702"
+        rpy="0 0 0" />
+      <mass
+        value="0.0083809" />
+      <inertia
+        ixx="7.5658E-07"
+        ixy="-4.6687E-19"
+        ixz="6.2324E-18"
+        iyy="3.1872E-06"
+        iyz="-1.2941E-11"
+        izz="3.0429E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/left_arm_link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_arm_joint5"
+    type="revolute">
+    <origin
+      xyz="-0.0009609 5E-05 -0.12907"
+      rpy="0 0 0" />
+    <parent
+      link="left_arm_link4" />
+    <child
+      link="left_arm_link5" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+
+  <link name="left_tool0">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+      <material name="left_tool_end_material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="left_arm_link5_to_left_tool0" type="fixed">
+    <parent link="left_arm_link5"/>
+    <child link="left_tool0"/>
+    <origin xyz="0 0 -0.11" rpy="0 0 0"/>
+  </joint>
+  
+
+  
+  <!-- ================================== -->
+  <!-- 右臂结构 (From second URDF)       -->
+  <!-- ================================== -->
+  <link
+    name="right_arm_link0">
+    <inertial>
+      <origin
+        xyz="0.00080507 -0.028313 0.00090737"
+        rpy="0 0 0" />
+      <mass
+        value="0.055401" />
+      <inertia
+        ixx="3.638E-05"
+        ixy="-5.4877E-11"
+        ixz="-2.7649E-11"
+        iyy="2.8995E-05"
+        iyz="-1.518E-07"
+        izz="5.6636E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link0.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link0.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint0"
+    type="revolute">
+    <origin
+      xyz="0 -0.164 0.597"
+      rpy="0 0 0" />
+    <parent
+      link="waist_Link" />
+    <child
+      link="right_arm_link0" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-0.785"
+      upper="2.967"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="right_arm_link1">
+    <inertial>
+      <origin
+        xyz="-0.00065093 -0.00016414 -0.058491"
+        rpy="0 0 0" />
+      <mass
+        value="0.19474" />
+      <inertia
+        ixx="0.00017245"
+        ixy="1.9893E-08"
+        ixz="-4.5943E-07"
+        iyy="0.00014959"
+        iyz="1.1177E-06"
+        izz="8.3706E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint1"
+    type="revolute">
+    <origin
+      xyz="5E-05 -0.0495 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_arm_link0" />
+    <child
+      link="right_arm_link1" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-2.61799"
+      upper="0.2094"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="right_arm_link2">
+    <inertial>
+      <origin
+        xyz="-3.1505E-06 -0.00039945 -0.080575"
+        rpy="0 0 0" />
+      <mass
+        value="0.11011" />
+      <inertia
+        ixx="0.00034067"
+        ixy="2.8142E-09"
+        ixz="-2.4121E-07"
+        iyy="0.0002912"
+        iyz="-3.6376E-08"
+        izz="7.1269E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint2"
+    type="revolute">
+    <origin
+      xyz="-0.0012018 0 -0.0975"
+      rpy="0 0 0" />
+    <parent
+      link="right_arm_link1" />
+    <child
+      link="right_arm_link2" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.61799"
+      upper="2.094395"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="right_arm_link3">
+    <inertial>
+      <origin
+        xyz="-0.00036243 -1.0155E-05 -0.057235"
+        rpy="0 0 0" />
+      <mass
+        value="0.12586" />
+      <inertia
+        ixx="0.00010582"
+        ixy="1.4687E-08"
+        ixz="2.1029E-06"
+        iyy="0.00012293"
+        iyz="-3.5666E-07"
+        izz="4.7397E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint3"
+    type="revolute">
+    <origin
+      xyz="0.0001909 2.0643E-05 -0.1533"
+      rpy="0 0 0" />
+    <parent
+      link="right_arm_link2" />
+    <child
+      link="right_arm_link3" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-1.658"
+      upper="2.35619"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="right_arm_link4">
+    <inertial>
+      <origin
+        xyz="6.7558E-06 -0.00018455 -0.065453"
+        rpy="0 0 0" />
+      <mass
+        value="0.090699" />
+      <inertia
+        ixx="0.00016062"
+        ixy="3.7106E-10"
+        ixz="2.3314E-10"
+        iyy="0.00020269"
+        iyz="-3.2278E-07"
+        izz="6.1791E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint4"
+    type="revolute">
+    <origin
+      xyz="0 1.5E-05 -0.0965"
+      rpy="0 0 0" />
+    <parent
+      link="right_arm_link3" />
+    <child
+      link="right_arm_link4" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-2.094395"
+      upper="2.094395"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  <link
+    name="right_arm_link5">
+    <inertial>
+      <origin
+        xyz="-0.0010109 7.5073E-08 -0.023904"
+        rpy="0 0 0" />
+      <mass
+        value="0.0083809" />
+      <inertia
+        ixx="7.5658E-07"
+        ixy="-2.3334E-19"
+        ixz="6.2482E-18"
+        iyy="3.1872E-06"
+        iyz="-1.2941E-11"
+        izz="3.0429E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://daxbot_description/meshes/x7/right_arm_link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_arm_joint5"
+    type="revolute">
+    <origin
+      xyz="0.0010109 -3E-05 -0.13018"
+      rpy="0 0 0" />
+    <parent
+      link="right_arm_link4" />
+    <child
+      link="right_arm_link5" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="3.0" />
+  </joint>
+  
+  <link name="tool0">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+      <material name="tool_end_material">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="right_arm_link5_to_tool0" type="fixed">
+    <parent link="right_arm_link5"/>
+    <child link="tool0"/>
+    <origin xyz="0 0 -0.19" rpy="0 0 0"/>
+  </joint>
+
+</robot>

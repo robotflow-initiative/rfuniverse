@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="dax_robot">
+    <xacro:arg name="use_sim" default="false" />
+    <xacro:arg name="use_fake_hardware" default="false" />
+    <xacro:arg name="prefix" default="" />
+    <xacro:arg name="model" default="x7_pro" />
+
+    <!-- Constants for wheel mechanical parameters -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+
+    <xacro:property name="chassis_radius" value="0.24135"/>       <!--底盘半径-->
+    <xacro:property name="wheel_radius" value="0.107"/>         <!--轮子半径-->
+    <xacro:property name="robot_height" value="0.09575"/>          <!--底盘高度-->
+
+    <!--ROBOT URDF-->
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/body.urdf"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/wheel.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/gripper.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/brain_hand.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/end_effertor.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/materials.urdf.xacro"/>
+    <xacro:wheel parent="base_link" suffix="1" theta="${PI}"/>
+    <xacro:wheel parent="base_link" suffix="2" theta="${-PI/3}"/>
+    <xacro:wheel parent="base_link" suffix="3" theta="${PI/3}"/>
+    <!-- todo : 进一步抽象，启动文件可配置末端参数-->
+    <!-- <xacro:gripper parent="right_arm_link6"/>  -->
+    <!-- <xacro:vacuum parent="left_arm_link6"/> -->
+    <xacro:left_hand parent="left_arm_link6"/>
+    <xacro:right_hand parent="right_arm_link6"/>
+    <!--ROBOT ROS2 CONTROL URDF-->
+    <!-- <xacro:include filename="$(find daxbot_description)/urdf/gazebo.urdf.xacro"/> -->
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/base_ros2_control.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/body_ros2_control.urdf.xacro"/>
+    <!-- <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/arm_head_ros2_control.urdf.xacro"/> -->
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/fake_planar_joint_ros2control.urdf.xacro"/>
+    <!--底盘-->
+    <xacro:dax_base_system1 use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    <xacro:dax_base_system2 use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    <!--腰部躯干-->
+    <xacro:dax_waist_system use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    <!--头臂-->
+    <xacro:dax_arm_head_system use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    <!--末端-->
+    <!-- <xacro:dax_ee_system use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/> -->
+</robot>

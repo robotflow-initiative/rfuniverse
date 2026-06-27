@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <ros2_control name="fake_planar_joint_hw_interface" type="system">
+        <hardware>
+          <plugin>fake_planar_joint_interface/FakePlanarJointInterface</plugin>
+          <param name="main_loop_update_rate">100</param>
+          <param name="desired_hw_update_rate">50</param>
+          <param name="linear_clamp">0.5</param>
+          <param name="angular_clamp">1.0</param>
+          <param name="max_linear_acc">1.0</param>
+          <param name="max_angular_acc">1.0</param>
+          <param name="translation_deadband">0.05</param>
+          <param name="rotation_deadband">0.05</param>
+          <param name="Kp">1.0</param>
+          <param name="Ki">0.0</param>
+          <param name="Kd">0.0</param>
+        </hardware>
+        
+        <!-- omni chassis -->
+        <joint name="planar_joint_x">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="planar_joint_y">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="planar_joint_theta">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+    </ros2_control>
+
+</robot>

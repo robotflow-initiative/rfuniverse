@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="dax_waist_system" params="use_sim:=^|false use_fake_hardware:=^|false">
+    <ros2_control name="dax_robot_hw_interface" type="system">
+      <xacro:unless value="$(arg use_sim)"> <!-- use_sim == false-->
+        <hardware>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+            <!-- <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin> -->
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin>
+          </xacro:unless>
+        </hardware>
+
+        <!-- 躯干关节 -->
+        <joint name="waist_joint0">
+          <command_interface name="position">
+            <param name="min">-1.187</param>
+            <param name="max">0.035</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint1"> 
+          <command_interface name="position">
+            <param name="min">-0.052</param>
+            <param name="max">2.39</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint2">
+          <command_interface name="position">
+            <param name="min">-2.094</param>
+            <param name="max">1.57</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint3">
+          <command_interface name="position">
+            <param name="min">-0.785</param>
+            <param name="max">0.785</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:unless>
+    </ros2_control>
+  </xacro:macro>
+</robot>

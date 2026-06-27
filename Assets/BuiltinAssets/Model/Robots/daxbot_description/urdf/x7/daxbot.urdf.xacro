@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="daxbot">
+    <xacro:arg name="use_sim" default="false" />
+    <xacro:arg name="use_fake_hardware" default="false" />
+    <xacro:arg name="prefix" default="" />
+    <xacro:arg name="model" default="x7" />
+
+    <!-- Constants for wheel mechanical parameters -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+
+    <xacro:property name="chassis_radius" value="0.27735"/>       <!--底盘半径-->
+    <xacro:property name="wheel_radius" value="0.107"/>         <!--轮子半径-->
+    <xacro:property name="robot_height" value="0.09575"/>          <!--底盘高度-->
+
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/body.urdf"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/wheel.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/materials.urdf.xacro"/>
+    <!-- <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/gazebo.urdf.xacro"/> -->
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/base_ros2_control.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/body_ros2_control.urdf.xacro"/>
+    <xacro:include filename="$(find daxbot_description)/urdf/$(arg model)/fake_planar_joint_ros2control.urdf.xacro"/>
+
+    <link name="base_footprint"></link>
+
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_footprint"/>
+        <child link="base_link" />
+    </joint>
+
+    <link
+      name="base_link">
+      <inertial>
+        <origin
+          xyz="0.01106 -6.5223E-05 0.18029"
+          rpy="0 0 0" />
+        <mass
+          value="5.8356" />
+        <inertia
+          ixx="0.21232"
+          ixy="-0.00014712"
+          ixz="-0.0017537"
+          iyy="0.11784"
+          iyz="9.4315E-05"
+          izz="0.26779" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://daxbot_description/meshes/x7/base_link.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.75294 0.75294 0.75294 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://daxbot_description/meshes/x7/base_link.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <xacro:dax_base_system1 use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+    <xacro:dax_base_system2 use_sim="$(arg use_sim)" use_fake_hardware="$(arg use_fake_hardware)"/>
+
+    <xacro:wheel parent="base_link" suffix="1" theta="${PI}"/>
+    <xacro:wheel parent="base_link" suffix="2" theta="${-PI/3}"/>
+    <xacro:wheel parent="base_link" suffix="3" theta="${PI/3}"/>
+</robot>

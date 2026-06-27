@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="dax_arm_head_system" params="use_sim:=^|false use_fake_hardware:=^|false">
+    <ros2_control name="arm_head_hw_interface" type="system">
+      <xacro:unless value="$(arg use_sim)"> <!-- use_sim == false-->
+        <hardware>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+            <!-- <plugin>myactuator_hw_interface/MyActuatorHWInterface</plugin>
+            <param name="can_interface_name">can1</param> -->
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <!-- <plugin>mock_components/GenericSystem</plugin> -->
+            <plugin>myactuator_hw_interface/MyActuatorHWInterface</plugin>
+            <param name="can_interface_name">can2</param>
+          </xacro:unless>
+        </hardware>
+        
+        <!-- 头部关节 -->
+        <joint name="head_joint0">
+          <param name="can_id">5</param>
+          <command_interface name="position">
+            <param name="min">-1.0472</param>
+            <param name="max">1.0472</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="head_joint1">
+          <param name="can_id">6</param>
+          <command_interface name="position">
+            <param name="min">-0.2443</param>
+            <param name="max">0.6981</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        
+        <!-- 左臂关节 -->
+        <joint name="left_arm_joint0">  <!--ok-->
+          <param name="can_id">11</param>     <!--0x14B-->
+          <command_interface name="position">
+            <param name="min">-2.356</param>
+            <param name="max">1.2217</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint1">  <!--ok-->
+          <param name="can_id">12</param>   <!--0x14C-->
+          <command_interface name="position">
+            <param name="min">-0.209</param>
+            <param name="max">2.618</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint2">  <!--ok-->
+          <param name="can_id">13</param>   <!--0x14D-->
+          <command_interface name="position">
+            <param name="min">-2.618</param>
+            <param name="max">2.618</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint3">  <!--ok-->
+          <param name="can_id">14</param>   <!--0x14E-->
+          <command_interface name="position">
+            <param name="min">-2.3562</param>
+            <param name="max">0.209</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint4">  <!--ok-->
+          <param name="can_id">15</param>   <!--0x14F-->
+          <command_interface name="position">
+            <param name="min">-2.618</param>
+            <param name="max">2.618</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint5">  <!--ok-->
+          <param name="can_id">16</param>   <!--0x150-->
+          <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="left_arm_joint6">   <!--ok-->
+          <param name="can_id">17</param>   <!--0x151-->
+          <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        
+        <!-- 右臂关节 -->
+        <joint name="right_arm_joint0">
+          <param name="can_id">21</param>   <!--0x155-->
+          <command_interface name="position">
+            <param name="min">-2.356</param>
+            <param name="max">1.2217</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint1">
+          <param name="can_id">22</param>   <!--0x156-->
+          <command_interface name="position">
+            <param name="min">-2.618</param>
+            <param name="max">0.209</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint2">
+          <param name="can_id">23</param>   <!--0x157-->
+          <command_interface name="position">
+            <param name="min">-2.618</param>
+            <param name="max">2.618</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint3">
+          <param name="can_id">24</param>   <!--0x158-->
+          <command_interface name="position">
+            <param name="min">2.3562</param>
+            <param name="max">0.209</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint4">
+          <param name="can_id">25</param>   <!--0x159-->
+          <command_interface name="position">
+            <param name="min">-2.618</param>
+            <param name="max">2.618</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint5">
+          <param name="can_id">26</param>   <!--0x15A-->
+          <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="right_arm_joint6">
+          <param name="can_id">27</param>   <!--0x15B-->
+          <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:unless>
+    </ros2_control>
+  </xacro:macro>
+  <xacro:macro name="dax_ee_system" params="use_sim:=^|false use_fake_hardware:=^|false">
+    <ros2_control name="dax_ee_hw_interface" type="system">
+      <xacro:unless value="$(arg use_sim)"> <!-- use_sim == false-->
+        <hardware>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+            <!-- <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin> -->
+          </xacro:unless>
+        </hardware>
+
+        <!-- 头部关节 -->
+        <!-- <joint name="head_joint0">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="head_joint1">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint> -->
+
+        <!-- 夹爪 -->
+        <!-- <joint name="Left_1_Joint">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+        </joint> -->
+      </xacro:unless>
+    </ros2_control>
+  </xacro:macro>
+  <xacro:macro name="dax_waist_system" params="use_sim:=^|false use_fake_hardware:=^|false">
+    <ros2_control name="dax_robot_hw_interface" type="system">
+      <xacro:unless value="$(arg use_sim)"> <!-- use_sim == false-->
+        <hardware>
+          <xacro:if value="${use_fake_hardware}">
+            <plugin>mock_components/GenericSystem</plugin>
+            <!-- <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin> -->
+          </xacro:if>
+          <xacro:unless value="${use_fake_hardware}">
+            <plugin>dax_robot_hw_interface/DaxRobotHWInterface</plugin>
+          </xacro:unless>
+        </hardware>
+
+        <!-- 躯干关节 向内缩小1度-->
+        <joint name="waist_joint0">
+          <command_interface name="position">
+            <param name="min">-1.326</param>
+            <param name="max">0.035</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint1"> 
+          <command_interface name="position">
+            <param name="min">-0.017</param>
+            <param name="max">2.758</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint2">
+          <command_interface name="position">
+            <param name="min">-1.570</param>
+            <param name="max">0.174</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+        <joint name="waist_joint3">
+          <command_interface name="position">
+            <param name="min">-1.571</param>
+            <param name="max">1.571</param>
+          </command_interface>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+        </joint>
+      </xacro:unless>
+    </ros2_control>
+  </xacro:macro>
+</robot>
